@@ -1,56 +1,81 @@
 import * as Fs from 'fs';
-import { IBootstrap, IMask, IStorable } from '../interface';
+import { IBootstrapConfig, IStorable } from '../interface';
+import { Mask, Validator } from './';
 
 export class Bootstrap implements IStorable {
 
   /** @type {string} */
   private configFile = 'hapify.json';
-  /** @type {IBootstrap} */
-  private config: IBootstrap;
+  /** @type {IBootstrapConfig} */
+  private config: IBootstrapConfig;
+  /** @type {Mask[]} Masks instances */
+  private masks: Mask[];
+  /** @type {Mask[]} Masks instances */
+  private validator: Validator;
 
   /**
    * Constructor
    * @param {string} path
    */
-  constructor(private path: string) {
+  constructor(public path: string) {
     this.validate();
   }
 
   /** @inheritDoc */
   async load(): Promise<void> {
+
     // Copy config to instance
     const path = `${this.path}/${this.configFile}`;
     this.config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
+
     // Load each content file
+    this.masks = [];
     for (let i = 0; i < this.config.masks.length; i++) {
-      const contentPath = `${this.path}/${this.config.masks[i].contentPath}`;
-      this.config.masks[i].content = <string>Fs.readFileSync(contentPath, 'utf8');
+      const mask = (new Mask(this)).fromObject(this.config.masks[i]);
+      await mask.load();
+      this.masks.push(mask);
     }
+
     // Load validator
-    const validatorPath = `${this.path}/${this.config.validatorPath}`;
-    this.config.validator = <string>Fs.readFileSync(validatorPath, 'utf8');
+    this.validator = new Validator(this, this.config.validatorPath);
+    await this.validator.load();
   }
   /** @inheritDoc */
   async save(): Promise<void> {
-    // Copy all contents to files
-    for (let i = 0; i < this.config.masks.length; i++) {
-      const contentPath = `${this.path}/${this.config.masks[i].contentPath}`;
-      Fs.writeFileSync(contentPath, this.config.masks[i].content, 'utf8');
+
+    // Copy all contents to files and update config
+    for (const mask of this.masks) {
+      await mask.save();
     }
+    this.config.masks = this.masks.map((m) => m.toObject());
+
     // Write validator
-    const validatorPath = `${this.path}/${this.config.validatorPath}`;
-    Fs.writeFileSync(validatorPath, this.config.validator, 'utf8');
-    // Clone o and filter object, then save it
-    const clone: IBootstrap = Object.assign({}, this.config);
-    delete clone.validator;
-    clone.masks = clone.masks.map((mask: IMask) => {
-      delete mask.content;
-      return mask;
-    });
+    await this.validator.save();
+    this.config.validatorPath = this.validator.path;
+
     // Write file
     const path = `${this.path}/${this.configFile}`;
-    const data = JSON.stringify(clone, null, 2);
+    const data = JSON.stringify(this.config, null, 2);
     Fs.writeFileSync(path, data, 'utf8');
+  }
+  /**
+   * Denotes if the mask should be considered as empty
+   * @returns {boolean}
+   */
+  public isEmpty(): boolean {
+    const validatorIsEmpty = this.validator.isEmpty();
+    const masksAreEmpty = this.masks.every((mask: Mask): boolean => mask.isEmpty());
+
+    return validatorIsEmpty && masksAreEmpty;
+  }
+  /**
+   * Remove empty masks
+   * @returns {void}
+   */
+  public filter(): void {
+    this.masks = this.masks.filter((mask: Mask): boolean => {
+      return !mask.isEmpty();
+    });
   }
   /**
    * Denotes if the config file exists and its templates
@@ -63,7 +88,7 @@ export class Bootstrap implements IStorable {
       throw new Error(`Bootstrap config's path ${path} does not exists.`);
     }
 
-    let config: IBootstrap;
+    let config: IBootstrapConfig;
     try {
       config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
     } catch (error) {

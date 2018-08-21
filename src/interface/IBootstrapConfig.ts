@@ -1,14 +1,12 @@
-export interface IMask {
+export interface IMaskConfig {
   name: string;
   path: string;
   engine: string;
   input: string;
   contentPath: string;
-  content?: string;
 }
 
-export interface IBootstrap {
+export interface IBootstrapConfig {
   validatorPath: string;
-  validator?: string;
-  masks: IMask[];
+  masks: IMaskConfig[];
 }
