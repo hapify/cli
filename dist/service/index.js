@@ -4,4 +4,6 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./StringService"));
+__export(require("./DotGenerator"));
+__export(require("./JsGenerator"));
 //# sourceMappingURL=index.js.map
