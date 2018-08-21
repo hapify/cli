@@ -1,6 +1,6 @@
 {
   "validatorPath": "hapify/validator.js",
-  "masks": [
+  "templates": [
     {
       "name": "Create",
       "path": "routes/{model.hyphen}/create.js",
