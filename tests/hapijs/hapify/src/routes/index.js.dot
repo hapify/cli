@@ -1,0 +1,11 @@
+'use strict';
+ 
+/**
+ * Export all routes.
+ */
+ 
+module.exports = {
+{{~it.m : m}}
+    {{=m.names.upperCamel}}: require('./{{=m.names.hyphen}}'),
+{{~}}
+};
