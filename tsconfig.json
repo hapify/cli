@@ -9,6 +9,8 @@
     "outDir": "dist",
     "baseUrl": ".",
     "watch": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "paths": {
       "*": [
         "node_modules/*",

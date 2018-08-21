@@ -1,7 +1,7 @@
 /**
  * Represent a class that can be loaded and saved
  */
-export default interface IStorable {
+export interface IStorable {
 
   /** @return {Promise<void>} */
   load(): Promise<void>;

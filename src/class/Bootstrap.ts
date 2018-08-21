@@ -1,8 +1,7 @@
 import * as Fs from 'fs';
-import IStorable from '../interface/IStorable';
-import { IBootstrap, IMask } from '../interface/IBootstrap';
+import { IBootstrap, IMask, IStorable } from '../interface';
 
-export default class Bootstrap implements IStorable {
+export class Bootstrap implements IStorable {
 
   /** @type {string} */
   private configFile = 'hapify.json';

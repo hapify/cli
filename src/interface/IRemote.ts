@@ -3,7 +3,7 @@ import Observable = Rx.Observable;
 /**
  * Represent a class that can be sync remotely to the console
  */
-export default interface IRemote {
+export interface IRemote {
 
   /**
    * Denotes if the instance can handle the incoming message
