@@ -5,4 +5,4 @@ class TemplateInput {
 TemplateInput.One = 'one';
 TemplateInput.All = 'all';
 exports.TemplateInput = TemplateInput;
-//# sourceMappingURL=MaskInput.js.map
+//# sourceMappingURL=TemplateInput.js.map

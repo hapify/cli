@@ -1,4 +1,4 @@
 
-export * from 'SentenceFormat';
-export * from 'TemplateEngine';
-export * from 'TemplateInput';
+export * from './SentenceFormat';
+export * from './TemplateEngine';
+export * from './TemplateInput';

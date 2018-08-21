@@ -1,2 +1,2 @@
 
-export * from 'StringService';
+export * from './StringService';
