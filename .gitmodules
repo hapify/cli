@@ -1,0 +1,3 @@
+[submodule "packages/hapify-syntax"]
+	path = packages/hapify-syntax
+	url = git@bitbucket.org:tractrs/hapify-syntax.git
