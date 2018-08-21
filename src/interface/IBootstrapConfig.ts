@@ -1,4 +1,4 @@
-export interface IMaskConfig {
+export interface ITemplateConfig {
   name: string;
   path: string;
   engine: string;
@@ -6,7 +6,7 @@ export interface IMaskConfig {
   contentPath: string;
 }
 
-export interface IBootstrapConfig {
+export interface IChannelConfig {
   validatorPath: string;
-  masks: IMaskConfig[];
+  templates: ITemplateConfig[];
 }

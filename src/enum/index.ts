@@ -1,4 +1,4 @@
 
 export * from 'SentenceFormat';
-export * from 'MaskEngine';
-export * from 'MaskInput';
+export * from 'TemplateEngine';
+export * from 'TemplateInput';

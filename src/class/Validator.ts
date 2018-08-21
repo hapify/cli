@@ -1,6 +1,6 @@
 import * as Fs from 'fs';
 import { IStorable } from '../interface';
-import { Bootstrap } from './';
+import { Channel } from './';
 
 export class Validator implements IStorable {
 
@@ -9,10 +9,10 @@ export class Validator implements IStorable {
 
   /**
    * Constructor
-   * @param {Bootstrap} parent
+   * @param {Channel} parent
    * @param {string} path
    */
-  constructor(private parent: Bootstrap, public path: string) {
+  constructor(private parent: Channel, public path: string) {
   }
 
   /** @inheritDoc */

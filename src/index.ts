@@ -3,7 +3,7 @@
 import * as Commander from 'commander';
 import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
-import Bootstrap from './class/Bootstrap';
+import { Channel } from './class';
 
 const commander: CommanderStatic = Commander.default;
 
@@ -17,7 +17,7 @@ commander
   .description('Start console for current directory')
   .action(() => {
     console.log(chalk.magentaBright('Loaded'));
-    const bootstrap = new Bootstrap('tests/hapijs');
+    const channel = new Channel('tests/hapijs');
   });
 
 // If no arguments, show help

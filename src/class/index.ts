@@ -1,4 +1,4 @@
 
-export * from 'Bootstrap';
-export * from 'Mask';
+export * from 'Channel';
+export * from 'Template';
 export * from 'Validator';
