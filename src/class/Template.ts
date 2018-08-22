@@ -3,7 +3,7 @@ import { ITemplate, IStorable } from '../interface';
 import { TemplateInput, TemplateEngine } from '../enum';
 import { Channel } from './';
 
-export class Template implements IStorable {
+export class Template implements IStorable, ITemplate {
 
   /** @type {string} The template's name */
   name: string;

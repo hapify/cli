@@ -1,5 +1,6 @@
 {
   "validatorPath": "hapify/validator.js",
+  "modelsPath": "../models.json",
   "templates": [
     {
       "name": "Create",

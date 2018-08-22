@@ -106,5 +106,10 @@ export class Channel implements IStorable {
     if (!Fs.existsSync(validatorPath)) {
       throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
     }
+
+    const modelsPath = `${this.path}/${config.modelsPath}`;
+    if (!Fs.existsSync(modelsPath)) {
+      throw new Error(`Channel models' path ${modelsPath} does not exists.`);
+    }
   }
 }
