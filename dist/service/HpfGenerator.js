@@ -18,6 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
+const hapify_syntax_1 = require("../../packages/hapify-syntax");
 let HpfGeneratorService = class HpfGeneratorService {
     /**
      * Constructor
@@ -30,7 +31,7 @@ let HpfGeneratorService = class HpfGeneratorService {
         return __awaiter(this, void 0, void 0, function* () {
             // Create template function
             const cleanedContent = yield this._preProcess(template.content);
-            const content = HapifySyntax.run(cleanedContent, model);
+            const content = hapify_syntax_1.HapifySyntax.run(cleanedContent, model);
             return yield this._postProcess(content);
         });
     }
@@ -41,7 +42,7 @@ let HpfGeneratorService = class HpfGeneratorService {
         return __awaiter(this, void 0, void 0, function* () {
             // Create template function
             const cleanedContent = yield this._preProcess(template.content);
-            const content = HapifySyntax.run(cleanedContent, models);
+            const content = hapify_syntax_1.HapifySyntax.run(cleanedContent, models);
             return yield this._postProcess(content);
         });
     }

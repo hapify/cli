@@ -1,13 +1,13 @@
 import * as Fs from 'fs';
-import { IChannelConfig, IStorable } from '../interface';
+import { IConfig, IStorable } from '../interface';
 import { Template, Validator } from './';
 
 export class Channel implements IStorable {
 
   /** @type {string} */
   private configFile = 'hapify.json';
-  /** @type {IChannelConfig} */
-  private config: IChannelConfig;
+  /** @type {IConfig} */
+  private config: IConfig;
   /** @type {Template[]} Templates instances */
   private templates: Template[];
   /** @type {Template[]} Templates instances */
@@ -88,7 +88,7 @@ export class Channel implements IStorable {
       throw new Error(`Channel config's path ${path} does not exists.`);
     }
 
-    let config: IChannelConfig;
+    let config: IConfig;
     try {
       config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
     } catch (error) {

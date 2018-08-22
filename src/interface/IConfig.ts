@@ -6,7 +6,7 @@ export interface ITemplateConfig {
   contentPath: string;
 }
 
-export interface IChannelConfig {
+export interface IConfig {
   validatorPath: string;
   templates: ITemplateConfig[];
 }

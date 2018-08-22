@@ -1,5 +1,5 @@
 
-export * from './IChannelConfig';
+export * from './IConfig';
 export * from './IFormattedSentences';
 export * from './IStorable';
 export * from './IRemote';
