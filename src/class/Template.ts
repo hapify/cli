@@ -1,5 +1,5 @@
 import * as Fs from 'fs';
-import { ITemplateConfig, IStorable } from '../interface';
+import { ITemplate, IStorable } from '../interface';
 import { TemplateInput, TemplateEngine } from '../enum';
 import { Channel } from './';
 
@@ -27,11 +27,11 @@ export class Template implements IStorable {
 
   /**
    * Bind properties from the base object to this object
-   * @param {ITemplateConfig} object
+   * @param {ITemplate} object
    * @returns {Template}
    *  Returns this
    */
-  public fromObject(object: ITemplateConfig): Template {
+  public fromObject(object: ITemplate): Template {
     this.name = object.name;
     this.path = object.path;
     this.engine = object.engine;
@@ -41,9 +41,9 @@ export class Template implements IStorable {
   }
   /**
    * Convert the instance to an object
-   * @returns {ITemplateConfig}
+   * @returns {ITemplate}
    */
-  public toObject(): ITemplateConfig {
+  public toObject(): ITemplate {
     return {
       name: this.name,
       path: this.path,

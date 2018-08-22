@@ -27,7 +27,7 @@ class Template {
     }
     /**
      * Bind properties from the base object to this object
-     * @param {ITemplateConfig} object
+     * @param {ITemplate} object
      * @returns {Template}
      *  Returns this
      */
@@ -41,7 +41,7 @@ class Template {
     }
     /**
      * Convert the instance to an object
-     * @returns {ITemplateConfig}
+     * @returns {ITemplate}
      */
     toObject() {
         return {

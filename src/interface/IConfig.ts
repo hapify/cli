@@ -1,4 +1,5 @@
-export interface ITemplateConfig {
+
+export interface ITemplate {
   name: string;
   path: string;
   engine: string;
@@ -8,5 +9,5 @@ export interface ITemplateConfig {
 
 export interface IConfig {
   validatorPath: string;
-  templates: ITemplateConfig[];
+  templates: ITemplate[];
 }
