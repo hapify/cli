@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Field_1 = require("./Field");
+const _1 = require("./");
 class Model {
     /** Constructor */
     constructor() { }
@@ -14,7 +14,7 @@ class Model {
         this.id = object.id;
         this.name = object.name;
         this.fields = object.fields.map((fieldBase) => {
-            const field = new Field_1.Field();
+            const field = new _1.Field();
             return field.fromObject(fieldBase);
         });
         return this;

@@ -1,5 +1,5 @@
 import { IField } from '../interface';
-import { FieldType } from './FieldType';
+import { FieldType } from './';
 
 export class Field implements IField {
 

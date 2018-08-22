@@ -7,6 +7,7 @@ __export(require("./Channel"));
 __export(require("./Template"));
 __export(require("./Validator"));
 __export(require("./Model"));
+__export(require("./ModelsCollection"));
 __export(require("./Field"));
 __export(require("./FieldType"));
 //# sourceMappingURL=index.js.map

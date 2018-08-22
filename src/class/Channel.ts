@@ -1,6 +1,6 @@
 import * as Fs from 'fs';
 import { IConfig, IStorable } from '../interface';
-import { Template, Validator } from './';
+import { Template, Validator, ModelsCollection } from './';
 
 export class Channel implements IStorable {
 
@@ -12,6 +12,8 @@ export class Channel implements IStorable {
   private templates: Template[];
   /** @type {Template[]} Templates instances */
   private validator: Validator;
+  /** @type {Template[]} Templates instances */
+  private models: ModelsCollection;
 
   /**
    * Constructor
@@ -36,6 +38,10 @@ export class Channel implements IStorable {
       this.templates.push(template);
     }
 
+    // Load models
+    this.models = new ModelsCollection(this, this.config.modelsPath);
+    await this.models.load();
+
     // Load validator
     this.validator = new Validator(this, this.config.validatorPath);
     await this.validator.load();
@@ -48,6 +54,10 @@ export class Channel implements IStorable {
       await template.save();
     }
     this.config.templates = this.templates.map((m) => m.toObject());
+
+    // Write models
+    await this.models.save();
+    this.config.modelsPath = this.models.path;
 
     // Write validator
     await this.validator.save();

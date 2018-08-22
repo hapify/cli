@@ -41,6 +41,9 @@ class Channel {
                 yield template.load();
                 this.templates.push(template);
             }
+            // Load models
+            this.models = new _1.ModelsCollection(this, this.config.modelsPath);
+            yield this.models.load();
             // Load validator
             this.validator = new _1.Validator(this, this.config.validatorPath);
             yield this.validator.load();
@@ -54,6 +57,9 @@ class Channel {
                 yield template.save();
             }
             this.config.templates = this.templates.map((m) => m.toObject());
+            // Write models
+            yield this.models.save();
+            this.config.modelsPath = this.models.path;
             // Write validator
             yield this.validator.save();
             this.config.validatorPath = this.validator.path;

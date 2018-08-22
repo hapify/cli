@@ -1,5 +1,5 @@
 import { IModel, IField } from '../interface';
-import { Field } from './Field';
+import { Field } from './';
 
 export class Model implements IModel {
 
@@ -7,8 +7,8 @@ export class Model implements IModel {
   id: string;
   /** @type {string} The model's name */
   name: string;
-  /** @type {IField[]} The fields of the model */
-  fields: IField[];
+  /** @type {Field[]} The fields of the model */
+  fields: Field[];
 
   /** Constructor */
   constructor() {}

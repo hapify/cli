@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const FieldType_1 = require("./FieldType");
+const _1 = require("./");
 class Field {
     /** Constructor */
     constructor() { }
@@ -36,7 +36,7 @@ class Field {
             name: this.name,
             type: this.type,
             subtype: this.subtype,
-            reference: this.type === FieldType_1.FieldType.Entity ? this.reference : null,
+            reference: this.type === _1.FieldType.Entity ? this.reference : null,
             primary: this.primary,
             unique: this.unique,
             label: this.label,
