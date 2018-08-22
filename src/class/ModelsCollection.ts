@@ -5,7 +5,7 @@ import { Model, Channel } from './';
 export class ModelsCollection implements IStorable {
 
   /** @type {Model[]} The list of model instances */
-  public models: Model[];
+  private models: Model[];
 
   /**
    * Constructor
@@ -30,5 +30,20 @@ export class ModelsCollection implements IStorable {
     const models = this.models.map((model: Model): IModel => model.toObject());
     const data = JSON.stringify(models, null, 2);
     Fs.writeFileSync(modelsPath, data, 'utf8');
+  }
+  /**
+   * Find a instance with its id
+   * @param {string} id
+   * @returns {Promise<Model|null>}
+   */
+  async find(id: string): Promise<Model|null> {
+    return this.models.find((instance) => instance.id === id);
+  }
+  /**
+   * Returns the list of models
+   * @returns {Promise<Model[]>}
+   */
+  async list(): Promise<Model[]> {
+    return this.models;
   }
 }

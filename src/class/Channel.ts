@@ -1,7 +1,6 @@
 import * as Fs from 'fs';
 import { IConfig, IStorable } from '../interface';
 import { Template, Validator, ModelsCollection } from './';
-import {Model} from './Model';
 
 export class Channel implements IStorable {
 
@@ -14,7 +13,7 @@ export class Channel implements IStorable {
   /** @type {Template[]} Templates instances */
   private validator: Validator;
   /** @type {ModelsCollection} List of models container */
-  private modelsCollection: ModelsCollection;
+  public modelsCollection: ModelsCollection;
 
   /**
    * Constructor
@@ -87,13 +86,6 @@ export class Channel implements IStorable {
     this.templates = this.templates.filter((template: Template): boolean => {
       return !template.isEmpty();
     });
-  }
-  /**
-   * Get the list of models
-   * @return {Model[]}
-   */
-  models(): Model[] {
-    return this.modelsCollection.models;
   }
   /**
    * Denotes if the config file exists and its templates

@@ -88,13 +88,6 @@ class Channel {
         });
     }
     /**
-     * Get the list of models
-     * @return {Model[]}
-     */
-    models() {
-        return this.modelsCollection.models;
-    }
-    /**
      * Denotes if the config file exists and its templates
      * If something is not valid, it throws an error.
      * @throws {Error}

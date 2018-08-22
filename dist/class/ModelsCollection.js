@@ -47,6 +47,25 @@ class ModelsCollection {
             Fs.writeFileSync(modelsPath, data, 'utf8');
         });
     }
+    /**
+     * Find a instance with its id
+     * @param {string} id
+     * @returns {Promise<Model|null>}
+     */
+    find(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.models.find((instance) => instance.id === id);
+        });
+    }
+    /**
+     * Returns the list of models
+     * @returns {Promise<Model[]>}
+     */
+    list() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.models;
+        });
+    }
 }
 exports.ModelsCollection = ModelsCollection;
 //# sourceMappingURL=ModelsCollection.js.map

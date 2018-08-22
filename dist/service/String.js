@@ -376,4 +376,4 @@ StringService = __decorate([
     __metadata("design:paramtypes", [])
 ], StringService);
 exports.StringService = StringService;
-//# sourceMappingURL=StringService.js.map
+//# sourceMappingURL=String.js.map
