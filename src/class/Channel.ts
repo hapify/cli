@@ -9,9 +9,9 @@ export class Channel implements IStorable {
   /** @type {IConfig} */
   private config: IConfig;
   /** @type {Template[]} Templates instances */
-  private templates: Template[];
+  public templates: Template[];
   /** @type {Template[]} Templates instances */
-  private validator: Validator;
+  public validator: Validator;
   /** @type {ModelsCollection} List of models container */
   public modelsCollection: ModelsCollection;
 

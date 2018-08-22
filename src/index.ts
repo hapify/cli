@@ -4,6 +4,8 @@ import * as Commander from 'commander';
 import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
+import { Container } from 'typedi';
+import { GeneratorService } from './service/Generator';
 
 const commander: CommanderStatic = Commander.default;
 
@@ -15,9 +17,15 @@ commander
   .command('start')
   .alias('s')
   .description('Start console for current directory')
-  .action(() => {
+  .action(async () => {
+  
     console.log(chalk.magentaBright('Loaded'));
+    
     const channel = new Channel('tests/hapijs');
+    await channel.load();
+    
+    const generator = Container.get(GeneratorService);
+    await generator.compile(channel, channel.templates[0]);
   });
 
 // If no arguments, show help
