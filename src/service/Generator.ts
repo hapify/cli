@@ -364,7 +364,7 @@ export class GeneratorService {
       const dependencies = (customFilter = (f: any) => f, removeSelf: boolean = true) => {
         const duplicates: any = {};
         return references
-        // Apply custom filter
+          // Apply custom filter
           .filter(customFilter)
           // Remove self
           .filter((ref: any) => removeSelf ? ref.model.id !== model.id : true)
