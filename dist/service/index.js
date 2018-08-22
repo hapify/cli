@@ -8,4 +8,6 @@ __export(require("./DotGenerator"));
 __export(require("./JsGenerator"));
 __export(require("./HpfGenerator"));
 __export(require("./Generator"));
+__export(require("./Options"));
+__export(require("./Logger"));
 //# sourceMappingURL=index.js.map

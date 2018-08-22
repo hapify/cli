@@ -15,34 +15,49 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Commander = __importStar(require("commander"));
-const chalk_1 = __importDefault(require("chalk"));
 const class_1 = require("./class");
 const typedi_1 = require("typedi");
-const Generator_1 = require("./service/Generator");
-const commander = Commander.default;
-commander
+const service_1 = require("./service");
+// ############################################
+// Get services
+const program = Commander.default;
+const generator = typedi_1.Container.get(service_1.GeneratorService);
+const options = typedi_1.Container.get(service_1.OptionsService);
+const logger = typedi_1.Container.get(service_1.LoggerService);
+// ############################################
+// Define program & actions
+program
     .version('0.1.0')
-    .description('Hapify Command Line Tool');
-commander
-    .command('start')
-    .alias('s')
+    .description('Hapify Command Line Tool')
+    .option('--debug', 'enable debug mode')
+    .option('-d, --dir <path>', 'change the working directory');
+program
+    .command('generate')
+    .alias('g')
     .description('Start console for current directory')
     .action(() => __awaiter(this, void 0, void 0, function* () {
-    console.log(chalk_1.default.magentaBright('Loaded'));
-    const channel = new class_1.Channel('tests/hapijs');
-    yield channel.load();
-    const generator = typedi_1.Container.get(Generator_1.GeneratorService);
-    yield generator.compile(channel, channel.templates[0]);
+    try {
+        const channel = new class_1.Channel(options.dir());
+        yield channel.load();
+        yield generator.compile(channel, channel.templates[0]);
+    }
+    catch (error) {
+        logger.handle(error);
+    }
 }));
+// ############################################
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
-    commander.outputHelp();
+    logger.art();
+    program.outputHelp();
     process.exit();
 }
-commander.parse(process.argv);
+// ############################################
+// Init services
+options.attach(program);
+// ############################################
+// Start program
+program.parse(process.argv);
 //# sourceMappingURL=index.js.map
