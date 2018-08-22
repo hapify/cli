@@ -42,8 +42,8 @@ class Channel {
                 this.templates.push(template);
             }
             // Load models
-            this.models = new _1.ModelsCollection(this, this.config.modelsPath);
-            yield this.models.load();
+            this.modelsCollection = new _1.ModelsCollection(this, this.config.modelsPath);
+            yield this.modelsCollection.load();
             // Load validator
             this.validator = new _1.Validator(this, this.config.validatorPath);
             yield this.validator.load();
@@ -58,8 +58,8 @@ class Channel {
             }
             this.config.templates = this.templates.map((m) => m.toObject());
             // Write models
-            yield this.models.save();
-            this.config.modelsPath = this.models.path;
+            yield this.modelsCollection.save();
+            this.config.modelsPath = this.modelsCollection.path;
             // Write validator
             yield this.validator.save();
             this.config.validatorPath = this.validator.path;
@@ -86,6 +86,13 @@ class Channel {
         this.templates = this.templates.filter((template) => {
             return !template.isEmpty();
         });
+    }
+    /**
+     * Get the list of models
+     * @return {Model[]}
+     */
+    models() {
+        return this.modelsCollection.models;
     }
     /**
      * Denotes if the config file exists and its templates

@@ -1,6 +1,7 @@
 import * as Fs from 'fs';
 import { IConfig, IStorable } from '../interface';
 import { Template, Validator, ModelsCollection } from './';
+import {Model} from './Model';
 
 export class Channel implements IStorable {
 
@@ -12,8 +13,8 @@ export class Channel implements IStorable {
   private templates: Template[];
   /** @type {Template[]} Templates instances */
   private validator: Validator;
-  /** @type {Template[]} Templates instances */
-  private models: ModelsCollection;
+  /** @type {ModelsCollection} List of models container */
+  private modelsCollection: ModelsCollection;
 
   /**
    * Constructor
@@ -39,8 +40,8 @@ export class Channel implements IStorable {
     }
 
     // Load models
-    this.models = new ModelsCollection(this, this.config.modelsPath);
-    await this.models.load();
+    this.modelsCollection = new ModelsCollection(this, this.config.modelsPath);
+    await this.modelsCollection.load();
 
     // Load validator
     this.validator = new Validator(this, this.config.validatorPath);
@@ -56,8 +57,8 @@ export class Channel implements IStorable {
     this.config.templates = this.templates.map((m) => m.toObject());
 
     // Write models
-    await this.models.save();
-    this.config.modelsPath = this.models.path;
+    await this.modelsCollection.save();
+    this.config.modelsPath = this.modelsCollection.path;
 
     // Write validator
     await this.validator.save();
@@ -72,7 +73,7 @@ export class Channel implements IStorable {
    * Denotes if the template should be considered as empty
    * @returns {boolean}
    */
-  public isEmpty(): boolean {
+  isEmpty(): boolean {
     const validatorIsEmpty = this.validator.isEmpty();
     const templatesAreEmpty = this.templates.every((template: Template): boolean => template.isEmpty());
 
@@ -82,10 +83,17 @@ export class Channel implements IStorable {
    * Remove empty templates
    * @returns {void}
    */
-  public filter(): void {
+  filter(): void {
     this.templates = this.templates.filter((template: Template): boolean => {
       return !template.isEmpty();
     });
+  }
+  /**
+   * Get the list of models
+   * @return {Model[]}
+   */
+  models(): Model[] {
+    return this.modelsCollection.models;
   }
   /**
    * Denotes if the config file exists and its templates

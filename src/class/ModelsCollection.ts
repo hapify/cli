@@ -5,7 +5,7 @@ import { Model, Channel } from './';
 export class ModelsCollection implements IStorable {
 
   /** @type {Model[]} The list of model instances */
-  models: Model[];
+  public models: Model[];
 
   /**
    * Constructor
