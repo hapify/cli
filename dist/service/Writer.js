@@ -23,13 +23,43 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Fs = __importStar(require("fs"));
 const Path = __importStar(require("path"));
+const jszip_1 = __importDefault(require("jszip"));
 let WriterService = class WriterService {
     /** Constructor */
     constructor() { }
+    /**
+     * Zip results and write to disk
+     * @param {string} path
+     * @param {IGeneratorResult[]} results
+     * @return {Promise<void>}
+     */
+    zip(path, results) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Create ZIP
+            const zip = new jszip_1.default();
+            // Append files
+            for (const result of results) {
+                zip.file(result.path, result.content);
+            }
+            // Generate ZIP
+            const content = yield zip.generateAsync({
+                type: 'nodebuffer',
+                compression: 'DEFLATE',
+                compressionOptions: {
+                    level: 9
+                }
+            });
+            yield this.ensureDir(path);
+            Fs.writeFileSync(path, content);
+        });
+    }
     /**
      * Write results to disk
      * @param {string} root

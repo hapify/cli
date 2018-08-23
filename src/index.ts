@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as Commander from 'commander';
+import * as Path from 'path';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
@@ -25,28 +26,52 @@ program
 program
   .command('generate')
   .alias('g')
-  .description('Generate console for current directory')
+  .description('Generate channel(s) from current directory')
   .option('--depth <n>', 'depth to recursively look for channels', 2)
   .action(async (cmd) => { try { options.setCommand(cmd);
 
-      // ---------------------------------
-      // Action starts
-      const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
+    // ---------------------------------
+    // Action starts
+    const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
 
-      if (channels.length === 0) {
-        throw new Error('No channel found');
-      }
+    if (channels.length === 0) {
+      throw new Error('No channel found');
+    }
 
-      for (const channel of channels) {
-        await channel.load();
-        logger.info(`Found channel ${channel.name}`);
-      }
+    for (const channel of channels) {
+      await channel.load();
+      logger.info(`Found channel ${channel.name}`);
+    }
 
-      for (const channel of channels) {
-        const results = await generator.runChannel(channel);
-        writer.writeMany(channel.path, results);
-        logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
-      }
+    for (const channel of channels) {
+      const results = await generator.runChannel(channel);
+      await writer.writeMany(channel.path, results);
+      logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
+    }
+    // Action Ends
+    // ---------------------------------
+
+    logger.time(); } catch (error) { logger.handle(error); }
+  });
+
+program
+  .command('export')
+  .alias('x')
+  .description('Export channel as ZIP from current directory')
+  .option('-o, --output <path>', 'output file path')
+  .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Action starts
+    const channel: Channel = new Channel(options.dir());
+    await channel.load();
+    logger.info(`Found channel ${channel.name}`);
+
+    const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
+
+    const results = await generator.runChannel(channel);
+    await writer.zip(outputPath, results);
+    logger.success(`=> Generated and zipped ${results.length} files for channel ${channel.name} to ${outputPath}`);
     // Action Ends
     // ---------------------------------
 

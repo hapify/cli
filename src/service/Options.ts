@@ -55,4 +55,11 @@ export class OptionsService {
   depth(): number {
     return this.command.depth;
   }
+  /**
+   * Get the output file path
+   * @return {string}
+   */
+  output(): string {
+    return this.command.output;
+  }
 }

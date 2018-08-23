@@ -17,6 +17,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Commander = __importStar(require("commander"));
+const Path = __importStar(require("path"));
 const class_1 = require("./class");
 const typedi_1 = require("typedi");
 const service_1 = require("./service");
@@ -37,7 +38,7 @@ program
 program
     .command('generate')
     .alias('g')
-    .description('Generate console for current directory')
+    .description('Generate channel(s) from current directory')
     .option('--depth <n>', 'depth to recursively look for channels', 2)
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
@@ -54,9 +55,34 @@ program
         }
         for (const channel of channels) {
             const results = yield generator.runChannel(channel);
-            writer.writeMany(channel.path, results);
+            yield writer.writeMany(channel.path, results);
             logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
         }
+        // Action Ends
+        // ---------------------------------
+        logger.time();
+    }
+    catch (error) {
+        logger.handle(error);
+    }
+}));
+program
+    .command('export')
+    .alias('x')
+    .description('Export channel as ZIP from current directory')
+    .option('-o, --output <path>', 'output file path')
+    .action((cmd) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        const channel = new class_1.Channel(options.dir());
+        yield channel.load();
+        logger.info(`Found channel ${channel.name}`);
+        const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
+        const results = yield generator.runChannel(channel);
+        yield writer.zip(outputPath, results);
+        logger.success(`=> Generated and zipped ${results.length} files for channel ${channel.name} to ${outputPath}`);
         // Action Ends
         // ---------------------------------
         logger.time();

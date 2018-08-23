@@ -63,6 +63,13 @@ let OptionsService = class OptionsService {
     depth() {
         return this.command.depth;
     }
+    /**
+     * Get the output file path
+     * @return {string}
+     */
+    output() {
+        return this.command.output;
+    }
 };
 OptionsService = __decorate([
     typedi_1.Service(),

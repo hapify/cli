@@ -26,10 +26,11 @@
     "commander": "^2.17.1",
     "dot": "^1.1.2",
     "hapi": "^17.5.3",
+    "hapify-syntax": "file:./packages/hapify-syntax",
     "inquirer": "^6.1.0",
     "joi": "^13.6.0",
-    "ora": "^3.0.0",
-    "hapify-syntax": "file:./packages/hapify-syntax"
+    "jszip": "^3.1.5",
+    "ora": "^3.0.0"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
@@ -38,6 +39,7 @@
     "@types/hapi": "^17.0.18",
     "@types/inquirer": "0.0.43",
     "@types/joi": "^13.4.3",
+    "@types/jszip": "^3.1.4",
     "@types/ora": "^1.3.4",
     "reflect-metadata": "^0.1.12",
     "tslint": "^5.11.0",
