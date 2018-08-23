@@ -36,6 +36,49 @@ program
     .option('--debug', 'enable debug mode')
     .option('-d, --dir <path>', 'change the working directory');
 program
+    .command('list')
+    .alias('l')
+    .description('List available channels from the current directory')
+    .action((cmd) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        const channels = class_1.Channel.sniff(options.dir(), options.depth());
+        if (channels.length === 0) {
+            throw new Error('No channel found');
+        }
+        for (const channel of channels) {
+            yield channel.load();
+            logger.info(`Found channel ${channel.name} in ${channel.path}`);
+        }
+        // Group channels by models collections
+        const modelsCollections = {};
+        for (const channel of channels) {
+            if (typeof modelsCollections[channel.modelsCollection.modelsPath] === 'undefined') {
+                modelsCollections[channel.modelsCollection.modelsPath] = [];
+            }
+            modelsCollections[channel.modelsCollection.modelsPath].push(channel);
+        }
+        const modelsPaths = Object.keys(modelsCollections);
+        for (const modelsPath of modelsPaths) {
+            const c = modelsCollections[modelsPath];
+            const mc = c.length > 1;
+            const m = yield c[0].modelsCollection.list();
+            const mm = m.length > 1;
+            let message = `\nChannel${mc ? 's' : ''} ${c.map(c => c.name).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${modelsPath}`;
+            message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => m.name).join(', ')}`;
+            logger.success(message);
+        }
+        // Action Ends
+        // ---------------------------------
+        logger.time();
+    }
+    catch (error) {
+        logger.handle(error);
+    }
+}));
+program
     .command('generate')
     .alias('g')
     .description('Generate channel(s) from current directory')

@@ -3,7 +3,7 @@
 import * as Commander from 'commander';
 import * as Path from 'path';
 import { CommanderStatic } from 'commander';
-import { Channel } from './class';
+import { Channel, ModelsCollection } from './class';
 import { Container } from 'typedi';
 import { GeneratorService, OptionsService, LoggerService, WriterService } from './service';
 
@@ -22,6 +22,51 @@ program
   .description('Hapify Command Line Tool')
   .option('--debug', 'enable debug mode')
   .option('-d, --dir <path>', 'change the working directory');
+
+program
+  .command('list')
+  .alias('l')
+  .description('List available channels from the current directory')
+  .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Action starts
+    const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
+
+    if (channels.length === 0) {
+      throw new Error('No channel found');
+    }
+
+    for (const channel of channels) {
+      await channel.load();
+      logger.info(`Found channel ${channel.name} in ${channel.path}`);
+    }
+
+    // Group channels by models collections
+    const modelsCollections: { [s: string]: Channel[] } = {};
+    for (const channel of channels) {
+      if (typeof modelsCollections[channel.modelsCollection.modelsPath] === 'undefined') {
+        modelsCollections[channel.modelsCollection.modelsPath] = [];
+      }
+      modelsCollections[channel.modelsCollection.modelsPath].push(channel);
+    }
+
+    const modelsPaths = Object.keys(modelsCollections);
+    for (const modelsPath of modelsPaths) {
+      const c: Channel[] = modelsCollections[modelsPath];
+      const mc = c.length > 1;
+      const m = await c[0].modelsCollection.list();
+      const mm = m.length > 1;
+      let message = `\nChannel${mc ? 's' : ''} ${c.map(c => c.name).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${modelsPath}`;
+      message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => m.name).join(', ')}`;
+      logger.success(message);
+    }
+
+    // Action Ends
+    // ---------------------------------
+
+    logger.time(); } catch (error) { logger.handle(error); }
+  });
 
 program
   .command('generate')

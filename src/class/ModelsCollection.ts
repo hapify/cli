@@ -1,4 +1,5 @@
 import * as Fs from 'fs';
+import * as Path from 'path';
 import { IModel, IStorable } from '../interface';
 import { Model, Channel } from './';
 
@@ -6,6 +7,8 @@ export class ModelsCollection implements IStorable {
 
   /** @type {Model[]} The list of model instances */
   private models: Model[];
+  /** @type {Model[]} The full path to the file */
+  public modelsPath: string;
 
   /**
    * Constructor
@@ -13,12 +16,12 @@ export class ModelsCollection implements IStorable {
    * @param {string} path
    */
   constructor(private parent: Channel, public path: string) {
+    this.modelsPath = Path.join(this.parent.path, this.path);
   }
 
   /** @inheritDoc */
   public async load(): Promise<void> {
-    const modelsPath = `${this.parent.path}/${this.path}`;
-    const models: IModel[] = JSON.parse(<string>Fs.readFileSync(modelsPath, 'utf8'));
+    const models: IModel[] = JSON.parse(<string>Fs.readFileSync(this.modelsPath, 'utf8'));
     this.models = models.map((model: IModel): Model => {
       const m = new Model();
       return m.fromObject(model);
@@ -26,10 +29,9 @@ export class ModelsCollection implements IStorable {
   }
   /** @inheritDoc */
   async save(): Promise<void> {
-    const modelsPath = `${this.parent.path}/${this.path}`;
     const models = this.models.map((model: Model): IModel => model.toObject());
     const data = JSON.stringify(models, null, 2);
-    Fs.writeFileSync(modelsPath, data, 'utf8');
+    Fs.writeFileSync(this.modelsPath, data, 'utf8');
   }
   /**
    * Find a instance with its id
