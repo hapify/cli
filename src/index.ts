@@ -78,6 +78,22 @@ program
     logger.time(); } catch (error) { logger.handle(error); }
   });
 
+program
+  .command('create')
+  .alias('c')
+  .description('Create a new Hapify channel in the directory')
+  .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Action starts
+    await Channel.create(options.dir());
+    logger.success(`=> Created a new channel in ${options.dir()}`);
+    // Action Ends
+    // ---------------------------------
+
+    logger.time(); } catch (error) { logger.handle(error); }
+  });
+
 // ############################################
 // If no arguments, show help
 if (!process.argv.slice(2).length) {

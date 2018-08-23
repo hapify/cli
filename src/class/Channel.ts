@@ -2,11 +2,14 @@ import * as Fs from 'fs';
 import * as Path from 'path';
 import { IConfig, IStorable } from '../interface';
 import { Template, Validator, ModelsCollection } from './';
+import { TemplateEngine, TemplateInput } from '../enum';
 
 export class Channel implements IStorable {
 
   /** @type {string} */
   public name: string;
+  /** @type {string} */
+  private static defaultFolder = 'hapify';
   /** @type {string} */
   private static configFile = 'hapify.json';
   /** @type {IConfig} */
@@ -32,7 +35,7 @@ export class Channel implements IStorable {
   async load(): Promise<void> {
 
     // Copy config to instance
-    const path = `${this.path}/${Channel.configFile}`;
+    const path = Path.join(this.path, Channel.configFile);
     this.config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
 
     // Load each content file
@@ -98,7 +101,7 @@ export class Channel implements IStorable {
    * @throws {Error}
    */
   private validate(): void {
-    const path = `${this.path}/${Channel.configFile}`;
+    const path = Path.join(this.path, Channel.configFile);
     if (!Fs.existsSync(path)) {
       throw new Error(`Channel config's path ${path} does not exists.`);
     }
@@ -111,18 +114,18 @@ export class Channel implements IStorable {
     }
 
     for (const template of config.templates) {
-      const contentPath = `${this.path}/${template.contentPath}`;
+      const contentPath = Path.join(this.path, template.contentPath);
       if (!Fs.existsSync(contentPath)) {
         throw new Error(`Channel template's path ${contentPath} does not exists.`);
       }
     }
 
-    const validatorPath = `${this.path}/${config.validatorPath}`;
+    const validatorPath = Path.join(this.path, config.validatorPath);
     if (!Fs.existsSync(validatorPath)) {
       throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
     }
 
-    const modelsPath = `${this.path}/${config.modelsPath}`;
+    const modelsPath = Path.join(this.path, config.modelsPath);
     if (!Fs.existsSync(modelsPath)) {
       throw new Error(`Channel models' path ${modelsPath} does not exists.`);
     }
@@ -146,7 +149,7 @@ export class Channel implements IStorable {
         .reduce((flatten: Channel[], channels: Channel[]) => flatten.concat(channels), []);
 
     // Get channel of current directory if exists
-    const configPath = `${path}/${Channel.configFile}`;
+    const configPath = Path.join(path, Channel.configFile);
     if (Fs.existsSync(configPath)) {
       const name = Path.relative(Path.dirname(from), path);
       const channel = new Channel(path, name);
@@ -154,5 +157,50 @@ export class Channel implements IStorable {
     }
 
     return channels;
+  }
+  /**
+   * Init a Hapify structure within a directory
+   * @param {string} path
+   * @return {Channel[]}
+   */
+  public static async create(path: string): Promise<void> {
+    if (!Fs.existsSync(path)) {
+      throw new Error(`Channel's path ${path} does not exists.`);
+    }
+    const configPath = Path.join(path, Channel.configFile);
+    if (Fs.existsSync(configPath)) {
+      throw new Error(`A channel already exists in this directory.`);
+    }
+    const config: IConfig = {
+      validatorPath: `${Channel.defaultFolder}/validator.js`,
+      modelsPath: '../models.json',
+      templates: [
+        {
+          name: 'Hello World',
+          path: 'models/{model.hyphen}/hello.js',
+          engine: TemplateEngine.Hpf,
+          input: TemplateInput.One,
+          contentPath: `${Channel.defaultFolder}/model/hello.js.hpf`
+        }
+      ]
+    };
+
+    // Create dir
+    Fs.mkdirSync(Path.join(path, Channel.defaultFolder));
+    Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'model'));
+
+    // Dump config file
+    const configData = JSON.stringify(config, null, 2);
+    Fs.writeFileSync(configPath, configData, 'utf8');
+
+    // Create template file
+    const templateContent = `// Hello <<M A>>`;
+    const templatePath = Path.join(path, Channel.defaultFolder, 'model', 'hello.js.hpf');
+    Fs.writeFileSync(templatePath, templateContent, 'utf8');
+
+    // Create validator file
+    const validatorContent = `// Models validation script`;
+    const validatorPath = Path.join(path, Channel.defaultFolder, 'validator.js');
+    Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
   }
 }

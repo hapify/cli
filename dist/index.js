@@ -91,6 +91,25 @@ program
         logger.handle(error);
     }
 }));
+program
+    .command('create')
+    .alias('c')
+    .description('Create a new Hapify channel in the directory')
+    .action((cmd) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        yield class_1.Channel.create(options.dir());
+        logger.success(`=> Created a new channel in ${options.dir()}`);
+        // Action Ends
+        // ---------------------------------
+        logger.time();
+    }
+    catch (error) {
+        logger.handle(error);
+    }
+}));
 // ############################################
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
