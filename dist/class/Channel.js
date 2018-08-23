@@ -16,23 +16,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
+const Path = __importStar(require("path"));
 const _1 = require("./");
 class Channel {
     /**
      * Constructor
      * @param {string} path
+     * @param {string|null} name
      */
-    constructor(path) {
+    constructor(path, name = null) {
         this.path = path;
-        /** @type {string} */
-        this.configFile = 'hapify.json';
         this.validate();
+        this.name = name ? name : Path.basename(path);
     }
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             // Copy config to instance
-            const path = `${this.path}/${this.configFile}`;
+            const path = `${this.path}/${Channel.configFile}`;
             this.config = JSON.parse(Fs.readFileSync(path, 'utf8'));
             // Load each content file
             this.templates = [];
@@ -64,7 +65,7 @@ class Channel {
             yield this.validator.save();
             this.config.validatorPath = this.validator.path;
             // Write file
-            const path = `${this.path}/${this.configFile}`;
+            const path = `${this.path}/${Channel.configFile}`;
             const data = JSON.stringify(this.config, null, 2);
             Fs.writeFileSync(path, data, 'utf8');
         });
@@ -93,7 +94,7 @@ class Channel {
      * @throws {Error}
      */
     validate() {
-        const path = `${this.path}/${this.configFile}`;
+        const path = `${this.path}/${Channel.configFile}`;
         if (!Fs.existsSync(path)) {
             throw new Error(`Channel config's path ${path} does not exists.`);
         }
@@ -119,6 +120,33 @@ class Channel {
             throw new Error(`Channel models' path ${modelsPath} does not exists.`);
         }
     }
+    /**
+     * This method detect all channels in the directory and its sub-directories, and create instances for them.
+     * We can define the depth level of subdirectories.
+     * @param {string} path
+     * @param {number} depth  Default: 2
+     * @param {number} from  Default: path
+     * @return {Channel[]}
+     */
+    static sniff(path, depth = 2, from = path) {
+        // Get channels in sub-directories first
+        const channels = depth <= 0 ? [] :
+            Fs.readdirSync(path)
+                .map((dir) => Path.join(path, dir))
+                .filter((subPath) => Fs.statSync(subPath).isDirectory())
+                .map((subPath) => Channel.sniff(subPath, depth - 1, from))
+                .reduce((flatten, channels) => flatten.concat(channels), []);
+        // Get channel of current directory if exists
+        const configPath = `${path}/${Channel.configFile}`;
+        if (Fs.existsSync(configPath)) {
+            const name = Path.relative(Path.dirname(from), path);
+            const channel = new Channel(path, name);
+            channels.push(channel);
+        }
+        return channels;
+    }
 }
+/** @type {string} */
+Channel.configFile = 'hapify.json';
 exports.Channel = Channel;
 //# sourceMappingURL=Channel.js.map

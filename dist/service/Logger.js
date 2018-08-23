@@ -25,12 +25,19 @@ let LoggerService = class LoggerService {
     }
     /**
      * Handle an error
-     * @return {string}
+     * @param {Error} error
      */
     handle(error) {
         const message = this.optionsService.debug() ?
             error.stack.toString() : error.toString();
         console.error(chalk_1.default.red(message));
+    }
+    /**
+     * Display a message
+     * @param {string} message
+     */
+    message(message) {
+        console.log(chalk_1.default.green(message));
     }
     /**
      * Display ascii art

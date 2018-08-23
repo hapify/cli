@@ -1,11 +1,14 @@
 import * as Fs from 'fs';
+import * as Path from 'path';
 import { IConfig, IStorable } from '../interface';
 import { Template, Validator, ModelsCollection } from './';
 
 export class Channel implements IStorable {
 
   /** @type {string} */
-  private configFile = 'hapify.json';
+  public name: string;
+  /** @type {string} */
+  private static configFile = 'hapify.json';
   /** @type {IConfig} */
   private config: IConfig;
   /** @type {Template[]} Templates instances */
@@ -18,16 +21,18 @@ export class Channel implements IStorable {
   /**
    * Constructor
    * @param {string} path
+   * @param {string|null} name
    */
-  constructor(public path: string) {
+  constructor(public path: string, name: string|null = null) {
     this.validate();
+    this.name = name ? name : Path.basename(path);
   }
 
   /** @inheritDoc */
   async load(): Promise<void> {
 
     // Copy config to instance
-    const path = `${this.path}/${this.configFile}`;
+    const path = `${this.path}/${Channel.configFile}`;
     this.config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
 
     // Load each content file
@@ -64,7 +69,7 @@ export class Channel implements IStorable {
     this.config.validatorPath = this.validator.path;
 
     // Write file
-    const path = `${this.path}/${this.configFile}`;
+    const path = `${this.path}/${Channel.configFile}`;
     const data = JSON.stringify(this.config, null, 2);
     Fs.writeFileSync(path, data, 'utf8');
   }
@@ -93,7 +98,7 @@ export class Channel implements IStorable {
    * @throws {Error}
    */
   private validate(): void {
-    const path = `${this.path}/${this.configFile}`;
+    const path = `${this.path}/${Channel.configFile}`;
     if (!Fs.existsSync(path)) {
       throw new Error(`Channel config's path ${path} does not exists.`);
     }
@@ -121,5 +126,33 @@ export class Channel implements IStorable {
     if (!Fs.existsSync(modelsPath)) {
       throw new Error(`Channel models' path ${modelsPath} does not exists.`);
     }
+  }
+  /**
+   * This method detect all channels in the directory and its sub-directories, and create instances for them.
+   * We can define the depth level of subdirectories.
+   * @param {string} path
+   * @param {number} depth  Default: 2
+   * @param {number} from  Default: path
+   * @return {Channel[]}
+   */
+  public static sniff(path: string, depth: number = 2, from: string = path): Channel[] {
+
+    // Get channels in sub-directories first
+    const channels: Channel[] = depth <= 0 ? [] :
+      Fs.readdirSync(path)
+        .map((dir) => Path.join(path, dir))
+        .filter((subPath) => Fs.statSync(subPath).isDirectory())
+        .map((subPath) => Channel.sniff(subPath, depth - 1, from))
+        .reduce((flatten: Channel[], channels: Channel[]) => flatten.concat(channels), []);
+
+    // Get channel of current directory if exists
+    const configPath = `${path}/${Channel.configFile}`;
+    if (Fs.existsSync(configPath)) {
+      const name = Path.relative(Path.dirname(from), path);
+      const channel = new Channel(path, name);
+      channels.push(channel);
+    }
+
+    return channels;
   }
 }

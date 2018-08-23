@@ -36,12 +36,19 @@ program
 program
     .command('generate')
     .alias('g')
-    .description('Start console for current directory')
-    .action(() => __awaiter(this, void 0, void 0, function* () {
+    .description('Generate console for current directory')
+    .option('--depth <n>', 'depth to recursively look for channels', 2)
+    .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const channel = new class_1.Channel(options.dir());
-        yield channel.load();
-        yield generator.compile(channel, channel.templates[0]);
+        options.setCommand(cmd);
+        const channels = class_1.Channel.sniff(options.dir(), options.depth());
+        if (channels.length === 0) {
+            throw new Error('No channel found');
+        }
+        for (const channel of channels) {
+            yield channel.load();
+            logger.message(`Found channel ${channel.name}`);
+        }
     }
     catch (error) {
         logger.handle(error);
@@ -56,7 +63,7 @@ if (!process.argv.slice(2).length) {
 }
 // ############################################
 // Init services
-options.attach(program);
+options.setProgram(program);
 // ############################################
 // Start program
 program.parse(process.argv);

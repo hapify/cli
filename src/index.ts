@@ -5,6 +5,7 @@ import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
 import { GeneratorService, OptionsService, LoggerService } from './service';
+import { log } from 'util';
 
 // ############################################
 // Get services
@@ -24,13 +25,23 @@ program
 program
   .command('generate')
   .alias('g')
-  .description('Start console for current directory')
-  .action(async () => {
+  .description('Generate console for current directory')
+  .option('--depth <n>', 'depth to recursively look for channels', 2)
+  .action(async (cmd) => {
     try {
-      const channel = new Channel(options.dir());
-      await channel.load();
+      options.setCommand(cmd);
 
-      await generator.compile(channel, channel.templates[0]);
+      const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
+
+      if (channels.length === 0) {
+        throw new Error('No channel found');
+      }
+
+      for (const channel of channels) {
+        await channel.load();
+        logger.message(`Found channel ${channel.name}`);
+      }
+
     } catch (error) { logger.handle(error); }
   });
 
@@ -44,7 +55,7 @@ if (!process.argv.slice(2).length) {
 
 // ############################################
 // Init services
-options.attach(program);
+options.setProgram(program);
 
 
 // ############################################

@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { CommanderStatic } from 'commander';
+import { Command, CommanderStatic } from 'commander';
 import * as Path from 'path';
 
 @Service()
@@ -7,6 +7,8 @@ export class OptionsService {
 
   /** @type {commander.CommanderStatic} program */
   private program: CommanderStatic;
+  /** @type {commander.CommanderStatic} program */
+  private command: Command;
 
   /** Constructor */
   constructor() {
@@ -16,14 +18,21 @@ export class OptionsService {
    * Set program entity
    * @param {commander.CommanderStatic} program
    */
-  attach(program: CommanderStatic): void {
+  setProgram(program: CommanderStatic): void {
     this.program = program;
+  }
+  /**
+   * Set command entity
+   * @param {commander.Command} command
+   */
+  setCommand(command: Command): void {
+    this.command = command;
   }
   /**
    * Return the working directory computed with the --dir option
    * @return {string}
    */
-  dir() {
+  dir(): string {
     if (this.program.dir) {
       if (Path.isAbsolute(this.program.dir)) {
         return this.program.dir;
@@ -36,7 +45,14 @@ export class OptionsService {
    * Denotes if the debug mode is enabled
    * @return {boolean}
    */
-  debug() {
+  debug(): boolean {
     return !!this.program.debug;
+  }
+  /**
+   * Get the depth for recursive search
+   * @return {number}
+   */
+  depth(): number {
+    return this.command.depth;
   }
 }

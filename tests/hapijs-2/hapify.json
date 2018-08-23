@@ -1,0 +1,62 @@
+{
+  "validatorPath": "hapify/validator.js",
+  "modelsPath": "../models.json",
+  "templates": [
+    {
+      "name": "Create",
+      "path": "routes/{model.hyphen}/create.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/create.js.dot"
+    },
+    {
+      "name": "Read",
+      "path": "routes/{model.hyphen}/read.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/read.js.dot"
+    },
+    {
+      "name": "Update",
+      "path": "routes/{model.hyphen}/update.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/update.js.dot"
+    },
+    {
+      "name": "Delete",
+      "path": "routes/{model.hyphen}/delete.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/delete.js.dot"
+    },
+    {
+      "name": "List",
+      "path": "routes/{model.hyphen}/list.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/list.js.dot"
+    },
+    {
+      "name": "Count",
+      "path": "routes/{model.hyphen}/count.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/count.js.dot"
+    },
+    {
+      "name": "Index",
+      "path": "routes/{model.hyphen}/index.js",
+      "engine": "dot",
+      "input": "one",
+      "contentPath": "hapify/src/routes/model/index.js.dot"
+    },
+    {
+      "name": "Index All",
+      "path": "routes/index.js",
+      "engine": "dot",
+      "input": "all",
+      "contentPath": "hapify/src/routes/index.js.dot"
+    }
+  ]
+}

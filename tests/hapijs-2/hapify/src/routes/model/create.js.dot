@@ -1,0 +1,169 @@
+{{  
+function defaultValue(f) {
+    let v = "null";
+    
+    if (f.multiple) v = [];
+    else if (f.nullable) v = "null";
+    else if (f.type === "boolean") v = "false";
+    else if (f.type === "string") v = "'-'";
+    else if (f.type === "number") v = "0";
+    else if (f.type === "datetime") v = "Date.now()";
+    
+    return v;
+}
+function joiValidator(f) {
+    let out = "Joi.";
+    
+    if (f.type === "boolean") out += "boolean()";
+    else if (f.type === "string") {
+        out +=  "string()";
+        if (f.subtype === "email") out += ".email()";
+        else if (f.subtype === "password") out += ".min(6)";
+        out +=  ".trim()";
+    }
+    else if (f.type === "number" || f.type === "datetime") {
+        out +=  "number()";
+        if (f.subtype === "latitude") out += ".min(-90).max(90)";
+        else if (f.subtype === "longitude") out += ".min(-180).max(180)";
+    }
+    else if (f.type === "entity") out +=  "string().length(24).hex()";
+    else out +=  "any()";
+    
+    /* Multiple and nullable */
+    if (f.multiple) {
+        out = `Joi.array().items(${out})`;
+        
+        out += f.nullable ? ".min(0)" : ".min(1).required()";
+    } else {
+        out += f.nullable ? ".allow(null)" : ".required()";
+    }
+    
+    return out;
+}
+}}'use strict';
+ 
+/**
+ * Create {{=it.m.names.wordsLower}}.
+ * Returns the created {{=it.m.names.wordsLower}}.
+ */
+ 
+const Joi = require('joi');
+const Boom = require('boom');
+{{?it.m.f.r.f(r => !r.internal).length}}
+const MongoDB = require('mongodb');
+{{?}}
+ 
+// Validation schema for payload
+const schema = Joi.object({
+{{~it.m.f.f(f => !f.internal) : f}}
+    {{=f.names.underscore}}: {{ out += joiValidator(f); }},
+{{~}}
+});
+ 
+/**
+ * Export route to create {{=it.m.names.wordsLower}}
+ */
+module.exports = {
+    method: 'POST',
+    path: '/{{=it.m.names.hyphen}}',
+    config: {
+        validate: { payload: schema },
+        description: 'Route to create {{=it.m.names.wordsLower}}',
+        tags: ['{{=it.m.names.hyphen}}', 'create']
+    },
+    handler: async (request, h) => {
+ 
+        // Get {{=it.m.names.wordsLower}} from payload
+        const payload = request.payload;
+
+{{?it.m.f.i.filter(f => !f.primary).length}}
+ 
+        // Init internal fields
+{{~it.m.f.i.filter(f => !f.primary) : i}}
+        payload.{{=i.names.underscore}} = {{ out += defaultValue(i); }};
+{{~}}
+{{?}}
+
+{{?it.m.f.r.f(r => !r.internal).length}}
+ 
+        // Convert reference fields
+{{~it.m.f.r.f(r => !r.internal) : r}}
+{{?r.multiple}}
+        payload.{{=r.names.underscore}} = request.payload.{{=r.names.underscore}} instanceof Array ?
+            request.payload.{{=r.names.underscore}}.map((i) => new MongoDB.ObjectId(i)) : null;
+{{??}}
+        payload.{{=r.names.underscore}} = typeof request.payload.{{=r.names.underscore}} === 'string' ?
+            new MongoDB.ObjectId(request.payload.{{=r.names.underscore}}) : null;
+{{?}}
+{{~}}
+{{?}}
+ 
+        // @hook create:before-insert:{{=it.m.names.hyphen}}
+ 
+        // Insertion options
+        const options = { w: 'majority' };
+ 
+        // Insert {{=it.m.names.wordsLower}} into database
+{{?it.m.f.u.length}}
+        let result;
+        try {
+            result = await request.server.db.collection('{{=it.m.names.underscore}}')
+                .insertOne(payload, options);
+        }
+        catch (e) {
+            // Handle duplicated key for unique indexes
+            return e.name === 'MongoError' && e.code === 11000 ?
+                Boom.conflict('Duplicate key') :
+                Boom.boomify(e);
+        }
+{{??}}
+        const result = await request.server.db.collection('{{=it.m.names.underscore}}')
+            .insertOne(payload, options);
+{{?}}
+ 
+        if (result.insertedCount === 0) {
+            return Boom.internal('Insert error');
+        }
+ 
+        const {{=it.m.names.lowerCamel}} = result.ops[0];
+
+{{?it.m.f.ip.length}}
+ 
+        // Delete private properties
+{{~it.m.f.ip : p}}
+        delete {{=it.m.names.lowerCamel}}.{{=p.names.underscore}};
+{{~}}
+{{?}}
+
+{{?it.m.f.r.f(r => !r.isPrivate).length}}
+ 
+        // Convert reference fields
+        await request.server.utils.Entity
+            .populate(request.server.db, {{=it.m.names.lowerCamel}}, [
+{{~it.m.f.r.f(r => !r.isPrivate) : r}}
+                {
+                    col: '{{=r.m.names.underscore}}',
+                    prop: '{{=r.names.underscore}}'{{?r.multiple}},
+                    multiple: true{{?}}{{?r.m.p.hasPrivate}},
+                    projection: {
+{{?r.m.p.mainlyPrivate}}
+{{~r.m.f.f(f => !f.isPrivate && !f.primary) : f}}
+                        {{=f.names.underscore }}: true,
+{{~}}
+{{??}}
+{{~r.m.f.ip : f}}
+                        {{=f.names.underscore }}: false,
+{{~}}
+{{?}}
+                    }
+{{?}}
+                },
+{{~}}
+            ]);
+
+{{?}}
+ 
+        return h.response({{=it.m.names.lowerCamel}}).code(201);
+    }
+};
+ 

@@ -26,8 +26,15 @@ let OptionsService = class OptionsService {
      * Set program entity
      * @param {commander.CommanderStatic} program
      */
-    attach(program) {
+    setProgram(program) {
         this.program = program;
+    }
+    /**
+     * Set command entity
+     * @param {commander.Command} command
+     */
+    setCommand(command) {
+        this.command = command;
     }
     /**
      * Return the working directory computed with the --dir option
@@ -48,6 +55,13 @@ let OptionsService = class OptionsService {
      */
     debug() {
         return !!this.program.debug;
+    }
+    /**
+     * Get the depth for recursive search
+     * @return {number}
+     */
+    depth() {
+        return this.command.depth;
     }
 };
 OptionsService = __decorate([
