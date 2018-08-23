@@ -28,6 +28,13 @@ export class LoggerService {
     console.log(chalk.green(message));
   }
   /**
+   * Display a message
+   * @param {string} message
+   */
+  raw(message: string): void {
+    console.log(message);
+  }
+  /**
    * Display an info
    * @param {string} message
    */

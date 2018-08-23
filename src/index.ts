@@ -2,8 +2,9 @@
 
 import * as Commander from 'commander';
 import * as Path from 'path';
+import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
-import { Channel, ModelsCollection } from './class';
+import { Channel } from './class';
 import { Container } from 'typedi';
 import { GeneratorService, OptionsService, LoggerService, WriterService } from './service';
 
@@ -39,7 +40,7 @@ program
 
     for (const channel of channels) {
       await channel.load();
-      logger.info(`Found channel ${channel.name} in ${channel.path}`);
+      logger.raw(`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(channel.path)}`);
     }
 
     // Group channels by models collections
@@ -57,9 +58,9 @@ program
       const mc = c.length > 1;
       const m = await c[0].modelsCollection.list();
       const mm = m.length > 1;
-      let message = `\nChannel${mc ? 's' : ''} ${c.map(c => c.name).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${modelsPath}`;
-      message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => m.name).join(', ')}`;
-      logger.success(message);
+      let message = `\nChannel${mc ? 's' : ''} ${c.map(c => chalk.yellow(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${chalk.blueBright(modelsPath)}`;
+      message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => chalk.magentaBright(m.name)).join(', ')}`;
+      logger.raw(message);
     }
 
     // Action Ends
@@ -85,7 +86,7 @@ program
 
     for (const channel of channels) {
       await channel.load();
-      logger.info(`Found channel ${channel.name}`);
+      logger.raw(`Found channel ${chalk.yellow(channel.name)}`);
     }
 
     for (const channel of channels) {
@@ -110,7 +111,7 @@ program
     // Action starts
     const channel: Channel = new Channel(options.dir());
     await channel.load();
-    logger.info(`Found channel ${channel.name}`);
+    logger.raw(`Found channel ${chalk.yellow(channel.name)}`);
 
     const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
 

@@ -40,6 +40,13 @@ let LoggerService = class LoggerService {
         console.log(chalk_1.default.green(message));
     }
     /**
+     * Display a message
+     * @param {string} message
+     */
+    raw(message) {
+        console.log(message);
+    }
+    /**
      * Display an info
      * @param {string} message
      */

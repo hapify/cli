@@ -15,9 +15,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Commander = __importStar(require("commander"));
 const Path = __importStar(require("path"));
+const chalk_1 = __importDefault(require("chalk"));
 const class_1 = require("./class");
 const typedi_1 = require("typedi");
 const service_1 = require("./service");
@@ -50,7 +54,7 @@ program
         }
         for (const channel of channels) {
             yield channel.load();
-            logger.info(`Found channel ${channel.name} in ${channel.path}`);
+            logger.raw(`Found channel ${chalk_1.default.yellow(channel.name)} in ${chalk_1.default.blueBright(channel.path)}`);
         }
         // Group channels by models collections
         const modelsCollections = {};
@@ -66,9 +70,9 @@ program
             const mc = c.length > 1;
             const m = yield c[0].modelsCollection.list();
             const mm = m.length > 1;
-            let message = `\nChannel${mc ? 's' : ''} ${c.map(c => c.name).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${modelsPath}`;
-            message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => m.name).join(', ')}`;
-            logger.success(message);
+            let message = `\nChannel${mc ? 's' : ''} ${c.map(c => chalk_1.default.yellow(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${chalk_1.default.blueBright(modelsPath)}`;
+            message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => chalk_1.default.magentaBright(m.name)).join(', ')}`;
+            logger.raw(message);
         }
         // Action Ends
         // ---------------------------------
@@ -94,7 +98,7 @@ program
         }
         for (const channel of channels) {
             yield channel.load();
-            logger.info(`Found channel ${channel.name}`);
+            logger.raw(`Found channel ${chalk_1.default.yellow(channel.name)}`);
         }
         for (const channel of channels) {
             const results = yield generator.runChannel(channel);
@@ -121,7 +125,7 @@ program
         // Action starts
         const channel = new class_1.Channel(options.dir());
         yield channel.load();
-        logger.info(`Found channel ${channel.name}`);
+        logger.raw(`Found channel ${chalk_1.default.yellow(channel.name)}`);
         const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
         const results = yield generator.runChannel(channel);
         yield writer.zip(outputPath, results);
