@@ -17,6 +17,16 @@ const logger = Container.get(LoggerService);
 const writer = Container.get(WriterService);
 
 // ############################################
+// Common methods
+const logChannel = (channel: Channel) => {
+  logger.info(`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(channel.path)}`);
+};
+const cChannel = chalk.yellow;
+const cModel = chalk.magentaBright;
+const cPath = chalk.blueBright;
+const cHigh = chalk.green;
+
+// ############################################
 // Define program & actions
 program
   .version('0.1.0')
@@ -40,7 +50,7 @@ program
 
     for (const channel of channels) {
       await channel.load();
-      logger.raw(`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(channel.path)}`);
+      logChannel(channel);
     }
 
     // Group channels by models collections
@@ -58,9 +68,9 @@ program
       const mc = c.length > 1;
       const m = await c[0].modelsCollection.list();
       const mm = m.length > 1;
-      let message = `\nChannel${mc ? 's' : ''} ${c.map(c => chalk.yellow(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${chalk.blueBright(modelsPath)}`;
-      message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => chalk.magentaBright(m.name)).join(', ')}`;
-      logger.raw(message);
+      let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${cPath(modelsPath)}`;
+      message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => cModel(m.name)).join(', ')}`;
+      logger.newLine().info(message);
     }
 
     // Action Ends
@@ -86,13 +96,13 @@ program
 
     for (const channel of channels) {
       await channel.load();
-      logger.raw(`Found channel ${chalk.yellow(channel.name)}`);
+      logChannel(channel);
     }
 
     for (const channel of channels) {
       const results = await generator.runChannel(channel);
       await writer.writeMany(channel.path, results);
-      logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
+      logger.success(`Generated ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)}`);
     }
     // Action Ends
     // ---------------------------------
@@ -111,13 +121,13 @@ program
     // Action starts
     const channel: Channel = new Channel(options.dir());
     await channel.load();
-    logger.raw(`Found channel ${chalk.yellow(channel.name)}`);
+    logChannel(channel);
 
     const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
 
     const results = await generator.runChannel(channel);
     await writer.zip(outputPath, results);
-    logger.success(`=> Generated and zipped ${results.length} files for channel ${channel.name} to ${outputPath}`);
+    logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
     // Action Ends
     // ---------------------------------
 
@@ -133,7 +143,7 @@ program
     // ---------------------------------
     // Action starts
     await Channel.create(options.dir());
-    logger.success(`=> Created a new channel in ${options.dir()}`);
+    logger.success(`Created a new channel in ${cPath(options.dir())}`);
     // Action Ends
     // ---------------------------------
 

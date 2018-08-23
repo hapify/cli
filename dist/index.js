@@ -33,6 +33,15 @@ const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
 const writer = typedi_1.Container.get(service_1.WriterService);
 // ############################################
+// Common methods
+const logChannel = (channel) => {
+    logger.info(`Found channel ${chalk_1.default.yellow(channel.name)} in ${chalk_1.default.blueBright(channel.path)}`);
+};
+const cChannel = chalk_1.default.yellow;
+const cModel = chalk_1.default.magentaBright;
+const cPath = chalk_1.default.blueBright;
+const cHigh = chalk_1.default.green;
+// ############################################
 // Define program & actions
 program
     .version('0.1.0')
@@ -54,7 +63,7 @@ program
         }
         for (const channel of channels) {
             yield channel.load();
-            logger.raw(`Found channel ${chalk_1.default.yellow(channel.name)} in ${chalk_1.default.blueBright(channel.path)}`);
+            logChannel(channel);
         }
         // Group channels by models collections
         const modelsCollections = {};
@@ -70,9 +79,9 @@ program
             const mc = c.length > 1;
             const m = yield c[0].modelsCollection.list();
             const mm = m.length > 1;
-            let message = `\nChannel${mc ? 's' : ''} ${c.map(c => chalk_1.default.yellow(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${chalk_1.default.blueBright(modelsPath)}`;
-            message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => chalk_1.default.magentaBright(m.name)).join(', ')}`;
-            logger.raw(message);
+            let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${cPath(modelsPath)}`;
+            message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => cModel(m.name)).join(', ')}`;
+            logger.newLine().info(message);
         }
         // Action Ends
         // ---------------------------------
@@ -98,12 +107,12 @@ program
         }
         for (const channel of channels) {
             yield channel.load();
-            logger.raw(`Found channel ${chalk_1.default.yellow(channel.name)}`);
+            logChannel(channel);
         }
         for (const channel of channels) {
             const results = yield generator.runChannel(channel);
             yield writer.writeMany(channel.path, results);
-            logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
+            logger.success(`Generated ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)}`);
         }
         // Action Ends
         // ---------------------------------
@@ -125,11 +134,11 @@ program
         // Action starts
         const channel = new class_1.Channel(options.dir());
         yield channel.load();
-        logger.raw(`Found channel ${chalk_1.default.yellow(channel.name)}`);
+        logChannel(channel);
         const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
         const results = yield generator.runChannel(channel);
         yield writer.zip(outputPath, results);
-        logger.success(`=> Generated and zipped ${results.length} files for channel ${channel.name} to ${outputPath}`);
+        logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
         // Action Ends
         // ---------------------------------
         logger.time();
@@ -148,7 +157,7 @@ program
         // ---------------------------------
         // Action starts
         yield class_1.Channel.create(options.dir());
-        logger.success(`=> Created a new channel in ${options.dir()}`);
+        logger.success(`Created a new channel in ${cPath(options.dir())}`);
         // Action Ends
         // ---------------------------------
         logger.time();

@@ -26,35 +26,69 @@ let LoggerService = class LoggerService {
     /**
      * Handle an error
      * @param {Error} error
+     * @return {LoggerService}
      */
     handle(error) {
         const message = this.optionsService.debug() ?
             error.stack.toString() : error.toString();
         console.error(chalk_1.default.red(message));
-    }
-    /**
-     * Display a success message
-     * @param {string} message
-     */
-    success(message) {
-        console.log(chalk_1.default.green(message));
+        return this;
     }
     /**
      * Display a message
      * @param {string} message
+     * @return {LoggerService}
      */
     raw(message) {
         console.log(message);
     }
     /**
+     * Display a success message
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    success(message) {
+        console.log(`${chalk_1.default.green('✓')} ${message}`);
+        return this;
+    }
+    /**
      * Display an info
      * @param {string} message
+     * @return {LoggerService}
      */
     info(message) {
-        console.log(chalk_1.default.blueBright(message));
+        console.log(`${chalk_1.default.blueBright('•')} ${message}`);
+        return this;
+    }
+    /**
+     * Display an error
+     * @param {string} message
+     */
+    error(message) {
+        console.log(`${chalk_1.default.red('✖')} ${message}`);
+        return this;
+    }
+    /**
+     * Add new lines
+     * @param {number} count
+     * @return {LoggerService}
+     */
+    newLine(count = 1) {
+        console.log(`\n`.repeat(count - 1));
+        return this;
+    }
+    /**
+     * Display an error
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    warning(message) {
+        console.log(`${chalk_1.default.yellow('!')} ${message}`);
+        return this;
     }
     /**
      * Display ascii art
+     * @return {LoggerService}
      */
     art() {
         console.log(chalk_1.default.magentaBright('  _    _             _  __       \n' +
@@ -65,13 +99,16 @@ let LoggerService = class LoggerService {
             ' |_|  |_|\\__,_| .__/|_|_|  \\__, |\n' +
             '              | |           __/ |\n' +
             '              |_|          |___/ '));
+        return this;
     }
     /**
      * Display the running time
+     * @return {LoggerService}
      */
     time() {
         const message = `Process ran in ${process.uptime()}`;
         console.log(message);
+        return this;
     }
 };
 LoggerService = __decorate([
