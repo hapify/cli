@@ -28,7 +28,8 @@
     "hapi": "^17.5.3",
     "inquirer": "^6.1.0",
     "joi": "^13.6.0",
-    "ora": "^3.0.0"
+    "ora": "^3.0.0",
+    "hapify-syntax": "file:./packages/hapify-syntax"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",

@@ -1,7 +1,7 @@
 import { IGenerator } from '../../interface';
 import { Template } from '../../class';
 import { Service } from 'typedi';
-import { HapifySyntax } from '../../../packages/hapify-syntax';
+import HapifySyntax from 'hapify-syntax';
 
 @Service()
 export class HpfGeneratorService implements IGenerator {
