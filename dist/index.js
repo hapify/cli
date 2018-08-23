@@ -42,18 +42,24 @@ program
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
         options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
         const channels = class_1.Channel.sniff(options.dir(), options.depth());
         if (channels.length === 0) {
             throw new Error('No channel found');
         }
         for (const channel of channels) {
             yield channel.load();
-            logger.message(`Found channel ${channel.name}`);
+            logger.info(`Found channel ${channel.name}`);
         }
         for (const channel of channels) {
             const results = yield generator.runChannel(channel);
             writer.writeMany(channel.path, results);
+            logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
         }
+        // Action Ends
+        // ---------------------------------
+        logger.time();
     }
     catch (error) {
         logger.handle(error);

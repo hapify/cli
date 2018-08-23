@@ -21,11 +21,18 @@ export class LoggerService {
     console.error(chalk.red(message));
   }
   /**
-   * Display a message
+   * Display a success message
    * @param {string} message
    */
-  message(message: string): void {
+  success(message: string): void {
     console.log(chalk.green(message));
+  }
+  /**
+   * Display an info
+   * @param {string} message
+   */
+  info(message: string): void {
+    console.log(chalk.blueBright(message));
   }
   /**
    * Display ascii art
@@ -41,5 +48,12 @@ export class LoggerService {
       '              | |           __/ |\n' +
       '              |_|          |___/ '
     ));
+  }
+  /**
+   * Display the running time
+   */
+  time(): void {
+    const message = `Process ran in ${process.uptime()}`;
+    console.log(message);
   }
 }

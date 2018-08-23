@@ -27,10 +27,10 @@ program
   .alias('g')
   .description('Generate console for current directory')
   .option('--depth <n>', 'depth to recursively look for channels', 2)
-  .action(async (cmd) => {
-    try {
-      options.setCommand(cmd);
+  .action(async (cmd) => { try { options.setCommand(cmd);
 
+      // ---------------------------------
+      // Action starts
       const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
 
       if (channels.length === 0) {
@@ -39,15 +39,18 @@ program
 
       for (const channel of channels) {
         await channel.load();
-        logger.message(`Found channel ${channel.name}`);
+        logger.info(`Found channel ${channel.name}`);
       }
 
       for (const channel of channels) {
         const results = await generator.runChannel(channel);
         writer.writeMany(channel.path, results);
+        logger.success(`=> Generated ${results.length} files for channel ${channel.name}`);
       }
+    // Action Ends
+    // ---------------------------------
 
-    } catch (error) { logger.handle(error); }
+    logger.time(); } catch (error) { logger.handle(error); }
   });
 
 // ############################################

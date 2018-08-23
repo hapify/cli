@@ -33,11 +33,18 @@ let LoggerService = class LoggerService {
         console.error(chalk_1.default.red(message));
     }
     /**
-     * Display a message
+     * Display a success message
      * @param {string} message
      */
-    message(message) {
+    success(message) {
         console.log(chalk_1.default.green(message));
+    }
+    /**
+     * Display an info
+     * @param {string} message
+     */
+    info(message) {
+        console.log(chalk_1.default.blueBright(message));
     }
     /**
      * Display ascii art
@@ -51,6 +58,13 @@ let LoggerService = class LoggerService {
             ' |_|  |_|\\__,_| .__/|_|_|  \\__, |\n' +
             '              | |           __/ |\n' +
             '              |_|          |___/ '));
+    }
+    /**
+     * Display the running time
+     */
+    time() {
+        const message = `Process ran in ${process.uptime()}`;
+        console.log(message);
     }
 };
 LoggerService = __decorate([
