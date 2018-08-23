@@ -37,6 +37,23 @@ let GeneratorService = class GeneratorService {
         this.javaScriptGeneratorService = javaScriptGeneratorService;
     }
     /**
+     * Compile for a whole channel
+     * @param {Channel} channel
+     * @returns {Promise<IGeneratorResult[]>}
+     */
+    runChannel(channel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Create results stack
+            const output = [];
+            // For each template, run sub process
+            for (const template of channel.templates) {
+                const results = yield this.runTemplate(channel, template);
+                output.concat(results);
+            }
+            return output;
+        });
+    }
+    /**
      * Compile a template to multiple files.
      * One per model, if applicable.
      *
@@ -44,22 +61,21 @@ let GeneratorService = class GeneratorService {
      * @param {Template} template
      * @returns {Promise<IGeneratorResult[]>}
      */
-    compile(caller, template) {
+    runTemplate(caller, template) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Create results stack
-            const promises = [];
             // For each template, build each models
             if (template.needsModel()) {
+                // Create results stack
+                const output = [];
                 const models = yield caller.modelsCollection.list();
-                models.forEach((model) => {
-                    promises.push(this._one(caller, template, model));
-                });
+                for (const model of models) {
+                    output.push(yield this._one(caller, template, model));
+                }
+                return output;
             }
             else {
-                promises.push(this._all(caller, template));
+                return [yield this._all(caller, template)];
             }
-            // Wait results
-            return yield Promise.all(promises);
         });
     }
     /**
@@ -73,15 +89,17 @@ let GeneratorService = class GeneratorService {
      *  If the template needs a model and no model is passed
      */
     run(caller, template, model) {
-        if (template.needsModel()) {
-            if (!model) {
-                throw new Error('Model should be defined for this template');
+        return __awaiter(this, void 0, void 0, function* () {
+            if (template.needsModel()) {
+                if (!model) {
+                    throw new Error('Model should be defined for this template');
+                }
+                return yield this._one(caller, template, model);
             }
-            return this._one(caller, template, model);
-        }
-        else {
-            return this._all(caller, template);
-        }
+            else {
+                return yield this._all(caller, template);
+            }
+        });
     }
     /**
      * Only process the path

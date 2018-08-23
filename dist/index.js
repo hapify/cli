@@ -26,6 +26,7 @@ const program = Commander.default;
 const generator = typedi_1.Container.get(service_1.GeneratorService);
 const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
+const writer = typedi_1.Container.get(service_1.WriterService);
 // ############################################
 // Define program & actions
 program
@@ -48,6 +49,10 @@ program
         for (const channel of channels) {
             yield channel.load();
             logger.message(`Found channel ${channel.name}`);
+        }
+        for (const channel of channels) {
+            const results = yield generator.runChannel(channel);
+            writer.writeMany(channel.path, results);
         }
     }
     catch (error) {

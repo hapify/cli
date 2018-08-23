@@ -4,8 +4,7 @@ import * as Commander from 'commander';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
-import { GeneratorService, OptionsService, LoggerService } from './service';
-import { log } from 'util';
+import { GeneratorService, OptionsService, LoggerService, WriterService } from './service';
 
 // ############################################
 // Get services
@@ -13,6 +12,7 @@ const program: CommanderStatic = Commander.default;
 const generator = Container.get(GeneratorService);
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
+const writer = Container.get(WriterService);
 
 // ############################################
 // Define program & actions
@@ -40,6 +40,11 @@ program
       for (const channel of channels) {
         await channel.load();
         logger.message(`Found channel ${channel.name}`);
+      }
+
+      for (const channel of channels) {
+        const results = await generator.runChannel(channel);
+        writer.writeMany(channel.path, results);
       }
 
     } catch (error) { logger.handle(error); }
