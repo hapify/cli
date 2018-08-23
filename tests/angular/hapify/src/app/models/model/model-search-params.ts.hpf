@@ -1,0 +1,167 @@
+import {Subject} from 'rxjs/Subject';
+import {Helpers} from '@app/shared';
+ 
+/** Used to export and import search params */
+export interface <<M AA>>SearchParamsInterface {
+  <<P a_a>>?: string[];
+<<@ F se f>>
+  <<=_interface(f)>>;
+<<@>>
+  _page?: string | number;
+  _limit?: string | number;
+  _sort?: string;
+  _order?: string;
+}
+ 
+/**
+ * List allowed keys for the interface
+ * @type {string[]}
+ */
+const AllowedKeys: string[] = [
+  '<<P a_a>>',
+<<@ F se f>>
+  <<=_key(f)>>,
+<<@>>
+  '_page',
+  '_limit',
+  '_sort',
+  '_order'
+];
+ 
+/** Manage <<M a>> search params */
+export class <<M AA>>SearchParams extends Subject<void> {
+ 
+  /** @type {<<M AA>>SearchParamsInterface} Stores the properties of the instance */
+  props: <<M AA>>SearchParamsInterface;
+  /** @type {number} Default page number */
+  defaultPage = 0;
+  /** @type {number} Default page length */
+  defaultLimit = 10;
+ 
+  /** Constructor */
+  constructor() {
+    super();
+    // Create from nothing
+    this.fromObject({});
+  }
+ 
+  /**
+   * Populate the instance from an object (extracted from query string)
+   * @param {<<M AA>>SearchParamsInterface} input
+   */
+  fromObject(input: <<M AA>>SearchParamsInterface): void {
+ 
+    // Clone object with allowed keys only
+    const props: <<M AA>>SearchParamsInterface = {};
+    AllowedKeys.map((key: string) => {
+      if (typeof input[key] !== 'undefined') {
+        props[key] = input[key];
+      }
+    });
+ 
+    // Keep default values
+    if (typeof props._page === 'undefined') { props._page = this.defaultPage; }
+    if (typeof props._limit === 'undefined') { props._limit = this.defaultLimit; }
+    
+    // Convert potentially multiple primary keys
+    if (typeof props.<<P a_a>> === 'string') {
+      props.<<P a_a>> = (< string>props.<<P a_a>>).split(',').filter((s) => s.length);
+    }
+
+<<@ F se f>>
+    <<? f tB>>
+ 
+    // Convert boolean <<f a>>
+    if (typeof props.<<f a_a>> !== 'undefined') {
+      props.<<f a_a>> = Helpers.convertToBoolean(props.<<f a_a>>);
+    }
+
+    <<?? f tD>>
+ 
+    // Convert dates for <<f a>>
+    if (typeof props.<<f a_a>> !== 'undefined') {
+      props.<<f a_a>> = Helpers.convertToDate(props.<<f a_a>>);
+    }
+    if (typeof props.<<f a_a>>__min !== 'undefined') {
+      props.<<f a_a>>__min = Helpers.convertToDate(props.<<f a_a>>__min);
+    }
+    if (typeof props.<<f a_a>>__max !== 'undefined') {
+      props.<<f a_a>>__max = Helpers.convertToDate(props.<<f a_a>>__max);
+    }
+
+    <<?? f tE*ml>>
+ 
+    // Convert potentially multiple ids for <<f a>>
+    if (typeof props.<<f a_a>> === 'string') {
+      props.<<f a_a>> = (< string>props.<<f a_a>>).split(',').filter((s) => s.length);
+    }
+    <<?>>
+<<@>>
+ 
+    // Assign values
+    this.props = props;
+    this.next();
+  }
+ 
+  /**
+   * Convert the instance to an object readable for the API and storable in the query string
+   * @return {<<M AA>>SearchParamsInterface}
+   */
+  toObject(): <<M AA>>SearchParamsInterface {
+ 
+    // Filter not allowed, undefined and null values
+    const props: <<M AA>>SearchParamsInterface = {};
+    AllowedKeys.map(Helpers.prepareObjectForApi(this.props, props));
+
+<<@ F se f>>
+    <<? f tD>>
+ 
+    // Avoid conflict in value of <<f a>>
+    if (typeof props.<<f a_a>> !== 'undefined') {
+      delete props.<<f a_a>>__min;
+      delete props.<<f a_a>>__max;
+    }
+    <<?? f tB>>
+ 
+    // Convert boolean <<f a>>
+    if (typeof props.<<f a_a>> !== 'undefined') {
+      props.<<f a_a>> = props.<<f a_a>> ? 'true' : 'false';
+    }
+    <<?>>
+<<@>>
+ 
+    return props;
+  }
+}
+
+<<< 
+function _type(f) {
+  if (f.type === "boolean") return "string | boolean";
+  if (f.type === "string") return "string";
+  if (f.type === "number") return "string | number";
+  if (f.type === "datetime") return "string | number | Date";
+  if (f.type === "entity") {
+    return f.multiple ? "string[]" : "string";
+  }
+  return "any";
+}
+function _interface(f) {
+    const prop = f.names.underscore;
+    const type = _type(f);
+    let line = `${prop}?: ${type}`;
+    if (f.type === "number" || f.type === "datetime") {
+        line += `;\n  ${prop}__min?: ${type}`;
+        line += `;\n  ${prop}__max?: ${type}`;
+    }
+    return line;
+}
+function _key(f) {
+    const prop = f.names.underscore;
+    let line = `'${prop}'`;
+    if (f.type === "number" || f.type === "datetime") {
+        line += `,\n  '${prop}__min'`;
+        line += `,\n  '${prop}__max'`;
+    }
+    return line;
+}
+>>>

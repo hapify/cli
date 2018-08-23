@@ -1,0 +1,223 @@
+{
+  "validatorPath": "hapify/validator.js",
+  "modelsPath": "../models.json",
+  "templates": [
+    {
+      "name": "English JSON",
+      "path": "src/assets/i18n/en.json",
+      "engine": "js",
+      "input": "all",
+      "contentPath": "hapify/src/assets/i18n/en.json.js"
+    },
+    {
+      "name": "Shared Models",
+      "path": "src/app/shared/models.ts",
+      "engine": "hpf",
+      "input": "all",
+      "contentPath": "hapify/src/app/shared/models.ts.hpf"
+    },
+    {
+      "name": "All Models Index",
+      "path": "src/app/models/index.ts",
+      "engine": "hpf",
+      "input": "all",
+      "contentPath": "hapify/src/app/models/index.ts.hpf"
+    },
+    {
+      "name": "All Models Module",
+      "path": "src/app/models/models.module.ts",
+      "engine": "hpf",
+      "input": "all",
+      "contentPath": "hapify/src/app/models/models.module.ts.hpf"
+    },
+    {
+      "name": "All Models Routing",
+      "path": "src/app/models/models-routing.module.ts",
+      "engine": "hpf",
+      "input": "all",
+      "contentPath": "hapify/src/app/models/models-routing.module.ts.hpf"
+    },
+    {
+      "name": "Models Index",
+      "path": "src/app/models/{model.hyphen}/index.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/index.ts.hpf"
+    },
+    {
+      "name": "Models Service",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}.service.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model.service.ts.hpf"
+    },
+    {
+      "name": "Models Model",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model.ts.hpf"
+    },
+    {
+      "name": "Models Search Params",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-search-params.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-search-params.ts.hpf"
+    },
+    {
+      "name": "Models View Read Html",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-read/{model.hyphen}-read.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-read/model-read.component.html.hpf"
+    },
+    {
+      "name": "Models View Read Ts",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-read/{model.hyphen}-read.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-read/model-read.component.ts.hpf"
+    },
+    {
+      "name": "Models View List Html",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-list/{model.hyphen}-list.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-list/model-list.component.html.hpf"
+    },
+    {
+      "name": "Models View List Scss",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-list/{model.hyphen}-list.component.scss",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-list/model-list.component.scss.hpf"
+    },
+    {
+      "name": "Models View List Ts",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-list/{model.hyphen}-list.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-list/model-list.component.ts.hpf"
+    },
+    {
+      "name": "Models View Edit Html",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-edit/{model.hyphen}-edit.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-edit/model-edit.component.html.hpf"
+    },
+    {
+      "name": "Models View Edit Ts",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-edit/{model.hyphen}-edit.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-edit/model-edit.component.ts.hpf"
+    },
+    {
+      "name": "Models View Create Html",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-create/{model.hyphen}-create.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-create/model-create.component.html.hpf"
+    },
+    {
+      "name": "Models View Create Ts",
+      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-create/{model.hyphen}-create.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/views/model-create/model-create.component.ts.hpf"
+    },
+    {
+      "name": "Models Model Html",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}/{model.hyphen}.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model/model.component.html.hpf"
+    },
+    {
+      "name": "Models Model Ts",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}/{model.hyphen}.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model/model.component.ts.hpf"
+    },
+    {
+      "name": "Models Model Details Html",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-details/{model.hyphen}-details.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-details/model-details.component.html.hpf"
+    },
+    {
+      "name": "Models Model Details Ts",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-details/{model.hyphen}-details.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-details/model-details.component.ts.hpf"
+    },
+    {
+      "name": "Models Model Filters Html",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-filters/{model.hyphen}-filters.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-filters/model-filters.component.html.hpf"
+    },
+    {
+      "name": "Models Model Filters Ts",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-filters/{model.hyphen}-filters.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-filters/model-filters.component.ts.hpf"
+    },
+    {
+      "name": "Models Model Form Html",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-form/{model.hyphen}-form.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-form/model-form.component.html.hpf"
+    },
+    {
+      "name": "Models Model Form Ts",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-form/{model.hyphen}-form.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-form/model-form.component.ts.hpf"
+    },
+    {
+      "name": "Models Model Table Html",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-table/{model.hyphen}-table.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-table/model-table.component.html.hpf"
+    },
+    {
+      "name": "Models Model Table Scss",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-table/{model.hyphen}-table.component.scss",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-table/model-table.component.scss.hpf"
+    },
+    {
+      "name": "Models Model Table Ts",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-table/{model.hyphen}-table.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-table/model-table.component.ts.hpf"
+    },
+    {
+      "name": "Models Model Select Html",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-select/{model.hyphen}-select.component.html",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-select/model-select.component.html.hpf"
+    },
+    {
+      "name": "Models Model Select Ts",
+      "path": "src/app/models/{model.hyphen}/{model.hyphen}-select/{model.hyphen}-select.component.ts",
+      "engine": "hpf",
+      "input": "one",
+      "contentPath": "hapify/src/app/models/model/model-select/model-select.component.ts.hpf"
+    }
+  ]
+}

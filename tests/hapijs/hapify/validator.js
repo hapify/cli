@@ -53,6 +53,15 @@ if (model.fields.filter((f) => f.multiple && f.type !== 'entity').length) {
     errors.push('Multiple fields can only be entities references');
 }
 
+// -----------------------------
+// Important fields
+if (model.fields.filter((f) => f.important && f.type !== 'entity').length) {
+    errors.push('Important fields can only be entities references');
+}
+if (model.fields.filter((f) => f.important && f.isPrivate).length) {
+    errors.push('Important fields cannot be private');
+}
+
 module.export = {
     errors,
     warnings,

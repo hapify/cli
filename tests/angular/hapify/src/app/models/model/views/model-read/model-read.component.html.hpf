@@ -1,0 +1,26 @@
+<hpf-<<M a-a>>-details
+    *ngIf="<<M aA>>"
+    [<<M aA>>]="<<M aA>>"
+    (onDelete)="onDelete()"></hpf-<<M a-a>>-details>
+<div *ngIf="!<<M aA>>" class="my-5">
+    <mat-spinner class="mx-auto"></mat-spinner>
+</div>
+<<? R>>
+<div class="container">
+    <<@ R m>>
+        <<@ m.f se f>>
+    <div class="row">
+        <div class="py-4 pb-5 col-12">
+            <div class="py-3 text-center">
+                <h4>{{ '<<M a_a>>_title_<<m a_a>>_as_<<f a_a>>' | translate }}</h4>
+            </div>
+            <hpf-<<m a-a>>-table
+                [searchParams]="<<m aA>>As<<f AA>>SearchParams"
+                (select)="onSelect<<m AA>>As<<f AA>>($event)">
+            </hpf-<<m a-a>>-table>
+        </div>
+    </div>
+        <<@>>
+    <<@>>
+</div>
+<<?>>

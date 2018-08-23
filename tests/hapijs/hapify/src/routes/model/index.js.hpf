@@ -1,7 +1,7 @@
 'use strict';
  
 /**
- * Export endpoints for {{=it.m.names.wordsLower}}.
+ * Export endpoints for <<M a>>.
  */
  
 module.exports = [
