@@ -30,16 +30,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const http_server_1 = __importDefault(require("http-server"));
-const Options_1 = require("./Options");
+const _1 = require("./");
+const WebSocketServer_1 = require("./WebSocketServer");
 const getPort = require('get-port');
 const { open } = require('openurl');
 let HttpServerService = class HttpServerService {
     /**
      * Constructor
      * @param {OptionsService} optionsService
+     * @param {WebSocketServerService} webSocketServerService
      */
-    constructor(optionsService) {
+    constructor(optionsService, webSocketServerService) {
         this.optionsService = optionsService;
+        this.webSocketServerService = webSocketServerService;
         /** @type {string} WebApp root */
         this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'html');
         /** @type {number} Start port number */
@@ -75,7 +78,13 @@ let HttpServerService = class HttpServerService {
                 cors: true,
                 gzip: true
             };
-            this.server = http_server_1.default.createServer(options);
+            // Create server
+            this.server = http_server_1.default.createServer(options).server; // wrong typing in @types/http-server
+            // Bind events
+            this.server.on('close', () => __awaiter(this, void 0, void 0, function* () {
+                yield this.webSocketServerService.stop();
+            }));
+            // Start listening
             this.serverStarted = yield new Promise((resolve, reject) => {
                 this.server.listen(this._port, this.optionsService.hostname(), (error) => {
                     if (error)
@@ -84,6 +93,7 @@ let HttpServerService = class HttpServerService {
                         resolve(true);
                 });
             });
+            yield this.webSocketServerService.serve(this.server);
         });
     }
     /**
@@ -96,6 +106,7 @@ let HttpServerService = class HttpServerService {
             if (!this.started())
                 return;
             this.serverStarted = false;
+            // Stop self server
             yield new Promise((resolve, reject) => {
                 this.server.close((error) => {
                     if (error)
@@ -152,7 +163,8 @@ let HttpServerService = class HttpServerService {
 };
 HttpServerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Options_1.OptionsService])
+    __metadata("design:paramtypes", [_1.OptionsService,
+        WebSocketServer_1.WebSocketServerService])
 ], HttpServerService);
 exports.HttpServerService = HttpServerService;
 //# sourceMappingURL=HttpServer.js.map

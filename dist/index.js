@@ -171,8 +171,8 @@ program
     .command('serve')
     .alias('s')
     .description('Start Hapify console for edition')
-    .option('-p, --port <n>', `the required port number (Default between ${http.minPort} and ${http.maxPort})`)
-    .option('-h, --hostname <hostname>', `the required hostname`, 'localhost')
+    .option('-p, --port <n>', `the required port number (default between ${http.minPort} and ${http.maxPort})`)
+    .option('-H, --hostname <hostname>', `the required hostname`, 'localhost')
     .option('--no-open', 'do not open a new tab in the browser')
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {

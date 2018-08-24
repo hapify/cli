@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import chalk from 'chalk';
-import { OptionsService } from './Options';
+import { OptionsService } from './';
 
 @Service()
 export class LoggerService {

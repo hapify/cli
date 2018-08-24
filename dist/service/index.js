@@ -8,6 +8,7 @@ __export(require("./Options"));
 __export(require("./Logger"));
 __export(require("./Writer"));
 __export(require("./HttpServer"));
+__export(require("./WebSocketServer"));
 __export(require("./generators/DotGenerator"));
 __export(require("./generators/JsGenerator"));
 __export(require("./generators/HpfGenerator"));

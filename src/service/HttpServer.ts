@@ -2,7 +2,8 @@ import { Service } from 'typedi';
 import * as Path from 'path';
 import * as http from 'http';
 import HttpServer from 'http-server';
-import { OptionsService } from './Options';
+import { OptionsService } from './';
+import { WebSocketServerService } from './WebSocketServer';
 const getPort: any = require('get-port');
 const { open } = require('openurl');
 
@@ -29,14 +30,16 @@ export class HttpServerService {
 
   /** @type {http.Server} The server instance */
   private server: http.Server;
-  /** @type {boolean} Demotes if the server is started */
+  /** @type {boolean} Denotes if the server is started */
   private serverStarted: boolean;
 
   /**
    * Constructor
    * @param {OptionsService} optionsService
+   * @param {WebSocketServerService} webSocketServerService
    */
-  constructor(private optionsService: OptionsService) {}
+  constructor(private optionsService: OptionsService,
+              private webSocketServerService: WebSocketServerService) {}
   /**
    * Starts the http server
    * Check if running before starting
@@ -55,13 +58,23 @@ export class HttpServerService {
       cors: true,
       gzip: true
     };
-    this.server = <http.Server>HttpServer.createServer(options);
+
+    // Create server
+    this.server = (<any>HttpServer.createServer(options)).server; // wrong typing in @types/http-server
+
+    // Bind events
+    this.server.on('close', async () => {
+      await this.webSocketServerService.stop();
+    });
+
+    // Start listening
     this.serverStarted = await <Promise<boolean>>new Promise((resolve, reject) => {
       this.server.listen(this._port, this.optionsService.hostname(), (error: Error) => {
         if (error) reject(error);
         else resolve(true);
       });
     });
+    await this.webSocketServerService.serve(this.server);
   }
   /**
    * Stops the http server
@@ -71,6 +84,7 @@ export class HttpServerService {
   public async stop(): Promise<void> {
     if (!this.started()) return;
     this.serverStarted = false;
+    // Stop self server
     await new Promise((resolve, reject) => {
       this.server.close((error: Error) => {
         if (error) reject(error);

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Service } from 'typedi';
-import { SentenceFormat } from '../enum/SentenceFormat';
+import { SentenceFormat } from '../enum';
 import { IFormattedSentences } from '../interface';
 
 @Service()

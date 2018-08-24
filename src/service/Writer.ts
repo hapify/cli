@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import * as Fs from 'fs';
 import * as Path from 'path';
 import JSZip from 'jszip';
-import { IGeneratorResult } from '../interface/IGeneratorResult';
+import { IGeneratorResult } from '../interface';
 
 @Service()
 export class WriterService {
