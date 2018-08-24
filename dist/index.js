@@ -173,12 +173,17 @@ program
     .description('Start Hapify console for edition')
     .option('-p, --port <n>', `the required port number (Default between ${http.minPort} and ${http.maxPort})`)
     .option('-h, --hostname <hostname>', `the required hostname`, 'localhost')
+    .option('--no-open', 'do not open a new tab in the browser')
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
         options.setCommand(cmd);
         // ---------------------------------
         // Action starts
         yield http.serve();
+        logger.info(`Server is running at: ${cPath(http.url())}`);
+        if (options.open()) {
+            http.open();
+        }
         // Action Ends
         // ---------------------------------
         logger.time();

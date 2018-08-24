@@ -1,10 +1,10 @@
 import { Service } from 'typedi';
 import * as Path from 'path';
 import * as http from 'http';
-import * as util from 'util';
 import HttpServer from 'http-server';
 import { OptionsService } from './Options';
 const getPort: any = require('get-port');
+const { open } = require('openurl');
 
 @Service()
 export class HttpServerService {
@@ -29,6 +29,8 @@ export class HttpServerService {
 
   /** @type {http.Server} The server instance */
   private server: http.Server;
+  /** @type {boolean} Demotes if the server is started */
+  private serverStarted: boolean;
 
   /**
    * Constructor
@@ -37,9 +39,11 @@ export class HttpServerService {
   constructor(private optionsService: OptionsService) {}
   /**
    * Starts the http server
+   * Check if running before starting
    * @return {Promise<void>}
    */
   public async serve(): Promise<void> {
+    if (this.started()) return;
     // Choose port
     this._port = this.optionsService.port() ?
       this.optionsService.port() : await this.findAvailablePort();
@@ -52,7 +56,12 @@ export class HttpServerService {
       gzip: true
     };
     this.server = <http.Server>HttpServer.createServer(options);
-    this.server.listen(this._port, this.optionsService.hostname());
+    this.serverStarted = await <Promise<boolean>>new Promise((resolve, reject) => {
+      this.server.listen(this._port, this.optionsService.hostname(), (error: Error) => {
+        if (error) reject(error);
+        else resolve(true);
+      });
+    });
   }
   /**
    * Stops the http server
@@ -60,16 +69,39 @@ export class HttpServerService {
    * @return {Promise<void>}
    */
   public async stop(): Promise<void> {
-    if (this.started()) {
-      await util.promisify(this.server.close)();
-    }
+    if (!this.started()) return;
+    this.serverStarted = false;
+    await new Promise((resolve, reject) => {
+      this.server.close((error: Error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+    });
+    this.server = null;
   }
   /**
    * Denotes if the HTTP server is running
    * @return {boolean}
    */
   public started(): boolean {
-    return this.server && this.server.listening;
+    return this.server && this.serverStarted;
+  }
+  /**
+   * Open the browser for the current server
+   * Do not open if not started
+   * @return {void}
+   */
+  public open(): void {
+    const url = this.url();
+    if (url) { open(url); }
+  }
+  /**
+   * Get the URL of the current session
+   * Returns null if not started
+   * @return {string|null}
+   */
+  public url(): string|null {
+    return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
   }
   /**
    * Test ports and returns the first one available

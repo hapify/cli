@@ -41,39 +41,16 @@ export class OptionsService {
     }
     return process.cwd();
   }
-  /**
-   * Denotes if the debug mode is enabled
-   * @return {boolean}
-   */
-  debug(): boolean {
-    return !!this.program.debug;
-  }
-  /**
-   * Get the depth for recursive search
-   * @return {number}
-   */
-  depth(): number {
-    return this.command.depth;
-  }
-  /**
-   * Get the output file path
-   * @return {string}
-   */
-  output(): string {
-    return this.command.output;
-  }
-  /**
-   * Get the required http port
-   * @return {number}
-   */
-  port(): number {
-    return this.command.port;
-  }
-  /**
-   * Get the required http hostname
-   * @return {number}
-   */
-  hostname(): number {
-    return this.command.hostname;
-  }
+  /** @return {boolean} Denotes if the debug mode is enabled */
+  debug(): boolean { return !!this.program.debug; }
+  /** @return {number} Get the depth for recursive search */
+  depth(): number { return this.command.depth; }
+  /** @return {string} Get the output file path */
+  output(): string { return this.command.output; }
+  /** @return {number} Get the required http port */
+  port(): number { return this.command.port; }
+  /** @return {number} Get the required http hostname */
+  hostname(): number { return this.command.hostname; }
+  /** @return {boolean} Denotes if a new tab should be opened */
+  open(): boolean { return !!this.command.open; }
 }

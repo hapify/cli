@@ -29,10 +29,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
-const util = __importStar(require("util"));
 const http_server_1 = __importDefault(require("http-server"));
 const Options_1 = require("./Options");
 const getPort = require('get-port');
+const { open } = require('openurl');
 let HttpServerService = class HttpServerService {
     /**
      * Constructor
@@ -57,10 +57,13 @@ let HttpServerService = class HttpServerService {
     get port() { return this._port; }
     /**
      * Starts the http server
+     * Check if running before starting
      * @return {Promise<void>}
      */
     serve() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.started())
+                return;
             // Choose port
             this._port = this.optionsService.port() ?
                 this.optionsService.port() : yield this.findAvailablePort();
@@ -73,7 +76,14 @@ let HttpServerService = class HttpServerService {
                 gzip: true
             };
             this.server = http_server_1.default.createServer(options);
-            this.server.listen(this._port, this.optionsService.hostname());
+            this.serverStarted = yield new Promise((resolve, reject) => {
+                this.server.listen(this._port, this.optionsService.hostname(), (error) => {
+                    if (error)
+                        reject(error);
+                    else
+                        resolve(true);
+                });
+            });
         });
     }
     /**
@@ -83,9 +93,18 @@ let HttpServerService = class HttpServerService {
      */
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.started()) {
-                yield util.promisify(this.server.close)();
-            }
+            if (!this.started())
+                return;
+            this.serverStarted = false;
+            yield new Promise((resolve, reject) => {
+                this.server.close((error) => {
+                    if (error)
+                        reject(error);
+                    else
+                        resolve();
+                });
+            });
+            this.server = null;
         });
     }
     /**
@@ -93,7 +112,26 @@ let HttpServerService = class HttpServerService {
      * @return {boolean}
      */
     started() {
-        return this.server && this.server.listening;
+        return this.server && this.serverStarted;
+    }
+    /**
+     * Open the browser for the current server
+     * Do not open if not started
+     * @return {void}
+     */
+    open() {
+        const url = this.url();
+        if (url) {
+            open(url);
+        }
+    }
+    /**
+     * Get the URL of the current session
+     * Returns null if not started
+     * @return {string|null}
+     */
+    url() {
+        return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
     }
     /**
      * Test ports and returns the first one available
