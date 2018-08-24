@@ -29,6 +29,7 @@ export class LoggerService {
    */
   raw(message: string): LoggerService {
     console.log(message);
+    return this;
   }
   /**
    * Display a success message

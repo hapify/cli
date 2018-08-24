@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
-import { GeneratorService, OptionsService, LoggerService, WriterService } from './service';
+import { GeneratorService, OptionsService, LoggerService, WriterService, HttpServerService } from './service';
 
 // ############################################
 // Get services
@@ -15,6 +15,7 @@ const generator = Container.get(GeneratorService);
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
 const writer = Container.get(WriterService);
+const http = Container.get(HttpServerService);
 
 // ############################################
 // Common methods
@@ -150,6 +151,23 @@ program
     logger.time(); } catch (error) { logger.handle(error); }
   });
 
+program
+  .command('serve')
+  .alias('s')
+  .description('Start Hapify console for edition')
+  .option('-p, --port <n>', `the required port number (Default between ${http.minPort} and ${http.maxPort})`)
+  .option('-h, --hostname <hostname>', `the required hostname`, 'localhost')
+  .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Action starts
+    await http.serve();
+    // Action Ends
+    // ---------------------------------
+
+    logger.time(); } catch (error) { logger.handle(error); }
+  });
+
 // ############################################
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
@@ -157,6 +175,12 @@ if (!process.argv.slice(2).length) {
   program.outputHelp();
   process.exit();
 }
+
+// ############################################
+// Init services
+process.on('exit', (code) => {
+  http.stop();
+});
 
 // ############################################
 // Init services

@@ -62,4 +62,18 @@ export class OptionsService {
   output(): string {
     return this.command.output;
   }
+  /**
+   * Get the required http port
+   * @return {number}
+   */
+  port(): number {
+    return this.command.port;
+  }
+  /**
+   * Get the required http hostname
+   * @return {number}
+   */
+  hostname(): number {
+    return this.command.hostname;
+  }
 }

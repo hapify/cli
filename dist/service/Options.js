@@ -70,6 +70,20 @@ let OptionsService = class OptionsService {
     output() {
         return this.command.output;
     }
+    /**
+     * Get the required http port
+     * @return {number}
+     */
+    port() {
+        return this.command.port;
+    }
+    /**
+     * Get the required http hostname
+     * @return {number}
+     */
+    hostname() {
+        return this.command.hostname;
+    }
 };
 OptionsService = __decorate([
     typedi_1.Service(),

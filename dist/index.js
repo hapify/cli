@@ -32,6 +32,7 @@ const generator = typedi_1.Container.get(service_1.GeneratorService);
 const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
 const writer = typedi_1.Container.get(service_1.WriterService);
+const http = typedi_1.Container.get(service_1.HttpServerService);
 // ############################################
 // Common methods
 const logChannel = (channel) => {
@@ -166,6 +167,26 @@ program
         logger.handle(error);
     }
 }));
+program
+    .command('serve')
+    .alias('s')
+    .description('Start Hapify console for edition')
+    .option('-p, --port <n>', `the required port number (Default between ${http.minPort} and ${http.maxPort})`)
+    .option('-h, --hostname <hostname>', `the required hostname`, 'localhost')
+    .action((cmd) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        yield http.serve();
+        // Action Ends
+        // ---------------------------------
+        logger.time();
+    }
+    catch (error) {
+        logger.handle(error);
+    }
+}));
 // ############################################
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
@@ -173,6 +194,11 @@ if (!process.argv.slice(2).length) {
     program.outputHelp();
     process.exit();
 }
+// ############################################
+// Init services
+process.on('exit', (code) => {
+    http.stop();
+});
 // ############################################
 // Init services
 options.setProgram(program);

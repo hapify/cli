@@ -41,6 +41,7 @@ let LoggerService = class LoggerService {
      */
     raw(message) {
         console.log(message);
+        return this;
     }
     /**
      * Display a success message
