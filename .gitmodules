@@ -1,3 +1,6 @@
 [submodule "packages/hapify-syntax"]
 	path = packages/hapify-syntax
 	url = git@bitbucket.org:tractrs/hapify-syntax.git
+[submodule "packages/hapify-cli-console"]
+	path = packages/hapify-cli-console
+	url = git@bitbucket.org:tractrs/hapify-cli-console.git
