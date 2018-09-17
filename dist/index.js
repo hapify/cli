@@ -81,7 +81,7 @@ program
             const m = yield c[0].modelsCollection.list();
             const mm = m.length > 1;
             let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${cPath(modelsPath)}`;
-            message += `\nThe model${mm ? 's are' : ' is'}: ${m.map(m => cModel(m.name)).join(', ')}`;
+            message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map(m => cModel(m.name)).join('\n- ')}`;
             logger.newLine().info(message);
         }
         // Action Ends
