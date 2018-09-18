@@ -5,6 +5,9 @@ import * as ws from 'ws';
 import * as http from 'http';
 import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
+import { AddressInfo } from 'ws';
+import { URL } from 'url';
+import { LoggerService } from './';
 
 interface TokenData { name: string; }
 
@@ -28,6 +31,12 @@ export class WebSocketServerService {
   private tokenExpires: number = 24 * 60 * 60 * 1000; // 1 day;
 
   /**
+   * Constructor
+   * @param {LoggerService} loggerService
+   */
+  constructor(private loggerService: LoggerService) {}
+
+  /**
    * Starts the http server
    * Check if running before starting
    * Every connection is checked against a JWT
@@ -41,13 +50,21 @@ export class WebSocketServerService {
       server: httpServer,
       path: this.baseUri,
       verifyClient: (info, cb) => {
-        const token = <string>info.req.headers.token;
-        if (!token) { cb(false, 401, 'Unauthorized'); }
-        else {
-          Jwt.verify(token, this.randomSecret, (error: Error, decoded: TokenData) => {
-            if (error || decoded.name !== this.randomName) { cb(false, 401, 'Unauthorized'); }
-            else { cb(true); }
-          });
+        try {
+          // Use fake hostname to parse url parameters
+          const url = new URL(`http://localhost${info.req.url}`);
+          const token = url.searchParams.get('token');
+          if (!token) { cb(false, 401, 'Unauthorized'); }
+          else {
+            Jwt.verify(token, this.randomSecret, (error: Error, decoded: TokenData) => {
+              if (error || decoded.name !== this.randomName) { cb(false, 401, 'Unauthorized'); }
+              else { cb(true); }
+            });
+          }
+        }
+        catch (error) {
+          this.loggerService.error(error.message);
+          cb(false, 500, 'InternalError');
         }
       }
     };
@@ -85,8 +102,11 @@ export class WebSocketServerService {
    * @return {Promise<void>}
    */
   private async createToken(): Promise<void> {
+    const wsAddress = <AddressInfo>this.server.address();
     const token = Jwt.sign({ name: this.randomName }, this.randomSecret, { expiresIn : this.tokenExpires });
-    const data = JSON.stringify({ token }, null, 2);
+    const data = JSON.stringify({
+      url: `ws://${wsAddress.address}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`
+    }, null, 2);
     Fs.writeFileSync(this.tokenPath, data, 'utf8');
   }
   /**

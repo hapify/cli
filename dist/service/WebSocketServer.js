@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -27,8 +30,15 @@ const Fs = __importStar(require("fs"));
 const ws = __importStar(require("ws"));
 const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));
+const url_1 = require("url");
+const _1 = require("./");
 let WebSocketServerService = class WebSocketServerService {
-    constructor() {
+    /**
+     * Constructor
+     * @param {LoggerService} loggerService
+     */
+    constructor(loggerService) {
+        this.loggerService = loggerService;
         /** @type {string} Websocket endpoint */
         this.baseUri = '/websocket';
         /** @type {string} The path to save the token */
@@ -56,19 +66,27 @@ let WebSocketServerService = class WebSocketServerService {
                 server: httpServer,
                 path: this.baseUri,
                 verifyClient: (info, cb) => {
-                    const token = info.req.headers.token;
-                    if (!token) {
-                        cb(false, 401, 'Unauthorized');
+                    try {
+                        // Use fake hostname to parse url parameters
+                        const url = new url_1.URL(`http://localhost${info.req.url}`);
+                        const token = url.searchParams.get('token');
+                        if (!token) {
+                            cb(false, 401, 'Unauthorized');
+                        }
+                        else {
+                            Jwt.verify(token, this.randomSecret, (error, decoded) => {
+                                if (error || decoded.name !== this.randomName) {
+                                    cb(false, 401, 'Unauthorized');
+                                }
+                                else {
+                                    cb(true);
+                                }
+                            });
+                        }
                     }
-                    else {
-                        Jwt.verify(token, this.randomSecret, (error, decoded) => {
-                            if (error || decoded.name !== this.randomName) {
-                                cb(false, 401, 'Unauthorized');
-                            }
-                            else {
-                                cb(true);
-                            }
-                        });
+                    catch (error) {
+                        this.loggerService.error(error.message);
+                        cb(false, 500, 'InternalError');
                     }
                 }
             };
@@ -112,8 +130,11 @@ let WebSocketServerService = class WebSocketServerService {
      */
     createToken() {
         return __awaiter(this, void 0, void 0, function* () {
+            const wsAddress = this.server.address();
             const token = Jwt.sign({ name: this.randomName }, this.randomSecret, { expiresIn: this.tokenExpires });
-            const data = JSON.stringify({ token }, null, 2);
+            const data = JSON.stringify({
+                url: `ws://${wsAddress.address}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`
+            }, null, 2);
             Fs.writeFileSync(this.tokenPath, data, 'utf8');
         });
     }
@@ -130,7 +151,8 @@ let WebSocketServerService = class WebSocketServerService {
     }
 };
 WebSocketServerService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [_1.LoggerService])
 ], WebSocketServerService);
 exports.WebSocketServerService = WebSocketServerService;
 //# sourceMappingURL=WebSocketServer.js.map
