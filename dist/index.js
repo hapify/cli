@@ -33,6 +33,7 @@ const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
 const writer = typedi_1.Container.get(service_1.WriterService);
 const http = typedi_1.Container.get(service_1.HttpServerService);
+const channelsService = typedi_1.Container.get(service_1.ChannelsService);
 // ############################################
 // Common methods
 const logChannel = (channel) => {
@@ -58,12 +59,8 @@ program
         options.setCommand(cmd);
         // ---------------------------------
         // Action starts
-        const channels = class_1.Channel.sniff(options.dir(), options.depth());
-        if (channels.length === 0) {
-            throw new Error('No channel found');
-        }
+        const channels = yield channelsService.channels();
         for (const channel of channels) {
-            yield channel.load();
             logChannel(channel);
         }
         // Group channels by models collections
@@ -102,12 +99,8 @@ program
         options.setCommand(cmd);
         // ---------------------------------
         // Action starts
-        const channels = class_1.Channel.sniff(options.dir(), options.depth());
-        if (channels.length === 0) {
-            throw new Error('No channel found');
-        }
+        const channels = yield channelsService.channels();
         for (const channel of channels) {
-            yield channel.load();
             logChannel(channel);
         }
         for (const channel of channels) {
@@ -184,6 +177,7 @@ program
         if (options.open()) {
             http.open();
         }
+        // Set channels to webscoket server
         // Action Ends
         // ---------------------------------
         logger.time();

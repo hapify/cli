@@ -1,16 +1,15 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
-import { OptionsService } from '../';
-import { Channel } from '../../class';
+import { ChannelsService } from '../';
 
 @Service()
 export class GetModelsHandlerService implements IWebSockerHandler {
 
   /**
    * Constructor
-   * @param optionsService
+   * @param channelsService
    */
-  constructor(private optionsService: OptionsService) {
+  constructor(private channelsService: ChannelsService) {
   }
 
   /** @inheritDoc */
@@ -20,11 +19,6 @@ export class GetModelsHandlerService implements IWebSockerHandler {
 
   /** @inheritDoc */
   async handle(message: IWebSocketMessage): Promise<any> {
-    const channels = Channel.sniff(this.optionsService.dir(), this.optionsService.depth());
-    if (channels.length === 0) {
-      return null;
-    }
-    await channels[0].load();
-    return channels[0].modelsCollection.toObject();
+    return (await this.channelsService.modelsCollection()).toObject();
   }
 }

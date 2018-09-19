@@ -23,7 +23,7 @@ const Path = __importStar(require("path"));
 const _1 = require("./");
 const enum_1 = require("../enum");
 const md5_1 = __importDefault(require("md5"));
-class Channel {
+class ChannelsCollections {
     /**
      * Constructor
      * @param {string} path
@@ -39,7 +39,7 @@ class Channel {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             // Copy config to instance
-            const path = Path.join(this.path, Channel.configFile);
+            const path = Path.join(this.path, _1.Channel.configFile);
             this.config = JSON.parse(Fs.readFileSync(path, 'utf8'));
             // Load each content file
             this.templates = [];
@@ -75,7 +75,7 @@ class Channel {
             yield this.validator.save();
             this.config.validatorPath = this.validator.path;
             // Write file
-            const path = `${this.path}/${Channel.configFile}`;
+            const path = `${this.path}/${_1.Channel.configFile}`;
             const data = JSON.stringify(this.config, null, 2);
             Fs.writeFileSync(path, data, 'utf8');
         });
@@ -104,7 +104,7 @@ class Channel {
      * @throws {Error}
      */
     validate() {
-        const path = Path.join(this.path, Channel.configFile);
+        const path = Path.join(this.path, _1.Channel.configFile);
         if (!Fs.existsSync(path)) {
             throw new Error(`Channel config's path ${path} does not exists.`);
         }
@@ -144,25 +144,16 @@ class Channel {
             Fs.readdirSync(path)
                 .map((dir) => Path.join(path, dir))
                 .filter((subPath) => Fs.statSync(subPath).isDirectory())
-                .map((subPath) => Channel.sniff(subPath, depth - 1, from))
+                .map((subPath) => _1.Channel.sniff(subPath, depth - 1, from))
                 .reduce((flatten, channels) => flatten.concat(channels), []);
         // Get channel of current directory if exists
-        const configPath = Path.join(path, Channel.configFile);
+        const configPath = Path.join(path, _1.Channel.configFile);
         if (Fs.existsSync(configPath)) {
             const name = Path.relative(Path.dirname(from), path);
-            const channel = new Channel(path, name);
+            const channel = new _1.Channel(path, name);
             channels.push(channel);
         }
         return channels;
-    }
-    /**
-     * Denotes if the config file exists
-     * @param {string} path
-     * @return {boolean}
-     */
-    static configExists(path) {
-        const configPath = Path.join(path, Channel.configFile);
-        return Fs.existsSync(configPath);
     }
     /**
      * Init a Hapify structure within a directory
@@ -174,12 +165,12 @@ class Channel {
             if (!Fs.existsSync(path)) {
                 throw new Error(`Channel's path ${path} does not exists.`);
             }
-            const configPath = Path.join(path, Channel.configFile);
+            const configPath = Path.join(path, _1.Channel.configFile);
             if (Fs.existsSync(configPath)) {
                 throw new Error(`A channel already exists in this directory.`);
             }
             const config = {
-                validatorPath: `${Channel.defaultFolder}/validator.js`,
+                validatorPath: `${_1.Channel.defaultFolder}/validator.js`,
                 modelsPath: '../models.json',
                 templates: [
                     {
@@ -187,23 +178,23 @@ class Channel {
                         path: 'models/{model.hyphen}/hello.js',
                         engine: enum_1.TemplateEngine.Hpf,
                         input: enum_1.TemplateInput.One,
-                        contentPath: `${Channel.defaultFolder}/model/hello.js.hpf`
+                        contentPath: `${_1.Channel.defaultFolder}/model/hello.js.hpf`
                     }
                 ]
             };
             // Create dir
-            Fs.mkdirSync(Path.join(path, Channel.defaultFolder));
-            Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'model'));
+            Fs.mkdirSync(Path.join(path, _1.Channel.defaultFolder));
+            Fs.mkdirSync(Path.join(path, _1.Channel.defaultFolder, 'model'));
             // Dump config file
             const configData = JSON.stringify(config, null, 2);
             Fs.writeFileSync(configPath, configData, 'utf8');
             // Create template file
             const templateContent = `// Hello <<M A>>`;
-            const templatePath = Path.join(path, Channel.defaultFolder, 'model', 'hello.js.hpf');
+            const templatePath = Path.join(path, _1.Channel.defaultFolder, 'model', 'hello.js.hpf');
             Fs.writeFileSync(templatePath, templateContent, 'utf8');
             // Create validator file
             const validatorContent = `// Models validation script`;
-            const validatorPath = Path.join(path, Channel.defaultFolder, 'validator.js');
+            const validatorPath = Path.join(path, _1.Channel.defaultFolder, 'validator.js');
             Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
         });
     }
@@ -227,9 +218,5 @@ class Channel {
         };
     }
 }
-/** @type {string} */
-Channel.defaultFolder = 'hapify';
-/** @type {string} */
-Channel.configFile = 'hapify.json';
-exports.Channel = Channel;
-//# sourceMappingURL=Channel.js.map
+exports.ChannelsCollections = ChannelsCollections;
+//# sourceMappingURL=ChannelsCollection.js.map

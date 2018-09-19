@@ -167,6 +167,15 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
     return channels;
   }
   /**
+   * Denotes if the config file exists
+   * @param {string} path
+   * @return {boolean}
+   */
+  public static configExists(path: string): boolean {
+    const configPath = Path.join(path, Channel.configFile);
+    return Fs.existsSync(configPath);
+  }
+  /**
    * Init a Hapify structure within a directory
    * @param {string} path
    * @return {Channel[]}

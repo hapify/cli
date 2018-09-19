@@ -4,6 +4,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./String"));
+__export(require("./Channels"));
 __export(require("./Options"));
 __export(require("./Logger"));
 __export(require("./Writer"));

@@ -1,5 +1,6 @@
 
 export * from './String';
+export * from './Channels';
 export * from './Options';
 export * from './Logger';
 export * from './Writer';

@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
-import { GeneratorService, OptionsService, LoggerService, WriterService, HttpServerService } from './service';
+import { GeneratorService, OptionsService, LoggerService, WriterService, HttpServerService, ChannelsService } from './service';
 
 // ############################################
 // Get services
@@ -16,6 +16,7 @@ const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
 const writer = Container.get(WriterService);
 const http = Container.get(HttpServerService);
+const channelsService = Container.get(ChannelsService);
 
 // ############################################
 // Common methods
@@ -43,14 +44,9 @@ program
 
     // ---------------------------------
     // Action starts
-    const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
-
-    if (channels.length === 0) {
-      throw new Error('No channel found');
-    }
+    const channels = await channelsService.channels();
 
     for (const channel of channels) {
-      await channel.load();
       logChannel(channel);
     }
 
@@ -89,14 +85,9 @@ program
 
     // ---------------------------------
     // Action starts
-    const channels: Channel[] = Channel.sniff(options.dir(), options.depth());
-
-    if (channels.length === 0) {
-      throw new Error('No channel found');
-    }
+    const channels = await channelsService.channels();
 
     for (const channel of channels) {
-      await channel.load();
       logChannel(channel);
     }
 
@@ -165,6 +156,8 @@ program
     await http.serve();
     logger.info(`Server is running at: ${cPath(http.url())}`);
     if (options.open()) { http.open(); }
+    // Set channels to webscoket server
+    
     // Action Ends
     // ---------------------------------
 

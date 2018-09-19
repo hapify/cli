@@ -20,14 +20,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
-const class_1 = require("../../class");
 let GetModelsHandlerService = class GetModelsHandlerService {
     /**
      * Constructor
-     * @param optionsService
+     * @param channelsService
      */
-    constructor(optionsService) {
-        this.optionsService = optionsService;
+    constructor(channelsService) {
+        this.channelsService = channelsService;
     }
     /** @inheritDoc */
     canHandle(message) {
@@ -36,18 +35,13 @@ let GetModelsHandlerService = class GetModelsHandlerService {
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const channels = class_1.Channel.sniff(this.optionsService.dir(), this.optionsService.depth());
-            if (channels.length === 0) {
-                return null;
-            }
-            yield channels[0].load();
-            return channels[0].modelsCollection.toObject();
+            return (yield this.channelsService.modelsCollection()).toObject();
         });
     }
 };
 GetModelsHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [__1.OptionsService])
+    __metadata("design:paramtypes", [__1.ChannelsService])
 ], GetModelsHandlerService);
 exports.GetModelsHandlerService = GetModelsHandlerService;
 //# sourceMappingURL=GetModelsHandler.js.map
