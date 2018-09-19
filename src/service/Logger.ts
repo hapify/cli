@@ -50,6 +50,17 @@ export class LoggerService {
     return this;
   }
   /**
+   * Display an info if in debug mode
+   * @param {string} message
+   * @return {LoggerService}
+   */
+  debug(message: string): LoggerService {
+    if (this.optionsService.debug()) {
+      console.log(`${chalk.blueBright('•')} ${message}`);
+    }
+    return this;
+  }
+  /**
    * Display an error
    * @param {string} message
    */

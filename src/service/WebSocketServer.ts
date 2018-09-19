@@ -7,7 +7,9 @@ import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
-import { LoggerService } from './';
+import { GetModelsHandlerService, LoggerService } from './';
+import { IWebSockerHandler, IWebSocketMessage } from '../interface';
+import { Container } from 'typedi';
 
 interface TokenData { name: string; }
 
@@ -22,19 +24,23 @@ export class WebSocketServerService {
   private serverStarted: boolean;
 
   /** @type {string} The path to save the token */
-  private tokenPath: string = Path.join(Path.dirname(require.main.filename), '..', 'html', 'token.json');
+  private wsInfoPath: string = Path.join(Path.dirname(require.main.filename), '..', 'html', 'ws.json');
   /** @type {string} Random name to generate token */
   private randomName: string = RandomString.generate({ length: 24 });
   /** @type {string} Random secret to generate token */
   private randomSecret: string = RandomString.generate({ length: 48 });
   /** @type {string} Random secret to generate token */
   private tokenExpires: number = 24 * 60 * 60 * 1000; // 1 day;
+  /** @type {IWebSockerHandler[]} Messages handlers */
+  private handlers: IWebSockerHandler[] = [];
 
   /**
    * Constructor
    * @param {LoggerService} loggerService
    */
-  constructor(private loggerService: LoggerService) {}
+  constructor(private loggerService: LoggerService) {
+    this.addHandler(Container.get(GetModelsHandlerService));
+  }
 
   /**
    * Starts the http server
@@ -69,6 +75,33 @@ export class WebSocketServerService {
       }
     };
     this.server = new ws.Server(options);
+    this.server.on('connection', (ws: any) => {
+      this.loggerService.debug(`Did open new websocket connection`);
+      ws.on('message', async (message: string) => {
+        try {
+          const decoded = <IWebSocketMessage>JSON.parse(message);
+          // Log for debug
+          this.loggerService.debug(`Did receive websocket message: ${decoded.id}`);
+          // Dispatch message to the right handler
+          for (const handler of this.handlers) {
+            if (handler.canHandle(decoded)) {
+              const ret = await handler.handle(decoded);
+              // If result, return it to the client
+              if (typeof ret !== 'undefined' && ret !== null) {
+                ws.send(JSON.stringify({
+                  id: decoded.id,
+                  tag: decoded.tag,
+                  data: ret
+                }));
+              }
+              break;
+            }
+          }
+        } catch (error) {
+          this.loggerService.error(error.message);
+        }
+      });
+    });
     this.serverStarted = true;
     await this.createToken();
   }
@@ -98,6 +131,14 @@ export class WebSocketServerService {
   }
 
   /**
+   * Add a new handler
+   * @param {IWebSockerHandler} handler
+   */
+  public addHandler(handler: IWebSockerHandler) {
+    this.handlers.push(handler);
+  }
+
+  /**
    * Create and store token
    * @return {Promise<void>}
    */
@@ -107,15 +148,15 @@ export class WebSocketServerService {
     const data = JSON.stringify({
       url: `ws://${wsAddress.address}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`
     }, null, 2);
-    Fs.writeFileSync(this.tokenPath, data, 'utf8');
+    Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
   }
   /**
    * Remove the token
    * @return {Promise<void>}
    */
   private async deleteToken(): Promise<void> {
-    if (Fs.existsSync(this.tokenPath)) {
-      Fs.unlinkSync(this.tokenPath);
+    if (Fs.existsSync(this.wsInfoPath)) {
+      Fs.unlinkSync(this.wsInfoPath);
     }
   }
 }

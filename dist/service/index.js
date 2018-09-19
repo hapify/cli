@@ -13,4 +13,5 @@ __export(require("./generators/DotGenerator"));
 __export(require("./generators/JsGenerator"));
 __export(require("./generators/HpfGenerator"));
 __export(require("./generators/Generator"));
+__export(require("./websocket-handlers/GetModelsHandler"));
 //# sourceMappingURL=index.js.map

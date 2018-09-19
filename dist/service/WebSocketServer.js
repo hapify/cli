@@ -32,6 +32,7 @@ const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));
 const url_1 = require("url");
 const _1 = require("./");
+const typedi_2 = require("typedi");
 let WebSocketServerService = class WebSocketServerService {
     /**
      * Constructor
@@ -42,13 +43,16 @@ let WebSocketServerService = class WebSocketServerService {
         /** @type {string} Websocket endpoint */
         this.baseUri = '/websocket';
         /** @type {string} The path to save the token */
-        this.tokenPath = Path.join(Path.dirname(require.main.filename), '..', 'html', 'token.json');
+        this.wsInfoPath = Path.join(Path.dirname(require.main.filename), '..', 'html', 'ws.json');
         /** @type {string} Random name to generate token */
         this.randomName = RandomString.generate({ length: 24 });
         /** @type {string} Random secret to generate token */
         this.randomSecret = RandomString.generate({ length: 48 });
         /** @type {string} Random secret to generate token */
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
+        /** @type {IWebSockerHandler[]} Messages handlers */
+        this.handlers = [];
+        this.addHandler(typedi_2.Container.get(_1.GetModelsHandlerService));
     }
     /**
      * Starts the http server
@@ -91,6 +95,34 @@ let WebSocketServerService = class WebSocketServerService {
                 }
             };
             this.server = new ws.Server(options);
+            this.server.on('connection', (ws) => {
+                this.loggerService.debug(`Did open new websocket connection`);
+                ws.on('message', (message) => __awaiter(this, void 0, void 0, function* () {
+                    try {
+                        const decoded = JSON.parse(message);
+                        // Log for debug
+                        this.loggerService.debug(`Did receive websocket message: ${decoded.id}`);
+                        // Dispatch message to the right handler
+                        for (const handler of this.handlers) {
+                            if (handler.canHandle(decoded)) {
+                                const ret = yield handler.handle(decoded);
+                                // If result, return it to the client
+                                if (typeof ret !== 'undefined' && ret !== null) {
+                                    ws.send(JSON.stringify({
+                                        id: decoded.id,
+                                        tag: decoded.tag,
+                                        data: ret
+                                    }));
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    catch (error) {
+                        this.loggerService.error(error.message);
+                    }
+                }));
+            });
             this.serverStarted = true;
             yield this.createToken();
         });
@@ -125,6 +157,13 @@ let WebSocketServerService = class WebSocketServerService {
         return this.server && this.serverStarted;
     }
     /**
+     * Add a new handler
+     * @param {IWebSockerHandler} handler
+     */
+    addHandler(handler) {
+        this.handlers.push(handler);
+    }
+    /**
      * Create and store token
      * @return {Promise<void>}
      */
@@ -135,7 +174,7 @@ let WebSocketServerService = class WebSocketServerService {
             const data = JSON.stringify({
                 url: `ws://${wsAddress.address}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`
             }, null, 2);
-            Fs.writeFileSync(this.tokenPath, data, 'utf8');
+            Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
         });
     }
     /**
@@ -144,8 +183,8 @@ let WebSocketServerService = class WebSocketServerService {
      */
     deleteToken() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (Fs.existsSync(this.tokenPath)) {
-                Fs.unlinkSync(this.tokenPath);
+            if (Fs.existsSync(this.wsInfoPath)) {
+                Fs.unlinkSync(this.wsInfoPath);
             }
         });
     }

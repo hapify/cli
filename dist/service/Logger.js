@@ -62,6 +62,17 @@ let LoggerService = class LoggerService {
         return this;
     }
     /**
+     * Display an info if in debug mode
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    debug(message) {
+        if (this.optionsService.debug()) {
+            console.log(`${chalk_1.default.blueBright('•')} ${message}`);
+        }
+        return this;
+    }
+    /**
      * Display an error
      * @param {string} message
      */

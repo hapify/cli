@@ -10,3 +10,5 @@ export * from './generators/DotGenerator';
 export * from './generators/JsGenerator';
 export * from './generators/HpfGenerator';
 export * from './generators/Generator';
+
+export * from './websocket-handlers/GetModelsHandler';
