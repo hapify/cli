@@ -96,12 +96,13 @@ let WebSocketServerService = class WebSocketServerService {
             };
             this.server = new ws.Server(options);
             this.server.on('connection', (ws) => {
-                this.loggerService.debug(`Did open new websocket connection`);
+                const id = this.makeId();
+                this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
                 ws.on('message', (message) => __awaiter(this, void 0, void 0, function* () {
                     try {
                         const decoded = JSON.parse(message);
                         // Log for debug
-                        this.loggerService.debug(`Did receive websocket message: ${decoded.id}`);
+                        this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
                         // Dispatch message to the right handler
                         let handled = false;
                         for (const handler of this.handlers) {
@@ -128,9 +129,16 @@ let WebSocketServerService = class WebSocketServerService {
                         }
                     }
                     catch (error) {
+                        this.loggerService.debug(`[WS:${id}] Error while parsing message`);
                         this.loggerService.error(error.message);
                     }
                 }));
+                ws.on('close', () => {
+                    this.loggerService.debug(`[WS:${id}] Did close websocket connection`);
+                });
+            });
+            this.server.on('error', (error) => {
+                this.loggerService.error(error.message);
             });
             this.serverStarted = true;
             yield this.createToken();
@@ -196,6 +204,18 @@ let WebSocketServerService = class WebSocketServerService {
                 Fs.unlinkSync(this.wsInfoPath);
             }
         });
+    }
+    /**
+     * Create a unique id
+     * @return {string}
+     */
+    makeId() {
+        let text = '';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 8; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
     }
 };
 WebSocketServerService = __decorate([

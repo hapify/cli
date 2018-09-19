@@ -85,14 +85,17 @@ export class WebSocketServerService {
     this.server = new ws.Server(options);
 
     this.server.on('connection', (ws: any) => {
-      this.loggerService.debug(`Did open new websocket connection`);
+
+      const id = this.makeId();
+      this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
+
       ws.on('message', async (message: string) => {
 
         try {
 
           const decoded = <IWebSocketMessage>JSON.parse(message);
           // Log for debug
-          this.loggerService.debug(`Did receive websocket message: ${decoded.id}`);
+          this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
           // Dispatch message to the right handler
           let handled = false;
           for (const handler of this.handlers) {
@@ -119,10 +122,19 @@ export class WebSocketServerService {
           }
 
         } catch (error) {
+          this.loggerService.debug(`[WS:${id}] Error while parsing message`);
           this.loggerService.error(error.message);
         }
 
       });
+
+      ws.on('close', () => {
+        this.loggerService.debug(`[WS:${id}] Did close websocket connection`);
+      });
+    });
+
+    this.server.on('error', (error: Error) => {
+      this.loggerService.error(error.message);
     });
 
     this.serverStarted = true;
@@ -184,5 +196,18 @@ export class WebSocketServerService {
     if (Fs.existsSync(this.wsInfoPath)) {
       Fs.unlinkSync(this.wsInfoPath);
     }
+  }
+
+  /**
+   * Create a unique id
+   * @return {string}
+   */
+  private makeId(): string {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 8; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
   }
 }

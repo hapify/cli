@@ -56,7 +56,7 @@ export class LoggerService {
    */
   debug(message: string): LoggerService {
     if (this.optionsService.debug()) {
-      console.log(`${chalk.blueBright('•')} ${message}`);
+      console.log(`${chalk.cyan('*')} ${message}`);
     }
     return this;
   }

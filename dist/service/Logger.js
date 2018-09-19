@@ -68,7 +68,7 @@ let LoggerService = class LoggerService {
      */
     debug(message) {
         if (this.optionsService.debug()) {
-            console.log(`${chalk_1.default.blueBright('•')} ${message}`);
+            console.log(`${chalk_1.default.cyan('*')} ${message}`);
         }
         return this;
     }
