@@ -120,16 +120,17 @@ let WebSocketServerService = class WebSocketServerService {
                         // If message is not handled, send an error to the client
                         if (!handled) {
                             // Send the error to the client
+                            this.loggerService.debug(`[WS:${id}] Unknown message key ${decoded.id}`);
                             ws.send(JSON.stringify({
                                 id: decoded.id,
                                 tag: decoded.tag,
                                 type: 'error',
-                                data: { error: 'Unknown message key' }
+                                data: { error: `Unknown message key ${decoded.id}` }
                             }));
                         }
                     }
                     catch (error) {
-                        this.loggerService.debug(`[WS:${id}] Error while parsing message`);
+                        this.loggerService.debug(`[WS:${id}] Error while reading message`);
                         this.loggerService.error(error.message);
                     }
                 }));
