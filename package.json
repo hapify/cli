@@ -22,6 +22,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/tractrs/hapify-cli#readme",
   "dependencies": {
+    "@types/md5": "^2.1.33",
     "chalk": "^2.4.1",
     "commander": "^2.17.1",
     "dot": "^1.1.2",
@@ -33,6 +34,7 @@
     "joi": "^13.6.0",
     "jsonwebtoken": "^8.3.0",
     "jszip": "^3.1.5",
+    "md5": "^2.2.1",
     "openurl": "^1.1.1",
     "ora": "^3.0.0",
     "randomstring": "^1.1.5",

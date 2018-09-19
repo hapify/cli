@@ -14,11 +14,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
 const Path = __importStar(require("path"));
 const _1 = require("./");
 const enum_1 = require("../enum");
+const md5_1 = __importDefault(require("md5"));
 class Channel {
     /**
      * Constructor
@@ -29,6 +33,7 @@ class Channel {
         this.path = path;
         this.validate();
         this.name = name ? name : Path.basename(path);
+        this.id = md5_1.default(this.name);
     }
     /** @inheritDoc */
     load() {
@@ -58,7 +63,11 @@ class Channel {
             for (const template of this.templates) {
                 yield template.save();
             }
-            this.config.templates = this.templates.map((m) => m.toObject());
+            this.config.templates = this.templates.map((m) => {
+                const t = m.toObject();
+                delete t.content;
+                return t;
+            });
             // Write models
             yield this.modelsCollection.save();
             this.config.modelsPath = this.modelsCollection.path;
@@ -188,6 +197,25 @@ class Channel {
             const validatorPath = Path.join(path, Channel.defaultFolder, 'validator.js');
             Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
         });
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        // this.id = object.id;
+        // this.name = object.name;
+        // this.templates = object.fields.map((fieldBase: IField): Field => {
+        //   const field = new Field();
+        //   return field.fromObject(fieldBase);
+        // });
+        return this;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return {
+            id: this.id,
+            name: this.name,
+            templates: this.templates.map((template) => template.toObject()),
+            validator: this.validator.content
+        };
     }
 }
 /** @type {string} */

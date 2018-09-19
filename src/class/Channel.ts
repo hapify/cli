@@ -1,13 +1,16 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
-import { IConfig, IStorable } from '../interface';
+import { IConfig, IStorable, IChannel, ISerilizable } from '../interface';
 import { Template, Validator, ModelsCollection } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
+import md5 from 'md5';
 
-export class Channel implements IStorable {
+export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
 
   /** @type {string} */
   public name: string;
+  /** @type {string} */
+  public id: string;
   /** @type {string} */
   private static defaultFolder = 'hapify';
   /** @type {string} */
@@ -29,6 +32,7 @@ export class Channel implements IStorable {
   constructor(public path: string, name: string|null = null) {
     this.validate();
     this.name = name ? name : Path.basename(path);
+    this.id = md5(this.name);
   }
 
   /** @inheritDoc */
@@ -61,7 +65,11 @@ export class Channel implements IStorable {
     for (const template of this.templates) {
       await template.save();
     }
-    this.config.templates = this.templates.map((m) => m.toObject());
+    this.config.templates = this.templates.map((m) => {
+      const t = m.toObject();
+      delete t.content;
+      return t;
+    });
 
     // Write models
     await this.modelsCollection.save();
@@ -202,5 +210,25 @@ export class Channel implements IStorable {
     const validatorContent = `// Models validation script`;
     const validatorPath = Path.join(path, Channel.defaultFolder, 'validator.js');
     Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
+  }
+
+  /** @inheritDoc */
+  public fromObject(object: IChannel): Channel {
+    // this.id = object.id;
+    // this.name = object.name;
+    // this.templates = object.fields.map((fieldBase: IField): Field => {
+    //   const field = new Field();
+    //   return field.fromObject(fieldBase);
+    // });
+    return this;
+  }
+  /** @inheritDoc */
+  public toObject(): IChannel {
+    return {
+      id: this.id,
+      name: this.name,
+      templates: this.templates.map((template: Template) => template.toObject()),
+      validator: this.validator.content
+    };
   }
 }

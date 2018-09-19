@@ -25,31 +25,25 @@ class Template {
     constructor(parent) {
         this.parent = parent;
     }
-    /**
-     * Bind properties from the base object to this object
-     * @param {ITemplate} object
-     * @returns {Template}
-     *  Returns this
-     */
+    /** @inheritDoc */
     fromObject(object) {
         this.name = object.name;
         this.path = object.path;
         this.engine = object.engine;
         this.input = object.input;
         this.contentPath = object.contentPath;
+        this.content = object.content;
         return this;
     }
-    /**
-     * Convert the instance to an object
-     * @returns {ITemplate}
-     */
+    /** @inheritDoc */
     toObject() {
         return {
             name: this.name,
             path: this.path,
             engine: this.engine,
             input: this.input,
-            contentPath: this.contentPath
+            contentPath: this.contentPath,
+            content: this.content
         };
     }
     /**

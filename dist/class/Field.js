@@ -4,12 +4,7 @@ const _1 = require("./");
 class Field {
     /** Constructor */
     constructor() { }
-    /**
-     * Bind properties from the base object to this object
-     * @param {IField} object
-     * @returns {Field}
-     *  Returns this
-     */
+    /** @inheritDoc */
     fromObject(object) {
         this.name = object.name;
         this.type = object.type;
@@ -27,10 +22,7 @@ class Field {
         this.important = !!object.important;
         return this;
     }
-    /**
-     * Convert the instance to an object
-     * @returns {IField}
-     */
+    /** @inheritDoc */
     toObject() {
         return {
             name: this.name,

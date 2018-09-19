@@ -1,7 +1,7 @@
-import { IModel, IField } from '../interface';
+import { IModel, IField, ISerilizable } from '../interface';
 import { Field } from './';
 
-export class Model implements IModel {
+export class Model implements IModel, ISerilizable<IModel, Model> {
 
   /** @type {string} The model's unique id */
   id: string;
@@ -13,12 +13,7 @@ export class Model implements IModel {
   /** Constructor */
   constructor() {}
 
-  /**
-   * Bind properties from the base object to this object
-   * @param {IModel} object
-   * @returns {Model}
-   *  Returns this
-   */
+  /** @inheritDoc */
   public fromObject(object: IModel): Model {
     this.id = object.id;
     this.name = object.name;
@@ -28,10 +23,7 @@ export class Model implements IModel {
     });
     return this;
   }
-  /**
-   * Convert the instance to an object
-   * @returns {IModel}
-   */
+  /** @inheritDoc */
   public toObject(): IModel {
     return {
       id: this.id,

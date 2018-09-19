@@ -39,6 +39,17 @@ export interface IModel {
   fields: IField[];
 }
 
+export interface IChannel {
+  /** @type {string} The channel's unique id */
+  id: string;
+  /** @type {string} The channel's name */
+  name: string;
+  /** @type {ITemplate[]} The templates of the channel */
+  templates: ITemplate[];
+  /** @type {string} The channel's validation script */
+  validator: string;
+}
+
 export interface ITemplate {
   /** @type {string} The template's name */
   name: string;
@@ -50,6 +61,8 @@ export interface ITemplate {
   input: string;
   /** @type {string} The template's content file path */
   contentPath: string;
+  /** @type {string} The template's content */
+  content?: string;
 }
 
 export interface IConfig {

@@ -21,7 +21,7 @@ const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
 const class_1 = require("../../class");
-let GetModelsHandlerService = class GetModelsHandlerService {
+let GetChannelsHandlerService = class GetChannelsHandlerService {
     /**
      * Constructor
      * @param optionsService
@@ -31,23 +31,22 @@ let GetModelsHandlerService = class GetModelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.GET_MODELS;
+        return message.id === interface_1.WebSocketMessages.GET_CHANNELS;
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const channels = class_1.Channel.sniff(this.optionsService.dir(), this.optionsService.depth());
-            if (channels.length === 0) {
-                return null;
+            for (const channel of channels) {
+                yield channel.load();
             }
-            yield channels[0].load();
-            return channels[0].modelsCollection.toObject();
+            return yield channels.map(channel => channel.toObject());
         });
     }
 };
-GetModelsHandlerService = __decorate([
+GetChannelsHandlerService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [__1.OptionsService])
-], GetModelsHandlerService);
-exports.GetModelsHandlerService = GetModelsHandlerService;
-//# sourceMappingURL=GetModelsHandler.js.map
+], GetChannelsHandlerService);
+exports.GetChannelsHandlerService = GetChannelsHandlerService;
+//# sourceMappingURL=GetChannelsHandler.js.map

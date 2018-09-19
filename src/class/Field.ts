@@ -1,7 +1,7 @@
-import { IField } from '../interface';
+import { IField, ISerilizable } from '../interface';
 import { FieldType } from './';
 
-export class Field implements IField {
+export class Field implements IField, ISerilizable<IField, Field> {
 
   /** @type {string} The field's name */
   name: string;
@@ -35,12 +35,7 @@ export class Field implements IField {
   /** Constructor */
   constructor() {}
 
-  /**
-   * Bind properties from the base object to this object
-   * @param {IField} object
-   * @returns {Field}
-   *  Returns this
-   */
+  /** @inheritDoc */
   public fromObject(object: IField): Field {
     this.name = object.name;
     this.type = object.type;
@@ -58,10 +53,7 @@ export class Field implements IField {
     this.important = !!<any>object.important;
     return this;
   }
-  /**
-   * Convert the instance to an object
-   * @returns {IField}
-   */
+  /** @inheritDoc */
   public toObject(): IField {
     return {
       name: this.name,

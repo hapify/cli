@@ -1,9 +1,9 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
-import { IModel, IStorable } from '../interface';
+import { IModel, IStorable, ISerilizable } from '../interface';
 import { Model, Channel } from './';
 
-export class ModelsCollection implements IStorable {
+export class ModelsCollection implements IStorable, ISerilizable<IModel[], Model[]> {
 
   /** @type {Model[]} The list of model instances */
   private models: Model[];
@@ -22,15 +22,11 @@ export class ModelsCollection implements IStorable {
   /** @inheritDoc */
   public async load(): Promise<void> {
     const models: IModel[] = JSON.parse(<string>Fs.readFileSync(this.modelsPath, 'utf8'));
-    this.models = models.map((model: IModel): Model => {
-      const m = new Model();
-      return m.fromObject(model);
-    });
+    this.fromObject(models);
   }
   /** @inheritDoc */
   async save(): Promise<void> {
-    const models = this.models.map((model: Model): IModel => model.toObject());
-    const data = JSON.stringify(models, null, 2);
+    const data = JSON.stringify(this.toObject(), null, 2);
     Fs.writeFileSync(this.modelsPath, data, 'utf8');
   }
   /**
@@ -47,5 +43,17 @@ export class ModelsCollection implements IStorable {
    */
   async list(): Promise<Model[]> {
     return this.models;
+  }
+  /** @inheritDoc */
+  public fromObject(object: IModel[]): Model[] {
+    this.models = object.map((model: IModel): Model => {
+      const m = new Model();
+      return m.fromObject(model);
+    });
+    return this.models;
+  }
+  /** @inheritDoc */
+  public toObject(): IModel[] {
+    return this.models.map((model: Model): IModel => model.toObject());
   }
 }

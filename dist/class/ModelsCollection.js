@@ -33,17 +33,13 @@ class ModelsCollection {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             const models = JSON.parse(Fs.readFileSync(this.modelsPath, 'utf8'));
-            this.models = models.map((model) => {
-                const m = new _1.Model();
-                return m.fromObject(model);
-            });
+            this.fromObject(models);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = this.models.map((model) => model.toObject());
-            const data = JSON.stringify(models, null, 2);
+            const data = JSON.stringify(this.toObject(), null, 2);
             Fs.writeFileSync(this.modelsPath, data, 'utf8');
         });
     }
@@ -65,6 +61,18 @@ class ModelsCollection {
         return __awaiter(this, void 0, void 0, function* () {
             return this.models;
         });
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.models = object.map((model) => {
+            const m = new _1.Model();
+            return m.fromObject(model);
+        });
+        return this.models;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return this.models.map((model) => model.toObject());
     }
 }
 exports.ModelsCollection = ModelsCollection;

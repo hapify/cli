@@ -1,6 +1,7 @@
 export * from './IConfig';
 export * from './IFormattedSentences';
 export * from './IStorable';
+export * from './ISerilizable';
 export * from './IRemote';
 export * from './IGenerator';
 export * from './IGeneratorResult';

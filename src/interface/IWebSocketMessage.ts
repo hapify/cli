@@ -7,5 +7,7 @@ export interface IWebSocketMessage {
 
 export class WebSocketMessages {
   static GET_MODELS = 'get:models';
+  static SET_MODELS = 'set:models';
   static GET_CHANNELS = 'get:channels';
+  static SET_CHANNELS = 'set:channels';
 }

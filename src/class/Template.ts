@@ -1,9 +1,9 @@
 import * as Fs from 'fs';
-import { ITemplate, IStorable } from '../interface';
+import { ITemplate, IStorable, ISerilizable } from '../interface';
 import { TemplateInput, TemplateEngine } from '../enum';
 import { Channel } from './';
 
-export class Template implements IStorable, ITemplate {
+export class Template implements IStorable, ISerilizable<ITemplate, Template>, ITemplate {
 
   /** @type {string} The template's name */
   name: string;
@@ -24,32 +24,25 @@ export class Template implements IStorable, ITemplate {
    */
   constructor(private parent: Channel) {
   }
-
-  /**
-   * Bind properties from the base object to this object
-   * @param {ITemplate} object
-   * @returns {Template}
-   *  Returns this
-   */
+  /** @inheritDoc */
   public fromObject(object: ITemplate): Template {
     this.name = object.name;
     this.path = object.path;
     this.engine = object.engine;
     this.input = object.input;
     this.contentPath = object.contentPath;
+    this.content = object.content;
     return this;
   }
-  /**
-   * Convert the instance to an object
-   * @returns {ITemplate}
-   */
+  /** @inheritDoc */
   public toObject(): ITemplate {
     return {
       name: this.name,
       path: this.path,
       engine: this.engine,
       input: this.input,
-      contentPath: this.contentPath
+      contentPath: this.contentPath,
+      content: this.content
     };
   }
   /**

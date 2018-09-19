@@ -7,7 +7,7 @@ import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
-import { GetModelsHandlerService, LoggerService } from './';
+import { GetModelsHandlerService, GetChannelsHandlerService, LoggerService } from './';
 import { IWebSockerHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
 
@@ -42,6 +42,7 @@ export class WebSocketServerService {
    */
   constructor(private loggerService: LoggerService) {
     this.addHandler(Container.get(GetModelsHandlerService));
+    this.addHandler(Container.get(GetChannelsHandlerService));
   }
 
   /**

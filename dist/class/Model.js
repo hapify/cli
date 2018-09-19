@@ -4,12 +4,7 @@ const _1 = require("./");
 class Model {
     /** Constructor */
     constructor() { }
-    /**
-     * Bind properties from the base object to this object
-     * @param {IModel} object
-     * @returns {Model}
-     *  Returns this
-     */
+    /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
         this.name = object.name;
@@ -19,10 +14,7 @@ class Model {
         });
         return this;
     }
-    /**
-     * Convert the instance to an object
-     * @returns {IModel}
-     */
+    /** @inheritDoc */
     toObject() {
         return {
             id: this.id,
