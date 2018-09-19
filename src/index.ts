@@ -156,8 +156,6 @@ program
     await http.serve();
     logger.info(`Server is running at: ${cPath(http.url())}`);
     if (options.open()) { http.open(); }
-    // Set channels to webscoket server
-    
     // Action Ends
     // ---------------------------------
 

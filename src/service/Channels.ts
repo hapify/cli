@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import * as Path from 'path';
-import { OptionsService } from './';
+import { OptionsService } from './Options';
 import * as Fs from 'fs';
 import { ModelsCollection, Channel } from '../class';
 
@@ -14,7 +14,7 @@ export class ChannelsService {
    * Constructor
    * @param optionsService
    */
-  constructor(private optionsService: OptionsService) {
+  constructor (private optionsService: OptionsService) {
   }
 
   /**

@@ -131,31 +131,6 @@ class Channel {
         }
     }
     /**
-     * This method detect all channels in the directory and its sub-directories, and create instances for them.
-     * We can define the depth level of subdirectories.
-     * @param {string} path
-     * @param {number} depth  Default: 2
-     * @param {number} from  Default: path
-     * @return {Channel[]}
-     */
-    static sniff(path, depth = 2, from = path) {
-        // Get channels in sub-directories first
-        const channels = depth <= 0 ? [] :
-            Fs.readdirSync(path)
-                .map((dir) => Path.join(path, dir))
-                .filter((subPath) => Fs.statSync(subPath).isDirectory())
-                .map((subPath) => Channel.sniff(subPath, depth - 1, from))
-                .reduce((flatten, channels) => flatten.concat(channels), []);
-        // Get channel of current directory if exists
-        const configPath = Path.join(path, Channel.configFile);
-        if (Fs.existsSync(configPath)) {
-            const name = Path.relative(Path.dirname(from), path);
-            const channel = new Channel(path, name);
-            channels.push(channel);
-        }
-        return channels;
-    }
-    /**
      * Denotes if the config file exists
      * @param {string} path
      * @return {boolean}
@@ -167,7 +142,7 @@ class Channel {
     /**
      * Init a Hapify structure within a directory
      * @param {string} path
-     * @return {Channel[]}
+     * @return {Promise<void>}
      */
     static create(path) {
         return __awaiter(this, void 0, void 0, function* () {

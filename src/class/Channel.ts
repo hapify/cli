@@ -139,34 +139,6 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
     }
   }
   /**
-   * This method detect all channels in the directory and its sub-directories, and create instances for them.
-   * We can define the depth level of subdirectories.
-   * @param {string} path
-   * @param {number} depth  Default: 2
-   * @param {number} from  Default: path
-   * @return {Channel[]}
-   */
-  public static sniff(path: string, depth: number = 2, from: string = path): Channel[] {
-
-    // Get channels in sub-directories first
-    const channels: Channel[] = depth <= 0 ? [] :
-      Fs.readdirSync(path)
-        .map((dir) => Path.join(path, dir))
-        .filter((subPath) => Fs.statSync(subPath).isDirectory())
-        .map((subPath) => Channel.sniff(subPath, depth - 1, from))
-        .reduce((flatten: Channel[], channels: Channel[]) => flatten.concat(channels), []);
-
-    // Get channel of current directory if exists
-    const configPath = Path.join(path, Channel.configFile);
-    if (Fs.existsSync(configPath)) {
-      const name = Path.relative(Path.dirname(from), path);
-      const channel = new Channel(path, name);
-      channels.push(channel);
-    }
-
-    return channels;
-  }
-  /**
    * Denotes if the config file exists
    * @param {string} path
    * @return {boolean}
@@ -178,7 +150,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
   /**
    * Init a Hapify structure within a directory
    * @param {string} path
-   * @return {Channel[]}
+   * @return {Promise<void>}
    */
   public static async create(path: string): Promise<void> {
     if (!Fs.existsSync(path)) {

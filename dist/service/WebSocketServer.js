@@ -53,6 +53,7 @@ let WebSocketServerService = class WebSocketServerService {
         /** @type {IWebSockerHandler[]} Messages handlers */
         this.handlers = [];
         this.addHandler(typedi_2.Container.get(_1.GetModelsHandlerService));
+        this.addHandler(typedi_2.Container.get(_1.SetModelsHandlerService));
         this.addHandler(typedi_2.Container.get(_1.GetChannelsHandlerService));
     }
     /**

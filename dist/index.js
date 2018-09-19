@@ -177,7 +177,6 @@ program
         if (options.open()) {
             http.open();
         }
-        // Set channels to webscoket server
         // Action Ends
         // ---------------------------------
         logger.time();

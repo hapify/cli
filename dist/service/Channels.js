@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ChannelsService_1;
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
-const _1 = require("./");
+const Options_1 = require("./Options");
 const Fs = __importStar(require("fs"));
 const class_1 = require("../class");
 let ChannelsService = ChannelsService_1 = class ChannelsService {
@@ -95,7 +95,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
 };
 ChannelsService = ChannelsService_1 = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [_1.OptionsService])
+    __metadata("design:paramtypes", [Options_1.OptionsService])
 ], ChannelsService);
 exports.ChannelsService = ChannelsService;
 //# sourceMappingURL=Channels.js.map
