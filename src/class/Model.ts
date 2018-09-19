@@ -1,7 +1,7 @@
 import { IModel, IField, ISerilizable } from '../interface';
 import { Field } from './';
 
-export class Model implements IModel, ISerilizable<IModel, Model> {
+export class Model implements ISerilizable<IModel, Model> {
 
   /** @type {string} The model's unique id */
   id: string;

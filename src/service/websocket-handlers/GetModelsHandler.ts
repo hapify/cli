@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage, IModel } from '../../interface';
+import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
 import { OptionsService } from '../';
-import { Channel, Model } from '../../class';
+import { Channel } from '../../class';
 
 @Service()
 export class GetModelsHandlerService implements IWebSockerHandler {

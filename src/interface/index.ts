@@ -1,4 +1,4 @@
-export * from './IConfig';
+export * from './IObjects';
 export * from './IFormattedSentences';
 export * from './IStorable';
 export * from './ISerilizable';

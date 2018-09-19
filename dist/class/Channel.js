@@ -44,7 +44,7 @@ class Channel {
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
-                const template = (new _1.Template(this)).fromObject(this.config.templates[i]);
+                const template = (new _1.Template(this)).fromObject(Object.assign(this.config.templates[i], { content: '' }));
                 yield template.load();
                 this.templates.push(template);
             }

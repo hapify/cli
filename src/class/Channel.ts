@@ -45,7 +45,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
     // Load each content file
     this.templates = [];
     for (let i = 0; i < this.config.templates.length; i++) {
-      const template = (new Template(this)).fromObject(this.config.templates[i]);
+      const template = (new Template(this)).fromObject(Object.assign(this.config.templates[i], {content: ''}));
       await template.load();
       this.templates.push(template);
     }
@@ -65,7 +65,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
     for (const template of this.templates) {
       await template.save();
     }
-    this.config.templates = this.templates.map((m) => {
+    this.config.templates = this.templates.map((m: Template) => {
       const t = m.toObject();
       delete t.content;
       return t;

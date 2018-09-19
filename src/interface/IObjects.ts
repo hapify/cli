@@ -1,4 +1,27 @@
 
+
+export interface IConfigTemplate {
+  /** @type {string} The template's name */
+  name: string;
+  /** @type {string} The template's path */
+  path: string;
+  /** @type {string} The template's type */
+  engine: string;
+  /** @type {string} Denotes if the template has to to be ran for one or all models */
+  input: string;
+  /** @type {string} The template's content file path */
+  contentPath: string;
+}
+
+export interface IConfig {
+  /** @type {string} The channel's validation script path */
+  validatorPath: string;
+  /** @type {string} The path to the models' file */
+  modelsPath: string;
+  /** @type {IConfigTemplate[]} The templates of the channel */
+  templates: IConfigTemplate[];
+}
+
 export interface IField {
   /** @type {string} The field's name */
   name: string;
@@ -39,6 +62,11 @@ export interface IModel {
   fields: IField[];
 }
 
+export interface ITemplate extends IConfigTemplate {
+  /** @type {string} The template's content */
+  content: string;
+}
+
 export interface IChannel {
   /** @type {string} The channel's unique id */
   id: string;
@@ -48,28 +76,4 @@ export interface IChannel {
   templates: ITemplate[];
   /** @type {string} The channel's validation script */
   validator: string;
-}
-
-export interface ITemplate {
-  /** @type {string} The template's name */
-  name: string;
-  /** @type {string} The template's path */
-  path: string;
-  /** @type {string} The template's type */
-  engine: string;
-  /** @type {string} Denotes if the template has to to be ran for one or all models */
-  input: string;
-  /** @type {string} The template's content file path */
-  contentPath: string;
-  /** @type {string} The template's content */
-  content?: string;
-}
-
-export interface IConfig {
-  /** @type {string} The channel's validation script path */
-  validatorPath: string;
-  /** @type {string} The path to the models' file */
-  modelsPath: string;
-  /** @type {ITemplate[]} The templates of the channel */
-  templates: ITemplate[];
 }
