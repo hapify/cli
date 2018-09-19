@@ -5,7 +5,7 @@ import { Channel, Model } from '../../class';
 
 @Service()
 export class GetModelsHandlerService implements IWebSockerHandler {
-  
+
   /**
    * Constructor
    * @param optionsService
@@ -19,7 +19,7 @@ export class GetModelsHandlerService implements IWebSockerHandler {
   }
 
   /** @inheritDoc */
-  async handle(message: IWebSocketMessage): Promise<any|null> {
+  async handle(message: IWebSocketMessage): Promise<any> {
     const channels = Channel.sniff(this.optionsService.dir(), this.optionsService.depth());
     if (channels.length === 0) {
       return null;

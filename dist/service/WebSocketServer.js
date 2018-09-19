@@ -103,19 +103,28 @@ let WebSocketServerService = class WebSocketServerService {
                         // Log for debug
                         this.loggerService.debug(`Did receive websocket message: ${decoded.id}`);
                         // Dispatch message to the right handler
+                        let handled = false;
                         for (const handler of this.handlers) {
                             if (handler.canHandle(decoded)) {
-                                const ret = yield handler.handle(decoded);
-                                // If result, return it to the client
-                                if (typeof ret !== 'undefined' && ret !== null) {
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        data: ret
-                                    }));
-                                }
+                                // Return the result to the client
+                                ws.send(JSON.stringify({
+                                    id: decoded.id,
+                                    tag: decoded.tag,
+                                    data: yield handler.handle(decoded)
+                                }));
+                                handled = true;
                                 break;
                             }
+                        }
+                        // If message is not handled, send an error to the client
+                        if (!handled) {
+                            // Send the error to the client
+                            ws.send(JSON.stringify({
+                                id: decoded.id,
+                                tag: decoded.tag,
+                                type: 'error',
+                                data: { error: 'Unknown message key' }
+                            }));
                         }
                     }
                     catch (error) {

@@ -13,8 +13,8 @@ export interface IWebSockerHandler {
    * Handle message.
    * Returns data if necessary, null otherwise
    * @param {IWebSocketMessage} message
-   * @return {Promise<any|null>}
+   * @return {Promise<any>}
    */
-  handle(message: IWebSocketMessage): Promise<any|null>;
+  handle(message: IWebSocketMessage): Promise<any>;
 }
 
