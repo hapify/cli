@@ -23,7 +23,6 @@ class SingleSave {
     shouldSave(data) {
         const contentMd5 = md5_1.default(data);
         if (contentMd5 !== this.contentMd5) {
-            console.log('should save');
             this.contentMd5 = contentMd5;
             return true;
         }

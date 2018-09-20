@@ -21,7 +21,6 @@ export class SingleSave {
   shouldSave(data: string): boolean {
     const contentMd5 = md5(data);
     if (contentMd5 !== this.contentMd5) {
-      console.log('should save');
       this.contentMd5 = contentMd5;
       return true;
     }

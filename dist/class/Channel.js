@@ -82,6 +82,21 @@ class Channel extends _1.SingleSave {
                 const path = `${this.path}/${Channel.configFile}`;
                 Fs.writeFileSync(path, data, 'utf8');
             }
+            // Cleanup files in template path
+            const legitFiles = [
+                Path.join(this.path, this.config.validatorPath),
+                Path.join(this.path, this.config.modelsPath),
+            ];
+            for (const template of this.templates) {
+                legitFiles.push(Path.join(this.templatesPath, template.contentPath));
+            }
+            const allFiles = Channel.listAllFiles(Path.join(this.path, Channel.defaultFolder));
+            for (const filePath of allFiles) {
+                if (legitFiles.indexOf(filePath) < 0) {
+                    Fs.unlinkSync(filePath);
+                }
+            }
+            Channel.clearEmptyDirectories(Path.join(this.path, Channel.defaultFolder));
         });
     }
     /**
@@ -211,6 +226,41 @@ class Channel extends _1.SingleSave {
             templates: this.templates.map((template) => template.toObject()),
             validator: this.validator.content
         };
+    }
+    /**
+     * Get all files' absolute path from a directory
+     * @param {string} rootPath
+     * @return {string[]}
+     */
+    static listAllFiles(rootPath) {
+        // Read the whole directory
+        const entries = Fs.readdirSync(rootPath)
+            .map((dir) => Path.join(rootPath, dir));
+        // Get sub-files
+        const subFiles = entries
+            .filter((subPath) => Fs.statSync(subPath).isDirectory())
+            .map((subPath) => Channel.listAllFiles(subPath))
+            .reduce((flatten, files) => flatten.concat(files), []);
+        // Return files and sub-files
+        return entries
+            .filter((subPath) => Fs.statSync(subPath).isFile())
+            .concat(subFiles);
+    }
+    /**
+     * Delete all directories if empty
+     * @param {string} rootPath
+     */
+    static clearEmptyDirectories(rootPath) {
+        // Remove sub-directories
+        Fs.readdirSync(rootPath)
+            .map((dir) => Path.join(rootPath, dir))
+            .filter((subPath) => Fs.statSync(subPath).isDirectory())
+            .forEach((subPath) => Channel.clearEmptyDirectories(subPath));
+        // Count remaining files & dirs
+        const count = Fs.readdirSync(rootPath).length;
+        if (count === 0) {
+            Fs.rmdirSync(rootPath);
+        }
     }
 }
 /** @type {string} */

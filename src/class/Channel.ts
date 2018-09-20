@@ -88,6 +88,22 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       const path = `${this.path}/${Channel.configFile}`;
       Fs.writeFileSync(path, data, 'utf8');
     }
+    
+    // Cleanup files in template path
+    const legitFiles = [
+      Path.join(this.path, this.config.validatorPath),
+      Path.join(this.path, this.config.modelsPath),
+    ];
+    for (const template of this.templates) {
+      legitFiles.push(Path.join(this.templatesPath, template.contentPath));
+    }
+    const allFiles = Channel.listAllFiles(Path.join(this.path, Channel.defaultFolder));
+    for (const filePath of allFiles) {
+      if (legitFiles.indexOf(filePath) < 0) {
+        Fs.unlinkSync(filePath);
+      }
+    }
+    Channel.clearEmptyDirectories(Path.join(this.path, Channel.defaultFolder));
   }
   /**
    * Denotes if the template should be considered as empty
@@ -226,5 +242,46 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       templates: this.templates.map((template: Template) => template.toObject()),
       validator: this.validator.content
     };
+  }
+  /**
+   * Get all files' absolute path from a directory
+   * @param {string} rootPath
+   * @return {string[]}
+   */
+  private static listAllFiles(rootPath: string): string[] {
+
+    // Read the whole directory
+    const entries = Fs.readdirSync(rootPath)
+      .map((dir) => Path.join(rootPath, dir));
+
+    // Get sub-files
+    const subFiles = entries
+      .filter((subPath) => Fs.statSync(subPath).isDirectory())
+      .map((subPath) => Channel.listAllFiles(subPath))
+      .reduce((flatten: string[], files: string[]) => flatten.concat(files), []);
+
+    // Return files and sub-files
+    return entries
+      .filter((subPath) => Fs.statSync(subPath).isFile())
+      .concat(subFiles);
+  }
+  /**
+   * Delete all directories if empty
+   * @param {string} rootPath
+   */
+  private static clearEmptyDirectories(rootPath: string): void {
+
+    // Remove sub-directories
+    Fs.readdirSync(rootPath)
+      .map((dir) => Path.join(rootPath, dir))
+      .filter((subPath) => Fs.statSync(subPath).isDirectory())
+      .forEach((subPath) => Channel.clearEmptyDirectories(subPath));
+
+    // Count remaining files & dirs
+    const count = Fs.readdirSync(rootPath).length;
+    
+    if (count === 0) {
+      Fs.rmdirSync(rootPath);
+    }
   }
 }
