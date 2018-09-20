@@ -9,8 +9,6 @@ export interface IConfigTemplate {
   engine: string;
   /** @type {string} Denotes if the template has to to be ran for one or all models */
   input: string;
-  /** @type {string} The template's content file path */
-  contentPath: string;
 }
 
 export interface IConfig {

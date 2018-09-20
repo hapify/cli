@@ -1,7 +1,7 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
-import { IConfig, IStorable, IChannel, ISerilizable } from '../interface';
-import { Template, Validator, ModelsCollection } from './';
+import { IChannel, IConfig, ISerilizable, IStorable } from '../interface';
+import { ModelsCollection, Template, Validator } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
 
@@ -23,16 +23,19 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
   public validator: Validator;
   /** @type {ModelsCollection} List of models container */
   public modelsCollection: ModelsCollection;
+  /** @type {string} */
+  public templatesPath: string;
 
   /**
    * Constructor
    * @param {string} path
    * @param {string|null} name
    */
-  constructor(public path: string, name: string|null = null) {
-    this.validate();
+  constructor(private path: string, name: string|null = null) {
     this.name = name ? name : Path.basename(path);
     this.id = md5(this.name);
+    this.templatesPath = Path.join(this.path, Channel.defaultFolder);
+    this.validate();
   }
 
   /** @inheritDoc */
@@ -122,7 +125,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
     }
 
     for (const template of config.templates) {
-      const contentPath = Path.join(this.path, template.contentPath);
+      const contentPath = Path.join(this.templatesPath, Template.computeContentPath(template));
       if (!Fs.existsSync(contentPath)) {
         throw new Error(`Channel template's path ${contentPath} does not exists.`);
       }
@@ -168,15 +171,15 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
           name: 'Hello World',
           path: 'models/{model.hyphen}/hello.js',
           engine: TemplateEngine.Hpf,
-          input: TemplateInput.One,
-          contentPath: `${Channel.defaultFolder}/model/hello.js.hpf`
+          input: TemplateInput.One
         }
       ]
     };
 
     // Create dir
     Fs.mkdirSync(Path.join(path, Channel.defaultFolder));
-    Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'model'));
+    Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models'));
+    Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
 
     // Dump config file
     const configData = JSON.stringify(config, null, 2);
@@ -184,7 +187,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
 
     // Create template file
     const templateContent = `// Hello <<M A>>`;
-    const templatePath = Path.join(path, Channel.defaultFolder, 'model', 'hello.js.hpf');
+    const templatePath = Path.join(path, Channel.defaultFolder, 'models', 'model', 'hello.js.hpf');
     Fs.writeFileSync(templatePath, templateContent, 'utf8');
 
     // Create validator file

@@ -9,7 +9,7 @@ export class ChannelsService {
 
   /** @type {Channel[]} Channels instances */
   private _channels: Channel[];
-  
+
   /**
    * Constructor
    * @param optionsService
@@ -44,7 +44,7 @@ export class ChannelsService {
     const channels = await this.channels();
     return channels[0].modelsCollection;
   }
-  
+
   /**
    * This method detect all channels in the directory and its sub-directories, and create instances for them.
    * We can define the depth level of subdirectories.

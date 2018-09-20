@@ -31,9 +31,10 @@ class Channel {
      */
     constructor(path, name = null) {
         this.path = path;
-        this.validate();
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.name);
+        this.templatesPath = Path.join(this.path, Channel.defaultFolder);
+        this.validate();
     }
     /** @inheritDoc */
     load() {
@@ -116,7 +117,7 @@ class Channel {
             throw new Error(`An error occurred while reading Channel config's at ${path}: ${error.toString()}`);
         }
         for (const template of config.templates) {
-            const contentPath = Path.join(this.path, template.contentPath);
+            const contentPath = Path.join(this.templatesPath, _1.Template.computeContentPath(template));
             if (!Fs.existsSync(contentPath)) {
                 throw new Error(`Channel template's path ${contentPath} does not exists.`);
             }
@@ -161,20 +162,20 @@ class Channel {
                         name: 'Hello World',
                         path: 'models/{model.hyphen}/hello.js',
                         engine: enum_1.TemplateEngine.Hpf,
-                        input: enum_1.TemplateInput.One,
-                        contentPath: `${Channel.defaultFolder}/model/hello.js.hpf`
+                        input: enum_1.TemplateInput.One
                     }
                 ]
             };
             // Create dir
             Fs.mkdirSync(Path.join(path, Channel.defaultFolder));
-            Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'model'));
+            Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models'));
+            Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
             // Dump config file
             const configData = JSON.stringify(config, null, 2);
             Fs.writeFileSync(configPath, configData, 'utf8');
             // Create template file
             const templateContent = `// Hello <<M A>>`;
-            const templatePath = Path.join(path, Channel.defaultFolder, 'model', 'hello.js.hpf');
+            const templatePath = Path.join(path, Channel.defaultFolder, 'models', 'model', 'hello.js.hpf');
             Fs.writeFileSync(templatePath, templateContent, 'utf8');
             // Create validator file
             const validatorContent = `// Models validation script`;

@@ -17,6 +17,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
 const enum_1 = require("../enum");
+const typedi_1 = require("typedi");
+const String_1 = require("../service/String");
 class Template {
     /**
      * Constructor
@@ -31,8 +33,8 @@ class Template {
         this.path = object.path;
         this.engine = object.engine;
         this.input = object.input;
-        this.contentPath = object.contentPath;
         this.content = object.content;
+        this.contentPath = Template.computeContentPath(this);
         return this;
     }
     /** @inheritDoc */
@@ -42,7 +44,6 @@ class Template {
             path: this.path,
             engine: this.engine,
             input: this.input,
-            contentPath: this.contentPath,
             content: this.content
         };
     }
@@ -67,28 +68,57 @@ class Template {
      * @returns {string}
      */
     extension() {
-        if (this.engine === enum_1.TemplateEngine.Hpf) {
-            return 'hpf';
-        }
-        else if (this.engine === enum_1.TemplateEngine.doT) {
-            return 'dot';
-        }
-        return 'js';
+        return Template.computeExtension(this);
     }
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const contentPath = `${this.parent.path}/${this.contentPath}`;
+            const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
             this.content = Fs.readFileSync(contentPath, 'utf8');
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const contentPath = `${this.parent.path}/${this.contentPath}`;
+            const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
             Fs.writeFileSync(contentPath, this.content, 'utf8');
         });
     }
+    /**
+     * Compute the content path from the dynamic path
+     * @param {Template|IConfigTemplate} template
+     * @return {string}
+     */
+    static computeContentPath(template) {
+        // Get string service
+        const stringService = typedi_1.Container.get(String_1.StringService);
+        // Apply replacements
+        const path = template.path
+            .replace(/{model\.hyphen}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.SlugHyphen))
+            .replace(/{model\.hyphenUpper}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.SlugHyphenUpperCase))
+            .replace(/{model\.underscore}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.SlugUnderscore))
+            .replace(/{model\.underscoreUpper}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.SlugUnderscoreUpperCase))
+            .replace(/{model\.oneWord}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.SlugOneWord))
+            .replace(/{model\.upperCamel}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.UpperCamelCase))
+            .replace(/{model\.lowerCamel}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.LowerCamelCase));
+        return `${path}.${Template.computeExtension(template)}`;
+    }
+    /**
+     * Compute the extension of the template
+     * @param {Template|IConfigTemplate} template
+     * @return {string}
+     */
+    static computeExtension(template) {
+        if (template.engine === enum_1.TemplateEngine.Hpf) {
+            return 'hpf';
+        }
+        else if (template.engine === enum_1.TemplateEngine.doT) {
+            return 'dot';
+        }
+        return 'js';
+    }
 }
+/** @type {string} */
+Template.defaultFolder = 'model';
 exports.Template = Template;
 //# sourceMappingURL=Template.js.map

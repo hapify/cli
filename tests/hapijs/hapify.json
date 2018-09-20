@@ -4,66 +4,57 @@
   "templates": [
     {
       "name": "Create",
-      "path": "routes/{model.hyphen}/create.js",
+      "path": "src/routes/{model.hyphen}/create.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/create.js.hpf"
+      "input": "one"
     },
     {
       "name": "Read",
-      "path": "routes/{model.hyphen}/read.js",
+      "path": "src/routes/{model.hyphen}/read.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/read.js.hpf"
+      "input": "one"
     },
     {
       "name": "Update",
-      "path": "routes/{model.hyphen}/update.js",
+      "path": "src/routes/{model.hyphen}/update.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/update.js.hpf"
+      "input": "one"
     },
     {
       "name": "Delete",
-      "path": "routes/{model.hyphen}/delete.js",
+      "path": "src/routes/{model.hyphen}/delete.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/delete.js.hpf"
+      "input": "one"
     },
     {
       "name": "List",
-      "path": "routes/{model.hyphen}/list.js",
+      "path": "src/routes/{model.hyphen}/list.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/list.js.hpf"
+      "input": "one"
     },
     {
       "name": "Count",
-      "path": "routes/{model.hyphen}/count.js",
+      "path": "src/routes/{model.hyphen}/count.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/count.js.hpf"
+      "input": "one"
     },
     {
       "name": "Includes",
-      "path": "routes/{model.hyphen}/inc.js",
+      "path": "src/routes/{model.hyphen}/inc.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/inc.js.hpf"
+      "input": "one"
     },
     {
       "name": "Index",
-      "path": "routes/{model.hyphen}/index.js",
+      "path": "src/routes/{model.hyphen}/index.js",
       "engine": "hpf",
-      "input": "one",
-      "contentPath": "hapify/src/routes/model/index.js.hpf"
+      "input": "one"
     },
     {
       "name": "Index All",
-      "path": "routes/index.js",
+      "path": "src/routes/index.js",
       "engine": "hpf",
-      "input": "all",
-      "contentPath": "hapify/src/routes/index.js.hpf"
+      "input": "all"
     }
   ]
 }
