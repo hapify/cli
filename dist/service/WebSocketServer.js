@@ -55,6 +55,7 @@ let WebSocketServerService = class WebSocketServerService {
         this.addHandler(typedi_2.Container.get(_1.GetModelsHandlerService));
         this.addHandler(typedi_2.Container.get(_1.SetModelsHandlerService));
         this.addHandler(typedi_2.Container.get(_1.GetChannelsHandlerService));
+        this.addHandler(typedi_2.Container.get(_1.SetChannelsHandlerService));
     }
     /**
      * Starts the http server
@@ -132,7 +133,7 @@ let WebSocketServerService = class WebSocketServerService {
                         }
                     }
                     catch (error) {
-                        this.loggerService.debug(`[WS:${id}] Error while reading message`);
+                        this.loggerService.debug(`[WS:${id}] Error while processing message`);
                         this.loggerService.error(error.message);
                     }
                 }));

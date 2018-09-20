@@ -31,9 +31,9 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
    * @param {string} path
    * @param {string|null} name
    */
-  constructor(private path: string, name: string|null = null) {
+  constructor(public path: string, name: string|null = null) {
     this.name = name ? name : Path.basename(path);
-    this.id = md5(this.name);
+    this.id = md5(this.path);
     this.templatesPath = Path.join(this.path, Channel.defaultFolder);
     this.validate();
   }

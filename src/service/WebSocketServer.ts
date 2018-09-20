@@ -7,7 +7,10 @@ import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
-import { GetModelsHandlerService, SetModelsHandlerService, GetChannelsHandlerService, LoggerService } from './';
+import {
+  GetModelsHandlerService, SetModelsHandlerService,
+  GetChannelsHandlerService, SetChannelsHandlerService,
+  LoggerService } from './';
 import { IWebSockerHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
 
@@ -44,6 +47,7 @@ export class WebSocketServerService {
     this.addHandler(Container.get(GetModelsHandlerService));
     this.addHandler(Container.get(SetModelsHandlerService));
     this.addHandler(Container.get(GetChannelsHandlerService));
+    this.addHandler(Container.get(SetChannelsHandlerService));
   }
 
   /**
@@ -125,7 +129,7 @@ export class WebSocketServerService {
           }
 
         } catch (error) {
-          this.loggerService.debug(`[WS:${id}] Error while reading message`);
+          this.loggerService.debug(`[WS:${id}] Error while processing message`);
           this.loggerService.error(error.message);
         }
 

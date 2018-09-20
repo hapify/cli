@@ -32,7 +32,7 @@ class Channel {
     constructor(path, name = null) {
         this.path = path;
         this.name = name ? name : Path.basename(path);
-        this.id = md5_1.default(this.name);
+        this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
         this.validate();
     }

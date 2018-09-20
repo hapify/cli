@@ -15,3 +15,4 @@ export * from './generators/Generator';
 export * from './websocket-handlers/GetModelsHandler';
 export * from './websocket-handlers/SetModelsHandler';
 export * from './websocket-handlers/GetChannelsHandler';
+export * from './websocket-handlers/SetChannelsHandler';
