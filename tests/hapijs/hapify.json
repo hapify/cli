@@ -3,38 +3,20 @@
   "modelsPath": "../models.json",
   "templates": [
     {
+      "name": "Count",
+      "path": "src/routes/{model.hyphen}/count.js",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
       "name": "Create",
       "path": "src/routes/{model.hyphen}/create.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "name": "Read",
-      "path": "src/routes/{model.hyphen}/read.js",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Update",
-      "path": "src/routes/{model.hyphen}/update.js",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
       "name": "Delete",
       "path": "src/routes/{model.hyphen}/delete.js",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "List",
-      "path": "src/routes/{model.hyphen}/list.js",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Count",
-      "path": "src/routes/{model.hyphen}/count.js",
       "engine": "hpf",
       "input": "one"
     },
@@ -55,6 +37,24 @@
       "path": "src/routes/index.js",
       "engine": "hpf",
       "input": "all"
+    },
+    {
+      "name": "List",
+      "path": "src/routes/{model.hyphen}/list.js",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "name": "Read",
+      "path": "src/routes/{model.hyphen}/read.js",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "name": "Update",
+      "path": "src/routes/{model.hyphen}/update.js",
+      "engine": "hpf",
+      "input": "one"
     }
   ]
 }

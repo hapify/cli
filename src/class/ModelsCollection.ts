@@ -1,9 +1,9 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
 import { IModel, IStorable, ISerilizable } from '../interface';
-import { Model, Channel } from './';
+import { Model, Channel, SingleSave } from './';
 
-export class ModelsCollection implements IStorable, ISerilizable<IModel[], Model[]> {
+export class ModelsCollection extends SingleSave implements IStorable, ISerilizable<IModel[], Model[]> {
 
   /** @type {Model[]} The list of model instances */
   private models: Model[];
@@ -16,18 +16,23 @@ export class ModelsCollection implements IStorable, ISerilizable<IModel[], Model
    * @param {string} path
    */
   constructor(private parent: Channel, public path: string) {
+    super();
     this.modelsPath = Path.join(this.parent.path, this.path);
   }
 
   /** @inheritDoc */
   public async load(): Promise<void> {
-    const models: IModel[] = JSON.parse(<string>Fs.readFileSync(this.modelsPath, 'utf8'));
+    const data = <string>Fs.readFileSync(this.modelsPath, 'utf8');
+    const models: IModel[] = JSON.parse(data);
+    this.didLoad(data);
     this.fromObject(models);
   }
   /** @inheritDoc */
   async save(): Promise<void> {
     const data = JSON.stringify(this.toObject(), null, 2);
-    Fs.writeFileSync(this.modelsPath, data, 'utf8');
+    if (this.shouldSave(data)) {
+      Fs.writeFileSync(this.modelsPath, data, 'utf8');
+    }
   }
   /**
    * Find a instance with its id

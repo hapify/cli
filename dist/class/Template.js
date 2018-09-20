@@ -14,17 +14,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
+const Path = __importStar(require("path"));
 const enum_1 = require("../enum");
+const _1 = require("./");
 const typedi_1 = require("typedi");
 const String_1 = require("../service/String");
-class Template {
+const mkdirp_1 = __importDefault(require("mkdirp"));
+class Template extends _1.SingleSave {
     /**
      * Constructor
      * @param {Channel} parent
      */
     constructor(parent) {
+        super();
         this.parent = parent;
     }
     /** @inheritDoc */
@@ -75,13 +82,17 @@ class Template {
         return __awaiter(this, void 0, void 0, function* () {
             const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
             this.content = Fs.readFileSync(contentPath, 'utf8');
+            this.didLoad(this.content);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
-            Fs.writeFileSync(contentPath, this.content, 'utf8');
+            if (this.shouldSave(this.content)) {
+                const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
+                mkdirp_1.default.sync(Path.dirname(contentPath));
+                Fs.writeFileSync(contentPath, this.content, 'utf8');
+            }
         });
     }
     /**

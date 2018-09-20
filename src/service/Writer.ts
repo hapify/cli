@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import * as Fs from 'fs';
 import * as Path from 'path';
+import mkdirp from 'mkdirp';
 import JSZip from 'jszip';
 import { IGeneratorResult } from '../interface';
 
@@ -31,7 +32,7 @@ export class WriterService {
         level: 9
       }
     });
-    await this.ensureDir(path);
+    mkdirp.sync(Path.dirname(path));
     Fs.writeFileSync(path, content);
   }
   /**
@@ -53,21 +54,7 @@ export class WriterService {
    */
   async write(root: string, result: IGeneratorResult): Promise<void> {
     const path = Path.join(root, result.path);
-    await this.ensureDir(path);
+    mkdirp.sync(Path.dirname(path));
     Fs.writeFileSync(path, result.content, 'utf8');
-  }
-
-  /**
-   * Create containing directory
-   * @param {string} path
-   * @return {Promise<void>}
-   */
-  private async ensureDir(path: string): Promise<void> {
-    const dirPath = Path.dirname(path);
-    if (Fs.existsSync(dirPath)) {
-      return;
-    }
-    await this.ensureDir(dirPath);
-    Fs.mkdirSync(dirPath);
   }
 }

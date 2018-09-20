@@ -30,6 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Fs = __importStar(require("fs"));
 const Path = __importStar(require("path"));
+const mkdirp_1 = __importDefault(require("mkdirp"));
 const jszip_1 = __importDefault(require("jszip"));
 let WriterService = class WriterService {
     /** Constructor */
@@ -56,7 +57,7 @@ let WriterService = class WriterService {
                     level: 9
                 }
             });
-            yield this.ensureDir(path);
+            mkdirp_1.default.sync(Path.dirname(path));
             Fs.writeFileSync(path, content);
         });
     }
@@ -82,23 +83,8 @@ let WriterService = class WriterService {
     write(root, result) {
         return __awaiter(this, void 0, void 0, function* () {
             const path = Path.join(root, result.path);
-            yield this.ensureDir(path);
+            mkdirp_1.default.sync(Path.dirname(path));
             Fs.writeFileSync(path, result.content, 'utf8');
-        });
-    }
-    /**
-     * Create containing directory
-     * @param {string} path
-     * @return {Promise<void>}
-     */
-    ensureDir(path) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const dirPath = Path.dirname(path);
-            if (Fs.existsSync(dirPath)) {
-                return;
-            }
-            yield this.ensureDir(dirPath);
-            Fs.mkdirSync(dirPath);
         });
     }
 };

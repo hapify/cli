@@ -1,11 +1,12 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
 import { IChannel, IConfig, ISerilizable, IStorable } from '../interface';
-import { ModelsCollection, Template, Validator } from './';
+import { ModelsCollection, Template, Validator, SingleSave } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
+import mkdirp from 'mkdirp';
 
-export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
+export class Channel extends SingleSave implements IStorable, ISerilizable<IChannel, Channel> {
 
   /** @type {string} */
   public name: string;
@@ -32,6 +33,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
    * @param {string|null} name
    */
   constructor(public path: string, name: string|null = null) {
+    super();
     this.name = name ? name : Path.basename(path);
     this.id = md5(this.path);
     this.templatesPath = Path.join(this.path, Channel.defaultFolder);
@@ -43,8 +45,10 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
 
     // Copy config to instance
     const path = Path.join(this.path, Channel.configFile);
-    this.config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
-
+    const data = <string>Fs.readFileSync(path, 'utf8');
+    this.config = JSON.parse(data);
+    this.didLoad(data);
+    
     // Load each content file
     this.templates = [];
     for (let i = 0; i < this.config.templates.length; i++) {
@@ -74,18 +78,16 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
       return t;
     });
 
-    // Write models
-    await this.modelsCollection.save();
-    this.config.modelsPath = this.modelsCollection.path;
-
     // Write validator
     await this.validator.save();
     this.config.validatorPath = this.validator.path;
 
-    // Write file
-    const path = `${this.path}/${Channel.configFile}`;
+    // Write file if necessary
     const data = JSON.stringify(this.config, null, 2);
-    Fs.writeFileSync(path, data, 'utf8');
+    if (this.shouldSave(data)) {
+      const path = `${this.path}/${Channel.configFile}`;
+      Fs.writeFileSync(path, data, 'utf8');
+    }
   }
   /**
    * Denotes if the template should be considered as empty
@@ -177,9 +179,7 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
     };
 
     // Create dir
-    Fs.mkdirSync(Path.join(path, Channel.defaultFolder));
-    Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models'));
-    Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
+    mkdirp.sync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
 
     // Dump config file
     const configData = JSON.stringify(config, null, 2);
@@ -198,12 +198,24 @@ export class Channel implements IStorable, ISerilizable<IChannel, Channel> {
 
   /** @inheritDoc */
   public fromObject(object: IChannel): Channel {
-    // this.id = object.id;
-    // this.name = object.name;
-    // this.templates = object.fields.map((fieldBase: IField): Field => {
-    //   const field = new Field();
-    //   return field.fromObject(fieldBase);
-    // });
+
+    // Do not update name nor id
+    // Create or update templates if necessary
+    // By keeping the same instances, we will avoid a file saving if the content did not change
+    this.templates = object.templates.map((t) => {
+      // Try to find an existing template
+      const existing = this.templates.find((e) => e.path === t.path);
+      if (existing) {
+        return existing.fromObject(t);
+      }
+      // Otherwise create a new temaplte
+      const newOne = new Template(this);
+      return newOne.fromObject(t);
+    });
+
+    // Update validator
+    this.validator.content = object.validator;
+
     return this;
   }
   /** @inheritDoc */

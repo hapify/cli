@@ -16,13 +16,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
-class Validator {
+const _1 = require("./");
+class Validator extends _1.SingleSave {
     /**
      * Constructor
      * @param {Channel} parent
      * @param {string} path
      */
     constructor(parent, path) {
+        super();
         this.parent = parent;
         this.path = path;
     }
@@ -31,13 +33,17 @@ class Validator {
         return __awaiter(this, void 0, void 0, function* () {
             const contentPath = `${this.parent.path}/${this.path}`;
             this.content = Fs.readFileSync(contentPath, 'utf8');
+            this.didLoad(this.content);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const contentPath = `${this.parent.path}/${this.path}`;
-            Fs.writeFileSync(contentPath, this.content, 'utf8');
+            // Leave early
+            if (this.shouldSave(this.content)) {
+                const contentPath = `${this.parent.path}/${this.path}`;
+                Fs.writeFileSync(contentPath, this.content, 'utf8');
+            }
         });
     }
     /**

@@ -23,13 +23,15 @@ const Path = __importStar(require("path"));
 const _1 = require("./");
 const enum_1 = require("../enum");
 const md5_1 = __importDefault(require("md5"));
-class Channel {
+const mkdirp_1 = __importDefault(require("mkdirp"));
+class Channel extends _1.SingleSave {
     /**
      * Constructor
      * @param {string} path
      * @param {string|null} name
      */
     constructor(path, name = null) {
+        super();
         this.path = path;
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
@@ -41,7 +43,9 @@ class Channel {
         return __awaiter(this, void 0, void 0, function* () {
             // Copy config to instance
             const path = Path.join(this.path, Channel.configFile);
-            this.config = JSON.parse(Fs.readFileSync(path, 'utf8'));
+            const data = Fs.readFileSync(path, 'utf8');
+            this.config = JSON.parse(data);
+            this.didLoad(data);
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
@@ -69,16 +73,15 @@ class Channel {
                 delete t.content;
                 return t;
             });
-            // Write models
-            yield this.modelsCollection.save();
-            this.config.modelsPath = this.modelsCollection.path;
             // Write validator
             yield this.validator.save();
             this.config.validatorPath = this.validator.path;
-            // Write file
-            const path = `${this.path}/${Channel.configFile}`;
+            // Write file if necessary
             const data = JSON.stringify(this.config, null, 2);
-            Fs.writeFileSync(path, data, 'utf8');
+            if (this.shouldSave(data)) {
+                const path = `${this.path}/${Channel.configFile}`;
+                Fs.writeFileSync(path, data, 'utf8');
+            }
         });
     }
     /**
@@ -167,9 +170,7 @@ class Channel {
                 ]
             };
             // Create dir
-            Fs.mkdirSync(Path.join(path, Channel.defaultFolder));
-            Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models'));
-            Fs.mkdirSync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
+            mkdirp_1.default.sync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
             // Dump config file
             const configData = JSON.stringify(config, null, 2);
             Fs.writeFileSync(configPath, configData, 'utf8');
@@ -185,12 +186,21 @@ class Channel {
     }
     /** @inheritDoc */
     fromObject(object) {
-        // this.id = object.id;
-        // this.name = object.name;
-        // this.templates = object.fields.map((fieldBase: IField): Field => {
-        //   const field = new Field();
-        //   return field.fromObject(fieldBase);
-        // });
+        // Do not update name nor id
+        // Create or update templates if necessary
+        // By keeping the same instances, we will avoid a file saving if the content did not change
+        this.templates = object.templates.map((t) => {
+            // Try to find an existing template
+            const existing = this.templates.find((e) => e.path === t.path);
+            if (existing) {
+                return existing.fromObject(t);
+            }
+            // Otherwise create a new temaplte
+            const newOne = new _1.Template(this);
+            return newOne.fromObject(t);
+        });
+        // Update validator
+        this.validator.content = object.validator;
         return this;
     }
     /** @inheritDoc */

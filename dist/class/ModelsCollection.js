@@ -18,13 +18,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
 const Path = __importStar(require("path"));
 const _1 = require("./");
-class ModelsCollection {
+class ModelsCollection extends _1.SingleSave {
     /**
      * Constructor
      * @param {Channel} parent
      * @param {string} path
      */
     constructor(parent, path) {
+        super();
         this.parent = parent;
         this.path = path;
         this.modelsPath = Path.join(this.parent.path, this.path);
@@ -32,7 +33,9 @@ class ModelsCollection {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = JSON.parse(Fs.readFileSync(this.modelsPath, 'utf8'));
+            const data = Fs.readFileSync(this.modelsPath, 'utf8');
+            const models = JSON.parse(data);
+            this.didLoad(data);
             this.fromObject(models);
         });
     }
@@ -40,7 +43,9 @@ class ModelsCollection {
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             const data = JSON.stringify(this.toObject(), null, 2);
-            Fs.writeFileSync(this.modelsPath, data, 'utf8');
+            if (this.shouldSave(data)) {
+                Fs.writeFileSync(this.modelsPath, data, 'utf8');
+            }
         });
     }
     /**

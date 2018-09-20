@@ -1,11 +1,13 @@
 import * as Fs from 'fs';
+import * as Path from 'path';
 import { ITemplate, IStorable, ISerilizable, IConfigTemplate } from '../interface';
 import { TemplateInput, TemplateEngine, SentenceFormat } from '../enum';
-import { Channel } from './';
+import { Channel, SingleSave } from './';
 import { Container } from 'typedi';
 import { StringService } from '../service/String';
+import mkdirp from 'mkdirp';
 
-export class Template implements IStorable, ISerilizable<ITemplate, Template> {
+export class Template extends SingleSave implements IStorable, ISerilizable<ITemplate, Template> {
 
   /** @type {string} */
   private static defaultFolder = 'model';
@@ -27,6 +29,7 @@ export class Template implements IStorable, ISerilizable<ITemplate, Template> {
    * @param {Channel} parent
    */
   constructor(private parent: Channel) {
+    super();
   }
 
   /** @inheritDoc */
@@ -77,11 +80,15 @@ export class Template implements IStorable, ISerilizable<ITemplate, Template> {
   public async load(): Promise<void> {
     const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
     this.content = <string>Fs.readFileSync(contentPath, 'utf8');
+    this.didLoad(this.content);
   }
   /** @inheritDoc */
   async save(): Promise<void> {
-    const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
-    Fs.writeFileSync(contentPath, this.content, 'utf8');
+    if (this.shouldSave(this.content)) {
+      const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
+      mkdirp.sync(Path.dirname(contentPath));
+      Fs.writeFileSync(contentPath, this.content, 'utf8');
+    }
   }
   /**
    * Compute the content path from the dynamic path
