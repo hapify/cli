@@ -10,4 +10,5 @@ export class WebSocketMessages {
   static SET_MODELS = 'set:models';
   static GET_CHANNELS = 'get:channels';
   static SET_CHANNELS = 'set:channels';
+  static GENERATE_PATH = 'gen:path';
 }
