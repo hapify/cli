@@ -10,7 +10,8 @@ import { URL } from 'url';
 import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
-  LoggerService } from './';
+  LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService
+} from './';
 import { IWebSockerHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
 
@@ -48,6 +49,8 @@ export class WebSocketServerService {
     this.addHandler(Container.get(SetModelsHandlerService));
     this.addHandler(Container.get(GetChannelsHandlerService));
     this.addHandler(Container.get(SetChannelsHandlerService));
+    this.addHandler(Container.get(PathPreviewHandlerService));
+    this.addHandler(Container.get(TemplatePreviewHandlerService));
   }
 
   /**

@@ -77,6 +77,13 @@ class Template extends _1.SingleSave {
     extension() {
         return Template.computeExtension(this);
     }
+    /**
+     * Get the parent channel
+     * @returns {Channel}
+     */
+    channel() {
+        return this.parent;
+    }
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {

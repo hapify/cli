@@ -31,7 +31,7 @@ export class GeneratorService {
     let output: IGeneratorResult[] = [];
     // For each template, run sub process
     for (const template of channel.templates) {
-      const results = await this.runTemplate(channel, template);
+      const results = await this.runTemplate(template);
       output = output.concat(results);
     }
     return output;
@@ -41,43 +41,41 @@ export class GeneratorService {
    * Compile a template to multiple files.
    * One per model, if applicable.
    *
-   * @param {Channel} caller
    * @param {Template} template
    * @returns {Promise<IGeneratorResult[]>}
    */
-  async runTemplate(caller: Channel, template: Template): Promise<IGeneratorResult[]> {
+  async runTemplate(template: Template): Promise<IGeneratorResult[]> {
     // For each template, build each models
     if (template.needsModel()) {
       // Create results stack
       const output: IGeneratorResult[] = [];
-      const models = await caller.modelsCollection.list();
+      const models = await template.channel().modelsCollection.list();
       for (const model of models) {
-        output.push(await this._one(caller, template, model));
+        output.push(await this._one(template, model));
       }
       return output;
     } else {
-      return [await this._all(caller, template)];
+      return [await this._all(template)];
     }
   }
 
   /**
    * Run generation process for one model
    *
-   * @param {Channel} caller
    * @param {Template} template
    * @param {Model|null} model
    * @returns {Promise<IGeneratorResult>}
    * @throws {Error}
    *  If the template needs a model and no model is passed
    */
-  async run(caller: Channel, template: Template, model: Model | null): Promise<IGeneratorResult> {
+  async run(template: Template, model: Model | null): Promise<IGeneratorResult> {
     if (template.needsModel()) {
       if (!model) {
         throw new Error('Model should be defined for this template');
       }
-      return await this._one(caller, template, model);
+      return await this._one(template, model);
     } else {
-      return await this._all(caller, template);
+      return await this._all(template);
     }
   }
 
@@ -130,7 +128,6 @@ export class GeneratorService {
   /**
    * Run generation process for one model
    *
-   * @param {Channel} caller
    * @param {Template} template
    * @param {Model} model
    * @returns {Promise<IGeneratorResult>}
@@ -138,12 +135,12 @@ export class GeneratorService {
    *  If the template rendering engine is unknown
    * @private
    */
-  private async _one(caller: Channel, template: Template, model: Model): Promise<IGeneratorResult> {
+  private async _one(template: Template, model: Model): Promise<IGeneratorResult> {
 
     // Compute path
     const path = this._path(template.path, model);
     // Get full model description
-    const input = await this._explicitModel(caller, model);
+    const input = await this._explicitModel(template.channel(), model);
 
     // Compute content
     let content;
@@ -166,19 +163,18 @@ export class GeneratorService {
   /**
    * Run generation process for all models
    *
-   * @param {Channel} caller
    * @param {Template} template
    * @returns {Promise<IGeneratorResult>}
    * @throws {Error}
    *  If the template rendering engine is unknowns
    * @private
    */
-  private async _all(caller: Channel, template: Template): Promise<IGeneratorResult> {
+  private async _all(template: Template): Promise<IGeneratorResult> {
 
     // Compute path
     const path = this._path(template.path);
     // Get full models description
-    const input = await this._explicitAllModels(caller);
+    const input = await this._explicitAllModels(template.channel());
 
     // Compute content
     let content;

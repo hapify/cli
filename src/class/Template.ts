@@ -75,6 +75,13 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
   public extension(): string {
     return Template.computeExtension(this);
   }
+  /**
+   * Get the parent channel
+   * @returns {Channel}
+   */
+  public channel(): Channel {
+    return this.parent;
+  }
 
   /** @inheritDoc */
   public async load(): Promise<void> {

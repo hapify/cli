@@ -17,3 +17,4 @@ export * from './websocket-handlers/SetModelsHandler';
 export * from './websocket-handlers/GetChannelsHandler';
 export * from './websocket-handlers/SetChannelsHandler';
 export * from './websocket-handlers/PathPreviewHandler';
+export * from './websocket-handlers/TemplatePreviewHandler';

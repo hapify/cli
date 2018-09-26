@@ -47,7 +47,7 @@ let GeneratorService = class GeneratorService {
             let output = [];
             // For each template, run sub process
             for (const template of channel.templates) {
-                const results = yield this.runTemplate(channel, template);
+                const results = yield this.runTemplate(template);
                 output = output.concat(results);
             }
             return output;
@@ -57,47 +57,45 @@ let GeneratorService = class GeneratorService {
      * Compile a template to multiple files.
      * One per model, if applicable.
      *
-     * @param {Channel} caller
      * @param {Template} template
      * @returns {Promise<IGeneratorResult[]>}
      */
-    runTemplate(caller, template) {
+    runTemplate(template) {
         return __awaiter(this, void 0, void 0, function* () {
             // For each template, build each models
             if (template.needsModel()) {
                 // Create results stack
                 const output = [];
-                const models = yield caller.modelsCollection.list();
+                const models = yield template.channel().modelsCollection.list();
                 for (const model of models) {
-                    output.push(yield this._one(caller, template, model));
+                    output.push(yield this._one(template, model));
                 }
                 return output;
             }
             else {
-                return [yield this._all(caller, template)];
+                return [yield this._all(template)];
             }
         });
     }
     /**
      * Run generation process for one model
      *
-     * @param {Channel} caller
      * @param {Template} template
      * @param {Model|null} model
      * @returns {Promise<IGeneratorResult>}
      * @throws {Error}
      *  If the template needs a model and no model is passed
      */
-    run(caller, template, model) {
+    run(template, model) {
         return __awaiter(this, void 0, void 0, function* () {
             if (template.needsModel()) {
                 if (!model) {
                     throw new Error('Model should be defined for this template');
                 }
-                return yield this._one(caller, template, model);
+                return yield this._one(template, model);
             }
             else {
-                return yield this._all(caller, template);
+                return yield this._all(template);
             }
         });
     }
@@ -150,7 +148,6 @@ let GeneratorService = class GeneratorService {
     /**
      * Run generation process for one model
      *
-     * @param {Channel} caller
      * @param {Template} template
      * @param {Model} model
      * @returns {Promise<IGeneratorResult>}
@@ -158,12 +155,12 @@ let GeneratorService = class GeneratorService {
      *  If the template rendering engine is unknown
      * @private
      */
-    _one(caller, template, model) {
+    _one(template, model) {
         return __awaiter(this, void 0, void 0, function* () {
             // Compute path
             const path = this._path(template.path, model);
             // Get full model description
-            const input = yield this._explicitModel(caller, model);
+            const input = yield this._explicitModel(template.channel(), model);
             // Compute content
             let content;
             if (template.engine === enum_1.TemplateEngine.Hpf) {
@@ -187,19 +184,18 @@ let GeneratorService = class GeneratorService {
     /**
      * Run generation process for all models
      *
-     * @param {Channel} caller
      * @param {Template} template
      * @returns {Promise<IGeneratorResult>}
      * @throws {Error}
      *  If the template rendering engine is unknowns
      * @private
      */
-    _all(caller, template) {
+    _all(template) {
         return __awaiter(this, void 0, void 0, function* () {
             // Compute path
             const path = this._path(template.path);
             // Get full models description
-            const input = yield this._explicitAllModels(caller);
+            const input = yield this._explicitAllModels(template.channel());
             // Compute content
             let content;
             if (template.engine === enum_1.TemplateEngine.Hpf) {
