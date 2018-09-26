@@ -48,7 +48,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     const data = <string>Fs.readFileSync(path, 'utf8');
     this.config = JSON.parse(data);
     this.didLoad(data);
-    
+
     // Load each content file
     this.templates = [];
     for (let i = 0; i < this.config.templates.length; i++) {
@@ -88,7 +88,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       const path = `${this.path}/${Channel.configFile}`;
       Fs.writeFileSync(path, data, 'utf8');
     }
-    
+
     // Cleanup files in template path
     const legitFiles = [
       Path.join(this.path, this.config.validatorPath),
@@ -279,7 +279,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
 
     // Count remaining files & dirs
     const count = Fs.readdirSync(rootPath).length;
-    
+
     if (count === 0) {
       Fs.rmdirSync(rootPath);
     }

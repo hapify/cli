@@ -20,8 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
-const class_1 = require("../../class");
-let PathGeneratorHandlerService = class PathGeneratorHandlerService {
+let PathPreviewHandlerService = class PathPreviewHandlerService {
     /**
      * Constructor
      * @param channelsService
@@ -33,24 +32,24 @@ let PathGeneratorHandlerService = class PathGeneratorHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.GENERATE_PATH;
+        return message.id === interface_1.WebSocketMessages.PREVIEW_PATH;
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const template = (new class_1.Template()), message, data, template;
+            // Get model, if any
             const model = message.data.model ?
-                (yield this.channelsService.modelsCollection()).find(message.data.model) :
+                (yield (yield this.channelsService.modelsCollection()).find(message.data.model)) :
                 null;
-            const channels = yield ;
-            return yield channels.map(channel => channel.toObject());
+            // Compute the path
+            return this.generatorService.pathPreview(message.data.path, model);
         });
     }
 };
-PathGeneratorHandlerService = __decorate([
+PathPreviewHandlerService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [__1.ChannelsService,
         __1.GeneratorService])
-], PathGeneratorHandlerService);
-exports.PathGeneratorHandlerService = PathGeneratorHandlerService;
-//# sourceMappingURL=PathGeneratorHandler.js.map
+], PathPreviewHandlerService);
+exports.PathPreviewHandlerService = PathPreviewHandlerService;
+//# sourceMappingURL=PathPreviewHandler.js.map

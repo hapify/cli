@@ -85,20 +85,31 @@ export class GeneratorService {
    * Only process the path
    *
    * @param {Template} template
-   * @param {Model|null} model
+   * @param {Model} model
    * @returns {string}
    * @throws {Error}
    *  If the template needs a model and no model is passed
    */
-  path(template: Template, model: Model|null): string {
+  path(template: Template, model?: Model): string {
     if (template.needsModel()) {
       if (!model) {
         throw new Error('Model should be defined for this template');
       }
-      return this._path(model, template);
+      return this._path(template.path, model);
     } else {
-      return this._pathForAll(template);
+      return this._path(template.path);
     }
+  }
+  /**
+   * Compute path from a string
+   *
+   * @param {string} path
+   * @param {Model|null} model
+   *  Default null
+   * @returns {string}
+   */
+  pathPreview(path: string, model: Model|null = null): string {
+    return this._path(path, model);
   }
 
   /**
@@ -130,7 +141,7 @@ export class GeneratorService {
   private async _one(caller: Channel, template: Template, model: Model): Promise<IGeneratorResult> {
 
     // Compute path
-    const path = this._path(model, template);
+    const path = this._path(template.path, model);
     // Get full model description
     const input = await this._explicitModel(caller, model);
 
@@ -165,7 +176,7 @@ export class GeneratorService {
   private async _all(caller: Channel, template: Template): Promise<IGeneratorResult> {
 
     // Compute path
-    const path = this._pathForAll(template);
+    const path = this._path(template.path);
     // Get full models description
     const input = await this._explicitAllModels(caller);
 
@@ -188,17 +199,20 @@ export class GeneratorService {
   }
 
   /**
-   * Compute path for a "one model" template
+   * Compute path from a string
    *
-   * @param {Model} model
-   * @param {Template} template
+   * @param {string} path
+   * @param {Model|null} model
+   *  Default null
    * @returns {string}
    * @private
    */
-  private _path(model: Model, template: Template): string {
+  private _path(path: string, model: Model|null = null): string {
 
-    // Get path
-    let path = template.path;
+    // Quick exit
+    if (model === null) {
+      return path;
+    }
 
     // Apply replacements
     path = path.replace(/{model\.hyphen}/g, this.stringService.format(model.name, SentenceFormat.SlugHyphen));
@@ -210,17 +224,6 @@ export class GeneratorService {
     path = path.replace(/{model\.lowerCamel}/g, this.stringService.format(model.name, SentenceFormat.LowerCamelCase));
 
     return path;
-  }
-
-  /**
-   * Compute path for a "all model" template
-   *
-   * @param {Template} template
-   * @returns {string}
-   * @private
-   */
-  private _pathForAll(template: Template): string {
-    return template.path;
   }
 
   /**

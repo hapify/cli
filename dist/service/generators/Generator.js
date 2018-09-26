@@ -105,7 +105,7 @@ let GeneratorService = class GeneratorService {
      * Only process the path
      *
      * @param {Template} template
-     * @param {Model|null} model
+     * @param {Model} model
      * @returns {string}
      * @throws {Error}
      *  If the template needs a model and no model is passed
@@ -115,11 +115,22 @@ let GeneratorService = class GeneratorService {
             if (!model) {
                 throw new Error('Model should be defined for this template');
             }
-            return this._path(model, template);
+            return this._path(template.path, model);
         }
         else {
-            return this._pathForAll(template);
+            return this._path(template.path);
         }
+    }
+    /**
+     * Compute path from a string
+     *
+     * @param {string} path
+     * @param {Model|null} model
+     *  Default null
+     * @returns {string}
+     */
+    pathPreview(path, model = null) {
+        return this._path(path, model);
     }
     /**
      * Returns the input(s) that will be injected in a template
@@ -150,7 +161,7 @@ let GeneratorService = class GeneratorService {
     _one(caller, template, model) {
         return __awaiter(this, void 0, void 0, function* () {
             // Compute path
-            const path = this._path(model, template);
+            const path = this._path(template.path, model);
             // Get full model description
             const input = yield this._explicitModel(caller, model);
             // Compute content
@@ -186,7 +197,7 @@ let GeneratorService = class GeneratorService {
     _all(caller, template) {
         return __awaiter(this, void 0, void 0, function* () {
             // Compute path
-            const path = this._pathForAll(template);
+            const path = this._path(template.path);
             // Get full models description
             const input = yield this._explicitAllModels(caller);
             // Compute content
@@ -210,16 +221,19 @@ let GeneratorService = class GeneratorService {
         });
     }
     /**
-     * Compute path for a "one model" template
+     * Compute path from a string
      *
-     * @param {Model} model
-     * @param {Template} template
+     * @param {string} path
+     * @param {Model|null} model
+     *  Default null
      * @returns {string}
      * @private
      */
-    _path(model, template) {
-        // Get path
-        let path = template.path;
+    _path(path, model = null) {
+        // Quick exit
+        if (model === null) {
+            return path;
+        }
         // Apply replacements
         path = path.replace(/{model\.hyphen}/g, this.stringService.format(model.name, enum_1.SentenceFormat.SlugHyphen));
         path = path.replace(/{model\.hyphenUpper}/g, this.stringService.format(model.name, enum_1.SentenceFormat.SlugHyphenUpperCase));
@@ -229,16 +243,6 @@ let GeneratorService = class GeneratorService {
         path = path.replace(/{model\.upperCamel}/g, this.stringService.format(model.name, enum_1.SentenceFormat.UpperCamelCase));
         path = path.replace(/{model\.lowerCamel}/g, this.stringService.format(model.name, enum_1.SentenceFormat.LowerCamelCase));
         return path;
-    }
-    /**
-     * Compute path for a "all model" template
-     *
-     * @param {Template} template
-     * @returns {string}
-     * @private
-     */
-    _pathForAll(template) {
-        return template.path;
     }
     /**
      * Convert the model to an object containing all its properties
