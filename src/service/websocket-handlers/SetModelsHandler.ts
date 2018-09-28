@@ -46,6 +46,6 @@ export class SetModelsHandlerService implements IWebSockerHandler {
   async handle(message: IWebSocketMessage): Promise<any> {
     const modelsCollection = await this.channelsService.modelsCollection();
     modelsCollection.fromObject(message.data);
-    modelsCollection.save();
+    await modelsCollection.save();
   }
 }

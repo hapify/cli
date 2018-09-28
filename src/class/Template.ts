@@ -7,7 +7,7 @@ import { Container } from 'typedi';
 import { StringService } from '../service/String';
 import mkdirp from 'mkdirp';
 
-export class Template extends SingleSave implements IStorable, ISerilizable<ITemplate, Template> {
+export class Template extends SingleSave implements IStorable, ISerilizable<ITemplate, Template>, ITemplate {
 
   /** @type {string} */
   private static defaultFolder = 'model';

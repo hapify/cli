@@ -48,7 +48,7 @@ export class SetChannelsHandlerService implements IWebSockerHandler {
         throw new Error(`Channel not found: ${toSave.name}`);
       }
       channel.fromObject(toSave);
-      channel.save();
+      await channel.save();
     }
   }
 }

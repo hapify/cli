@@ -22,4 +22,6 @@ __export(require("./websocket-handlers/SetChannelsHandler"));
 __export(require("./websocket-handlers/PathPreviewHandler"));
 __export(require("./websocket-handlers/TemplatePreviewHandler"));
 __export(require("./websocket-handlers/ValidateModelHandler"));
+__export(require("./websocket-handlers/GenerateTemplateHandler"));
+__export(require("./websocket-handlers/GenerateChannelHandler"));
 //# sourceMappingURL=index.js.map

@@ -62,6 +62,9 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
         return __awaiter(this, void 0, void 0, function* () {
             // Get channel
             const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
+            if (!channel) {
+                throw new Error(`Unable to find channel ${message.data.channel}`);
+            }
             // Get model, if any
             const model = message.data.model ? (yield channel.modelsCollection.find(message.data.model)) : null;
             // Get template

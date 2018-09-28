@@ -20,3 +20,5 @@ export * from './websocket-handlers/SetChannelsHandler';
 export * from './websocket-handlers/PathPreviewHandler';
 export * from './websocket-handlers/TemplatePreviewHandler';
 export * from './websocket-handlers/ValidateModelHandler';
+export * from './websocket-handlers/GenerateTemplateHandler';
+export * from './websocket-handlers/GenerateChannelHandler';

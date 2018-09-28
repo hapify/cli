@@ -34,11 +34,17 @@ export class ValidateModelHandlerService implements IWebSockerHandler {
 
     // Get model
     const model = await (await this.channelsService.modelsCollection()).find(message.data.model);
+    if (!model) {
+      throw new Error(`Unable to find model ${message.data.model}`);
+    }
 
     // From an existing channel
     if (message.data.channel) {
-      // Get channel, if any
+      // Get channel
       const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);
+      if (!channel) {
+        throw new Error(`Unable to find channel ${message.data.channel}`);
+      }
       return await this.validatorService.runForChannel(channel, model);
     }
 

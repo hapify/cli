@@ -70,7 +70,7 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
                     throw new Error(`Channel not found: ${toSave.name}`);
                 }
                 channel.fromObject(toSave);
-                channel.save();
+                yield channel.save();
             }
         });
     }

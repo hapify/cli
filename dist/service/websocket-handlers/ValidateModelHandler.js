@@ -55,10 +55,16 @@ let ValidateModelHandlerService = class ValidateModelHandlerService {
         return __awaiter(this, void 0, void 0, function* () {
             // Get model
             const model = yield (yield this.channelsService.modelsCollection()).find(message.data.model);
+            if (!model) {
+                throw new Error(`Unable to find model ${message.data.model}`);
+            }
             // From an existing channel
             if (message.data.channel) {
-                // Get channel, if any
+                // Get channel
                 const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
+                if (!channel) {
+                    throw new Error(`Unable to find channel ${message.data.channel}`);
+                }
                 return yield this.validatorService.runForChannel(channel, model);
             }
             // From content

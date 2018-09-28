@@ -68,7 +68,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
         return __awaiter(this, void 0, void 0, function* () {
             const modelsCollection = yield this.channelsService.modelsCollection();
             modelsCollection.fromObject(message.data);
-            modelsCollection.save();
+            yield modelsCollection.save();
         });
     }
 };

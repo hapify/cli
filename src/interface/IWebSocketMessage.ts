@@ -13,4 +13,6 @@ export class WebSocketMessages {
   static PREVIEW_PATH = 'prv:path';
   static PREVIEW_TEMPLATE = 'prv:template';
   static VALIDATE_MODEL = 'val:model';
+  static GENERATE_TEMPLATE = 'gen:template';
+  static GENERATE_CHANNEL = 'gen:channel';
 }

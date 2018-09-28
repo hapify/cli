@@ -12,7 +12,7 @@ import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
   LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService,
-  ValidateModelHandlerService
+  ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
 } from './';
 import { IWebSockerHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
@@ -54,6 +54,8 @@ export class WebSocketServerService {
     this.addHandler(Container.get(PathPreviewHandlerService));
     this.addHandler(Container.get(TemplatePreviewHandlerService));
     // this.addHandler(Container.get(ValidateModelHandlerService));
+    this.addHandler(Container.get(GenerateTemplateHandlerService));
+    this.addHandler(Container.get(GenerateChannelHandlerService));
   }
 
   /**
