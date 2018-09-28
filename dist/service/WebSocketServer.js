@@ -59,7 +59,7 @@ let WebSocketServerService = class WebSocketServerService {
         this.addHandler(typedi_2.Container.get(_1.SetChannelsHandlerService));
         this.addHandler(typedi_2.Container.get(_1.PathPreviewHandlerService));
         this.addHandler(typedi_2.Container.get(_1.TemplatePreviewHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.ValidateModelHandlerService));
+        // this.addHandler(Container.get(ValidateModelHandlerService));
     }
     /**
      * Starts the http server
