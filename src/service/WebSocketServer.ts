@@ -7,10 +7,12 @@ import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
+import * as Joi from 'joi';
 import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
-  LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService
+  LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService,
+  ValidateModelHandlerService
 } from './';
 import { IWebSockerHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
@@ -51,6 +53,7 @@ export class WebSocketServerService {
     this.addHandler(Container.get(SetChannelsHandlerService));
     this.addHandler(Container.get(PathPreviewHandlerService));
     this.addHandler(Container.get(TemplatePreviewHandlerService));
+    this.addHandler(Container.get(ValidateModelHandlerService));
   }
 
   /**
@@ -103,12 +106,30 @@ export class WebSocketServerService {
         try {
 
           const decoded = <IWebSocketMessage>JSON.parse(message);
+
           // Log for debug
           this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
+
           // Dispatch message to the right handler
           let handled = false;
           for (const handler of this.handlers) {
             if (handler.canHandle(decoded)) {
+
+              // Validate the incoming payload
+              const validation = Joi.validate(decoded.data, handler.validator());
+              if (validation.error) {
+                const errorMessage = validation.error.details.map((v) => v.message).join(', ');
+                ws.send(JSON.stringify({
+                  id: decoded.id,
+                  tag: decoded.tag,
+                  type: 'error',
+                  data: {error: errorMessage}
+                }));
+                this.loggerService.debug(`[WS:${id}] Invalid request format`);
+                this.loggerService.error(errorMessage);
+                return;
+              }
+
               // Return the result to the client
               await handler.handle(decoded)
                 .then((result) => {
@@ -132,6 +153,7 @@ export class WebSocketServerService {
               break;
             }
           }
+
           // If message is not handled, send an error to the client
           if (!handled) {
             // Send the error to the client

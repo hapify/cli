@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../';
+import * as Joi from 'joi';
 
 @Service()
 export class GetChannelsHandlerService implements IWebSockerHandler {
@@ -15,6 +16,11 @@ export class GetChannelsHandlerService implements IWebSockerHandler {
   /** @inheritDoc */
   canHandle(message: IWebSocketMessage): boolean {
     return message.id === WebSocketMessages.GET_CHANNELS;
+  }
+
+  /** @inheritDoc */
+  validator(): Joi.Schema {
+    return Joi.any();
   }
 
   /** @inheritDoc */

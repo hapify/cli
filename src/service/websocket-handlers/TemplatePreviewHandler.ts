@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage, ITemplate } from '../../interface';
 import { ChannelsService, GeneratorService } from '../';
 import { Template } from '../../class';
+import * as Joi from 'joi';
 
 @Service()
 export class TemplatePreviewHandlerService implements IWebSockerHandler {
@@ -21,8 +22,23 @@ export class TemplatePreviewHandlerService implements IWebSockerHandler {
   }
 
   /** @inheritDoc */
+  validator(): Joi.Schema {
+    return Joi.object({
+      model: Joi.string(),
+      channel: Joi.string().required(),
+      template: Joi.object({
+        name: Joi.string().required(),
+        path: Joi.string().required(),
+        engine: Joi.string().required(),
+        input: Joi.string().required(),
+        content: Joi.string().required().allow('')
+      }).required()
+    });
+  }
+
+  /** @inheritDoc */
   async handle(message: IWebSocketMessage): Promise<any> {
-    // Get model, if any
+    // Get channel
     const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);
     // Get model, if any
     const model = message.data.model ? (await channel.modelsCollection.find(message.data.model)) : null;

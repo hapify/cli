@@ -8,5 +8,6 @@ WebSocketMessages.GET_CHANNELS = 'get:channels';
 WebSocketMessages.SET_CHANNELS = 'set:channels';
 WebSocketMessages.PREVIEW_PATH = 'prv:path';
 WebSocketMessages.PREVIEW_TEMPLATE = 'prv:template';
+WebSocketMessages.VALIDATE_MODEL = 'val:model';
 exports.WebSocketMessages = WebSocketMessages;
 //# sourceMappingURL=IWebSocketMessage.js.map

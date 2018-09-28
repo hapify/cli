@@ -5,6 +5,7 @@ export * from './Options';
 export * from './Logger';
 export * from './Writer';
 export * from './HttpServer';
+export * from './Validator';
 export * from './WebSocketServer';
 
 export * from './generators/DotGenerator';
@@ -18,3 +19,4 @@ export * from './websocket-handlers/GetChannelsHandler';
 export * from './websocket-handlers/SetChannelsHandler';
 export * from './websocket-handlers/PathPreviewHandler';
 export * from './websocket-handlers/TemplatePreviewHandler';
+export * from './websocket-handlers/ValidateModelHandler';

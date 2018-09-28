@@ -16,10 +16,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
+const Joi = __importStar(require("joi"));
 let SetModelsHandlerService = class SetModelsHandlerService {
     /**
      * Constructor
@@ -31,6 +39,29 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     /** @inheritDoc */
     canHandle(message) {
         return message.id === interface_1.WebSocketMessages.SET_MODELS;
+    }
+    /** @inheritDoc */
+    validator() {
+        return Joi.array().items(Joi.object({
+            id: Joi.string().required(),
+            name: Joi.string().required(),
+            fields: Joi.array().items(Joi.object({
+                name: Joi.string().required(),
+                type: Joi.string().required(),
+                subtype: Joi.string().required().allow(null),
+                reference: Joi.string().required().allow(null),
+                primary: Joi.boolean().required(),
+                unique: Joi.boolean().required(),
+                label: Joi.boolean().required(),
+                nullable: Joi.boolean().required(),
+                multiple: Joi.boolean().required(),
+                searchable: Joi.boolean().required(),
+                sortable: Joi.boolean().required(),
+                isPrivate: Joi.boolean().required(),
+                internal: Joi.boolean().required(),
+                important: Joi.boolean().required(),
+            })).required().min(1)
+        })).min(1);
     }
     /** @inheritDoc */
     handle(message) {

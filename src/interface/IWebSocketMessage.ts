@@ -12,4 +12,5 @@ export class WebSocketMessages {
   static SET_CHANNELS = 'set:channels';
   static PREVIEW_PATH = 'prv:path';
   static PREVIEW_TEMPLATE = 'prv:template';
+  static VALIDATE_MODEL = 'val:model';
 }

@@ -28,7 +28,7 @@ export interface IField {
   /** @type {string} The field's subtype */
   subtype: string | null;
   /** @type {string} The field's reference if the type is entity. The GUID string of the targeted model */
-  reference: string;
+  reference: string | null;
   /** @type {boolean} Should be used as a primary key or not */
   primary: boolean;
   /** @type {boolean} Should be used as a unique key or not */

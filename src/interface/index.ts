@@ -5,5 +5,6 @@ export * from './ISerilizable';
 export * from './IRemote';
 export * from './IGenerator';
 export * from './IGeneratorResult';
+export * from './IValidatorResult';
 export * from './IWebSocketMessage';
 export * from './IWebSockerHandler';

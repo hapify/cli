@@ -1,4 +1,5 @@
 import { IWebSocketMessage } from './IWebSocketMessage';
+import * as Joi from 'joi';
 
 export interface IWebSockerHandler {
 
@@ -16,5 +17,11 @@ export interface IWebSockerHandler {
    * @return {Promise<any>}
    */
   handle(message: IWebSocketMessage): Promise<any>;
+
+  /**
+   * Returns the JOi validator for the input payload
+   * @return {Schema}
+   */
+  validator(): Joi.Schema;
 }
 

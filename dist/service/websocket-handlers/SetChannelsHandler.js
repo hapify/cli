@@ -16,10 +16,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
+const Joi = __importStar(require("joi"));
 let SetChannelsHandlerService = class SetChannelsHandlerService {
     /**
      * Constructor
@@ -31,6 +39,21 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
     /** @inheritDoc */
     canHandle(message) {
         return message.id === interface_1.WebSocketMessages.SET_CHANNELS;
+    }
+    /** @inheritDoc */
+    validator() {
+        return Joi.array().items(Joi.object({
+            id: Joi.string().required(),
+            name: Joi.string().required(),
+            validator: Joi.string().required().allow(''),
+            templates: Joi.array().items(Joi.object({
+                name: Joi.string().required(),
+                path: Joi.string().required(),
+                engine: Joi.string().required(),
+                input: Joi.string().required(),
+                content: Joi.string().required().allow('')
+            })).required()
+        })).min(1);
     }
     /** @inheritDoc */
     handle(message) {

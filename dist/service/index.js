@@ -9,6 +9,7 @@ __export(require("./Options"));
 __export(require("./Logger"));
 __export(require("./Writer"));
 __export(require("./HttpServer"));
+__export(require("./Validator"));
 __export(require("./WebSocketServer"));
 __export(require("./generators/DotGenerator"));
 __export(require("./generators/JsGenerator"));
@@ -20,4 +21,5 @@ __export(require("./websocket-handlers/GetChannelsHandler"));
 __export(require("./websocket-handlers/SetChannelsHandler"));
 __export(require("./websocket-handlers/PathPreviewHandler"));
 __export(require("./websocket-handlers/TemplatePreviewHandler"));
+__export(require("./websocket-handlers/ValidateModelHandler"));
 //# sourceMappingURL=index.js.map

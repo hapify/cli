@@ -31,6 +31,7 @@ const ws = __importStar(require("ws"));
 const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));
 const url_1 = require("url");
+const Joi = __importStar(require("joi"));
 const _1 = require("./");
 const typedi_2 = require("typedi");
 let WebSocketServerService = class WebSocketServerService {
@@ -58,6 +59,7 @@ let WebSocketServerService = class WebSocketServerService {
         this.addHandler(typedi_2.Container.get(_1.SetChannelsHandlerService));
         this.addHandler(typedi_2.Container.get(_1.PathPreviewHandlerService));
         this.addHandler(typedi_2.Container.get(_1.TemplatePreviewHandlerService));
+        this.addHandler(typedi_2.Container.get(_1.ValidateModelHandlerService));
     }
     /**
      * Starts the http server
@@ -112,6 +114,20 @@ let WebSocketServerService = class WebSocketServerService {
                         let handled = false;
                         for (const handler of this.handlers) {
                             if (handler.canHandle(decoded)) {
+                                // Validate the incoming payload
+                                const validation = Joi.validate(decoded.data, handler.validator());
+                                if (validation.error) {
+                                    const errorMessage = validation.error.details.map((v) => v.message).join(', ');
+                                    ws.send(JSON.stringify({
+                                        id: decoded.id,
+                                        tag: decoded.tag,
+                                        type: 'error',
+                                        data: { error: errorMessage }
+                                    }));
+                                    this.loggerService.debug(`[WS:${id}] Invalid request format`);
+                                    this.loggerService.error(errorMessage);
+                                    return;
+                                }
                                 // Return the result to the client
                                 yield handler.handle(decoded)
                                     .then((result) => {
