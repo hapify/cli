@@ -113,11 +113,24 @@ let WebSocketServerService = class WebSocketServerService {
                         for (const handler of this.handlers) {
                             if (handler.canHandle(decoded)) {
                                 // Return the result to the client
-                                ws.send(JSON.stringify({
-                                    id: decoded.id,
-                                    tag: decoded.tag,
-                                    data: yield handler.handle(decoded)
-                                }));
+                                yield handler.handle(decoded)
+                                    .then((result) => {
+                                    ws.send(JSON.stringify({
+                                        id: decoded.id,
+                                        tag: decoded.tag,
+                                        data: result
+                                    }));
+                                })
+                                    .catch((error) => {
+                                    ws.send(JSON.stringify({
+                                        id: decoded.id,
+                                        tag: decoded.tag,
+                                        type: 'error',
+                                        data: { error: error.message }
+                                    }));
+                                    this.loggerService.debug(`[WS:${id}] Error while handling the request`);
+                                    this.loggerService.error(error.message);
+                                });
                                 handled = true;
                                 break;
                             }
