@@ -33,10 +33,12 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
      * Constructor
      * @param {ChannelsService} channelsService
      * @param {GeneratorService} generatorService
+     * @param {WriterService} writerService
      */
-    constructor(channelsService, generatorService) {
+    constructor(channelsService, generatorService, writerService) {
         this.channelsService = channelsService;
         this.generatorService = generatorService;
+        this.writerService = writerService;
     }
     /** @inheritDoc */
     canHandle(message) {
@@ -62,14 +64,16 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
             if (!template) {
                 throw new Error(`Unable to find template ${message.data.template}`);
             }
-            yield this.generatorService.runTemplate(template);
+            const results = yield this.generatorService.runTemplate(template);
+            yield this.writerService.writeMany(channel.path, results);
         });
     }
 };
 GenerateTemplateHandlerService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [__1.ChannelsService,
-        __1.GeneratorService])
+        __1.GeneratorService,
+        __1.WriterService])
 ], GenerateTemplateHandlerService);
 exports.GenerateTemplateHandlerService = GenerateTemplateHandlerService;
 //# sourceMappingURL=GenerateTemplateHandler.js.map

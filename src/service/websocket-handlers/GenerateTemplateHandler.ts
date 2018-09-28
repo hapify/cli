@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
-import { ChannelsService, GeneratorService } from '../';
+import { ChannelsService, GeneratorService, WriterService } from '../';
 import * as Joi from 'joi';
 
 @Service()
@@ -10,9 +10,11 @@ export class GenerateTemplateHandlerService implements IWebSockerHandler {
    * Constructor
    * @param {ChannelsService} channelsService
    * @param {GeneratorService} generatorService
+   * @param {WriterService} writerService
    */
   constructor(private channelsService: ChannelsService,
-              private generatorService: GeneratorService) {
+              private generatorService: GeneratorService,
+              private writerService: WriterService) {
   }
 
   /** @inheritDoc */
@@ -40,6 +42,7 @@ export class GenerateTemplateHandlerService implements IWebSockerHandler {
     if (!template) {
       throw new Error(`Unable to find template ${message.data.template}`);
     }
-    await this.generatorService.runTemplate(template);
+    const results = await this.generatorService.runTemplate(template);
+    await this.writerService.writeMany(channel.path, results);
   }
 }

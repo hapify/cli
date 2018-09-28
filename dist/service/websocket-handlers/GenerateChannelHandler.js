@@ -33,10 +33,12 @@ let GenerateChannelHandlerService = class GenerateChannelHandlerService {
      * Constructor
      * @param {ChannelsService} channelsService
      * @param {GeneratorService} generatorService
+     * @param {WriterService} writerService
      */
-    constructor(channelsService, generatorService) {
+    constructor(channelsService, generatorService, writerService) {
         this.channelsService = channelsService;
         this.generatorService = generatorService;
+        this.writerService = writerService;
     }
     /** @inheritDoc */
     canHandle(message) {
@@ -56,14 +58,16 @@ let GenerateChannelHandlerService = class GenerateChannelHandlerService {
             if (!channel) {
                 throw new Error(`Unable to find channel ${message.data.channel}`);
             }
-            yield this.generatorService.runChannel(channel);
+            const results = yield this.generatorService.runChannel(channel);
+            yield this.writerService.writeMany(channel.path, results);
         });
     }
 };
 GenerateChannelHandlerService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [__1.ChannelsService,
-        __1.GeneratorService])
+        __1.GeneratorService,
+        __1.WriterService])
 ], GenerateChannelHandlerService);
 exports.GenerateChannelHandlerService = GenerateChannelHandlerService;
 //# sourceMappingURL=GenerateChannelHandler.js.map
