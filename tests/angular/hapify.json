@@ -1,6 +1,12 @@
 {
   "validatorPath": "hapify/validator.js",
-  "modelsPath": "../models.json",
+  "models": {
+    "key": "AKIAJNB2JZQWEW3KG6JA",
+    "secret": "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",
+    "region": "us-east-1",
+    "bucket": "hapify-storage",
+    "path": "models/cli-demo.json"
+  },
   "templates": [
     {
       "name": "All Models Index",

@@ -53,10 +53,10 @@ program
     // Group channels by models collections
     const modelsCollections: { [s: string]: Channel[] } = {};
     for (const channel of channels) {
-      if (typeof modelsCollections[channel.modelsCollection.modelsPath] === 'undefined') {
-        modelsCollections[channel.modelsCollection.modelsPath] = [];
+      if (typeof modelsCollections[channel.modelsCollection.path()] === 'undefined') {
+        modelsCollections[channel.modelsCollection.path()] = [];
       }
-      modelsCollections[channel.modelsCollection.modelsPath].push(channel);
+      modelsCollections[channel.modelsCollection.path()].push(channel);
     }
 
     const modelsPaths = Object.keys(modelsCollections);
@@ -66,9 +66,14 @@ program
       const m = await c[0].modelsCollection.list();
       const mm = m.length > 1;
       let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${cPath(modelsPath)}`;
-      message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map(m => cModel(m.name)).join('\n- ')}`;
+      if (m.length === 0) {
+        message += `\nThere is no model yet.`;
+      } else {
+        message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map(m => cModel(m.name)).join('\n- ')}`;
+      }
       logger.newLine().info(message);
     }
+    logger.newLine();
 
     // Action Ends
     // ---------------------------------

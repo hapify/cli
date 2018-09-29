@@ -7,45 +7,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Fs = __importStar(require("fs"));
-const Path = __importStar(require("path"));
+const S3 = require("aws-sdk/clients/s3");
 const _1 = require("./");
 class ModelsCollection extends _1.SingleSave {
     /**
      * Constructor
      * @param {Channel} parent
-     * @param {string} path
+     * @param {IConfigModel} config
      */
-    constructor(parent, path) {
+    constructor(parent, config) {
         super();
         this.parent = parent;
-        this.path = path;
-        this.modelsPath = Path.join(this.parent.path, this.path);
+        this.config = config;
+        this.s3service = new S3({
+            region: config.region,
+            accessKeyId: config.key,
+            secretAccessKey: config.secret
+        });
     }
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = Fs.readFileSync(this.modelsPath, 'utf8');
-            const models = JSON.parse(data);
-            this.didLoad(data);
+            const models = yield this.s3service.getObject({
+                Bucket: this.config.bucket,
+                Key: this.config.path
+            })
+                .promise()
+                .then((data) => {
+                const content = data.Body.toString('utf8');
+                const models = JSON.parse(content);
+                this.didLoad(content);
+                return models;
+            })
+                .catch((error) => {
+                // First loading => no file => AccessDenied
+                if (error.code === 'NotFound' || error.code === 'AccessDenied') {
+                    return [];
+                }
+                throw error;
+            });
             this.fromObject(models);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = JSON.stringify(this.toObject(), null, 2);
+            /*const data = JSON.stringify(this.toObject(), null, 2);
             if (this.shouldSave(data)) {
-                Fs.writeFileSync(this.modelsPath, data, 'utf8');
-            }
+              Fs.writeFileSync(this.modelsPath, data, 'utf8');
+            }*/
         });
     }
     /**
@@ -78,6 +89,13 @@ class ModelsCollection extends _1.SingleSave {
     /** @inheritDoc */
     toObject() {
         return this.models.map((model) => model.toObject());
+    }
+    /**
+     * Returns a pseudo path
+     * @returns {string}
+     */
+    path() {
+        return `s3:${this.config.bucket}:${this.config.path}`;
     }
 }
 exports.ModelsCollection = ModelsCollection;

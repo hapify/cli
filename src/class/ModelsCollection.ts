@@ -1,38 +1,58 @@
 import * as Fs from 'fs';
-import * as Path from 'path';
+import S3 = require('aws-sdk/clients/s3');
 import { IModel, IStorable, ISerilizable } from '../interface';
 import { Model, Channel, SingleSave } from './';
+import { IConfigModel } from '../interface/IObjects';
 
 export class ModelsCollection extends SingleSave implements IStorable, ISerilizable<IModel[], Model[]> {
 
   /** @type {Model[]} The list of model instances */
   private models: Model[];
   /** @type {Model[]} The full path to the file */
-  public modelsPath: string;
+  public s3service: S3;
 
   /**
    * Constructor
    * @param {Channel} parent
-   * @param {string} path
+   * @param {IConfigModel} config
    */
-  constructor(private parent: Channel, public path: string) {
+  constructor(private parent: Channel, public config: IConfigModel) {
     super();
-    this.modelsPath = Path.join(this.parent.path, this.path);
+    this.s3service = new S3({
+      region: config.region,
+      accessKeyId: config.key,
+      secretAccessKey: config.secret
+    });
   }
 
   /** @inheritDoc */
   public async load(): Promise<void> {
-    const data = <string>Fs.readFileSync(this.modelsPath, 'utf8');
-    const models: IModel[] = JSON.parse(data);
-    this.didLoad(data);
+   const models = await this.s3service.getObject({
+      Bucket: this.config.bucket,
+      Key: this.config.path
+    })
+      .promise()
+      .then((data) => {
+        const content = (data.Body as Buffer).toString('utf8');
+        const models: IModel[] = JSON.parse(content);
+        this.didLoad(content);
+        return models;
+      })
+      .catch((error) => {
+        // First loading => no file => AccessDenied
+        if (error.code === 'NotFound' || error.code === 'AccessDenied') {
+          return [];
+        }
+        throw error;
+      });
     this.fromObject(models);
   }
   /** @inheritDoc */
   async save(): Promise<void> {
-    const data = JSON.stringify(this.toObject(), null, 2);
+    /*const data = JSON.stringify(this.toObject(), null, 2);
     if (this.shouldSave(data)) {
       Fs.writeFileSync(this.modelsPath, data, 'utf8');
-    }
+    }*/
   }
   /**
    * Find a instance with its id
@@ -60,5 +80,12 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
   /** @inheritDoc */
   public toObject(): IModel[] {
     return this.models.map((model: Model): IModel => model.toObject());
+  }
+  /**
+   * Returns a pseudo path
+   * @returns {string}
+   */
+  public path(): string {
+    return `s3:${this.config.bucket}:${this.config.path}`;
   }
 }

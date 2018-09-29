@@ -58,7 +58,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
 
     // Load models
-    this.modelsCollection = new ModelsCollection(this, this.config.modelsPath);
+    this.modelsCollection = new ModelsCollection(this, this.config.models);
     await this.modelsCollection.load();
 
     // Load validator
@@ -90,10 +90,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
 
     // Cleanup files in template path
-    const legitFiles = [
-      Path.join(this.path, this.config.validatorPath),
-      Path.join(this.path, this.config.modelsPath),
-    ];
+    const legitFiles = [Path.join(this.path, this.config.validatorPath)];
     for (const template of this.templates) {
       legitFiles.push(Path.join(this.templatesPath, template.contentPath));
     }
@@ -153,11 +150,6 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     if (!Fs.existsSync(validatorPath)) {
       throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
     }
-
-    const modelsPath = Path.join(this.path, config.modelsPath);
-    if (!Fs.existsSync(modelsPath)) {
-      throw new Error(`Channel models' path ${modelsPath} does not exists.`);
-    }
   }
   /**
    * Denotes if the config file exists
@@ -183,11 +175,17 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
     const config: IConfig = {
       validatorPath: `${Channel.defaultFolder}/validator.js`,
-      modelsPath: '../models.json',
+      models: {
+        key: 'AAAAAAAAAAA',
+        secret: 'XXXXXXXXXXX',
+        region: 'us-east-1',
+        bucket: 'hapify-storage',
+        path: 'models/cli-demo.json'
+      },
       templates: [
         {
           name: 'Hello World',
-          path: 'models/{model.hyphen}/hello.js',
+          path: 'models/{model.hyphen}/hello.j s',
           engine: TemplateEngine.Hpf,
           input: TemplateInput.One
         }

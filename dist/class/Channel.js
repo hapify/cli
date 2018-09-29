@@ -54,7 +54,7 @@ class Channel extends _1.SingleSave {
                 this.templates.push(template);
             }
             // Load models
-            this.modelsCollection = new _1.ModelsCollection(this, this.config.modelsPath);
+            this.modelsCollection = new _1.ModelsCollection(this, this.config.models);
             yield this.modelsCollection.load();
             // Load validator
             this.validator = new _1.Validator(this, this.config.validatorPath);
@@ -83,10 +83,7 @@ class Channel extends _1.SingleSave {
                 Fs.writeFileSync(path, data, 'utf8');
             }
             // Cleanup files in template path
-            const legitFiles = [
-                Path.join(this.path, this.config.validatorPath),
-                Path.join(this.path, this.config.modelsPath),
-            ];
+            const legitFiles = [Path.join(this.path, this.config.validatorPath)];
             for (const template of this.templates) {
                 legitFiles.push(Path.join(this.templatesPath, template.contentPath));
             }
@@ -144,10 +141,6 @@ class Channel extends _1.SingleSave {
         if (!Fs.existsSync(validatorPath)) {
             throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
         }
-        const modelsPath = Path.join(this.path, config.modelsPath);
-        if (!Fs.existsSync(modelsPath)) {
-            throw new Error(`Channel models' path ${modelsPath} does not exists.`);
-        }
     }
     /**
      * Denotes if the config file exists
@@ -174,11 +167,17 @@ class Channel extends _1.SingleSave {
             }
             const config = {
                 validatorPath: `${Channel.defaultFolder}/validator.js`,
-                modelsPath: '../models.json',
+                models: {
+                    key: 'AAAAAAAAAAA',
+                    secret: 'XXXXXXXXXXX',
+                    region: 'us-east-1',
+                    bucket: 'hapify-storage',
+                    path: 'models/cli-demo.json'
+                },
                 templates: [
                     {
                         name: 'Hello World',
-                        path: 'models/{model.hyphen}/hello.js',
+                        path: 'models/{model.hyphen}/hello.j s',
                         engine: enum_1.TemplateEngine.Hpf,
                         input: enum_1.TemplateInput.One
                     }
