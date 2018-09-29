@@ -53,10 +53,10 @@ program
     // Group channels by models collections
     const modelsCollections: { [s: string]: Channel[] } = {};
     for (const channel of channels) {
-      if (typeof modelsCollections[channel.modelsCollection.path()] === 'undefined') {
-        modelsCollections[channel.modelsCollection.path()] = [];
+      if (typeof modelsCollections[channel.modelsCollection.path] === 'undefined') {
+        modelsCollections[channel.modelsCollection.path] = [];
       }
-      modelsCollections[channel.modelsCollection.path()].push(channel);
+      modelsCollections[channel.modelsCollection.path].push(channel);
     }
 
     const modelsPaths = Object.keys(modelsCollections);

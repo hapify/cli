@@ -58,8 +58,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
 
     // Load models
-    this.modelsCollection = new ModelsCollection(this, this.config.models);
-    await this.modelsCollection.load();
+    this.modelsCollection = await ModelsCollection.getInstance(this.config.models);
 
     // Load validator
     this.validator = new Validator(this, this.config.validatorPath);

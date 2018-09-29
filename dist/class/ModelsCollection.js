@@ -13,17 +13,36 @@ const _1 = require("./");
 class ModelsCollection extends _1.SingleSave {
     /**
      * Constructor
-     * @param {Channel} parent
      * @param {IConfigModel} config
      */
-    constructor(parent, config) {
+    constructor(config) {
         super();
-        this.parent = parent;
         this.config = config;
         this.s3service = new S3({
             region: config.region,
             accessKeyId: config.key,
             secretAccessKey: config.secret
+        });
+        this.path = ModelsCollection.path(config);
+    }
+    /**
+     * Returns a singleton for this config
+     * @param {IConfigModel} config
+     */
+    static getInstance(config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const path = ModelsCollection.path(config);
+            // Try to find an existing collection
+            const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
+            if (modelsCollection) {
+                return modelsCollection;
+            }
+            // Create and load a new collection
+            const collection = new ModelsCollection(config);
+            yield collection.load();
+            // Keep the collection
+            ModelsCollection.instances.push(collection);
+            return collection;
         });
     }
     /** @inheritDoc */
@@ -53,10 +72,15 @@ class ModelsCollection extends _1.SingleSave {
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            /*const data = JSON.stringify(this.toObject(), null, 2);
+            const data = JSON.stringify(this.toObject(), null, 2);
             if (this.shouldSave(data)) {
-              Fs.writeFileSync(this.modelsPath, data, 'utf8');
-            }*/
+                yield this.s3service.putObject({
+                    Body: Buffer.from(data, 'utf8'),
+                    Bucket: this.config.bucket,
+                    Key: this.config.path
+                })
+                    .promise();
+            }
         });
     }
     /**
@@ -94,9 +118,11 @@ class ModelsCollection extends _1.SingleSave {
      * Returns a pseudo path
      * @returns {string}
      */
-    path() {
-        return `s3:${this.config.bucket}:${this.config.path}`;
+    static path(config) {
+        return `s3:${config.bucket}:${config.path}`;
     }
 }
+/** @type {string} The pseudo path */
+ModelsCollection.instances = [];
 exports.ModelsCollection = ModelsCollection;
 //# sourceMappingURL=ModelsCollection.js.map

@@ -54,8 +54,7 @@ class Channel extends _1.SingleSave {
                 this.templates.push(template);
             }
             // Load models
-            this.modelsCollection = new _1.ModelsCollection(this, this.config.models);
-            yield this.modelsCollection.load();
+            this.modelsCollection = yield _1.ModelsCollection.getInstance(this.config.models);
             // Load validator
             this.validator = new _1.Validator(this, this.config.validatorPath);
             yield this.validator.load();
