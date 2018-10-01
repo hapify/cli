@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
+  "bin": {
+    "hpf": "bin/index.js"
+  },
+  "preferGlobal": true,
   "scripts": {
     "start": "node dist/index.js",
     "watch": "rm -rf dist && tsc",
