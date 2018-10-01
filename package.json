@@ -28,7 +28,7 @@
     "dot": "^1.1.2",
     "get-port": "^4.0.0",
     "hapi": "^17.5.3",
-    "hapify-syntax": "file:./packages/hapify-syntax",
+    "hapify-syntax": "file:./libs/syntax",
     "http-server": "^0.11.1",
     "inquirer": "^6.1.0",
     "joi": "^13.6.0",
