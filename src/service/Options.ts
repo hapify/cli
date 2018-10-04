@@ -49,8 +49,8 @@ export class OptionsService {
   output(): string { return this.command.output; }
   /** @return {number} Get the required http port */
   port(): number { return this.command.port; }
-  /** @return {number} Get the required http hostname */
-  hostname(): number { return this.command.hostname; }
+  /** @return {string} Get the required http hostname */
+  hostname(): string { return this.command.hostname; }
   /** @return {boolean} Denotes if a new tab should be opened */
   open(): boolean { return !!this.command.open; }
 }

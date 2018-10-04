@@ -54,6 +54,7 @@ program
     .command('list')
     .alias('l')
     .description('List available channels from the current directory')
+    .option('--depth <n>', 'depth to recursively look for channels', 2)
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
         options.setCommand(cmd);
@@ -169,10 +170,11 @@ program
 program
     .command('serve')
     .alias('s')
-    .description('Start Hapify console for edition')
+    .description('Start Hapify console for channel(s) and models edition')
     .option('-p, --port <n>', `the required port number (default between ${http.minPort} and ${http.maxPort})`)
     .option('-H, --hostname <hostname>', `the required hostname`, 'localhost')
     .option('--no-open', 'do not open a new tab in the browser')
+    .option('--depth <n>', 'depth to recursively look for channels', 2)
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
         options.setCommand(cmd);
