@@ -32,8 +32,8 @@ const Path = __importStar(require("path"));
 const http_server_1 = __importDefault(require("http-server"));
 const _1 = require("./");
 const WebSocketServer_1 = require("./WebSocketServer");
-const getPort = require('get-port');
 const { open } = require('openurl');
+const DetectPort = require('detect-port');
 let HttpServerService = class HttpServerService {
     /**
      * Constructor
@@ -155,7 +155,7 @@ let HttpServerService = class HttpServerService {
                 throw new Error(`Reached maximum port number ${this._maxPort} to start HTTP server`);
             }
             const requiredPort = this._port + increment;
-            const possiblePort = yield getPort({ port: requiredPort });
+            const possiblePort = yield DetectPort(requiredPort);
             return requiredPort !== possiblePort ?
                 this.findAvailablePort(increment + 1) : requiredPort;
         });

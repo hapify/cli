@@ -4,8 +4,8 @@ import * as http from 'http';
 import HttpServer from 'http-server';
 import { OptionsService } from './';
 import { WebSocketServerService } from './WebSocketServer';
-const getPort: any = require('get-port');
 const { open } = require('openurl');
+const DetectPort = require('detect-port');
 
 @Service()
 export class HttpServerService {
@@ -127,7 +127,7 @@ export class HttpServerService {
       throw new Error(`Reached maximum port number ${this._maxPort} to start HTTP server`);
     }
     const requiredPort = this._port + increment;
-    const possiblePort = await getPort({ port: requiredPort });
+    const possiblePort = await DetectPort(requiredPort);
     return requiredPort !== possiblePort ?
       this.findAvailablePort(increment + 1) : requiredPort;
   }
