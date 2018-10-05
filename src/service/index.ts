@@ -8,7 +8,6 @@ export * from './HttpServer';
 export * from './Validator';
 export * from './WebSocketServer';
 
-export * from './generators/DotGenerator';
 export * from './generators/JsGenerator';
 export * from './generators/HpfGenerator';
 export * from './generators/Generator';

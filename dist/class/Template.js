@@ -130,9 +130,6 @@ class Template extends _1.SingleSave {
         if (template.engine === enum_1.TemplateEngine.Hpf) {
             return 'hpf';
         }
-        else if (template.engine === enum_1.TemplateEngine.doT) {
-            return 'dot';
-        }
         return 'js';
     }
 }

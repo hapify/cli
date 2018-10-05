@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { IField, IGeneratorResult } from '../../interface';
 import { Template, Model, Channel, FieldType } from '../../class';
-import { JavaScriptGeneratorService, DotGeneratorService, HpfGeneratorService, StringService } from '../';
+import { JavaScriptGeneratorService, HpfGeneratorService, StringService } from '../';
 import { SentenceFormat, TemplateEngine } from '../../enum';
 
 @Service()
@@ -12,12 +12,10 @@ export class GeneratorService {
    *
    * @param stringService
    * @param hpfGeneratorService
-   * @param dotGeneratorService
    * @param javaScriptGeneratorService
    */
   constructor(private stringService: StringService,
               private hpfGeneratorService: HpfGeneratorService,
-              private dotGeneratorService: DotGeneratorService,
               private javaScriptGeneratorService: JavaScriptGeneratorService) {
   }
 
@@ -146,8 +144,6 @@ export class GeneratorService {
     let content;
     if (template.engine === TemplateEngine.Hpf) {
       content = await this.hpfGeneratorService.one(input, template);
-    } else if (template.engine === TemplateEngine.doT) {
-      content = await this.dotGeneratorService.one(input, template);
     } else if (template.engine === TemplateEngine.JavaScript) {
       content = await this.javaScriptGeneratorService.one(input, template);
     } else {
@@ -180,8 +176,6 @@ export class GeneratorService {
     let content;
     if (template.engine === TemplateEngine.Hpf) {
       content = await this.hpfGeneratorService.all(input, template);
-    } else if (template.engine === TemplateEngine.doT) {
-      content = await this.dotGeneratorService.all(input, template);
     } else if (template.engine === TemplateEngine.JavaScript) {
       content = await this.javaScriptGeneratorService.all(input, template);
     } else {

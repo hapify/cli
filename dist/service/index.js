@@ -11,7 +11,6 @@ __export(require("./Writer"));
 __export(require("./HttpServer"));
 __export(require("./Validator"));
 __export(require("./WebSocketServer"));
-__export(require("./generators/DotGenerator"));
 __export(require("./generators/JsGenerator"));
 __export(require("./generators/HpfGenerator"));
 __export(require("./generators/Generator"));

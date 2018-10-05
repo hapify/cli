@@ -29,7 +29,6 @@
     "aws-sdk": "^2.325.0",
     "chalk": "^2.4.1",
     "commander": "^2.17.1",
-    "dot": "^1.1.2",
     "get-port": "^4.0.0",
     "hapi": "^17.5.3",
     "hapify-syntax": "file:./libs/syntax",
@@ -49,7 +48,6 @@
   "devDependencies": {
     "@types/chalk": "^2.2.0",
     "@types/commander": "^2.12.2",
-    "@types/dot": "^1.1.2",
     "@types/hapi": "^17.0.18",
     "@types/http-server": "^0.10.0",
     "@types/inquirer": "0.0.43",

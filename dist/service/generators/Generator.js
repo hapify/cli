@@ -27,13 +27,11 @@ let GeneratorService = class GeneratorService {
      *
      * @param stringService
      * @param hpfGeneratorService
-     * @param dotGeneratorService
      * @param javaScriptGeneratorService
      */
-    constructor(stringService, hpfGeneratorService, dotGeneratorService, javaScriptGeneratorService) {
+    constructor(stringService, hpfGeneratorService, javaScriptGeneratorService) {
         this.stringService = stringService;
         this.hpfGeneratorService = hpfGeneratorService;
-        this.dotGeneratorService = dotGeneratorService;
         this.javaScriptGeneratorService = javaScriptGeneratorService;
     }
     /**
@@ -166,9 +164,6 @@ let GeneratorService = class GeneratorService {
             if (template.engine === enum_1.TemplateEngine.Hpf) {
                 content = yield this.hpfGeneratorService.one(input, template);
             }
-            else if (template.engine === enum_1.TemplateEngine.doT) {
-                content = yield this.dotGeneratorService.one(input, template);
-            }
             else if (template.engine === enum_1.TemplateEngine.JavaScript) {
                 content = yield this.javaScriptGeneratorService.one(input, template);
             }
@@ -200,9 +195,6 @@ let GeneratorService = class GeneratorService {
             let content;
             if (template.engine === enum_1.TemplateEngine.Hpf) {
                 content = yield this.hpfGeneratorService.all(input, template);
-            }
-            else if (template.engine === enum_1.TemplateEngine.doT) {
-                content = yield this.dotGeneratorService.all(input, template);
             }
             else if (template.engine === enum_1.TemplateEngine.JavaScript) {
                 content = yield this.javaScriptGeneratorService.all(input, template);
@@ -450,7 +442,6 @@ GeneratorService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [__1.StringService,
         __1.HpfGeneratorService,
-        __1.DotGeneratorService,
         __1.JavaScriptGeneratorService])
 ], GeneratorService);
 exports.GeneratorService = GeneratorService;

@@ -125,8 +125,6 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
   private static computeExtension(template: Template|IConfigTemplate): string {
     if (template.engine === TemplateEngine.Hpf) {
       return 'hpf';
-    } else if (template.engine === TemplateEngine.doT) {
-      return 'dot';
     }
     return 'js';
   }
