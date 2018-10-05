@@ -1,0 +1,12 @@
+Iteration testing.
+
+<<@ F pr*in f>>
+This model has one primary internal field<<@>>
+
+<<@ F !nu f>>
+This model has 6 not nullable fields<<@>>
+
+<<@2 F !nu f>>
+This model has 6 not nullable fields again<<@>>
+
+End
