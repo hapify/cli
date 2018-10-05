@@ -192,7 +192,7 @@ class Channel extends _1.SingleSave {
             const templatePath = Path.join(path, Channel.defaultFolder, 'models', 'model', 'hello.js.hpf');
             Fs.writeFileSync(templatePath, templateContent, 'utf8');
             // Create validator file
-            const validatorContent = `// Models validation script`;
+            const validatorContent = `// Models validation script\nreturn { errors: [], warnings: [] };`;
             const validatorPath = Path.join(path, Channel.defaultFolder, 'validator.js');
             Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
         });
