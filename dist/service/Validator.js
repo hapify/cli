@@ -18,6 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
+const SafeEval = require('safe-eval');
 let ValidatorService = class ValidatorService {
     /**
      * Constructor
@@ -40,7 +41,7 @@ let ValidatorService = class ValidatorService {
                     warnings: []
                 };
             }
-            const result = eval(script);
+            const result = SafeEval(`(function() { ${script} })()`, { model: model });
             if (!(result && result.errors instanceof Array && result.warnings instanceof Array)) {
                 throw new Error('Invalid validator return. Must returns { errors: string[], warnings: string[] }');
             }

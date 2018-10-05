@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { IValidatorResult, IModel } from '../interface';
 import { Channel } from '../class';
+const SafeEval = require('safe-eval');
 
 @Service()
 export class ValidatorService {
@@ -28,7 +29,7 @@ export class ValidatorService {
       };
     }
 
-    const result = <IValidatorResult>eval(script);
+    const result = <IValidatorResult>SafeEval(`(function() { ${script} })()`, { model: model });
 
     if (!(result && result.errors instanceof Array && result.warnings instanceof Array)) {
       throw new Error('Invalid validator return. Must returns { errors: string[], warnings: string[] }');
