@@ -1,6 +1,7 @@
 import { IGenerator } from '../../interface';
 import { Template } from '../../class';
 import { Service } from 'typedi';
+const SafeEval = require('safe-eval');
 
 @Service()
 export class JavaScriptGeneratorService implements IGenerator {
@@ -17,8 +18,10 @@ export class JavaScriptGeneratorService implements IGenerator {
   async one(model: any, template: Template): Promise<string> {
 
     // Eval template content
-    const m = model;
-    return eval(template.content);
+    return SafeEval(this.evalString(template.content),  {
+      model: model,
+      m: model
+    });
   }
 
   /**
@@ -27,7 +30,18 @@ export class JavaScriptGeneratorService implements IGenerator {
   async all(models: any[], template: Template): Promise<string> {
 
     // Create template function
-    const m = models;
-    return eval(template.content);
+    return SafeEval(this.evalString(template.content),  {
+      models: models,
+      m: models
+    });
+  }
+
+  /**
+   * Return the function to be evaluated
+   * @param {string} content
+   * @return {string}
+   */
+  private evalString(content: string): string {
+    return `(function() { ${content} })()`;
   }
 }

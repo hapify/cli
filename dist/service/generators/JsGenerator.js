@@ -18,6 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
+const SafeEval = require('safe-eval');
 let JavaScriptGeneratorService = class JavaScriptGeneratorService {
     /**
      * Constructor
@@ -30,8 +31,10 @@ let JavaScriptGeneratorService = class JavaScriptGeneratorService {
     one(model, template) {
         return __awaiter(this, void 0, void 0, function* () {
             // Eval template content
-            const m = model;
-            return eval(template.content);
+            return SafeEval(this.evalString(template.content), {
+                model: model,
+                m: model
+            });
         });
     }
     /**
@@ -40,9 +43,19 @@ let JavaScriptGeneratorService = class JavaScriptGeneratorService {
     all(models, template) {
         return __awaiter(this, void 0, void 0, function* () {
             // Create template function
-            const m = models;
-            return eval(template.content);
+            return SafeEval(this.evalString(template.content), {
+                models: models,
+                m: models
+            });
         });
+    }
+    /**
+     * Return the function to be evaluated
+     * @param {string} content
+     * @return {string}
+     */
+    evalString(content) {
+        return `(function() { ${content} })()`;
     }
 };
 JavaScriptGeneratorService = __decorate([
