@@ -167,4 +167,4 @@ function __model(model) {
 models.map((model) => {
     _output = Object.assign(_output, __model(model));
 });
-module.export = JSON.stringify(_output, null, 2);
+return JSON.stringify(_output, null, 2);
