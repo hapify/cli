@@ -62,8 +62,7 @@ if (model.fields.filter((f) => f.important && f.isPrivate).length) {
     errors.push('Important fields cannot be private');
 }
 
-module.export = {
+return {
     errors,
-    warnings,
-    name: 'HapiJS Routes'
+    warnings
 };
