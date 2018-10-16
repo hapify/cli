@@ -28,6 +28,7 @@ const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
 const Joi = __importStar(require("joi"));
+const IObjects_1 = require("../../interface/IObjects");
 let SetModelsHandlerService = class SetModelsHandlerService {
     /**
      * Constructor
@@ -42,6 +43,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     }
     /** @inheritDoc */
     validator() {
+        const contexts = [IObjects_1.Context.ADMIN, IObjects_1.Context.OWNER, IObjects_1.Context.AUTHENTICATED, IObjects_1.Context.GUEST];
         return Joi.array().items(Joi.object({
             id: Joi.string().required(),
             name: Joi.string().required(),
@@ -60,7 +62,15 @@ let SetModelsHandlerService = class SetModelsHandlerService {
                 isPrivate: Joi.boolean().required(),
                 internal: Joi.boolean().required(),
                 important: Joi.boolean().required(),
-            })).required().min(1)
+            })).required().min(1),
+            contexts: Joi.object({
+                create: Joi.string().valid(contexts).required(),
+                read: Joi.string().valid(contexts).required(),
+                update: Joi.string().valid(contexts).required(),
+                remove: Joi.string().valid(contexts).required(),
+                search: Joi.string().valid(contexts).required(),
+                count: Joi.string().valid(contexts).required(),
+            })
         })).min(1);
     }
     /** @inheritDoc */

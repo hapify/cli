@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../';
 import * as Joi from 'joi';
+import {Context} from '../../interface/IObjects';
 
 @Service()
 export class SetModelsHandlerService implements IWebSockerHandler {
@@ -20,6 +21,7 @@ export class SetModelsHandlerService implements IWebSockerHandler {
 
   /** @inheritDoc */
   validator(): Joi.Schema {
+    const contexts = [Context.ADMIN, Context.OWNER, Context.AUTHENTICATED, Context.GUEST];
     return Joi.array().items(Joi.object({
       id: Joi.string().required(),
       name: Joi.string().required(),
@@ -38,7 +40,15 @@ export class SetModelsHandlerService implements IWebSockerHandler {
         isPrivate: Joi.boolean().required(),
         internal: Joi.boolean().required(),
         important: Joi.boolean().required(),
-      })).required().min(1)
+      })).required().min(1),
+      contexts: Joi.object({
+        create: Joi.string().valid(contexts).required(),
+        read: Joi.string().valid(contexts).required(),
+        update: Joi.string().valid(contexts).required(),
+        remove: Joi.string().valid(contexts).required(),
+        search: Joi.string().valid(contexts).required(),
+        count: Joi.string().valid(contexts).required(),
+      })
     })).min(1);
   }
 
