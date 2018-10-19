@@ -8,7 +8,6 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "watch": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
