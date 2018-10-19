@@ -1,0 +1,46 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const _1 = require("./");
+class Field {
+    /** Constructor */
+    constructor() { }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.name = object.name;
+        this.type = object.type;
+        this.subtype = object.subtype;
+        this.reference = object.reference;
+        this.primary = !!object.primary;
+        this.unique = !!object.unique;
+        this.label = !!object.label;
+        this.nullable = !!object.nullable;
+        this.multiple = !!object.multiple;
+        this.searchable = !!object.searchable;
+        this.sortable = !!object.sortable;
+        this.isPrivate = !!object.isPrivate;
+        this.internal = !!object.internal;
+        this.important = !!object.important;
+        return this;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return {
+            name: this.name,
+            type: this.type,
+            subtype: this.subtype,
+            reference: this.type === _1.FieldType.Entity ? this.reference : null,
+            primary: this.primary,
+            unique: this.unique,
+            label: this.label,
+            nullable: this.nullable,
+            multiple: this.multiple,
+            searchable: this.searchable,
+            sortable: this.sortable,
+            isPrivate: this.isPrivate,
+            internal: this.internal,
+            important: this.important
+        };
+    }
+}
+exports.Field = Field;
+//# sourceMappingURL=Field.js.map
