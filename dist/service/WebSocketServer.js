@@ -51,7 +51,7 @@ let WebSocketServerService = class WebSocketServerService {
         this.randomSecret = RandomString.generate({ length: 48 });
         /** @type {string} Random secret to generate token */
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
-        /** @type {IWebSockerHandler[]} Messages handlers */
+        /** @type {IWebSocketHandler[]} Messages handlers */
         this.handlers = [];
         this.addHandler(typedi_2.Container.get(_1.GetModelsHandlerService));
         this.addHandler(typedi_2.Container.get(_1.SetModelsHandlerService));
@@ -212,7 +212,7 @@ let WebSocketServerService = class WebSocketServerService {
     }
     /**
      * Add a new handler
-     * @param {IWebSockerHandler} handler
+     * @param {IWebSocketHandler} handler
      */
     addHandler(handler) {
         this.handlers.push(handler);

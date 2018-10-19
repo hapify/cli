@@ -7,4 +7,4 @@ export * from './IGenerator';
 export * from './IGeneratorResult';
 export * from './IValidatorResult';
 export * from './IWebSocketMessage';
-export * from './IWebSockerHandler';
+export * from './IWebSocketHandler';
