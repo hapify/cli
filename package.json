@@ -9,7 +9,8 @@
   "preferGlobal": true,
   "scripts": {
     "start": "node dist/index.js",
-    "watch": "rm -rf dist && tsc",
+    "watch": "rm -rf dist && tsc -w",
+    "build": "./node_modules/.bin/tsc -p .",
     "lint": "tslint --fix -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
