@@ -70,14 +70,26 @@ export interface IField {
  *  - authenticated (Denotes if the access is restricted to authenticated users)
  *  - guest (Denotes if the access is not restricted)
  */
-export class Context {
+export class Access {
   static GUEST = 'guest';
   static AUTHENTICATED = 'auth';
   static OWNER = 'owner';
   static ADMIN = 'admin';
+  /**
+   * Returns the list of permissions ordered by restriction
+   * @return {string[]}
+   */
+  static list(): string[] {
+    return [
+      Access.ADMIN,
+      Access.OWNER,
+      Access.AUTHENTICATED,
+      Access.GUEST,
+    ];
+  };
 }
 
-export interface IContexts {
+export interface IAccesses {
   create: string;
   read: string;
   update: string;
@@ -93,8 +105,8 @@ export interface IModel {
   name: string;
   /** @type {IField[]} The fields of the model */
   fields: IField[];
-  /** @type IContexts The model privacy context */
-  contexts: IContexts;
+  /** @type IAccesses The model privacy access */
+  accesses: IAccesses;
 }
 
 export interface ITemplate extends IConfigTemplate {
