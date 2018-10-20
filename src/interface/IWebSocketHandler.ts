@@ -1,7 +1,7 @@
 import { IWebSocketMessage } from './IWebSocketMessage';
 import * as Joi from 'joi';
 
-export interface IWebSockerHandler {
+export interface IWebSocketHandler {
 
   /**
    * Denotes if the handler can handle this message

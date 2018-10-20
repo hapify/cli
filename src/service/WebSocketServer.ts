@@ -14,7 +14,7 @@ import {
   LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService,
   ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
 } from './';
-import { IWebSockerHandler, IWebSocketMessage } from '../interface';
+import { IWebSocketHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
 
 interface TokenData {
@@ -39,8 +39,8 @@ export class WebSocketServerService {
   private randomSecret: string = RandomString.generate({length: 48});
   /** @type {string} Random secret to generate token */
   private tokenExpires: number = 24 * 60 * 60 * 1000; // 1 day;
-  /** @type {IWebSockerHandler[]} Messages handlers */
-  private handlers: IWebSockerHandler[] = [];
+  /** @type {IWebSocketHandler[]} Messages handlers */
+  private handlers: IWebSocketHandler[] = [];
 
   /**
    * Constructor
@@ -216,9 +216,9 @@ export class WebSocketServerService {
 
   /**
    * Add a new handler
-   * @param {IWebSockerHandler} handler
+   * @param {IWebSocketHandler} handler
    */
-  public addHandler(handler: IWebSockerHandler) {
+  public addHandler(handler: IWebSocketHandler) {
     this.handlers.push(handler);
   }
 

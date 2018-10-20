@@ -1,10 +1,10 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService, ValidatorService } from '../';
 import * as Joi from 'joi';
 
 @Service()
-export class ValidateModelHandlerService implements IWebSockerHandler {
+export class ValidateModelHandlerService implements IWebSocketHandler {
 
   /**
    * Constructor

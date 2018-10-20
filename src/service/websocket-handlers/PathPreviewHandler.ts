@@ -1,10 +1,10 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSockerHandler, IWebSocketMessage } from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService, GeneratorService } from '../';
 import * as Joi from 'joi';
 
 @Service()
-export class PathPreviewHandlerService implements IWebSockerHandler {
+export class PathPreviewHandlerService implements IWebSocketHandler {
 
   /**
    * Constructor
