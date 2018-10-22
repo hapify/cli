@@ -7,11 +7,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *  - authenticated (Denotes if the access is restricted to authenticated users)
  *  - guest (Denotes if the access is not restricted)
  */
-class Context {
+class Access {
+    /**
+     * Returns the list of permissions ordered by restriction
+     * @return {string[]}
+     */
+    static list() {
+        return [
+            Access.ADMIN,
+            Access.OWNER,
+            Access.AUTHENTICATED,
+            Access.GUEST,
+        ];
+    }
+    ;
 }
-Context.GUEST = 'guest';
-Context.AUTHENTICATED = 'auth';
-Context.OWNER = 'owner';
-Context.ADMIN = 'admin';
-exports.Context = Context;
+Access.GUEST = 'guest';
+Access.AUTHENTICATED = 'auth';
+Access.OWNER = 'owner';
+Access.ADMIN = 'admin';
+exports.Access = Access;
 //# sourceMappingURL=IObjects.js.map

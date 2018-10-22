@@ -89,6 +89,7 @@ export class Access {
   };
 }
 
+/** Define the access for each available action */
 export interface IAccesses {
   create: string;
   read: string;
@@ -96,6 +97,7 @@ export interface IAccesses {
   remove: string;
   search: string;
   count: string;
+  [s: string]: string;
 }
 
 export interface IModel {

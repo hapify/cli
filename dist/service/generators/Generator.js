@@ -18,6 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
+const interface_1 = require("../../interface");
 const class_1 = require("../../class");
 const __1 = require("../");
 const enum_1 = require("../../enum");
@@ -328,6 +329,74 @@ let GeneratorService = class GeneratorService {
                 isGeolocated: fields.filter((f) => f.type === 'number' && f.subtype === 'latitude').length > 0 &&
                     fields.filter((f) => f.type === 'number' && f.subtype === 'longitude').length > 0
             };
+            // ==========================================
+            // ACCESSES
+            // ==========================================
+            // Compute accesses sub-object for each action
+            // For each action, add a boolean for each access that denote if the access type is granted
+            const accesses = [];
+            const ordered = interface_1.Access.list();
+            for (const action in model.accesses) {
+                const accessIndex = ordered.indexOf(model.accesses[action]);
+                const description = {
+                    action: action,
+                    admin: accessIndex <= ordered.indexOf(interface_1.Access.ADMIN),
+                    owner: accessIndex <= ordered.indexOf(interface_1.Access.OWNER),
+                    auth: accessIndex <= ordered.indexOf(interface_1.Access.AUTHENTICATED),
+                    guest: accessIndex <= ordered.indexOf(interface_1.Access.GUEST),
+                };
+                // Append short codes
+                description.a = description.action;
+                description.ad = description.admin;
+                description.ow = description.owner;
+                description.au = description.auth;
+                description.gs = description.guest;
+                accesses.push(description);
+            }
+            // Get admin actions
+            const admin = accesses.filter((a) => a.admin);
+            // Get owner actions
+            const owner = accesses.filter((a) => a.owner);
+            // Get auth actions
+            const auth = accesses.filter((a) => a.auth);
+            // Get guest actions
+            const guest = accesses.filter((a) => a.guest);
+            // Pre-computed properties
+            const propertiesAccess = {
+                allAdmin: owner.length === 0,
+                allOwner: auth.length === 0 && owner.length === accesses.length,
+                allAuth: guest.length === 0 && auth.length === accesses.length,
+                allGuest: guest.length === accesses.length,
+                noAdmin: admin.length === 0,
+                noOwner: owner.length === 0,
+                noAuth: auth.length === 0,
+                noGuest: guest.length === 0,
+                hasAdmin: admin.length > 0,
+                hasOwner: owner.length > 0,
+                hasAuth: auth.length > 0,
+                hasGuest: guest.length > 0,
+            };
+            // Create filter function
+            const filterAccess = (func = null) => {
+                return typeof func === 'function' ?
+                    accesses.filter(func) : fields;
+            };
+            m.accesses = {
+                list: accesses,
+                l: accesses,
+                filter: filterAccess,
+                f: filterAccess,
+                properties: propertiesAccess,
+                p: propertiesAccess,
+                admin,
+                ad: admin,
+                owner,
+                ow: owner,
+                auth,
+                au: auth,
+                guest,
+                gs: guest,
+            };
             // Add references and dependencies on first level
             if (depth === 0) {
                 // ==========================================
@@ -421,6 +490,7 @@ let GeneratorService = class GeneratorService {
             // Add short name
             m.f = m.fields;
             m.p = m.properties;
+            m.a = m.accesses;
             return m;
         });
     }
