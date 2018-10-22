@@ -82,12 +82,15 @@
   "error_input_value": "Le type d'entrée n'est pas valide.",
   "tooltip_primary": "Est une clé primaire ?",
   "tooltip_unique": "Est une clé unique ?",
-  "tooltip_label": "Est un label ?",
-  "tooltip_nullable": "Peut-il être vide ?",
+  "tooltip_label": "Cette donnée sert de nom ?",
+  "tooltip_nullable": "Ce champs peut-il être vide ?",
   "tooltip_multiple": "Est-une liste de valeurs",
-  "tooltip_searchable": "Est recherchable ?",
-  "tooltip_sortable": "Est triable ?",
-  "tooltip_private": "Est privé ?",
-  "tooltip_internal": "Pour une utilisation interne ?",
-  "tooltip_important": "Est-ce un champ important ?"
+  "tooltip_important": "Est-ce une donnée importante ?",
+  "tooltip_searchable": "Ce champs est recherchable ?",
+  "tooltip_sortable": "Ce champs est triable ?",
+  "tooltip_private": "Cette donnée ne doit pas être visible ?",
+  "tooltip_internal": "Cette donnée est définie par le système ?",
+  "tooltip_restricted": "L'accès à cette donnée est restreint ?",
+  "tooltip_ownership": "Cette donnée contient l'identité du propriétaire de l'instance ?",
+  "access_title": "Restrictions d'accès"
 }

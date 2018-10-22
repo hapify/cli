@@ -28,6 +28,7 @@ const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
 const Joi = __importStar(require("joi"));
+const IObjects_1 = require("../../interface/IObjects");
 let SetModelsHandlerService = class SetModelsHandlerService {
     /**
      * Constructor
@@ -42,6 +43,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     }
     /** @inheritDoc */
     validator() {
+        const accesses = [IObjects_1.Access.ADMIN, IObjects_1.Access.OWNER, IObjects_1.Access.AUTHENTICATED, IObjects_1.Access.GUEST];
         return Joi.array().items(Joi.object({
             id: Joi.string().required(),
             name: Joi.string().required(),
@@ -55,12 +57,22 @@ let SetModelsHandlerService = class SetModelsHandlerService {
                 label: Joi.boolean().required(),
                 nullable: Joi.boolean().required(),
                 multiple: Joi.boolean().required(),
+                important: Joi.boolean().required(),
                 searchable: Joi.boolean().required(),
                 sortable: Joi.boolean().required(),
                 isPrivate: Joi.boolean().required(),
                 internal: Joi.boolean().required(),
-                important: Joi.boolean().required(),
-            })).required().min(1)
+                restricted: Joi.boolean().required(),
+                ownership: Joi.boolean().required(),
+            })).required().min(1),
+            accesses: Joi.object({
+                create: Joi.string().valid(accesses).required(),
+                read: Joi.string().valid(accesses).required(),
+                update: Joi.string().valid(accesses).required(),
+                remove: Joi.string().valid(accesses).required(),
+                search: Joi.string().valid(accesses).required(),
+                count: Joi.string().valid(accesses).required(),
+            })
         })).min(1);
     }
     /** @inheritDoc */

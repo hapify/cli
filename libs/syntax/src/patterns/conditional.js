@@ -29,11 +29,13 @@ const Repalcements = [
     { search: 'lb', replace: 'i.label' },
     { search: 'nu', replace: 'i.nullable' },
     { search: 'ml', replace: 'i.multiple' },
+    { search: 'im', replace: 'i.important' },
     { search: 'se', replace: 'i.searchable' },
     { search: 'so', replace: 'i.sortable' },
     { search: 'ip', replace: 'i.isPrivate' },
     { search: 'in', replace: 'i.internal' },
-    { search: 'im', replace: 'i.important' },
+    { search: 'rs', replace: 'i.restricted' },
+    { search: 'os', replace: 'i.ownership' },
     
     // Fields types for string
     { search: 'tSe', replace: '(i.type === \'string\' && i.subtype === \'email\')' },
@@ -59,11 +61,31 @@ const Repalcements = [
 
     // Fields types for entity
     { search: 'tE', replace: '(i.type === \'entity\')' },
-    
+
     // Models computed properties
     { search: 'pMPr', replace: 'i.properties.mainlyPrivate' },
     { search: 'pMIn', replace: 'i.properties.mainlyInternal' },
     { search: 'pGeo', replace: 'i.properties.isGeolocated' },
+
+    // Accesses actions properties
+    { search: 'ad', replace: 'i.admin' },
+    { search: 'ow', replace: 'i.owner' },
+    { search: 'au', replace: 'i.auth' },
+    { search: 'gs', replace: 'i.guest' },
+
+    // Accesses computed properties
+    { search: 'pOAd', replace: 'i.accesses.properties.onlyAdmin' },
+    { search: 'pOOw', replace: 'i.accesses.properties.onlyOwner' },
+    { search: 'pOAu', replace: 'i.accesses.properties.onlyAuth' },
+    { search: 'pOGs', replace: 'i.accesses.properties.onlyGuest' },
+    { search: 'pMAd', replace: 'i.accesses.properties.maxAdmin' },
+    { search: 'pMOw', replace: 'i.accesses.properties.maxOwner' },
+    { search: 'pMAu', replace: 'i.accesses.properties.maxAuth' },
+    { search: 'pMGs', replace: 'i.accesses.properties.maxGuest' },
+    { search: 'pNAd', replace: 'i.accesses.properties.noAdmin' },
+    { search: 'pNOw', replace: 'i.accesses.properties.noOwner' },
+    { search: 'pNAu', replace: 'i.accesses.properties.noAuth' },
+    { search: 'pNGs', replace: 'i.accesses.properties.noGuest' },
     
 ];
 /** @type {Function} Convert replacement search for regexp */
@@ -170,6 +192,14 @@ module.exports = class ConditionalPattern extends BasePattern {
         else if (variable === 'D') variable = 'root.dependencies';
         else if (variable === 'R') variable = 'root.referencedIn';
         else if (variable === 'P') variable = 'root.fields.primary';
+        // Accesses
+        else if (variable === 'A') variable = 'root.accesses.list';
+        else if (variable === 'Ac') variable = 'root.accesses.create';
+        else if (variable === 'Ar') variable = 'root.accesses.read';
+        else if (variable === 'Au') variable = 'root.accesses.update';
+        else if (variable === 'Ad') variable = 'root.accesses.remove';
+        else if (variable === 'As') variable = 'root.accesses.search';
+        else if (variable === 'An') variable = 'root.accesses.count';
         
         return variable;
     }

@@ -51,6 +51,8 @@ export interface IField {
   nullable: boolean;
   /** @type {boolean} Denotes if the field is an array of values */
   multiple: boolean;
+  /** @type {boolean} Indicate whether the field is important (should be always exposed explicitly) */
+  important: boolean;
   /** @type {boolean} Indicate whether the field is searchable or not */
   searchable: boolean;
   /** @type {boolean} Indicate whether the field is sortable or not */
@@ -59,8 +61,47 @@ export interface IField {
   isPrivate: boolean;
   /** @type {boolean} Indicate whether the field is for an internal use only (should not be defined by an user) */
   internal: boolean;
-  /** @type {boolean} Indicate whether the field is important (should be always exposed explicitly) */
-  important: boolean;
+  /** @type {boolean} Indicate whether the field is restricted to authorized roles (should only be defined by an admin) */
+  restricted: boolean;
+  /** @type {boolean} Indicate that this field defines the owner of the entity */
+  ownership: boolean;
+}
+
+/**
+ * Possible values for actions' access:
+ *  - admin (Denotes if the access is restricted to the admins)
+ *  - owner (Denotes if the access is restricted to the owner of the resource)
+ *  - authenticated (Denotes if the access is restricted to authenticated users)
+ *  - guest (Denotes if the access is not restricted)
+ */
+export class Access {
+  static GUEST = 'guest';
+  static AUTHENTICATED = 'auth';
+  static OWNER = 'owner';
+  static ADMIN = 'admin';
+  /**
+   * Returns the list of permissions ordered by restriction
+   * @return {string[]}
+   */
+  static list(): string[] {
+    return [
+      Access.ADMIN,
+      Access.OWNER,
+      Access.AUTHENTICATED,
+      Access.GUEST,
+    ];
+  };
+}
+
+/** Define the access for each available action */
+export interface IAccesses {
+  create: string;
+  read: string;
+  update: string;
+  remove: string;
+  search: string;
+  count: string;
+  [s: string]: string;
 }
 
 export interface IModel {
@@ -70,6 +111,8 @@ export interface IModel {
   name: string;
   /** @type {IField[]} The fields of the model */
   fields: IField[];
+  /** @type IAccesses The model privacy access */
+  accesses: IAccesses;
 }
 
 export interface ITemplate extends IConfigTemplate {

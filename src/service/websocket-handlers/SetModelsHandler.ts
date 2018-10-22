@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../';
 import * as Joi from 'joi';
+import { Access } from '../../interface/IObjects';
 
 @Service()
 export class SetModelsHandlerService implements IWebSocketHandler {
@@ -20,6 +21,7 @@ export class SetModelsHandlerService implements IWebSocketHandler {
 
   /** @inheritDoc */
   validator(): Joi.Schema {
+    const accesses = [Access.ADMIN, Access.OWNER, Access.AUTHENTICATED, Access.GUEST];
     return Joi.array().items(Joi.object({
       id: Joi.string().required(),
       name: Joi.string().required(),
@@ -33,12 +35,22 @@ export class SetModelsHandlerService implements IWebSocketHandler {
         label: Joi.boolean().required(),
         nullable: Joi.boolean().required(),
         multiple: Joi.boolean().required(),
+        important: Joi.boolean().required(),
         searchable: Joi.boolean().required(),
         sortable: Joi.boolean().required(),
         isPrivate: Joi.boolean().required(),
         internal: Joi.boolean().required(),
-        important: Joi.boolean().required(),
-      })).required().min(1)
+        restricted: Joi.boolean().required(),
+        ownership: Joi.boolean().required(),
+      })).required().min(1),
+      accesses: Joi.object({
+        create: Joi.string().valid(accesses).required(),
+        read: Joi.string().valid(accesses).required(),
+        update: Joi.string().valid(accesses).required(),
+        remove: Joi.string().valid(accesses).required(),
+        search: Joi.string().valid(accesses).required(),
+        count: Joi.string().valid(accesses).required(),
+      })
     })).min(1);
   }
 

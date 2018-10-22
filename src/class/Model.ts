@@ -1,4 +1,4 @@
-import { IModel, IField, ISerilizable } from '../interface';
+import { IModel, IField, ISerilizable, Access, IAccesses } from '../interface';
 import { Field } from './';
 
 export class Model implements ISerilizable<IModel, Model>, IModel {
@@ -9,6 +9,15 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
   name: string;
   /** @type {Field[]} The fields of the model */
   fields: Field[];
+  /** @type IAccesses The model privacy access */
+  public accesses: IAccesses = {
+    create: Access.GUEST,
+    read: Access.GUEST,
+    update: Access.GUEST,
+    remove: Access.GUEST,
+    search: Access.GUEST,
+    count: Access.GUEST,
+  };
 
   /** Constructor */
   constructor() {}
@@ -21,6 +30,9 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
       const field = new Field();
       return field.fromObject(fieldBase);
     });
+    if (object.accesses) {
+      this.accesses = object.accesses;
+    }
     return this;
   }
   /** @inheritDoc */
@@ -28,7 +40,8 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
     return {
       id: this.id,
       name: this.name,
-      fields: this.fields.map((field: Field): IField => field.toObject())
+      fields: this.fields.map((field: Field): IField => field.toObject()),
+      accesses: this.accesses
     };
   }
 }

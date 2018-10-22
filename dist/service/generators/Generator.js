@@ -18,6 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
+const interface_1 = require("../../interface");
 const class_1 = require("../../class");
 const __1 = require("../");
 const enum_1 = require("../../enum");
@@ -265,6 +266,8 @@ let GeneratorService = class GeneratorService {
             const nullable = fields.filter((f) => f.nullable);
             // Get multiple fields
             const multiple = fields.filter((f) => f.multiple);
+            // Get important fields
+            const important = fields.filter((f) => f.important);
             // Get searchable fields
             const searchable = fields.filter((f) => f.searchable);
             // Get sortable fields
@@ -273,8 +276,10 @@ let GeneratorService = class GeneratorService {
             const isPrivate = fields.filter((f) => f.isPrivate);
             // Get internal fields
             const internal = fields.filter((f) => f.internal);
-            // Get important fields
-            const important = fields.filter((f) => f.important);
+            // Get restricted fields
+            const restricted = fields.filter((f) => f.restricted);
+            // Get ownership fields
+            const ownership = fields.filter((f) => f.ownership);
             // Create filter function
             const filter = (func = null) => {
                 return typeof func === 'function' ?
@@ -296,6 +301,8 @@ let GeneratorService = class GeneratorService {
                 n: nullable,
                 multiple,
                 m: multiple,
+                important,
+                im: important,
                 searchable,
                 se: searchable,
                 sortable,
@@ -304,8 +311,10 @@ let GeneratorService = class GeneratorService {
                 ip: isPrivate,
                 internal,
                 i: internal,
-                important,
-                im: important,
+                restricted,
+                r: restricted,
+                ownership,
+                o: ownership,
                 searchableLabel,
                 sl: searchableLabel
             };
@@ -317,16 +326,105 @@ let GeneratorService = class GeneratorService {
                 hasLabel: label.length > 0,
                 hasNullable: nullable.length > 0,
                 hasMultiple: multiple.length > 0,
+                hasImportant: important.length > 0,
                 hasSearchable: searchable.length > 0,
                 hasSortable: sortable.length > 0,
                 hasPrivate: isPrivate.length > 0,
                 hasInternal: internal.length > 0,
-                hasImportant: important.length > 0,
+                hasRestricted: restricted.length > 0,
+                hasOwnership: ownership.length > 0,
                 hasSearchableLabel: searchableLabel.length > 0,
                 mainlyPrivate: fields.length < 2 * isPrivate.length,
                 mainlyInternal: fields.length < 2 * internal.length,
                 isGeolocated: fields.filter((f) => f.type === 'number' && f.subtype === 'latitude').length > 0 &&
                     fields.filter((f) => f.type === 'number' && f.subtype === 'longitude').length > 0
+            };
+            // ==========================================
+            // ACCESSES
+            // ==========================================
+            // Compute accesses sub-object for each action
+            // For each action, add a boolean for each access that denote if the access type is granted
+            const accesses = [];
+            const ordered = interface_1.Access.list();
+            for (const action in model.accesses) {
+                const accessIndex = ordered.indexOf(model.accesses[action]);
+                const description = {
+                    action: action,
+                    admin: accessIndex >= ordered.indexOf(interface_1.Access.ADMIN),
+                    owner: accessIndex >= ordered.indexOf(interface_1.Access.OWNER),
+                    auth: accessIndex >= ordered.indexOf(interface_1.Access.AUTHENTICATED),
+                    guest: accessIndex >= ordered.indexOf(interface_1.Access.GUEST),
+                };
+                accesses.push(description);
+            }
+            // Get admin actions
+            const admin = accesses.filter((a) => a.admin);
+            // Get owner actions
+            const owner = accesses.filter((a) => a.owner);
+            // Get auth actions
+            const auth = accesses.filter((a) => a.auth);
+            // Get guest actions
+            const guest = accesses.filter((a) => a.guest);
+            // Get actions
+            const actionCreate = accesses.find((a) => a.action === 'create');
+            const actionRead = accesses.find((a) => a.action === 'read');
+            const actionUpdate = accesses.find((a) => a.action === 'update');
+            const actionRemove = accesses.find((a) => a.action === 'remove');
+            const actionSearch = accesses.find((a) => a.action === 'search');
+            const actionCount = accesses.find((a) => a.action === 'count');
+            // Pre-computed properties
+            const propertiesAccess = {
+                onlyAdmin: owner.length === 0,
+                onlyOwner: auth.length === 0 && owner.length === accesses.length,
+                onlyAuth: guest.length === 0 && auth.length === accesses.length,
+                onlyGuest: guest.length === accesses.length,
+                maxAdmin: admin.length > 0 && owner.length === 0 && auth.length === 0 && guest.length === 0,
+                maxOwner: owner.length > 0 && auth.length === 0 && guest.length === 0,
+                maxAuth: auth.length > 0 && guest.length === 0,
+                maxGuest: guest.length > 0,
+                noAdmin: admin.length === 0,
+                noOwner: owner.length === 0,
+                noAuth: auth.length === 0,
+                noGuest: guest.length === 0,
+                hasAdmin: admin.length > 0,
+                hasOwner: owner.length > 0,
+                hasAuth: auth.length > 0,
+                hasGuest: guest.length > 0,
+            };
+            // Create filter function
+            const filterAccess = (func = null) => {
+                return typeof func === 'function' ?
+                    accesses.filter(func) : fields;
+            };
+            m.accesses = {
+                list: accesses,
+                l: accesses,
+                filter: filterAccess,
+                f: filterAccess,
+                properties: propertiesAccess,
+                p: propertiesAccess,
+                // By access
+                admin,
+                ad: admin,
+                owner,
+                ow: owner,
+                auth,
+                au: auth,
+                guest,
+                gs: guest,
+                // By actions
+                create: actionCreate,
+                c: actionCreate,
+                read: actionRead,
+                r: actionRead,
+                update: actionUpdate,
+                u: actionUpdate,
+                remove: actionRemove,
+                d: actionRemove,
+                search: actionSearch,
+                s: actionSearch,
+                count: actionCount,
+                n: actionCount,
             };
             // Add references and dependencies on first level
             if (depth === 0) {
@@ -421,6 +519,7 @@ let GeneratorService = class GeneratorService {
             // Add short name
             m.f = m.fields;
             m.p = m.properties;
+            m.a = m.accesses;
             return m;
         });
     }

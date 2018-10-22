@@ -87,11 +87,13 @@ Here is the list of short-codes available for a field:
 - `lb` for the boolean property `label`
 - `nu` for the boolean property `nullable`
 - `ml` for the boolean property `multiple`
+- `im` for the boolean property `important`
 - `se` for the boolean property `searchable`
 - `so` for the boolean property `sortable`
 - `ip` for the boolean property `isPrivate`
 - `in` for the boolean property `internal`
-- `im` for the boolean property `important`
+- `rs` for the boolean property `restricted`
+- `os` for the boolean property `ownership`
 - `tS` to test if property `type` is `string`
     - `tSe` to test if properties `type` is `string` and `subtype` is `email`
     - `tSp` to test if properties `type` is `string` and `subtype` is `password`

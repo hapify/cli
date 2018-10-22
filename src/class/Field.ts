@@ -21,6 +21,8 @@ export class Field implements ISerilizable<IField, Field> {
   nullable: boolean;
   /** @type {boolean} Denotes if the field is an array of values */
   multiple: boolean;
+  /** @type {boolean} Indicate whether the field is important (should be always exposed explicitly) */
+  important: boolean;
   /** @type {boolean} Indicate whether the field is searchable or not */
   searchable: boolean;
   /** @type {boolean} Indicate whether the field is sortable or not */
@@ -29,8 +31,10 @@ export class Field implements ISerilizable<IField, Field> {
   isPrivate: boolean;
   /** @type {boolean} Indicate whether the field is for an internal use only (should not be defined by an user) */
   internal: boolean;
-  /** @type {boolean} Indicate whether the field is important (should be always exposed explicitly) */
-  important: boolean;
+  /** @type {boolean} Indicate whether the field is restricted to authorized roles (should only be defined by an admin) */
+  restricted: boolean;
+  /** @type {boolean} Indicate that this field defines the owner of the entity */
+  ownership: boolean;
 
   /** Constructor */
   constructor() {}
@@ -46,11 +50,13 @@ export class Field implements ISerilizable<IField, Field> {
     this.label = !!<any>object.label;
     this.nullable = !!<any>object.nullable;
     this.multiple = !!<any>object.multiple;
+    this.important = !!<any>object.important;
     this.searchable = !!<any>object.searchable;
     this.sortable = !!<any>object.sortable;
     this.isPrivate = !!<any>object.isPrivate;
     this.internal = !!<any>object.internal;
-    this.important = !!<any>object.important;
+    this.restricted = !!<any>object.restricted;
+    this.ownership = !!<any>object.ownership;
     return this;
   }
   /** @inheritDoc */
@@ -65,11 +71,13 @@ export class Field implements ISerilizable<IField, Field> {
       label: this.label,
       nullable: this.nullable,
       multiple: this.multiple,
+      important: this.important,
       searchable: this.searchable,
       sortable: this.sortable,
       isPrivate: this.isPrivate,
       internal: this.internal,
-      important: this.important
+      restricted: this.restricted,
+      ownership: this.ownership
     };
   }
 }

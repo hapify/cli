@@ -1,8 +1,11 @@
 import { Service } from 'typedi';
-import { IField, IGeneratorResult } from '../../interface';
+import { IField, IGeneratorResult, Access } from '../../interface';
 import { Template, Model, Channel, FieldType } from '../../class';
 import { JavaScriptGeneratorService, HpfGeneratorService, StringService } from '../';
 import { SentenceFormat, TemplateEngine } from '../../enum';
+
+/** Define the restriction for an action */
+interface IActionAccesses { [s: string]: boolean|string; }
 
 @Service()
 export class GeneratorService {
@@ -258,6 +261,9 @@ export class GeneratorService {
     // Get multiple fields
     const multiple = fields.filter((f: IField) => f.multiple);
 
+    // Get important fields
+    const important = fields.filter((f: IField) => f.important);
+
     // Get searchable fields
     const searchable = fields.filter((f: IField) => f.searchable);
 
@@ -270,8 +276,11 @@ export class GeneratorService {
     // Get internal fields
     const internal = fields.filter((f: IField) => f.internal);
 
-    // Get important fields
-    const important = fields.filter((f: IField) => f.important);
+    // Get restricted fields
+    const restricted = fields.filter((f: IField) => f.restricted);
+
+    // Get ownership fields
+    const ownership = fields.filter((f: IField) => f.ownership);
 
     // Create filter function
     const filter = (func: (f: IField) => boolean = null) => {
@@ -295,6 +304,8 @@ export class GeneratorService {
       n: nullable,
       multiple,
       m: multiple,
+      important,
+      im: important,
       searchable,
       se: searchable,
       sortable,
@@ -303,8 +314,10 @@ export class GeneratorService {
       ip: isPrivate,
       internal,
       i: internal,
-      important,
-      im: important,
+      restricted,
+      r: restricted,
+      ownership,
+      o: ownership,
       searchableLabel,
       sl: searchableLabel
     };
@@ -317,16 +330,113 @@ export class GeneratorService {
       hasLabel: label.length > 0,
       hasNullable: nullable.length > 0,
       hasMultiple: multiple.length > 0,
+      hasImportant: important.length > 0,
       hasSearchable: searchable.length > 0,
       hasSortable: sortable.length > 0,
       hasPrivate: isPrivate.length > 0,
       hasInternal: internal.length > 0,
-      hasImportant: important.length > 0,
+      hasRestricted: restricted.length > 0,
+      hasOwnership: ownership.length > 0,
       hasSearchableLabel: searchableLabel.length > 0,
       mainlyPrivate: fields.length < 2 * isPrivate.length,
       mainlyInternal: fields.length < 2 * internal.length,
       isGeolocated: fields.filter((f: IField) => f.type === 'number' && f.subtype === 'latitude').length > 0 &&
                     fields.filter((f: IField) => f.type === 'number' && f.subtype === 'longitude').length > 0
+    };
+
+    // ==========================================
+    // ACCESSES
+    // ==========================================
+    // Compute accesses sub-object for each action
+    // For each action, add a boolean for each access that denote if the access type is granted
+    const accesses: IActionAccesses[] = [];
+    const ordered = Access.list();
+    for (const action in model.accesses) {
+      const accessIndex = ordered.indexOf(model.accesses[action]);
+      const description: IActionAccesses = {
+        action: action,
+        admin: accessIndex >= ordered.indexOf(Access.ADMIN),
+        owner: accessIndex >= ordered.indexOf(Access.OWNER),
+        auth: accessIndex >= ordered.indexOf(Access.AUTHENTICATED),
+        guest: accessIndex >= ordered.indexOf(Access.GUEST),
+      };
+      accesses.push(description);
+    }
+
+    // Get admin actions
+    const admin = accesses.filter((a: IActionAccesses) => a.admin);
+
+    // Get owner actions
+    const owner = accesses.filter((a: IActionAccesses) => a.owner);
+
+    // Get auth actions
+    const auth = accesses.filter((a: IActionAccesses) => a.auth);
+
+    // Get guest actions
+    const guest = accesses.filter((a: IActionAccesses) => a.guest);
+    
+    // Get actions
+    const actionCreate = accesses.find((a: IActionAccesses) => a.action === 'create');
+    const actionRead = accesses.find((a: IActionAccesses) => a.action === 'read');
+    const actionUpdate = accesses.find((a: IActionAccesses) => a.action === 'update');
+    const actionRemove = accesses.find((a: IActionAccesses) => a.action === 'remove');
+    const actionSearch = accesses.find((a: IActionAccesses) => a.action === 'search');
+    const actionCount = accesses.find((a: IActionAccesses) => a.action === 'count');
+
+    // Pre-computed properties
+    const propertiesAccess = {
+      onlyAdmin: owner.length === 0,
+      onlyOwner: auth.length === 0 && owner.length === accesses.length,
+      onlyAuth: guest.length === 0 && auth.length === accesses.length,
+      onlyGuest: guest.length === accesses.length,
+      maxAdmin: admin.length > 0 && owner.length === 0 && auth.length === 0 && guest.length === 0,
+      maxOwner: owner.length > 0 && auth.length === 0 && guest.length === 0,
+      maxAuth: auth.length > 0 && guest.length === 0,
+      maxGuest: guest.length > 0,
+      noAdmin: admin.length === 0,
+      noOwner: owner.length === 0,
+      noAuth: auth.length === 0,
+      noGuest: guest.length === 0,
+      hasAdmin: admin.length > 0,
+      hasOwner: owner.length > 0,
+      hasAuth: auth.length > 0,
+      hasGuest: guest.length > 0,
+    };
+
+    // Create filter function
+    const filterAccess = (func: (a: IActionAccesses) => boolean = null) => {
+      return typeof func === 'function' ?
+        accesses.filter(func) : fields;
+    };
+    m.accesses = {
+      list: accesses,
+      l: accesses,
+      filter: filterAccess,
+      f: filterAccess,
+      properties: propertiesAccess,
+      p: propertiesAccess,
+      // By access
+      admin,
+      ad: admin,
+      owner,
+      ow: owner,
+      auth,
+      au: auth,
+      guest,
+      gs: guest,
+      // By actions
+      create: actionCreate,
+      c: actionCreate,
+      read: actionRead,
+      r: actionRead,
+      update: actionUpdate,
+      u: actionUpdate,
+      remove: actionRemove,
+      d: actionRemove,
+      search: actionSearch,
+      s: actionSearch,
+      count: actionCount,
+      n: actionCount,
     };
 
     // Add references and dependencies on first level
@@ -431,6 +541,7 @@ export class GeneratorService {
     // Add short name
     m.f = m.fields;
     m.p = m.properties;
+    m.a = m.accesses;
 
     return m;
   }
