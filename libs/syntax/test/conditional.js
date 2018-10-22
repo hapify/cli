@@ -26,6 +26,8 @@ lab.test('unit', async () => {
     const condition = (test, length = 0) => `\`; if ((root.fields.list.filter && root.fields.list.filter((i) => ${test}).length > ${length}) || (!(root.fields.list.filter) && ((i) => ${test})(root.fields.list))) { out += \``;
     const conditionElse = (test, length = 0) => `\`; } else if ((root.fields.list.filter && root.fields.list.filter((i) => ${test}).length > ${length}) || (!(root.fields.list.filter) && ((i) => ${test})(root.fields.list))) { out += \``;
     const conditionModel = (test, length = 0) => `\`; if ((root.filter && root.filter((i) => ${test}).length > ${length}) || (!(root.filter) && ((i) => ${test})(root))) { out += \``;
+    const conditionAccesses = (test, length = 0) => `\`; if ((root.accesses.list.filter && root.accesses.list.filter((i) => ${test}).length > ${length}) || (!(root.accesses.list.filter) && ((i) => ${test})(root.accesses.list))) { out += \``;
+    const conditionAccessesActinos = (test, action, length = 0) => `\`; if ((root.accesses.${action}.filter && root.accesses.${action}.filter((i) => ${test}).length > ${length}) || (!(root.accesses.${action}.filter) && ((i) => ${test})(root.accesses.${action}))) { out += \``;
 
     //Start with not
     const notSe = condition('!i.searchable', 3);
@@ -42,11 +44,13 @@ lab.test('unit', async () => {
     expect(ConditionalPattern.execute('<<? F lb>>')).to.equal(condition('i.label'));
     expect(ConditionalPattern.execute('<<? F nu>>')).to.equal(condition('i.nullable'));
     expect(ConditionalPattern.execute('<<? F ml>>')).to.equal(condition('i.multiple'));
+    expect(ConditionalPattern.execute('<<? F im>>')).to.equal(condition('i.important'));
     expect(ConditionalPattern.execute('<<? F se>>')).to.equal(condition('i.searchable'));
     expect(ConditionalPattern.execute('<<? F so>>')).to.equal(condition('i.sortable'));
     expect(ConditionalPattern.execute('<<? F ip>>')).to.equal(condition('i.isPrivate'));
     expect(ConditionalPattern.execute('<<? F in>>')).to.equal(condition('i.internal'));
-    expect(ConditionalPattern.execute('<<? F im>>')).to.equal(condition('i.important'));
+    expect(ConditionalPattern.execute('<<? F rs>>')).to.equal(condition('i.restricted'));
+    expect(ConditionalPattern.execute('<<? F os>>')).to.equal(condition('i.ownership'));
 
     expect(ConditionalPattern.execute('<<? F tS>>')).to.equal(condition('(i.type === \'string\')'));
     expect(ConditionalPattern.execute('<<? F tSe>>')).to.equal(condition('(i.type === \'string\' && i.subtype === \'email\')'));
@@ -88,4 +92,30 @@ lab.test('unit', async () => {
     
     // Sub fields
     expect(ConditionalPattern.execute('<<? m.f>>')).to.equal('`; if ((m.f.filter && m.f.filter((i) => i).length > 0) || (!(m.f.filter) && ((i) => i)(m.f))) { out += `');
+
+    // Accesses
+    expect(ConditionalPattern.execute('<<? A ow>>')).to.equal(conditionAccesses('i.owner'));
+    
+    // Accesses actions
+    expect(ConditionalPattern.execute('<<? Ac ad>>')).to.equal(conditionAccessesActinos('i.admin', 'create'));
+    expect(ConditionalPattern.execute('<<? Ar ad>>')).to.equal(conditionAccessesActinos('i.admin', 'read'));
+    expect(ConditionalPattern.execute('<<? Au au>>')).to.equal(conditionAccessesActinos('i.auth', 'update'));
+    expect(ConditionalPattern.execute('<<? Ad gs>>')).to.equal(conditionAccessesActinos('i.guest', 'remove'));
+    expect(ConditionalPattern.execute('<<? As ow>>')).to.equal(conditionAccessesActinos('i.owner', 'search'));
+    expect(ConditionalPattern.execute('<<? An ow>>')).to.equal(conditionAccessesActinos('i.owner', 'count'));
+
+    // Accesses properties
+    expect(ConditionalPattern.execute('<<? M pOAd>>')).to.equal(conditionModel('i.accesses.properties.onlyAdmin'));
+    expect(ConditionalPattern.execute('<<? M pOOw>>')).to.equal(conditionModel('i.accesses.properties.onlyOwner'));
+    expect(ConditionalPattern.execute('<<? M pOAu>>')).to.equal(conditionModel('i.accesses.properties.onlyAuth'));
+    expect(ConditionalPattern.execute('<<? M pOGs>>')).to.equal(conditionModel('i.accesses.properties.onlyGuest'));
+    expect(ConditionalPattern.execute('<<? M pMAd>>')).to.equal(conditionModel('i.accesses.properties.maxAdmin'));
+    expect(ConditionalPattern.execute('<<? M pMOw>>')).to.equal(conditionModel('i.accesses.properties.maxOwner'));
+    expect(ConditionalPattern.execute('<<? M pMAu>>')).to.equal(conditionModel('i.accesses.properties.maxAuth'));
+    expect(ConditionalPattern.execute('<<? M pMGs>>')).to.equal(conditionModel('i.accesses.properties.maxGuest'));
+    expect(ConditionalPattern.execute('<<? M pNAd>>')).to.equal(conditionModel('i.accesses.properties.noAdmin'));
+    expect(ConditionalPattern.execute('<<? M pNOw>>')).to.equal(conditionModel('i.accesses.properties.noOwner'));
+    expect(ConditionalPattern.execute('<<? M pNAu>>')).to.equal(conditionModel('i.accesses.properties.noAuth'));
+    expect(ConditionalPattern.execute('<<? M pNGs>>')).to.equal(conditionModel('i.accesses.properties.noGuest'));
+    
 });
