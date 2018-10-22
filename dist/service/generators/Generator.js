@@ -266,6 +266,8 @@ let GeneratorService = class GeneratorService {
             const nullable = fields.filter((f) => f.nullable);
             // Get multiple fields
             const multiple = fields.filter((f) => f.multiple);
+            // Get important fields
+            const important = fields.filter((f) => f.important);
             // Get searchable fields
             const searchable = fields.filter((f) => f.searchable);
             // Get sortable fields
@@ -274,8 +276,10 @@ let GeneratorService = class GeneratorService {
             const isPrivate = fields.filter((f) => f.isPrivate);
             // Get internal fields
             const internal = fields.filter((f) => f.internal);
-            // Get important fields
-            const important = fields.filter((f) => f.important);
+            // Get restricted fields
+            const restricted = fields.filter((f) => f.restricted);
+            // Get ownership fields
+            const ownership = fields.filter((f) => f.ownership);
             // Create filter function
             const filter = (func = null) => {
                 return typeof func === 'function' ?
@@ -297,6 +301,8 @@ let GeneratorService = class GeneratorService {
                 n: nullable,
                 multiple,
                 m: multiple,
+                important,
+                im: important,
                 searchable,
                 se: searchable,
                 sortable,
@@ -305,8 +311,10 @@ let GeneratorService = class GeneratorService {
                 ip: isPrivate,
                 internal,
                 i: internal,
-                important,
-                im: important,
+                restricted,
+                r: restricted,
+                ownership,
+                o: ownership,
                 searchableLabel,
                 sl: searchableLabel
             };
@@ -318,11 +326,13 @@ let GeneratorService = class GeneratorService {
                 hasLabel: label.length > 0,
                 hasNullable: nullable.length > 0,
                 hasMultiple: multiple.length > 0,
+                hasImportant: important.length > 0,
                 hasSearchable: searchable.length > 0,
                 hasSortable: sortable.length > 0,
                 hasPrivate: isPrivate.length > 0,
                 hasInternal: internal.length > 0,
-                hasImportant: important.length > 0,
+                hasRestricted: restricted.length > 0,
+                hasOwnership: ownership.length > 0,
                 hasSearchableLabel: searchableLabel.length > 0,
                 mainlyPrivate: fields.length < 2 * isPrivate.length,
                 mainlyInternal: fields.length < 2 * internal.length,

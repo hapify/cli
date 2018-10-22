@@ -261,6 +261,9 @@ export class GeneratorService {
     // Get multiple fields
     const multiple = fields.filter((f: IField) => f.multiple);
 
+    // Get important fields
+    const important = fields.filter((f: IField) => f.important);
+
     // Get searchable fields
     const searchable = fields.filter((f: IField) => f.searchable);
 
@@ -273,8 +276,11 @@ export class GeneratorService {
     // Get internal fields
     const internal = fields.filter((f: IField) => f.internal);
 
-    // Get important fields
-    const important = fields.filter((f: IField) => f.important);
+    // Get restricted fields
+    const restricted = fields.filter((f: IField) => f.restricted);
+
+    // Get ownership fields
+    const ownership = fields.filter((f: IField) => f.ownership);
 
     // Create filter function
     const filter = (func: (f: IField) => boolean = null) => {
@@ -298,6 +304,8 @@ export class GeneratorService {
       n: nullable,
       multiple,
       m: multiple,
+      important,
+      im: important,
       searchable,
       se: searchable,
       sortable,
@@ -306,8 +314,10 @@ export class GeneratorService {
       ip: isPrivate,
       internal,
       i: internal,
-      important,
-      im: important,
+      restricted,
+      r: restricted,
+      ownership,
+      o: ownership,
       searchableLabel,
       sl: searchableLabel
     };
@@ -320,11 +330,13 @@ export class GeneratorService {
       hasLabel: label.length > 0,
       hasNullable: nullable.length > 0,
       hasMultiple: multiple.length > 0,
+      hasImportant: important.length > 0,
       hasSearchable: searchable.length > 0,
       hasSortable: sortable.length > 0,
       hasPrivate: isPrivate.length > 0,
       hasInternal: internal.length > 0,
-      hasImportant: important.length > 0,
+      hasRestricted: restricted.length > 0,
+      hasOwnership: ownership.length > 0,
       hasSearchableLabel: searchableLabel.length > 0,
       mainlyPrivate: fields.length < 2 * isPrivate.length,
       mainlyInternal: fields.length < 2 * internal.length,

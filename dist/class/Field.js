@@ -15,11 +15,13 @@ class Field {
         this.label = !!object.label;
         this.nullable = !!object.nullable;
         this.multiple = !!object.multiple;
+        this.important = !!object.important;
         this.searchable = !!object.searchable;
         this.sortable = !!object.sortable;
         this.isPrivate = !!object.isPrivate;
         this.internal = !!object.internal;
-        this.important = !!object.important;
+        this.restricted = !!object.restricted;
+        this.ownership = !!object.ownership;
         return this;
     }
     /** @inheritDoc */
@@ -34,11 +36,13 @@ class Field {
             label: this.label,
             nullable: this.nullable,
             multiple: this.multiple,
+            important: this.important,
             searchable: this.searchable,
             sortable: this.sortable,
             isPrivate: this.isPrivate,
             internal: this.internal,
-            important: this.important
+            restricted: this.restricted,
+            ownership: this.ownership
         };
     }
 }
