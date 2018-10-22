@@ -28,11 +28,13 @@ The following objects will be available in the template.
     - `label` - alias `lb` (array): An array containing all fields flagged as `label`.
     - `nullable` - alias `n` (array): An array containing all fields flagged as `nullable`.
     - `multiple` - alias `m` (array): An array containing all fields flagged as `multiple`.
+    - `important` - alias `im` (array): An array containing all fields flagged as `important`.
     - `searchable` - alias `se` (array): An array containing all fields flagged as `searchable`.
     - `sortable` - alias `so` (array): An array containing all fields flagged as `sortable`.
     - `isPrivate` - alias `ip` (array): An array containing all fields flagged as `private`.
     - `internal` - alias `i` (array): An array containing all fields flagged as `internal`.
-    - `important` - alias `im` (array): An array containing all fields flagged as `important`.
+    - `restricted` - alias `rs` (array): An array containing all fields flagged as `restricted`.
+    - `ownership` - alias `os` (array): An array containing all fields flagged as `ownership`.
     - `searchableLabel` - alias `sl` (array): An array containing all fields flagged as `label` and `searchable`. Useful for quick-search by label.
     - `filter` - alias `f` (Function): A function for filtering fields with a custom rule. Equivalent of `model.fields.list.filter`.
     - `references` - alias `r` - non-deep model only (array): An array containing all fields of type `entity`.
@@ -52,11 +54,13 @@ The following objects will be available in the template.
     - `hasLabel` (boolean): Denotes if the model has at least one label field.
     - `hasNullable` (boolean): Denotes if the model has at least one nullable field.
     - `hasMultiple` (boolean): Denotes if the model has at least one multiple field.
+    - `hasImportant` (boolean): Denotes if the model has at least one important field.
     - `hasSearchable` (boolean): Denotes if the model has at least one searchable field.
     - `hasSortable` (boolean): Denotes if the model has at least one sortable field.
     - `hasPrivate` (boolean): Denotes if the model has at least one private field.
     - `hasInternal` (boolean): Denotes if the model has at least one internal field.
-    - `hasImportant` (boolean): Denotes if the model has at least one important field.
+    - `hasRestricted` (boolean): Denotes if the model has at least one restricted field.
+    - `hasOwnership` (boolean): Denotes if the model has at least one ownership field.
     - `hasSearchableLabel` (boolean): Denotes if the model has at least one field marked as label and also searchable.
     - `hasDependencies` - non-deep model only (boolean): Denotes if the model has dependencies to other models or itself (through an `entity` field).
     - `isReferenced` - non-deep model only (boolean): Denotes if the model is referenced by other models.
@@ -83,11 +87,13 @@ The following objects will be available in the template.
 - `label` (boolean): Indicates if the field is flagged as `label`.
 - `nullable` (boolean): Indicates if the field is flagged as `nullable`.
 - `multiple` (boolean): Indicates if the field is flagged as `multiple`.
+- `important` (boolean): Indicates if the field is flagged as `important`.
 - `searchable` (boolean): Indicates if the field is flagged as `searchable`.
 - `sortable` (boolean): Indicates if the field is flagged as `sortable`.
 - `isPrivate` (boolean): Indicates if the field is flagged as `private`.
 - `internal` (boolean): Indicates if the field is flagged as `internal`.
-- `important` (boolean): Indicates if the field is flagged as `important`.
+- `restricted` (boolean): Indicates if the field is flagged as `restricted`.
+- `ownership` (boolean): Indicates if the field is flagged as `ownership`.
 - `type` (string): The type of the field. Can be `string`, `number`, `boolean`, `datetime` or `entity`.
 - `subtype` (string): The subtype of the field. The available values depend on the `type`:
     - `string`: Can be `null`, `email`, `password` `text` or `rich`.
@@ -103,17 +109,10 @@ The following objects will be available in the template.
 #### Single model
 
 If the template requires all the models, therefore, a object `model` (alias `m`) will be available as a global variable in the template.
-In a `dot.js` template it will be available under `{{=it.model}}` or `{{=it.m}}`
+In a `hpf` template it will be available under `M`
 
 #### Multiple models
 
 If the template requires all the models, therefore, an array `models` (alias `m`) will be available as a global variable in the template.
 This array contains all the models defined.
-In a `dot.js` template it will be available under `{{=it.models}}` or `{{=it.m}}`
-
-## Auto-Sync compiled files
-
-On development, when editing templates via the editor, you can automatically sync the compiled files to your bootstraps.
-To run the web-app with this auto-sync mode, run `npm run start-sync`.
-
-For more information, go to `sync/README.md`.
+In a `hpf` template it will be available under `M`
