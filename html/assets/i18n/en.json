@@ -85,9 +85,12 @@
   "tooltip_label": "Is a label?",
   "tooltip_nullable": "Can be empty?",
   "tooltip_multiple": "Is an array",
+  "tooltip_important": "Is it an important data ?",
   "tooltip_searchable": "Is searchable?",
   "tooltip_sortable": "Is sortable?",
-  "tooltip_private": "Is private ?",
-  "tooltip_internal": "Is for internal use ?",
-  "tooltip_important": "Is it an important field ?"
+  "tooltip_private": "This data is not readable ?",
+  "tooltip_internal": "This data is defined by the system ?",
+  "tooltip_restricted": "The access to this data is restricted ?",
+  "tooltip_ownership": "Contains the owner's id ?",
+  "access_title": "Access restrictions"
 }
