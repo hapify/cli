@@ -350,17 +350,11 @@ let GeneratorService = class GeneratorService {
                 const accessIndex = ordered.indexOf(model.accesses[action]);
                 const description = {
                     action: action,
-                    admin: accessIndex <= ordered.indexOf(interface_1.Access.ADMIN),
-                    owner: accessIndex <= ordered.indexOf(interface_1.Access.OWNER),
-                    auth: accessIndex <= ordered.indexOf(interface_1.Access.AUTHENTICATED),
-                    guest: accessIndex <= ordered.indexOf(interface_1.Access.GUEST),
+                    admin: accessIndex >= ordered.indexOf(interface_1.Access.ADMIN),
+                    owner: accessIndex >= ordered.indexOf(interface_1.Access.OWNER),
+                    auth: accessIndex >= ordered.indexOf(interface_1.Access.AUTHENTICATED),
+                    guest: accessIndex >= ordered.indexOf(interface_1.Access.GUEST),
                 };
-                // Append short codes
-                description.a = description.action;
-                description.ad = description.admin;
-                description.ow = description.owner;
-                description.au = description.auth;
-                description.gs = description.guest;
                 accesses.push(description);
             }
             // Get admin actions
@@ -371,12 +365,23 @@ let GeneratorService = class GeneratorService {
             const auth = accesses.filter((a) => a.auth);
             // Get guest actions
             const guest = accesses.filter((a) => a.guest);
+            // Get actions
+            const actionCreate = accesses.find((a) => a.action === 'create');
+            const actionRead = accesses.find((a) => a.action === 'read');
+            const actionUpdate = accesses.find((a) => a.action === 'update');
+            const actionRemove = accesses.find((a) => a.action === 'remove');
+            const actionSearch = accesses.find((a) => a.action === 'search');
+            const actionCount = accesses.find((a) => a.action === 'count');
             // Pre-computed properties
             const propertiesAccess = {
-                allAdmin: owner.length === 0,
-                allOwner: auth.length === 0 && owner.length === accesses.length,
-                allAuth: guest.length === 0 && auth.length === accesses.length,
-                allGuest: guest.length === accesses.length,
+                onlyAdmin: owner.length === 0,
+                onlyOwner: auth.length === 0 && owner.length === accesses.length,
+                onlyAuth: guest.length === 0 && auth.length === accesses.length,
+                onlyGuest: guest.length === accesses.length,
+                maxAdmin: admin.length > 0 && owner.length === 0 && auth.length === 0 && guest.length === 0,
+                maxOwner: owner.length > 0 && auth.length === 0 && guest.length === 0,
+                maxAuth: auth.length > 0 && guest.length === 0,
+                maxGuest: guest.length > 0,
                 noAdmin: admin.length === 0,
                 noOwner: owner.length === 0,
                 noAuth: auth.length === 0,
@@ -398,6 +403,7 @@ let GeneratorService = class GeneratorService {
                 f: filterAccess,
                 properties: propertiesAccess,
                 p: propertiesAccess,
+                // By access
                 admin,
                 ad: admin,
                 owner,
@@ -406,6 +412,19 @@ let GeneratorService = class GeneratorService {
                 au: auth,
                 guest,
                 gs: guest,
+                // By actions
+                create: actionCreate,
+                c: actionCreate,
+                read: actionRead,
+                r: actionRead,
+                update: actionUpdate,
+                u: actionUpdate,
+                remove: actionRemove,
+                d: actionRemove,
+                search: actionSearch,
+                s: actionSearch,
+                count: actionCount,
+                n: actionCount,
             };
             // Add references and dependencies on first level
             if (depth === 0) {
