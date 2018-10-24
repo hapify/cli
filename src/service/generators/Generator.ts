@@ -351,14 +351,28 @@ export class GeneratorService {
     // For each action, add a boolean for each access that denote if the access type is granted
     const accesses: IActionAccesses[] = [];
     const ordered = Access.list();
+    const indexes = {
+      admin: ordered.indexOf(Access.ADMIN),
+      owner: ordered.indexOf(Access.OWNER),
+      auth: ordered.indexOf(Access.AUTHENTICATED),
+      guest: ordered.indexOf(Access.GUEST),
+    };
     for (const action in model.accesses) {
       const accessIndex = ordered.indexOf(model.accesses[action]);
       const description: IActionAccesses = {
         action: action,
-        admin: accessIndex >= ordered.indexOf(Access.ADMIN),
-        owner: accessIndex >= ordered.indexOf(Access.OWNER),
-        auth: accessIndex >= ordered.indexOf(Access.AUTHENTICATED),
-        guest: accessIndex >= ordered.indexOf(Access.GUEST),
+        admin: accessIndex === indexes.admin,
+        owner: accessIndex === indexes.owner,
+        auth: accessIndex === indexes.auth,
+        guest: accessIndex === indexes.guest,
+        gtAdmin: accessIndex > indexes.admin,
+        gtOwner: accessIndex > indexes.owner,
+        gtAuth: accessIndex > indexes.auth,
+        gtGuest: accessIndex > indexes.guest,
+        ltAdmin: accessIndex < indexes.admin,
+        ltOwner: accessIndex < indexes.owner,
+        ltAuth: accessIndex < indexes.auth,
+        ltGuest: accessIndex < indexes.guest,
       };
       accesses.push(description);
     }
@@ -374,7 +388,7 @@ export class GeneratorService {
 
     // Get guest actions
     const guest = accesses.filter((a: IActionAccesses) => a.guest);
-    
+
     // Get actions
     const actionCreate = accesses.find((a: IActionAccesses) => a.action === 'create');
     const actionRead = accesses.find((a: IActionAccesses) => a.action === 'read');
@@ -385,9 +399,9 @@ export class GeneratorService {
 
     // Pre-computed properties
     const propertiesAccess = {
-      onlyAdmin: owner.length === 0,
-      onlyOwner: auth.length === 0 && owner.length === accesses.length,
-      onlyAuth: guest.length === 0 && auth.length === accesses.length,
+      onlyAdmin: admin.length === accesses.length,
+      onlyOwner: owner.length === accesses.length,
+      onlyAuth: auth.length === accesses.length,
       onlyGuest: guest.length === accesses.length,
       maxAdmin: admin.length > 0 && owner.length === 0 && auth.length === 0 && guest.length === 0,
       maxOwner: owner.length > 0 && auth.length === 0 && guest.length === 0,
