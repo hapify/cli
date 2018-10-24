@@ -27,7 +27,7 @@ lab.test('unit', async () => {
     const conditionElse = (test, length = 0) => `\`; } else if ((root.fields.list.filter && root.fields.list.filter((i) => ${test}).length > ${length}) || (!(root.fields.list.filter) && ((i) => ${test})(root.fields.list))) { out += \``;
     const conditionModel = (test, length = 0) => `\`; if ((root.filter && root.filter((i) => ${test}).length > ${length}) || (!(root.filter) && ((i) => ${test})(root))) { out += \``;
     const conditionAccesses = (test, length = 0) => `\`; if ((root.accesses.list.filter && root.accesses.list.filter((i) => ${test}).length > ${length}) || (!(root.accesses.list.filter) && ((i) => ${test})(root.accesses.list))) { out += \``;
-    const conditionAccessesActinos = (test, action, length = 0) => `\`; if ((root.accesses.${action}.filter && root.accesses.${action}.filter((i) => ${test}).length > ${length}) || (!(root.accesses.${action}.filter) && ((i) => ${test})(root.accesses.${action}))) { out += \``;
+    const conditionAccessesActions = (test, action, length = 0) => `\`; if ((root.accesses.${action}.filter && root.accesses.${action}.filter((i) => ${test}).length > ${length}) || (!(root.accesses.${action}.filter) && ((i) => ${test})(root.accesses.${action}))) { out += \``;
 
     //Start with not
     const notSe = condition('!i.searchable', 3);
@@ -97,12 +97,23 @@ lab.test('unit', async () => {
     expect(ConditionalPattern.execute('<<? A ow>>')).to.equal(conditionAccesses('i.owner'));
     
     // Accesses actions
-    expect(ConditionalPattern.execute('<<? Ac ad>>')).to.equal(conditionAccessesActinos('i.admin', 'create'));
-    expect(ConditionalPattern.execute('<<? Ar ad>>')).to.equal(conditionAccessesActinos('i.admin', 'read'));
-    expect(ConditionalPattern.execute('<<? Au au>>')).to.equal(conditionAccessesActinos('i.auth', 'update'));
-    expect(ConditionalPattern.execute('<<? Ad gs>>')).to.equal(conditionAccessesActinos('i.guest', 'remove'));
-    expect(ConditionalPattern.execute('<<? As ow>>')).to.equal(conditionAccessesActinos('i.owner', 'search'));
-    expect(ConditionalPattern.execute('<<? An ow>>')).to.equal(conditionAccessesActinos('i.owner', 'count'));
+    expect(ConditionalPattern.execute('<<? Ac ad>>')).to.equal(conditionAccessesActions('i.admin', 'create'));
+    expect(ConditionalPattern.execute('<<? Ar ow>>')).to.equal(conditionAccessesActions('i.owner', 'read'));
+    expect(ConditionalPattern.execute('<<? Au au>>')).to.equal(conditionAccessesActions('i.auth', 'update'));
+    expect(ConditionalPattern.execute('<<? Ad gs>>')).to.equal(conditionAccessesActions('i.guest', 'remove'));
+    
+    expect(ConditionalPattern.execute('<<? Ac [ad>>')).to.equal(conditionAccessesActions('i.gteAdmin', 'create'));
+    expect(ConditionalPattern.execute('<<? Ar [ow>>')).to.equal(conditionAccessesActions('i.gteOwner', 'read'));
+    expect(ConditionalPattern.execute('<<? Au [au>>')).to.equal(conditionAccessesActions('i.gteAuth', 'update'));
+    expect(ConditionalPattern.execute('<<? Ad [gs>>')).to.equal(conditionAccessesActions('i.gteGuest', 'remove'));
+    
+    expect(ConditionalPattern.execute('<<? Ac ad]>>')).to.equal(conditionAccessesActions('i.lteAdmin', 'create'));
+    expect(ConditionalPattern.execute('<<? Ar ow]>>')).to.equal(conditionAccessesActions('i.lteOwner', 'read'));
+    expect(ConditionalPattern.execute('<<? Au au]>>')).to.equal(conditionAccessesActions('i.lteAuth', 'update'));
+    expect(ConditionalPattern.execute('<<? Ad gs]>>')).to.equal(conditionAccessesActions('i.lteGuest', 'remove'));
+    
+    expect(ConditionalPattern.execute('<<? As ow>>')).to.equal(conditionAccessesActions('i.owner', 'search'));
+    expect(ConditionalPattern.execute('<<? An ow>>')).to.equal(conditionAccessesActions('i.owner', 'count'));
 
     // Accesses properties
     expect(ConditionalPattern.execute('<<? M pOAd>>')).to.equal(conditionModel('i.accesses.properties.onlyAdmin'));

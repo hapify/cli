@@ -7,9 +7,9 @@ const BasePattern = require('./base');
 const { InternalError } = require('../errors');
 
 /** @type {RegExp} if () { pattern */
-const IfPattern = /<<\?(\d)?\s+([a-zA-Z_.]+)(\s+[a-zA-Z()!+*\-/]+)?\s*>>/g;
+const IfPattern = /<<\?(\d)?\s+([a-zA-Z_.]+)(\s+[a-zA-Z()[\]!+*\-/]+)?\s*>>/g;
 /** @type {RegExp} else if () { pattern */
-const ElseIfPattern = /<<\?\?(\d)?\s+([a-zA-Z_.]+)(\s+[a-zA-Z()!+*\-/]+)?\s*>>/g;
+const ElseIfPattern = /<<\?\?(\d)?\s+([a-zA-Z_.]+)(\s+[a-zA-Z()[\]!+*\-/]+)?\s*>>/g;
 /** @type {RegExp} else pattern */
 const ElsePattern = /<<\?\?>>/g;
 /** @type {RegExp} } pattern */
@@ -68,6 +68,16 @@ const Repalcements = [
     { search: 'pGeo', replace: 'i.properties.isGeolocated' },
 
     // Accesses actions properties
+    { search: '[ad', replace: 'i.gteAdmin', escape: true },
+    { search: '[ow', replace: 'i.gteOwner', escape: true },
+    { search: '[au', replace: 'i.gteAuth', escape: true },
+    { search: '[gs', replace: 'i.gteGuest', escape: true },
+
+    { search: 'ad]', replace: 'i.lteAdmin' },
+    { search: 'ow]', replace: 'i.lteOwner' },
+    { search: 'au]', replace: 'i.lteAuth' },
+    { search: 'gs]', replace: 'i.lteGuest' },
+    
     { search: 'ad', replace: 'i.admin' },
     { search: 'ow', replace: 'i.owner' },
     { search: 'au', replace: 'i.auth' },
@@ -163,7 +173,7 @@ module.exports = class ConditionalPattern extends BasePattern {
                 .replace(Condition, (match) => {
                     const replacement = Repalcements.find((l) => l.search === match);
                     if (!replacement) {
-                        throw new InternalError(`[ConditionalPattern._condition] Cannot find condition replacement for ${match}`);
+                        throw new InternalError(`[ConditionalPattern._condition] Cannot find condition replacement for match: ${match} (in :${trimed})`);
                     }
 
                     return replacement.replace;
