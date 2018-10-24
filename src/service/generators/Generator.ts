@@ -365,14 +365,16 @@ export class GeneratorService {
         owner: accessIndex === indexes.owner,
         auth: accessIndex === indexes.auth,
         guest: accessIndex === indexes.guest,
-        gtAdmin: accessIndex > indexes.admin,
-        gtOwner: accessIndex > indexes.owner,
-        gtAuth: accessIndex > indexes.auth,
-        gtGuest: accessIndex > indexes.guest,
-        ltAdmin: accessIndex < indexes.admin,
-        ltOwner: accessIndex < indexes.owner,
-        ltAuth: accessIndex < indexes.auth,
-        ltGuest: accessIndex < indexes.guest,
+
+        gteAdmin: accessIndex >= indexes.admin,
+        gteOwner: accessIndex >= indexes.owner,
+        gteAuth: accessIndex >= indexes.auth,
+        gteGuest: accessIndex >= indexes.guest,
+
+        lteAdmin: accessIndex <= indexes.admin,
+        lteOwner: accessIndex <= indexes.owner,
+        lteAuth: accessIndex <= indexes.auth,
+        lteGuest: accessIndex <= indexes.guest,
       };
       accesses.push(description);
     }

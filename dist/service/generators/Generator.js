@@ -346,14 +346,28 @@ let GeneratorService = class GeneratorService {
             // For each action, add a boolean for each access that denote if the access type is granted
             const accesses = [];
             const ordered = interface_1.Access.list();
+            const indexes = {
+                admin: ordered.indexOf(interface_1.Access.ADMIN),
+                owner: ordered.indexOf(interface_1.Access.OWNER),
+                auth: ordered.indexOf(interface_1.Access.AUTHENTICATED),
+                guest: ordered.indexOf(interface_1.Access.GUEST),
+            };
             for (const action in model.accesses) {
                 const accessIndex = ordered.indexOf(model.accesses[action]);
                 const description = {
                     action: action,
-                    admin: accessIndex >= ordered.indexOf(interface_1.Access.ADMIN),
-                    owner: accessIndex >= ordered.indexOf(interface_1.Access.OWNER),
-                    auth: accessIndex >= ordered.indexOf(interface_1.Access.AUTHENTICATED),
-                    guest: accessIndex >= ordered.indexOf(interface_1.Access.GUEST),
+                    admin: accessIndex === indexes.admin,
+                    owner: accessIndex === indexes.owner,
+                    auth: accessIndex === indexes.auth,
+                    guest: accessIndex === indexes.guest,
+                    gteAdmin: accessIndex >= indexes.admin,
+                    gteOwner: accessIndex >= indexes.owner,
+                    gteAuth: accessIndex >= indexes.auth,
+                    gteGuest: accessIndex >= indexes.guest,
+                    lteAdmin: accessIndex <= indexes.admin,
+                    lteOwner: accessIndex <= indexes.owner,
+                    lteAuth: accessIndex <= indexes.auth,
+                    lteGuest: accessIndex <= indexes.guest,
                 };
                 accesses.push(description);
             }
@@ -374,9 +388,9 @@ let GeneratorService = class GeneratorService {
             const actionCount = accesses.find((a) => a.action === 'count');
             // Pre-computed properties
             const propertiesAccess = {
-                onlyAdmin: owner.length === 0,
-                onlyOwner: auth.length === 0 && owner.length === accesses.length,
-                onlyAuth: guest.length === 0 && auth.length === accesses.length,
+                onlyAdmin: admin.length === accesses.length,
+                onlyOwner: owner.length === accesses.length,
+                onlyAuth: auth.length === accesses.length,
                 onlyGuest: guest.length === accesses.length,
                 maxAdmin: admin.length > 0 && owner.length === 0 && auth.length === 0 && guest.length === 0,
                 maxOwner: owner.length > 0 && auth.length === 0 && guest.length === 0,
