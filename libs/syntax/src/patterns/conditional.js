@@ -66,6 +66,7 @@ const Repalcements = [
     { search: 'pMPr', replace: 'i.properties.mainlyPrivate' },
     { search: 'pMIn', replace: 'i.properties.mainlyInternal' },
     { search: 'pGeo', replace: 'i.properties.isGeolocated' },
+    { search: 'pGSe', replace: 'i.properties.isGeoSearchable' },
 
     // Accesses actions properties
     { search: '[ad', replace: 'i.gteAdmin', escape: true },

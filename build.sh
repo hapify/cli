@@ -19,3 +19,4 @@ rm -rf $DIR/packages/hapify-cli-console/node_modules
 echo "... Restore node_modules"
 cd $DIR
 npm install
+npm run build

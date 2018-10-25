@@ -67,6 +67,7 @@ The following objects will be available in the template.
     - `mainlyPrivate` (boolean): Denotes if most of the fields are private (strictly).
     - `mainlyInternal` (boolean): Denotes if most of the fields are internal (strictly).
     - `isGeolocated` (boolean): Denotes if the model contains at least one latitude field and one longitude field.
+    - `isGeoSearchable` (boolean): Denotes if the model contains at least one searchable latitude field and one searchable longitude field.
             
 **Field object**
 

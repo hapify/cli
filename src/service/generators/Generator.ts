@@ -341,7 +341,9 @@ export class GeneratorService {
       mainlyPrivate: fields.length < 2 * isPrivate.length,
       mainlyInternal: fields.length < 2 * internal.length,
       isGeolocated: fields.filter((f: IField) => f.type === 'number' && f.subtype === 'latitude').length > 0 &&
-                    fields.filter((f: IField) => f.type === 'number' && f.subtype === 'longitude').length > 0
+                    fields.filter((f: IField) => f.type === 'number' && f.subtype === 'longitude').length > 0,
+      isGeoSearchable: fields.filter((f: IField) => f.type === 'number' && f.subtype === 'latitude' && f.searchable).length > 0 &&
+                       fields.filter((f: IField) => f.type === 'number' && f.subtype === 'longitude' && f.searchable).length > 0,
     };
 
     // ==========================================
