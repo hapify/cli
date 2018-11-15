@@ -2,7 +2,7 @@
 
 ## Hapify Syntax
 
-For documentation about Hapify Syntax, please refer to [libs/syntax/README.md](libs/syntax/README.md).
+For documentation about Hapify Syntax, please refer to [libs/syntax/README.md](./libs/syntax/README.md).
 
 ## Model injected in the templates
 
