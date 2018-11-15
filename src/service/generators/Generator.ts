@@ -424,7 +424,7 @@ export class GeneratorService {
     // Create filter function
     const filterAccess = (func: (a: IActionAccesses) => boolean = null) => {
       return typeof func === 'function' ?
-        accesses.filter(func) : fields;
+        accesses.filter(func) : accesses;
     };
     m.accesses = {
       list: accesses,
