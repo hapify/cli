@@ -106,7 +106,7 @@ hpf export -o /path/to/file.zip
 
 ## Hapify Syntax
 
-For documentation about Hapify Syntax, please refer to [libs/syntax/README.md](./libs/syntax/README.md).
+For documentation about Hapify Syntax, please refer to [libs/syntax/README.md](https://bitbucket.org/tractrs/hapify-cli/src/master/libs/syntax/README.md).
 
 ## Model usage within a template
 
