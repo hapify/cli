@@ -1,5 +1,109 @@
 # Hapify
 
+## Description
+
+Hapify is a code generation tool based on relational data models.
+It uses a dedicated templating language.
+It exposes a web-based console for models definition and templates writing.
+
+## Usage
+
+### Installation
+
+You need to install this package globally to have the `hpf` command.
+To do so, run this:
+
+```bash
+npm i && npm i -g .
+```
+
+### Global options
+
+- `-V`, `--version`: output the version number
+- `--debug`: enable debug mode
+- `-d <path>`, `--dir <path>`: change the working directory. This path can be absolute or relative to the current path
+
+### Commands
+
+#### List visible channels
+
+```bash
+hpf list
+```
+
+This will display what is visible for the CLI from this directory.
+This shows the list of channels and the list of models used by those channels.
+
+The CLI looks for `hapify.json` files to auto-detect channels.
+It recurses over sub-directories. Default depth is `2`.
+To change this, use the `depth` option.
+
+```bash
+hpf list --depth 3
+```
+
+*Note:*
+You are not supposed to run the CLI with different models sets.
+If you do this, the first found set will be used.
+
+#### Create a new channel
+
+```bash
+hpf create
+```
+
+This will create a new Hapify file structure in the current directory.
+It creates a file `hapify.json` and a folder `hapify` containing a template `hello-world.hpf`.
+
+#### Start the console
+
+```bash
+hpf serve
+```
+
+This will start a server that hosts a web-based console for models and templates editions.
+
+Available options are:
+
+- `-p <n>`, `--port <n>`: the required port number (default between 4800 and 4820)
+- `-H <hostname>`, `--hostname <hostname>`: the required hostname (default: localhost)
+- `--no-open`: do not open a new tab in the browser to show the console
+- `--depth <n>`: depth to recursively look for channels (default: 2)
+
+*Note:*
+There is a routing issue for deep links. When refreshing the web-page, you must omit the path.
+
+#### Generate the code
+
+```bash
+hpf generate
+```
+
+This will generate all found channels from theirs templates and models.
+To define the depth to look for channels, use this option: `--depth <n>`. Default is `2`.
+
+```bash
+hpf generate --depth 3
+```
+
+#### Export the code
+
+```bash
+hpf export
+```
+
+This will generate the channel from its templates and its models.
+Then it saves the generated files in a zip file.
+To run this command you must be in the channel directory, next to the `hapify.json` file.
+
+By default, the zip file has the name of the channel, ie the folder name.
+Example: `angular-admin/angular-admin.zip`.
+You can define a custom path with this option: `-o, --output <path>`.
+
+```bash
+hpf export -o /path/to/file.zip
+```
+
 ## Hapify Syntax
 
 For documentation about Hapify Syntax, please refer to [libs/syntax/README.md](./libs/syntax/README.md).
