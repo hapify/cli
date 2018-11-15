@@ -1,0 +1,32 @@
+{
+  "name": "hapify-syntax",
+  "version": "0.3.0",
+  "description": "Templating syntax optimized for Hapify models handling.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "lab test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/tractrs/hapify-syntax.git"
+  },
+  "keywords": [
+    "hapify",
+    "syntax"
+  ],
+  "author": "Edouard Demotes-Mainard",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/tractrs/hapify-syntax#readme",
+  "devDependencies": {
+    "code": "^5.2.0",
+    "eslint": "^4.7.1",
+    "eslint-config-hapi": "^11.1.0",
+    "eslint-plugin-hapi": "^4.0.0",
+    "eslint-plugin-immutable": "^1.0.0",
+    "eslint-plugin-perf-standard": "^1.0.3",
+    "lab": "^15.4.5"
+  },
+  "dependencies": {
+    "safe-eval": "^0.4.1"
+  }
+}

@@ -1,0 +1,171 @@
+import {Injectable} from '@angular/core';
+import {environment} from '@env/environment';
+import {HttpClient} from '@angular/common/http';
+import {<<M AA>>, <<M AA>>Interface} from './<<M a-a>>';
+import {<<M AA>>SearchParamsInterface} from './<<M a-a>>-search-params';
+ 
+/** Interface for listings result */
+interface <<M AA>>ListResultInterface {
+  page: number;
+  limit: number;
+  count: number;
+  total: number;
+  items: <<M AA>>Interface[];
+}
+/** Interface for listings */
+export interface <<M AA>>ListInterface {
+  page: number;
+  limit: number;
+  count: number;
+  total: number;
+  items: <<M AA>>[];
+}
+/** Interface for count results */
+interface <<M AA>>CountInterface {
+  total: number;
+}
+ 
+@Injectable()
+export class <<M AA>>Service {
+ 
+  /** @type {string} Base route for this module */
+  private _uri = `${environment.api.uri}/<<M a-a>>`;
+  /** @param {HttpClient} http Constructor */
+  constructor(private http: HttpClient) {}
+ 
+  /**
+   * Create a new <<M a>>
+   * @param {<<M AA>>Interface} payload
+   * @return {Promise<<<M AA>>>}
+   */
+  create(payload: <<M AA>>Interface): Promise<<<M AA>>> {
+    // Start request
+    const options = {withCredentials: true};
+    return this.http
+      .post(`${this._uri}`, payload, options)
+      .toPromise()
+      .then((result: <<M AA>>Interface) => {
+        // Create <<M a>> from results
+        const output = new <<M AA>>();
+        output.fromObject(result);
+ 
+        return output;
+      });
+  }
+  /**
+   * Update an <<M a>> selected from it's id
+   * @param {string} id
+   * @param {<<M AA>>Interface} payload
+   * @return {Promise<any>}
+   */
+  update(id: string, payload: <<M AA>>Interface): Promise<any> {
+    // Start request
+    const options = {withCredentials: true};
+    return this.http
+      .patch(`${this._uri}/${id}`, payload, options)
+      .toPromise();
+  }
+  /**
+   * Get an <<M a>> from it's id
+   * @param {string} id
+   * @return {Promise<<<M AA>>>}
+   */
+  get(id: string): Promise<<<M AA>>> {
+    // Start request
+    const options = {withCredentials: true};
+    return this.http
+      .get(`${this._uri}/${id}`, options)
+      .toPromise()
+      .then((result: <<M AA>>Interface) => {
+        // Create <<M a>> from results
+        const output = new <<M AA>>();
+        output.fromObject(result);
+ 
+        return output;
+      });
+  }
+  /**
+   * Delete an <<M a>> selected from it's id
+   * @param {string} id
+   * @return {Promise<any>}
+   */
+  remove(id: string): Promise<any> {
+    // Start request
+    const options = {withCredentials: true};
+    return this.http
+      .delete(`${this._uri}/${id}`, options)
+      .toPromise();
+  }
+  /**
+   * Get list for <<M a>> search
+   * @param {<<M AA>>SearchParamsInterface} searchParams
+   * @return {Promise< <<M AA>>ListInterface>}
+   */
+  list(searchParams: <<M AA>>SearchParamsInterface): Promise< <<M AA>>ListInterface> {
+    // Start request
+    const options = {
+      withCredentials: true,
+      params: searchParams as {}
+    };
+    return this.http
+      .get(`${this._uri}`, options)
+      .toPromise()
+      .then((result: <<M AA>>ListResultInterface) => {
+        // Create list from results
+        return {
+          page: result.page,
+          limit: result.limit,
+          count: result.count,
+          total: result.total,
+          items: result.items.map((item): <<M AA>> => {
+            const <<M aA>> = new <<M AA>>();
+            <<M aA>>.fromObject(item);
+            return <<M aA>>;
+          })
+        };
+      });
+  }
+  /**
+   * Count for <<M a>>
+   * @param {<<M AA>>SearchParamsInterface} searchParams
+   * @return {Promise<number>}
+   */
+  count(searchParams: <<M AA>>SearchParamsInterface): Promise<number> {
+    // Remove unwanted properties
+    const params = Object.assign({}, searchParams);
+    delete params._page;
+    delete params._limit;
+    delete params._order;
+    delete params._sort;
+    // Start request
+    const options = {
+      withCredentials: true,
+      params: params as {}
+    };
+    return this.http
+      .get(`${this._uri}/count`, options)
+      .toPromise()
+      .then((result: <<M AA>>CountInterface) => {
+        return result.total;
+      });
+  }
+ 
+}
+
+<<<  
+function type(f) {
+  let out = "";
+ 
+  if (f.type === "boolean") out += "boolean";
+  else if (f.type === "string") out += "string";
+  else if (f.type === "number") out += "number";
+  else if (f.type === "datetime") out += "number";
+  else if (f.type === "entity") out += "string";
+  else out += "any";
+ 
+  if (f.multiple) out += "[]";
+  else if (f.nullable) out += " | null";
+ 
+  return out;
+}
+>>>

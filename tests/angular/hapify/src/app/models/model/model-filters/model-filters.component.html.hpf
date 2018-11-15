@@ -1,0 +1,119 @@
+<<@ F se f>>
+
+    <<? f tS>>
+ 
+<!-- <<f A>> -->
+<mat-form-field class="w-100">
+    <input matInput
+           (keyup)="onChangeDebounced();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>">
+</mat-form-field>
+<!-- /<<f A>> -->
+
+    <<?? f tN>>
+ 
+<!-- <<f A>> -->
+<mat-form-field class="w-100">
+    <input matInput
+           type="number"
+           (change)="onChange();"
+           (keyup)="onChangeDebounced();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>">
+</mat-form-field>
+<!-- /<<f A>> -->
+ 
+<!-- <<f A>> min -->
+<mat-form-field class="w-100">
+    <input matInput
+           type="number"
+           (change)="onChange();"
+           (keyup)="onChangeDebounced();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__min' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>__min">
+</mat-form-field>
+<!-- /<<f A>> min -->
+ 
+<!-- <<f A>> max -->
+<mat-form-field class="w-100">
+    <input matInput
+           type="number"
+           (change)="onChange();"
+           (keyup)="onChangeDebounced();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__max' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>__max">
+</mat-form-field>
+<!-- /<<f A>> max -->
+
+    <<?? f tD>>
+ 
+<!-- <<f A>> -->
+<mat-form-field class="w-100">
+    <input matInput
+           [matDatepicker]="picker_<<f a_a>>"
+           (dateChange)="onChange();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>">
+    <mat-datepicker-toggle matSuffix [for]="picker_<<f a_a>>"></mat-datepicker-toggle>
+    <mat-datepicker #picker_<<f a_a>>></mat-datepicker>
+</mat-form-field>
+<!-- /<<f A>> -->
+ 
+<!-- <<f A>> min -->
+<mat-form-field class="w-100">
+    <input matInput
+           [matDatepicker]="picker_<<f a_a>>__min"
+           (dateChange)="onChange();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__min' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>__min">
+    <mat-datepicker-toggle matSuffix [for]="picker_<<f a_a>>__min"></mat-datepicker-toggle>
+    <mat-datepicker #picker_<<f a_a>>__min></mat-datepicker>
+</mat-form-field>
+<!-- /<<f A>> min -->
+ 
+<!-- <<f A>> max -->
+<mat-form-field class="w-100">
+    <input matInput
+           [matDatepicker]="picker_<<f a_a>>__max"
+           (dateChange)="onChange();"
+           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__max' | translate }}"
+           [(ngModel)]="searchParams.props.<<f a_a>>__max">
+    <mat-datepicker-toggle matSuffix [for]="picker_<<f a_a>>__max"></mat-datepicker-toggle>
+    <mat-datepicker #picker_<<f a_a>>__max></mat-datepicker>
+</mat-form-field>
+<!-- /<<f A>> max -->
+
+    <<?? f tB>>
+ 
+<!-- <<f A>> -->
+<mat-form-field class="w-100">
+    <mat-select placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
+                (change)="onChange();"
+                [(ngModel)]="searchParams.props.<<f a_a>>">
+        <mat-option>{{ '<<M a_a>>_filter_<<f a_a>>_any' | translate }}</mat-option>
+        <mat-option [value]="false">{{ '<<M a_a>>_filter_<<f a_a>>_false' | translate }}</mat-option>
+        <mat-option [value]="true">{{ '<<M a_a>>_filter_<<f a_a>>_true' | translate }}</mat-option>
+    </mat-select>
+</mat-form-field>
+<!-- /<<f A>> -->
+
+    <<?? f tE>>
+ 
+<!-- <<f A>> -->
+<div class="w-100">
+    <hpf-<<f.m a-a>>-select
+        [placeholder]="'<<M a_a>>_filter_<<f a_a>>' | translate"
+        [(id)]="searchParams.props.<<f a_a>>"
+        [nullable]="true"
+        [nullLabel]="'<<M a_a>>_filter_<<f a_a>>_any' | translate"
+        <<? f ml>>
+        [multiple]="true"
+        <<?>>
+        (change)="onChange();">
+    </hpf-<<f.m a-a>>-select>
+</div>
+<!-- /<<f A>> -->
+    <<?>>
+
+<<@>>

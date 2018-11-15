@@ -1,0 +1,7 @@
+<hpf-<<M a-a>>-form
+        *ngIf="<<M aA>>"
+        [<<M aA>>]="<<M aA>>"
+        (onUpdate)="onSave($event)"></hpf-<<M a-a>>-form>
+<div *ngIf="!<<M aA>>" class="my-5">
+    <mat-spinner class="mx-auto"></mat-spinner>
+</div>

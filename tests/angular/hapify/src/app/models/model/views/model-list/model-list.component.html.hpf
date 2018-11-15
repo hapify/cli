@@ -1,0 +1,23 @@
+<mat-sidenav-container class="sidenav-cnt">
+<<? F se>>
+    <mat-sidenav #sidenav
+                 mode="side"
+                 opened="true"
+                 class="sidenav p-3"
+                 [fixedInViewport]="false"
+                 [fixedTopGap]="0"
+                 [fixedBottomGap]="0">
+        <hpf-<<M a-a>>-filters [searchParams]="searchParams"></hpf-<<M a-a>>-filters>
+    </mat-sidenav>
+<<?>>
+    <mat-sidenav-content class="sidenav-ctt p-3">
+        <hpf-<<M a-a>>-table 
+            [searchParams]="searchParams"
+            (select)="onSelect($event)"></hpf-<<M a-a>>-table>
+        <div class="text-center my-4">
+            <a [routerLink]="['/<<M a-a>>/create']" mat-raised-button color="secondary">
+                {{ '<<M a_a>>_action_create' | translate }}
+            </a>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

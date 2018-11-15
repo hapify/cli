@@ -1,0 +1,195 @@
+import {Helpers} from '@app/shared';
+import {Subject} from 'rxjs/Subject';
+<<@ D !(ip*in) d>>
+import {<<d AA>>, <<d AA>>Interface} from '../<<d a-a>>/<<d a-a>>';
+<<@>>
+ 
+export interface <<M AA>>Interface {
+<<@ F !(ip*in) f>>
+  <<f a_a>>?: <<=type(f)>>;
+<<@>>
+}
+ 
+export class <<M AA>> extends Subject<void> {
+ 
+  /** Store <<M a>> properties */
+  props: <<M AA>>Interface = {};
+  /** Constructor */
+  constructor() { super(); }
+  
+  /** @return {string} Short function to get id */
+  getId(): string {
+    return this.props.<<P a_a>>;
+  }
+  /** @return {string} Short function to get label of instance */
+  getLabel(): string {
+<<? F lb>>
+    return `<<=labels()>>`
+<<??>>
+    return this.props.<<P a_a>>;
+<<?>>
+  }
+  /** @return {boolean} Denotes if the instance has been created or already exists in the API */
+  isNew(): boolean {
+    return !this.getId();
+  }
+  /** @return {boolean} Denotes if the instance has been populated */
+  exists(): boolean {
+    return !!this.props && typeof this.getId() !== 'undefined';
+  }
+<<@ F tE r>>
+  /** @return {boolean} Denotes if the instance of <<r a>> has been populated */
+  <<r aA>>Exists(): boolean {
+    <<? r ml>>
+    return !!this.props &&
+        this.props.<<r a_a>> instanceof Array &&
+        (< <<r.m AA>>[]>this.props.<<r a_a>>).every((item) => {
+            return item instanceof <<r.m AA>> && item.exists();
+        });
+    <<??>>
+    return !!this.props &&
+        this.props.<<r a_a>> instanceof <<r.m AA>> &&
+        this.props.<<r a_a>>.exists();
+    <<?>>
+  }
+<<@>>
+ 
+  /**
+   * Populate the current instance from an object
+   * @param {<<M AA>>Interface} object
+   */
+  fromObject(object: <<M AA>>Interface): void {
+    this.props = Object.assign({}, object);
+<<@ F tD f>>
+    <<? f nu>>
+    if (this.props.<<f a_a>> !== null) {
+    <<?>>
+        this.props.<<f a_a>> = Helpers.convertToDate(this.props.<<f a_a>>);
+    <<? f nu>>
+    }
+    <<?>>
+<<@>>
+
+<<@ F tE r>>
+    <<? r ml>>
+    if (this.props.<<r a_a>> instanceof Array) {
+        this.props.<<r a_a>> = (< <<r.m AA>>Interface[]>this.props.<<r a_a>>).map((item) => {
+            if (typeof item === 'object') {
+                const instance = new <<r.m AA>>();
+                instance.fromObject(item);
+                return instance;
+            }
+            return item;
+        });
+    }
+    <<??>>
+    if (<<? r nu>>this.props.<<r a_a>> !== null && <<?>>typeof this.props.<<r a_a>> === 'object') {
+        const <<r aA>> = new <<r.m AA>>();
+        <<r aA>>.fromObject(< <<r.m AA>>Interface>this.props.<<r a_a>>);
+        this.props.<<r a_a>> = <<r aA>>
+    }
+    <<?>>
+<<@>>
+  }
+  
+  /**
+   * Convert the current instance to an object
+   * @return {<<M AA>>Interface}
+   */
+  toObject(): <<M AA>>Interface {
+    const props = Object.assign({}, this.props);
+<<@ F nu/ip f>>
+    <<? f tS>>
+    if (typeof props.<<f a_a>> !== 'string' || props.<<f a_a>>.length === 0) {
+        props.<<f a_a>> = null;
+    }
+    <<??>>
+    if (typeof props.<<f a_a>> === 'undefined') {
+        props.<<f a_a>> = <<? f ml>>[]<<??>>null<<?>>;
+    }
+    <<?>>
+<<@>>
+
+<<@ F tD f>>
+    <<? f nu>>
+    if (props.<<f a_a>> !== null) {
+    <<?>>
+        props.<<f a_a>> = Helpers.convertToTimestamp(props.<<f a_a>>);
+    <<? f nu>>
+    }
+    <<?>>
+<<@>>
+
+<<@ F tE r>>
+    <<? r ml>>
+    if (this.props.<<r a_a>> instanceof Array) {
+        props.<<r a_a>> = (< <<r.m AA>>[]>props.<<r a_a>>).map((item) => {
+            return item instanceof <<r.m AA>> ? item.toObject() : item;
+        });
+    }
+    <<??>>
+    if (<<? r nu>>props.<<r a_a>> !== null && <<?>>props.<<r a_a>> instanceof <<r.m AA>>) {
+        props.<<r a_a>> = props.<<r a_a>>.toObject();
+    }
+    <<?>>
+<<@>>
+    return props;
+  }
+  
+  /**
+   * Convert an instance to an object to be sent to the API
+   * @return {<<M AA>>Interface}
+   */
+  toPayload(): <<M AA>>Interface {
+    const payload = this.toObject();
+
+<<# Remove public data that cannot be sent to the API >>
+<<@ F in/ip f>>
+    delete payload.<<f a_a>>;
+<<@>>
+
+<<# Remove private data that have been entered >>
+<<@ F ip/nu f>>
+    if (payload.<<f a_a>> === null) { delete payload.<<f a_a>>; }
+<<@>>
+
+<<# Convert dates and entities >>
+<<@ F !in*(tD+tE) f>>
+    <<? f tD>>
+    payload.<<f a_a>> = < number>payload.<<f a_a>>;
+    <<?? f tE>>
+        <<? f ml>>
+    payload.<<f a_a>> = payload.<<f a_a>> ? (< <<f.m AA>>Interface[]>payload.<<f a_a>>).map((i) => i.<<f.m.f.p a_a>>) : null;
+        <<??>>
+    payload.<<f a_a>> = payload.<<f a_a>> ? (< <<f.m AA>>Interface>payload.<<f a_a>>).<<f.m.f.p a_a>> : null;
+        <<?>>
+    <<?>>
+<<@>>
+    return payload;
+  }
+}
+
+<<< 
+function type(f) {
+  let out = "";
+ 
+  if (f.type === "boolean") out += "boolean";
+  else if (f.type === "string") out += "string";
+  else if (f.type === "number") out += "number";
+  else if (f.type === "datetime") out += "number | Date";
+  else if (f.type === "entity") {
+    const m = f.multiple ? "[]" : "";
+    out += `string${m} | ${f.m.names.upperCamel}${m} | ${f.m.names.upperCamel}Interface${m}`;
+  }
+  else out += "any";
+ 
+  if (f.nullable && !f.multiple) out += " | null";
+ 
+  return out;
+}
+function labels() {
+    return root.f.lb
+        .map(lb => "${this.props."+lb.names.underscore+"}")
+        .join(' ');
+}
+>>>
