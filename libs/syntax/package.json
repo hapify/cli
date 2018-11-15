@@ -1,6 +1,6 @@
 {
   "name": "hapify-syntax",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "Templating syntax optimized for Hapify models handling.",
   "main": "src/index.js",
   "scripts": {

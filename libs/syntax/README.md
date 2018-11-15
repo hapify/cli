@@ -3,7 +3,7 @@
 ## Pre-requisites
 
 Before reading this, you should read the documentation about models and fields structure:
-https://bitbucket.org/tractrs/hapify-web-app/src/master/README.md
+https://bitbucket.org/tractrs/hapify-cli/src/master/README.md
 
 ## Wrappers
 
@@ -44,6 +44,13 @@ By default, in a case of a single model template:
 - `D` refers to the models list: `root.dependencies`
 - `R` refers to the models list: `root.referencedIn`
 - `P` refers to the models primary field: `root.fileds.primary`
+- `A` refers to the action's accesses list: `root.accesses.list`
+- `Ac` refers to the create action's access: `root.accesses.create`
+- `Ar` refers to the create action's access: `root.accesses.read`
+- `Au` refers to the create action's access: `root.accesses.update`
+- `Ad` refers to the create action's access: `root.accesses.remove`
+- `As` refers to the create action's access: `root.accesses.search`
+- `An` refers to the create action's access: `root.accesses.count`
 
 ## Conditional operator
 
@@ -78,7 +85,6 @@ Therefore, `-se*so` and `/se*so` are equivalent to `!se*so`.
 ### Properties short-codes
 
 For filtering an array or testing a field by its properties, we use short-codes.
-To read more about fields and models properties, please refer to https://bitbucket.org/tractrs/hapify-web-app/src/master/README.md.
 
 Here is the list of short-codes available for a field:
 
@@ -110,12 +116,44 @@ Here is the list of short-codes available for a field:
     - `tDt` to test if properties `type` is `datetime` and `subtype` is `time`
 - `tE` to test if property `type` is `entity`
 
-And this is the list of short-codes available for a model:
+This is the list of short-codes available for the properties of a model:
 
 - `pMPr` for the boolean property `mainlyPrivate`
 - `pMIn` for the boolean property `mainlyInternal`
 - `pGeo` for the boolean property `isGeolocated`
 - `pGSe` for the boolean property `isGeoSearchable`
+
+#### Access controls
+
+For filtering an array or testing an action by its properties, use those short-codes:
+
+- `ad` for the boolean property `admin`
+- `ow` for the boolean property `owner`
+- `au` for the boolean property `auth`
+- `gs` for the boolean property `guest`
+- `[ad` for the boolean property `gteAdmin`
+- `[ow` for the boolean property `gteOwner`
+- `[au` for the boolean property `gteAuth`
+- `[gs` for the boolean property `gteGuest`
+- `ad]` for the boolean property `lteAdmin`
+- `ow]` for the boolean property `lteOwner`
+- `au]` for the boolean property `lteAuth`
+- `gs]` for the boolean property `lteGuest`
+
+This is the list of short-codes available for the access' properties of a model:
+
+- `pOAd` for the boolean property `onlyAdmin`
+- `pOOw` for the boolean property `onlyOwner`
+- `pOAu` for the boolean property `onlyAuth`
+- `pOGs` for the boolean property `onlyGuest`
+- `pMAd` for the boolean property `maxAdmin`
+- `pMOw` for the boolean property `maxOwner`
+- `pMAu` for the boolean property `maxAuth`
+- `pMGs` for the boolean property `maxGuest`
+- `pNAd` for the boolean property `noAdmin`
+- `pNOw` for the boolean property `noOwner`
+- `pNAu` for the boolean property `noAuth`
+- `pNGs` for the boolean property `noGuest`
 
 ### Structure
 
@@ -221,6 +259,40 @@ Example to test if the model has at least two label fields
 Is equivalent to
 ```javascript
 if (root.fields.list.filter((f) => f.label).length >= 2) {
+    out += '.....';
+}
+```
+
+#### Example for a specific action's access
+
+Example to test if the update action is restricted to admin or owner
+
+```
+<<? Au ad+ow>>
+    .....
+<<?>>
+```
+
+Is equivalent to
+```javascript
+if (root.accesses.update.admin || root.accesses.update.owner) {
+    out += '.....';
+}
+```
+
+#### Example for many action's accesses
+
+Example to test if at least one action is restricted to authenticated user or less
+
+```
+<<? A au]>>
+    .....
+<<?>>
+```
+
+Is equivalent to
+```javascript
+if (root.accesses.filter((a) => a.lteAuth).length > 0) {
     out += '.....';
 }
 ```
@@ -343,6 +415,23 @@ Is equivalent to
 ```javascript
 for(let f of root.fields.list) {
     out += '.....';
+}
+```
+
+#### Example with accesses
+
+This will loop over all actions restricted to admin or owner.
+
+```
+<<@ A ad+ow>>
+    .....
+<<@>>
+```
+
+Is equivalent to
+```javascript
+for(let f of root.accesses.list.filter((a) => a.admin || a.owner)) {
+    out += '...';
 }
 ```
 
