@@ -52,7 +52,7 @@ If you do this, the first found set will be used.
 hpf create
 ```
 
-This will create a new Hapify file structure in the current directory.
+This will create a new Hapify files structure in the current directory.
 It creates a file `hapify.json` and a folder `hapify` containing a template `hello-world.hpf`.
 
 #### Start the console
@@ -61,7 +61,7 @@ It creates a file `hapify.json` and a folder `hapify` containing a template `hel
 hpf serve
 ```
 
-This will start a server that hosts a web-based console for models and templates editions.
+This will start a server that hosts a web-based console for models and templates edition.
 
 Available options are:
 
@@ -108,7 +108,9 @@ hpf export -o /path/to/file.zip
 
 For documentation about Hapify Syntax, please refer to [libs/syntax/README.md](./libs/syntax/README.md).
 
-## Model injected in the templates
+## Model usage within a template
+
+We will describe the structure of the object that represent a model when writing a template.
 
 ### Fields properties
 
