@@ -31,7 +31,7 @@ const cHigh = chalk.green;
 // ############################################
 // Define program & actions
 program
-  .version('0.1.0')
+  .version('0.3.0')
   .description('Hapify Command Line Tool')
   .option('--debug', 'enable debug mode')
   .option('-d, --dir <path>', 'change the working directory');

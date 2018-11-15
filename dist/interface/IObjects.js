@@ -20,7 +20,6 @@ class Access {
             Access.GUEST,
         ];
     }
-    ;
 }
 Access.GUEST = 'guest';
 Access.AUTHENTICATED = 'auth';

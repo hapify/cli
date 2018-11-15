@@ -90,7 +90,7 @@ export class Access {
       Access.AUTHENTICATED,
       Access.GUEST,
     ];
-  };
+  }
 }
 
 /** Define the access for each available action */
