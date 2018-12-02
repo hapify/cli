@@ -1,0 +1,38 @@
+import { IPreset, IModel, ISerilizable } from '../interface';
+import { Model } from './';
+
+export class Preset implements ISerilizable<IPreset, Preset>, IPreset {
+
+  /** @type {string} The model's unique id */
+  id: string;
+  /** @type {string} The preset icon */
+  icon: string;
+  /** @type {string} The model's name */
+  name: string;
+  /** @type {Model[]} The models of the model */
+  models: Model[];
+
+  /** Constructor */
+  constructor() {}
+
+  /** @inheritDoc */
+  public fromObject(object: IPreset): Preset {
+    this.id = object.id;
+    this.icon = object.icon;
+    this.name = object.name;
+    this.models = object.models.map((modelBase: IModel): Model => {
+      const model = new Model();
+      return model.fromObject(modelBase);
+    });
+    return this;
+  }
+  /** @inheritDoc */
+  public toObject(): IPreset {
+    return {
+      id: this.id,
+      icon: this.icon,
+      name: this.name,
+      models: this.models.map((model: Model): IModel => model.toObject()),
+    };
+  }
+}

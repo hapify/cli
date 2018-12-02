@@ -11,7 +11,7 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
   private s3service: S3;
   /** @type {string} The pseudo path */
   public path: string;
-  /** @type {string} The pseudo path */
+  /** @type {string} The loaded instances */
   private static instances: ModelsCollection[] = [];
 
   /**

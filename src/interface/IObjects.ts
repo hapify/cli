@@ -130,3 +130,27 @@ export interface IChannel {
   /** @type {string} The channel's validation script */
   validator: string;
 }
+
+export interface IPreset {
+  /** @type {string} The preset's unique id */
+  id: string;
+  /** @type {string} The preset icon */
+  icon: string;
+  /** @type {string} The preset's name */
+  name: string;
+  /** @type {IModel[]} The models of the preset */
+  models: IModel[];
+}
+
+export interface IConfigPreset {
+  /** @type {string} The AWS access key */
+  key: string;
+  /** @type {string} The AWS access secret */
+  secret: string;
+  /** @type {string} The S3 bucket's name */
+  bucket: string;
+  /** @type {string} The S3 bucket's region */
+  region: string;
+  /** @type {string} The file path */
+  path: string;
+}
