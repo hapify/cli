@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const S3 = require("aws-sdk/clients/s3");
 const _1 = require("./");
-const config_1 = require("../config");
 class PresetsCollection {
     /**
      * Constructor
@@ -25,20 +24,25 @@ class PresetsCollection {
             accessKeyId: config.key,
             secretAccessKey: config.secret
         });
+        this.path = PresetsCollection.path(config);
     }
     /**
-     * Returns a singleton
+     * Returns a singleton for this config
+     * @param {IConfigPreset} config
      */
-    static getInstance() {
+    static getInstance(config) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (PresetsCollection.instance) {
-                return PresetsCollection.instance;
+            const path = PresetsCollection.path(config);
+            // Try to find an existing collection
+            const presetsCollection = PresetsCollection.instances.find((m) => m.path === path);
+            if (presetsCollection) {
+                return presetsCollection;
             }
             // Create and load a new collection
-            const collection = new PresetsCollection(config_1.ConfigPreset);
+            const collection = new PresetsCollection(config);
             yield collection.load();
             // Keep the collection
-            PresetsCollection.instance = collection;
+            PresetsCollection.instances.push(collection);
             return collection;
         });
     }
@@ -101,6 +105,15 @@ class PresetsCollection {
     toObject() {
         return this.presets.map((preset) => preset.toObject());
     }
+    /**
+     * Returns a pseudo path
+     * @returns {string}
+     */
+    static path(config) {
+        return `s3:${config.bucket}:${config.path}`;
+    }
 }
+/** @type {string} The loaded instances */
+PresetsCollection.instances = [];
 exports.PresetsCollection = PresetsCollection;
 //# sourceMappingURL=PresetsCollection.js.map

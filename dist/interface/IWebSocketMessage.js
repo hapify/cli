@@ -6,6 +6,7 @@ WebSocketMessages.GET_MODELS = 'get:models';
 WebSocketMessages.SET_MODELS = 'set:models';
 WebSocketMessages.GET_CHANNELS = 'get:channels';
 WebSocketMessages.SET_CHANNELS = 'set:channels';
+WebSocketMessages.GET_PRESETS = 'get:presets';
 WebSocketMessages.PREVIEW_PATH = 'prv:path';
 WebSocketMessages.PREVIEW_TEMPLATE = 'prv:template';
 WebSocketMessages.VALIDATE_MODEL = 'val:model';

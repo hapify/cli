@@ -2,7 +2,6 @@ import S3 = require('aws-sdk/clients/s3');
 import { IPreset, ISerilizable } from '../interface';
 import { Preset } from './';
 import { IConfigPreset } from '../interface/IObjects';
-import { ConfigPreset } from '../config';
 
 export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
 
@@ -12,8 +11,8 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
   private s3service: S3;
   /** @type {string} The pseudo path */
   public path: string;
-  /** @type {string} The loaded instance */
-  private static instance: PresetsCollection;
+  /** @type {string} The loaded instances */
+  private static instances: PresetsCollection[] = [];
 
   /**
    * Constructor
@@ -25,20 +24,25 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
       accessKeyId: config.key,
       secretAccessKey: config.secret
     });
+    this.path = PresetsCollection.path(config);
   }
 
   /**
-   * Returns a singleton
+   * Returns a singleton for this config
+   * @param {IConfigPreset} config
    */
-  public static async getInstance() {
-    if (PresetsCollection.instance) {
-      return PresetsCollection.instance;
+  public static async getInstance(config: IConfigPreset) {
+    const path = PresetsCollection.path(config);
+    // Try to find an existing collection
+    const presetsCollection = PresetsCollection.instances.find((m) => m.path === path);
+    if (presetsCollection) {
+      return presetsCollection;
     }
     // Create and load a new collection
-    const collection = new PresetsCollection(ConfigPreset);
+    const collection = new PresetsCollection(config);
     await collection.load();
     // Keep the collection
-    PresetsCollection.instance = collection;
+    PresetsCollection.instances.push(collection);
 
     return collection;
   }
@@ -107,5 +111,12 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
   /** @inheritDoc */
   public toObject(): IPreset[] {
     return this.presets.map((preset: Preset): IPreset => preset.toObject());
+  }
+  /**
+   * Returns a pseudo path
+   * @returns {string}
+   */
+  private static path(config: IConfigPreset): string {
+    return `s3:${config.bucket}:${config.path}`;
   }
 }
