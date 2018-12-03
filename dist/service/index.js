@@ -19,6 +19,7 @@ __export(require("./websocket-handlers/GetModelsHandler"));
 __export(require("./websocket-handlers/SetModelsHandler"));
 __export(require("./websocket-handlers/GetChannelsHandler"));
 __export(require("./websocket-handlers/SetChannelsHandler"));
+__export(require("./websocket-handlers/GetPresetsHandler"));
 __export(require("./websocket-handlers/PathPreviewHandler"));
 __export(require("./websocket-handlers/TemplatePreviewHandler"));
 __export(require("./websocket-handlers/ValidateModelHandler"));

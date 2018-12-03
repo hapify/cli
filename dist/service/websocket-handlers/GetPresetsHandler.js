@@ -28,7 +28,7 @@ const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const __1 = require("../");
 const Joi = __importStar(require("joi"));
-let GetModelsHandlerService = class GetModelsHandlerService {
+let GetPresetsHandlerService = class GetPresetsHandlerService {
     /**
      * Constructor
      * @param presetsService
@@ -51,9 +51,9 @@ let GetModelsHandlerService = class GetModelsHandlerService {
         });
     }
 };
-GetModelsHandlerService = __decorate([
+GetPresetsHandlerService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [__1.PresetsService])
-], GetModelsHandlerService);
-exports.GetModelsHandlerService = GetModelsHandlerService;
+], GetPresetsHandlerService);
+exports.GetPresetsHandlerService = GetPresetsHandlerService;
 //# sourceMappingURL=GetPresetsHandler.js.map

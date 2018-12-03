@@ -4,7 +4,7 @@ import { PresetsService } from '../';
 import * as Joi from 'joi';
 
 @Service()
-export class GetModelsHandlerService implements IWebSocketHandler {
+export class GetPresetsHandlerService implements IWebSocketHandler {
 
   /**
    * Constructor
