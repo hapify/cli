@@ -11,6 +11,7 @@ import * as Joi from 'joi';
 import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
+  GetPresetsHandlerService,
   LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService,
   ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
 } from './';
@@ -51,6 +52,7 @@ export class WebSocketServerService {
     this.addHandler(Container.get(SetModelsHandlerService));
     this.addHandler(Container.get(GetChannelsHandlerService));
     this.addHandler(Container.get(SetChannelsHandlerService));
+    this.addHandler(Container.get(GetPresetsHandlerService));
     this.addHandler(Container.get(PathPreviewHandlerService));
     this.addHandler(Container.get(TemplatePreviewHandlerService));
     // this.addHandler(Container.get(ValidateModelHandlerService));

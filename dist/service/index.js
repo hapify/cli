@@ -5,6 +5,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./String"));
 __export(require("./Channels"));
+__export(require("./Presets"));
 __export(require("./Options"));
 __export(require("./Logger"));
 __export(require("./Writer"));
@@ -18,6 +19,7 @@ __export(require("./websocket-handlers/GetModelsHandler"));
 __export(require("./websocket-handlers/SetModelsHandler"));
 __export(require("./websocket-handlers/GetChannelsHandler"));
 __export(require("./websocket-handlers/SetChannelsHandler"));
+__export(require("./websocket-handlers/GetPresetsHandler"));
 __export(require("./websocket-handlers/PathPreviewHandler"));
 __export(require("./websocket-handlers/TemplatePreviewHandler"));
 __export(require("./websocket-handlers/ValidateModelHandler"));

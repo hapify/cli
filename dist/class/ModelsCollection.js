@@ -122,7 +122,7 @@ class ModelsCollection extends _1.SingleSave {
         return `s3:${config.bucket}:${config.path}`;
     }
 }
-/** @type {string} The pseudo path */
+/** @type {string} The loaded instances */
 ModelsCollection.instances = [];
 exports.ModelsCollection = ModelsCollection;
 //# sourceMappingURL=ModelsCollection.js.map
