@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Handle scenarios.
 
 ### Changed
 
