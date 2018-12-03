@@ -60,7 +60,7 @@ class PresetsCollection {
                     Bucket: this.config.bucket,
                     Prefix: this.config.path
                 })
-                    .promise()).Contents;
+                    .promise()).Contents.filter((o) => o.Key.endsWith('.json'));
                 objects.sort((a, b) => a.Key.localeCompare(b.Key));
                 // Load objects
                 for (const object of objects) {

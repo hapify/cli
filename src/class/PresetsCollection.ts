@@ -52,7 +52,6 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
    * @return {Promise<void>}
    */
   private async load(): Promise<void> {
-
     try {
       // Flush presets
       const presets: IPreset[] = [];
@@ -62,7 +61,7 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
         Bucket: this.config.bucket,
         Prefix: this.config.path
       })
-        .promise()).Contents;
+        .promise()).Contents.filter((o) => o.Key.endsWith('.json'));
       objects.sort((a, b) => a.Key.localeCompare(b.Key));
 
       // Load objects
