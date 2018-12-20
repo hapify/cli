@@ -27,6 +27,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/tractrs/hapify-cli#readme",
   "dependencies": {
+    "@types/opn": "^5.1.0",
     "aws-sdk": "^2.325.0",
     "chalk": "^2.4.1",
     "commander": "^2.17.1",
@@ -40,7 +41,7 @@
     "jszip": "^3.1.5",
     "md5": "^2.2.1",
     "mkdirp": "^0.5.1",
-    "openurl": "^1.1.1",
+    "opn": "^5.4.0",
     "ora": "^3.0.0",
     "randomstring": "^1.1.5",
     "safe-eval": "^0.4.1",

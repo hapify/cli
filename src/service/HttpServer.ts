@@ -4,7 +4,7 @@ import * as http from 'http';
 import HttpServer from 'http-server';
 import { OptionsService } from './';
 import { WebSocketServerService } from './WebSocketServer';
-const { open } = require('openurl');
+const opn = require('opn');
 const DetectPort = require('detect-port');
 
 @Service()
@@ -107,7 +107,9 @@ export class HttpServerService {
    */
   public open(): void {
     const url = this.url();
-    if (url) { open(url); }
+    if (url) {
+        opn(url);
+    }
   }
   /**
    * Get the URL of the current session
