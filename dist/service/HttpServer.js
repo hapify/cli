@@ -32,7 +32,8 @@ const Path = __importStar(require("path"));
 const http_server_1 = __importDefault(require("http-server"));
 const _1 = require("./");
 const WebSocketServer_1 = require("./WebSocketServer");
-const { open } = require('openurl');
+const Logger_1 = require("./Logger");
+const opn = require('opn');
 const DetectPort = require('detect-port');
 let HttpServerService = class HttpServerService {
     /**
@@ -40,9 +41,10 @@ let HttpServerService = class HttpServerService {
      * @param {OptionsService} optionsService
      * @param {WebSocketServerService} webSocketServerService
      */
-    constructor(optionsService, webSocketServerService) {
+    constructor(optionsService, webSocketServerService, loggerService) {
         this.optionsService = optionsService;
         this.webSocketServerService = webSocketServerService;
+        this.loggerService = loggerService;
         /** @type {string} WebApp root */
         this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'html');
         /** @type {number} Start port number */
@@ -133,7 +135,7 @@ let HttpServerService = class HttpServerService {
     open() {
         const url = this.url();
         if (url) {
-            open(url);
+            opn(url);
         }
     }
     /**
@@ -164,7 +166,8 @@ let HttpServerService = class HttpServerService {
 HttpServerService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [_1.OptionsService,
-        WebSocketServer_1.WebSocketServerService])
+        WebSocketServer_1.WebSocketServerService,
+        Logger_1.LoggerService])
 ], HttpServerService);
 exports.HttpServerService = HttpServerService;
 //# sourceMappingURL=HttpServer.js.map
