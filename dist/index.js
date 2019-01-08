@@ -29,6 +29,7 @@ const service_1 = require("./service");
 // Get services
 const program = Commander.default;
 const generator = typedi_1.Container.get(service_1.GeneratorService);
+const globalConfig = typedi_1.Container.get(service_1.GlobalConfigService);
 const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
 const writer = typedi_1.Container.get(service_1.WriterService);
@@ -49,7 +50,8 @@ program
     .version('0.3.0')
     .description('Hapify Command Line Tool')
     .option('--debug', 'enable debug mode')
-    .option('-d, --dir <path>', 'change the working directory');
+    .option('-d, --dir <path>', 'change the working directory')
+    .option('-k, --key <secret>', 'define the api key to use (override global key)');
 program
     .command('list')
     .alias('l')
@@ -58,6 +60,9 @@ program
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
         options.setCommand(cmd);
+        // ---------------------------------
+        // Needs global configs
+        globalConfig.validate();
         // ---------------------------------
         // Action starts
         const channels = yield channelsService.channels();

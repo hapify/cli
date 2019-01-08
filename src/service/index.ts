@@ -1,6 +1,7 @@
 
 export * from './String';
 export * from './Channels';
+export * from './GlobalConfig';
 export * from './Presets';
 export * from './Options';
 export * from './Logger';

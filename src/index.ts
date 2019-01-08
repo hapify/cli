@@ -6,12 +6,21 @@ import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
-import { GeneratorService, OptionsService, LoggerService, WriterService, HttpServerService, ChannelsService } from './service';
+import {
+  GeneratorService,
+  OptionsService,
+  LoggerService,
+  WriterService,
+  HttpServerService,
+  ChannelsService,
+  GlobalConfigService
+} from './service';
 
 // ############################################
 // Get services
 const program: CommanderStatic = Commander.default;
 const generator = Container.get(GeneratorService);
+const globalConfig = Container.get(GlobalConfigService);
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
 const writer = Container.get(WriterService);
@@ -34,7 +43,8 @@ program
   .version('0.3.0')
   .description('Hapify Command Line Tool')
   .option('--debug', 'enable debug mode')
-  .option('-d, --dir <path>', 'change the working directory');
+  .option('-d, --dir <path>', 'change the working directory')
+  .option('-k, --key <secret>', 'define the api key to use (override global key)');
 
 program
   .command('list')
@@ -42,6 +52,10 @@ program
   .description('List available channels from the current directory')
   .option('--depth <n>', 'depth to recursively look for channels', 2)
   .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Needs global configs
+    globalConfig.validate();
 
     // ---------------------------------
     // Action starts

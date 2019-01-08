@@ -18,9 +18,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
+const _1 = require("./");
 let OptionsService = class OptionsService {
     /** Constructor */
-    constructor() {
+    constructor(globalConfigService) {
+        this.globalConfigService = globalConfigService;
     }
     /**
      * Set program entity
@@ -36,10 +38,7 @@ let OptionsService = class OptionsService {
     setCommand(command) {
         this.command = command;
     }
-    /**
-     * Return the working directory computed with the --dir option
-     * @return {string}
-     */
+    /** @return {string} Return the working directory computed with the --dir option */
     dir() {
         if (this.program.dir) {
             if (Path.isAbsolute(this.program.dir)) {
@@ -48,6 +47,10 @@ let OptionsService = class OptionsService {
             return Path.resolve(process.cwd(), this.program.dir);
         }
         return process.cwd();
+    }
+    /** @return {string} Return the API Key to use (explicit or global) */
+    apiKey() {
+        return this.program.key || this.globalConfigService.getData().apiKey;
     }
     /** @return {boolean} Denotes if the debug mode is enabled */
     debug() { return !!this.program.debug; }
@@ -64,7 +67,7 @@ let OptionsService = class OptionsService {
 };
 OptionsService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [_1.GlobalConfigService])
 ], OptionsService);
 exports.OptionsService = OptionsService;
 //# sourceMappingURL=Options.js.map
