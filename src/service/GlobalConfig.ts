@@ -19,7 +19,7 @@ export class GlobalConfigService {
   private data: IGlobalConfig = {};
   /** Store the config data */
   private dataValidator = Joi.object({
-    apiKey: Joi.string().min(1).required()
+    apiKey: Joi.string().min(1)
   });
 
   /** Constructor */
@@ -28,18 +28,18 @@ export class GlobalConfigService {
   }
 
   /** Create file if not exists */
-  init(): void {
+  private init(): void {
     // Create path
     if (!Fs.existsSync(this.rootPath) || !Fs.statSync(this.rootPath).isDirectory()) {
       mkdirp.sync(this.rootPath);
     }
     // Create file
     if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {
-      this.data.apiKey = '';
       this.save();
     }
-    // Load config
+    // Load & validate config
     this.load();
+    this.validate();
   }
   /** Save data to config file */
   private save(): void {
@@ -50,11 +50,11 @@ export class GlobalConfigService {
     this.data = JSON.parse(<string>Fs.readFileSync(this.filePath, 'utf8'));
   }
   /** Validate the current config or scream */
-  validate(): void {
-    const validation = Joi.validate(this.data, this.dataValidator);
+  private validate(data: IGlobalConfig = this.data): void {
+    const validation = Joi.validate(data, this.dataValidator);
     if (validation.error) {
       const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-      throw new Error(`Please configure Hapify CLI before using it with command "hpf config" (Global config format error: ${errorMessage}).`);
+      throw new Error(`Global config format error: ${errorMessage}.`);
     }
   }
   /** Returns the configs */
@@ -63,11 +63,7 @@ export class GlobalConfigService {
   }
   /** Validate and save the configs */
   setData(data: IGlobalConfig): void {
-    const validation = Joi.validate(data, this.dataValidator);
-    if (validation.error) {
-      const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-      throw new Error(`Global config format error: ${errorMessage}.`);
-    }
+    this.validate(data);
     this.data = data;
     this.save();
   }

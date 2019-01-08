@@ -18,7 +18,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
-const _1 = require("./");
+const GlobalConfig_1 = require("./GlobalConfig");
 let OptionsService = class OptionsService {
     /** Constructor */
     constructor(globalConfigService) {
@@ -50,7 +50,11 @@ let OptionsService = class OptionsService {
     }
     /** @return {string} Return the API Key to use (explicit or global) */
     apiKey() {
-        return this.program.key || this.globalConfigService.getData().apiKey;
+        const key = this.program.key || this.globalConfigService.getData().apiKey;
+        if (!key) {
+            throw new Error('Please define an API Key using command "hpf config" or the option "--key"');
+        }
+        return key;
     }
     /** @return {boolean} Denotes if the debug mode is enabled */
     debug() { return !!this.program.debug; }
@@ -67,7 +71,7 @@ let OptionsService = class OptionsService {
 };
 OptionsService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [_1.GlobalConfigService])
+    __metadata("design:paramtypes", [GlobalConfig_1.GlobalConfigService])
 ], OptionsService);
 exports.OptionsService = OptionsService;
 //# sourceMappingURL=Options.js.map

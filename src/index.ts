@@ -47,15 +47,45 @@ program
   .option('-k, --key <secret>', 'define the api key to use (override global key)');
 
 program
+  .command('config')
+  .alias('c')
+  .description('Define global configuration')
+  .option('--apiKey <secret>', 'define the api key to use for every commands')
+  .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Action starts
+    // Get actual values
+    const data = globalConfig.getData();
+
+    const updates = [];
+    
+    // Update values
+    if (cmd.apiKey) {
+      data.apiKey = cmd.apiKey;
+      updates.push('apiKey');
+    }
+    
+    // Store values
+    globalConfig.setData(data);
+    
+    if (updates.length) {
+      logger.success(`Did update global configuration: ${updates.join(', ')}`);
+    } else {
+      logger.warning(`Nothing updated`);
+    }
+    // Action Ends
+    // ---------------------------------
+
+    logger.time(); } catch (error) { logger.handle(error); }
+  });
+
+program
   .command('list')
   .alias('l')
   .description('List available channels from the current directory')
   .option('--depth <n>', 'depth to recursively look for channels', 2)
   .action(async (cmd) => { try { options.setCommand(cmd);
-
-    // ---------------------------------
-    // Needs global configs
-    globalConfig.validate();
 
     // ---------------------------------
     // Action starts

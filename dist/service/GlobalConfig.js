@@ -38,7 +38,7 @@ let GlobalConfigService = class GlobalConfigService {
         this.data = {};
         /** Store the config data */
         this.dataValidator = Joi.object({
-            apiKey: Joi.string().min(1).required()
+            apiKey: Joi.string().min(1)
         });
         this.init();
     }
@@ -50,11 +50,11 @@ let GlobalConfigService = class GlobalConfigService {
         }
         // Create file
         if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {
-            this.data.apiKey = '';
             this.save();
         }
-        // Load config
+        // Load & validate config
         this.load();
+        this.validate();
     }
     /** Save data to config file */
     save() {
@@ -65,11 +65,11 @@ let GlobalConfigService = class GlobalConfigService {
         this.data = JSON.parse(Fs.readFileSync(this.filePath, 'utf8'));
     }
     /** Validate the current config or scream */
-    validate() {
-        const validation = Joi.validate(this.data, this.dataValidator);
+    validate(data = this.data) {
+        const validation = Joi.validate(data, this.dataValidator);
         if (validation.error) {
             const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-            throw new Error(`Please configure Hapify CLI before using it with command "hpf config" (Global config format error: ${errorMessage}).`);
+            throw new Error(`Global config format error: ${errorMessage}.`);
         }
     }
     /** Returns the configs */
@@ -78,11 +78,7 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Validate and save the configs */
     setData(data) {
-        const validation = Joi.validate(data, this.dataValidator);
-        if (validation.error) {
-            const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-            throw new Error(`Global config format error: ${errorMessage}.`);
-        }
+        this.validate(data);
         this.data = data;
         this.save();
     }

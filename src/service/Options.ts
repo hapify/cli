@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Command, CommanderStatic } from 'commander';
 import * as Path from 'path';
-import { GlobalConfigService } from './';
+import { GlobalConfigService } from './GlobalConfig';
 
 @Service()
 export class OptionsService {
@@ -41,7 +41,11 @@ export class OptionsService {
   }
   /** @return {string} Return the API Key to use (explicit or global) */
   apiKey(): string {
-    return this.program.key || this.globalConfigService.getData().apiKey;
+    const key = this.program.key || this.globalConfigService.getData().apiKey;
+    if (!key) {
+      throw new Error('Please define an API Key using command "hpf config" or the option "--key"');
+    }
+    return key;
   }
   /** @return {boolean} Denotes if the debug mode is enabled */
   debug(): boolean { return !!this.program.debug; }
