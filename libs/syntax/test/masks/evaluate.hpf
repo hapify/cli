@@ -1,8 +1,0 @@
-<<<
-function testFunc() {
-    return `yo mec`;
-}
->>>Result:
-
-<<<out += testFunc();>>>
-

@@ -1,3 +1,0 @@
-This is the underscore youtube_video.
-This is the hyphen youtube-video.
-This model contains 6 fields.

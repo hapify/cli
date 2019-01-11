@@ -1,5 +1,0 @@
-Escaped text
-
-This \<\<should\>\> be escaped.
- - This \<\<should\>\> be escaped \<\<also\>\>.
- - This <\<\<should>\>\> be escaped.

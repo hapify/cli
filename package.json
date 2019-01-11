@@ -33,7 +33,6 @@
     "commander": "^2.17.1",
     "detect-port": "^1.2.3",
     "hapi": "^17.5.3",
-    "hapify-syntax": "file:./libs/syntax",
     "http-server": "^0.11.1",
     "inquirer": "^6.1.0",
     "joi": "^13.6.0",
