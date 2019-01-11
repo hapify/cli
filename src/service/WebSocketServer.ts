@@ -12,9 +12,10 @@ import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
   GetPresetsHandlerService,
-  LoggerService, PathPreviewHandlerService, TemplatePreviewHandlerService,
+  PathPreviewHandlerService, TemplatePreviewHandlerService,
   ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
-} from './';
+} from './websocket-handlers';
+import { LoggerService } from './Logger'
 import { IWebSocketHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
 

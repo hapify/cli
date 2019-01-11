@@ -17,7 +17,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
   /** @type {string} */
   private static configFile = 'hapify.json';
   /** @type {IConfig} */
-  private config: IConfig;
+  public config: IConfig;
   /** @type {Template[]} Templates instances */
   public templates: Template[];
   /** @type {Template[]} Templates instances */

@@ -26,7 +26,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
-const __1 = require("../");
+const Presets_1 = require("../Presets");
 const Joi = __importStar(require("joi"));
 let GetPresetsHandlerService = class GetPresetsHandlerService {
     /**
@@ -53,7 +53,7 @@ let GetPresetsHandlerService = class GetPresetsHandlerService {
 };
 GetPresetsHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [__1.PresetsService])
+    __metadata("design:paramtypes", [Presets_1.PresetsService])
 ], GetPresetsHandlerService);
 exports.GetPresetsHandlerService = GetPresetsHandlerService;
 //# sourceMappingURL=GetPresetsHandler.js.map

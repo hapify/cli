@@ -30,7 +30,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const http_server_1 = __importDefault(require("http-server"));
-const _1 = require("./");
+const Options_1 = require("./Options");
 const WebSocketServer_1 = require("./WebSocketServer");
 const opn = require('opn');
 const DetectPort = require('detect-port');
@@ -163,7 +163,7 @@ let HttpServerService = class HttpServerService {
 };
 HttpServerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [_1.OptionsService,
+    __metadata("design:paramtypes", [Options_1.OptionsService,
         WebSocketServer_1.WebSocketServerService])
 ], HttpServerService);
 exports.HttpServerService = HttpServerService;

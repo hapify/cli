@@ -26,7 +26,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
-const __1 = require("../");
+const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
 const IObjects_1 = require("../../interface/IObjects");
 let SetModelsHandlerService = class SetModelsHandlerService {
@@ -86,7 +86,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
 };
 SetModelsHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [__1.ChannelsService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService])
 ], SetModelsHandlerService);
 exports.SetModelsHandlerService = SetModelsHandlerService;
 //# sourceMappingURL=SetModelsHandler.js.map

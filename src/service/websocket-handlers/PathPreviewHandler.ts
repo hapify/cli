@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
-import { ChannelsService, GeneratorService } from '../';
+import { ChannelsService } from '../Channels';
+import { GeneratorService } from '../Generator';
 import * as Joi from 'joi';
 
 @Service()
@@ -35,6 +36,6 @@ export class PathPreviewHandlerService implements IWebSocketHandler {
       (await (await this.channelsService.modelsCollection()).find(message.data.model)) :
       null;
     // Compute the path
-    return this.generatorService.pathPreview(message.data.path, model);
+    return await this.generatorService.pathPreview(message.data.path, model);
   }
 }
