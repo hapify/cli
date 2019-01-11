@@ -54,7 +54,7 @@ class Channel extends _1.SingleSave {
                 this.templates.push(template);
             }
             // Load models
-            this.modelsCollection = yield _1.ModelsCollection.getInstance(this.config.models);
+            this.modelsCollection = yield _1.ModelsCollection.getInstance(this.config.project);
             // Load validator
             this.validator = new _1.Validator(this, this.config.validatorPath);
             yield this.validator.load();
@@ -166,13 +166,7 @@ class Channel extends _1.SingleSave {
             }
             const config = {
                 validatorPath: `${Channel.defaultFolder}/validator.js`,
-                models: {
-                    key: 'AAAAAAAAAAA',
-                    secret: 'XXXXXXXXXXX',
-                    region: 'us-east-1',
-                    bucket: 'hapify-storage',
-                    path: 'models/cli-demo.json'
-                },
+                project: 'projectId',
                 templates: [
                     {
                         name: 'Hello World',

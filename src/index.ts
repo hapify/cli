@@ -48,7 +48,7 @@ program
 
 program
   .command('config')
-  .alias('c')
+  .alias('f')
   .description('Define global configuration')
   .option('--apiKey <secret>', 'define the api key to use for every commands')
   .action(async (cmd) => { try { options.setCommand(cmd);

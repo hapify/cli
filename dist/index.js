@@ -54,7 +54,7 @@ program
     .option('-k, --key <secret>', 'define the api key to use (override global key)');
 program
     .command('config')
-    .alias('c')
+    .alias('f')
     .description('Define global configuration')
     .option('--apiKey <secret>', 'define the api key to use for every commands')
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {

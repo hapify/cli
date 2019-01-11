@@ -8,37 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const S3 = require("aws-sdk/clients/s3");
 const _1 = require("./");
+const service_1 = require("../service");
+const typedi_1 = require("typedi");
 class ModelsCollection extends _1.SingleSave {
     /**
      * Constructor
-     * @param {IConfigModel} config
+     * @param {string} project
      */
-    constructor(config) {
+    constructor(project) {
         super();
-        this.config = config;
-        this.s3service = new S3({
-            region: config.region,
-            accessKeyId: config.key,
-            secretAccessKey: config.secret
-        });
-        this.path = ModelsCollection.path(config);
+        this.project = project;
+        this.apiService = typedi_1.Container.get(service_1.ApiService);
+        this.path = ModelsCollection.path(project);
     }
     /**
      * Returns a singleton for this config
-     * @param {IConfigModel} config
+     * @param {string} project
      */
-    static getInstance(config) {
+    static getInstance(project) {
         return __awaiter(this, void 0, void 0, function* () {
-            const path = ModelsCollection.path(config);
+            const path = ModelsCollection.path(project);
             // Try to find an existing collection
             const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
             if (modelsCollection) {
                 return modelsCollection;
             }
             // Create and load a new collection
-            const collection = new ModelsCollection(config);
+            const collection = new ModelsCollection(project);
             yield collection.load();
             // Keep the collection
             ModelsCollection.instances.push(collection);
@@ -48,23 +45,19 @@ class ModelsCollection extends _1.SingleSave {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = yield this.s3service.getObject({
-                Bucket: this.config.bucket,
-                Key: this.config.path
+            const models = yield this.apiService.get('model', {
+                _page: 0,
+                _limit: 100,
+                project: this.project
             })
-                .promise()
-                .then((data) => {
-                const content = data.Body.toString('utf8');
-                const models = JSON.parse(content);
-                this.didLoad(content);
-                return models;
-            })
-                .catch((error) => {
-                // First loading => no file => AccessDenied
-                if (error.code === 'NotFound' || error.code === 'AccessDenied') {
-                    return [];
-                }
-                throw error;
+                .then(response => {
+                return response.data.items
+                    .map((m) => ({
+                    id: m._id,
+                    name: m.name,
+                    fields: m.fields,
+                    accesses: m.accesses,
+                }));
             });
             this.fromObject(models);
         });
@@ -72,15 +65,15 @@ class ModelsCollection extends _1.SingleSave {
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = JSON.stringify(this.toObject(), null, 2);
-            if (this.shouldSave(data)) {
-                yield this.s3service.putObject({
-                    Body: Buffer.from(data, 'utf8'),
-                    Bucket: this.config.bucket,
-                    Key: this.config.path
-                })
-                    .promise();
-            }
+            // const data = JSON.stringify(this.toObject(), null, 2);
+            // if (this.shouldSave(data)) {
+            //   await this.s3service.putObject({
+            //     Body: Buffer.from(data, 'utf8'),
+            //     Bucket: this.config.bucket,
+            //     Key: this.config.path
+            //   })
+            //     .promise();
+            // }
         });
     }
     /**
@@ -118,8 +111,8 @@ class ModelsCollection extends _1.SingleSave {
      * Returns a pseudo path
      * @returns {string}
      */
-    static path(config) {
-        return `s3:${config.bucket}:${config.path}`;
+    static path(project) {
+        return `api:${project}`;
     }
 }
 /** @type {string} The loaded instances */

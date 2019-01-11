@@ -1,4 +1,4 @@
-import { IConfigPreset } from '../interface/IObjects';
+import { IConfigPreset } from '../interface';
 
 export const ConfigPreset: IConfigPreset = {
   key: 'AKIAJNB2JZQWEW3KG6JA',

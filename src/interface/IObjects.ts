@@ -1,17 +1,4 @@
 
-export interface IConfigModel {
-  /** @type {string} The AWS access key */
-  key: string;
-  /** @type {string} The AWS access secret */
-  secret: string;
-  /** @type {string} The S3 bucket's name */
-  bucket: string;
-  /** @type {string} The S3 bucket's region */
-  region: string;
-  /** @type {string} The file path */
-  path: string;
-}
-
 export interface IConfigTemplate {
   /** @type {string} The template's name */
   name: string;
@@ -26,8 +13,8 @@ export interface IConfigTemplate {
 export interface IConfig {
   /** @type {string} The channel's validation script path */
   validatorPath: string;
-  /** @type {IConfigModel} The models file configurations */
-  models: IConfigModel;
+  /** @type {string} The project id containing the models */
+  project: string;
   /** @type {IConfigTemplate[]} The templates of the channel */
   templates: IConfigTemplate[];
 }
@@ -153,4 +140,9 @@ export interface IConfigPreset {
   region: string;
   /** @type {string} The file path */
   path: string;
+}
+
+export interface IConfigRemote {
+  /** @type {string} The API URL */
+  uri: string;
 }
