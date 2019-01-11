@@ -33,9 +33,36 @@ export class ApiService {
   }
 
   /** Get */
-  async get(url: string, object?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+  async get(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
     try {
-      return await this.http.get(this.query(url, object), config);
+      return await this.http.get(this.query(url, query), config);
+    } catch (e) {
+      throw this.wrapError(e);
+    }
+  }
+
+  /** Post */
+  async post(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+    try {
+      return await this.http.post(this.query(url, query), payload, config);
+    } catch (e) {
+      throw this.wrapError(e);
+    }
+  }
+
+  /** Patch */
+  async patch(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+    try {
+      return await this.http.patch(this.query(url, query), payload, config);
+    } catch (e) {
+      throw this.wrapError(e);
+    }
+  }
+
+  /** Delete */
+  async delete(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+    try {
+      return await this.http.delete(this.query(url, query), config);
     } catch (e) {
       throw this.wrapError(e);
     }

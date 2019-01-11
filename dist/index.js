@@ -114,7 +114,7 @@ program
             const mc = c.length > 1;
             const m = yield c[0].modelsCollection.list();
             const mm = m.length > 1;
-            let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${cPath(modelsPath)}`;
+            let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} of ${cPath(modelsPath)}`;
             if (m.length === 0) {
                 message += `\nThere is no model yet.`;
             }

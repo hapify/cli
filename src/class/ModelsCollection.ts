@@ -13,6 +13,8 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
   public path: string;
   /** @type {string} The loaded instances */
   private static instances: ModelsCollection[] = [];
+  /** @type {string} The loaded instances */
+  private hashes: { [id: string]: string } = {};
 
   /**
    * Constructor
@@ -62,18 +64,53 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
       });
 
     this.fromObject(models);
+    this.updateHashes();
   }
   /** @inheritDoc */
   async save(): Promise<void> {
-    // const data = JSON.stringify(this.toObject(), null, 2);
-    // if (this.shouldSave(data)) {
-    //   await this.s3service.putObject({
-    //     Body: Buffer.from(data, 'utf8'),
-    //     Bucket: this.config.bucket,
-    //     Key: this.config.path
-    //   })
-    //     .promise();
-    // }
+    
+    // Get models to create
+    const toCreate = this.models.filter(m => typeof this.hashes[m.id] === 'undefined');
+    
+    // Create models and update id
+    for(const model of toCreate) {
+      const response = await this.apiService.post('model', {
+        project: this.project,
+        name: model.name,
+        fields: model.fields,
+        accesses: model.accesses,
+      });
+      model.id = response.data._id;
+    }
+
+    // Get models to update
+    const toUpdate = this.models.filter(m => typeof this.hashes[m.id] === 'string' && this.hashes[m.id] !== m.hash());
+
+    // Update models
+    for(const model of toUpdate) {
+      await this.apiService.patch(`model/${model.id}`, {
+        name: model.name,
+        fields: model.fields,
+        accesses: model.accesses,
+      });
+    }
+
+    // Get models to delete
+    const toDelete = Object.keys(this.hashes).filter(id => !this.models.some(m => m.id === id));
+
+    // Delete models
+    for(const id of toDelete) {
+      await this.apiService.delete(`model/${id}`);
+    }
+    
+    this.updateHashes();
+  }
+  /** Update hashes from models */
+  private updateHashes() {
+    this.hashes = {};
+    for (const model of this.models) {
+      this.hashes[model.id] = model.hash();
+    }
   }
   /**
    * Find a instance with its id
@@ -107,6 +144,6 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
    * @returns {string}
    */
   private static path(project: string): string {
-    return `api:${project}`;
+    return `project:${project}`;
   }
 }

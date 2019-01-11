@@ -37,10 +37,43 @@ let ApiService = class ApiService {
         });
     }
     /** Get */
-    get(url, object, config) {
+    get(url, query, config) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield this.http.get(this.query(url, object), config);
+                return yield this.http.get(this.query(url, query), config);
+            }
+            catch (e) {
+                throw this.wrapError(e);
+            }
+        });
+    }
+    /** Post */
+    post(url, payload, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.http.post(this.query(url, query), payload, config);
+            }
+            catch (e) {
+                throw this.wrapError(e);
+            }
+        });
+    }
+    /** Patch */
+    patch(url, payload, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.http.patch(this.query(url, query), payload, config);
+            }
+            catch (e) {
+                throw this.wrapError(e);
+            }
+        });
+    }
+    /** Delete */
+    delete(url, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.http.delete(this.query(url, query), config);
             }
             catch (e) {
                 throw this.wrapError(e);
