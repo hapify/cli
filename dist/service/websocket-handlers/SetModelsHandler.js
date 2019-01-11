@@ -73,7 +73,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
                 search: Joi.string().valid(accesses).required(),
                 count: Joi.string().valid(accesses).required(),
             })
-        })).min(1);
+        })).min(0);
     }
     /** @inheritDoc */
     handle(message) {

@@ -31,7 +31,7 @@ export class SetChannelsHandlerService implements IWebSocketHandler {
         input: Joi.string().required(),
         content: Joi.string().required().allow('')
       })).required()
-    })).min(1);
+    })).min(0);
   }
 
   /** @inheritDoc */

@@ -16,6 +16,15 @@ export interface IApiModel {
   accesses?: any;
 }
 
+export interface IApiPreset {
+  _id?: string;
+  created_at?: number;
+  version?: string;
+  name?: string;
+  icon?: string;
+  models?: IApiModel[];
+}
+
 @Service()
 export class ApiService {
 

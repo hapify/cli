@@ -19,7 +19,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const class_1 = require("../class");
-const config_1 = require("../config");
 let PresetsService = class PresetsService {
     /**
      * Constructor
@@ -33,7 +32,7 @@ let PresetsService = class PresetsService {
      */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield class_1.PresetsCollection.getInstance(config_1.ConfigPreset);
+            return yield class_1.PresetsCollection.getInstance();
         });
     }
 };

@@ -53,7 +53,7 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
                 input: Joi.string().required(),
                 content: Joi.string().required().allow('')
             })).required()
-        })).min(1);
+        })).min(0);
     }
     /** @inheritDoc */
     handle(message) {

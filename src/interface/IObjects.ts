@@ -129,19 +129,6 @@ export interface IPreset {
   models: IModel[];
 }
 
-export interface IConfigPreset {
-  /** @type {string} The AWS access key */
-  key: string;
-  /** @type {string} The AWS access secret */
-  secret: string;
-  /** @type {string} The S3 bucket's name */
-  bucket: string;
-  /** @type {string} The S3 bucket's region */
-  region: string;
-  /** @type {string} The file path */
-  path: string;
-}
-
 export interface IConfigRemote {
   /** @type {string} The API URL */
   uri: string;
