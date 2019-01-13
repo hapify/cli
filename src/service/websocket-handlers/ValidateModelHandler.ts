@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
-import { ChannelsService, ValidatorService } from '../';
+import { ChannelsService } from '../Channels';
+import { ValidatorService } from '../Validator';
 import * as Joi from 'joi';
 
 @Service()

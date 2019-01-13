@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import * as Path from 'path';
 import * as http from 'http';
 import HttpServer from 'http-server';
-import { OptionsService } from './';
+import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
 const opn = require('opn');
 const DetectPort = require('detect-port');

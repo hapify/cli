@@ -17,7 +17,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
   /** @type {string} */
   private static configFile = 'hapify.json';
   /** @type {IConfig} */
-  private config: IConfig;
+  public config: IConfig;
   /** @type {Template[]} Templates instances */
   public templates: Template[];
   /** @type {Template[]} Templates instances */
@@ -58,7 +58,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
 
     // Load models
-    this.modelsCollection = await ModelsCollection.getInstance(this.config.models);
+    this.modelsCollection = await ModelsCollection.getInstance(this.config.project);
 
     // Load validator
     this.validator = new Validator(this, this.config.validatorPath);
@@ -174,13 +174,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
     const config: IConfig = {
       validatorPath: `${Channel.defaultFolder}/validator.js`,
-      models: {
-        key: 'AAAAAAAAAAA',
-        secret: 'XXXXXXXXXXX',
-        region: 'us-east-1',
-        bucket: 'hapify-storage',
-        path: 'models/cli-demo.json'
-      },
+      project: 'projectId',
       templates: [
         {
           name: 'Hello World',

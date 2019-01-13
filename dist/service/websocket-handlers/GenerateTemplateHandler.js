@@ -26,7 +26,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
-const __1 = require("../");
+const Channels_1 = require("../Channels");
+const Generator_1 = require("../Generator");
+const Writer_1 = require("../Writer");
 const Joi = __importStar(require("joi"));
 let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
     /**
@@ -71,9 +73,9 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
 };
 GenerateTemplateHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [__1.ChannelsService,
-        __1.GeneratorService,
-        __1.WriterService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService,
+        Generator_1.GeneratorService,
+        Writer_1.WriterService])
 ], GenerateTemplateHandlerService);
 exports.GenerateTemplateHandlerService = GenerateTemplateHandlerService;
 //# sourceMappingURL=GenerateTemplateHandler.js.map

@@ -1,9 +1,0 @@
-This is the lower camel <<M aA>>.
-This is the upper camel <<M AA>>.
-This is the lower words <<M a__a>>.
-This is the upper words <<M  A>>.
-This is the hyphen <<M a-a>>.
-This is the underscore <<M a_a>>.
-This is the one word <<M aa>>.
-This is the raw <<M R>>.
-This should not be detected <<Ma>>.

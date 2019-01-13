@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ITemplate } from '../../interface';
-import { ChannelsService, GeneratorService } from '../';
+import { ChannelsService } from '../Channels';
+import { GeneratorService } from '../Generator';
 import { Template } from '../../class';
 import * as Joi from 'joi';
 

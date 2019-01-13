@@ -30,9 +30,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const http_server_1 = __importDefault(require("http-server"));
-const _1 = require("./");
+const Options_1 = require("./Options");
 const WebSocketServer_1 = require("./WebSocketServer");
-const Logger_1 = require("./Logger");
 const opn = require('opn');
 const DetectPort = require('detect-port');
 let HttpServerService = class HttpServerService {
@@ -41,10 +40,9 @@ let HttpServerService = class HttpServerService {
      * @param {OptionsService} optionsService
      * @param {WebSocketServerService} webSocketServerService
      */
-    constructor(optionsService, webSocketServerService, loggerService) {
+    constructor(optionsService, webSocketServerService) {
         this.optionsService = optionsService;
         this.webSocketServerService = webSocketServerService;
-        this.loggerService = loggerService;
         /** @type {string} WebApp root */
         this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'html');
         /** @type {number} Start port number */
@@ -165,9 +163,8 @@ let HttpServerService = class HttpServerService {
 };
 HttpServerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [_1.OptionsService,
-        WebSocketServer_1.WebSocketServerService,
-        Logger_1.LoggerService])
+    __metadata("design:paramtypes", [Options_1.OptionsService,
+        WebSocketServer_1.WebSocketServerService])
 ], HttpServerService);
 exports.HttpServerService = HttpServerService;
 //# sourceMappingURL=HttpServer.js.map

@@ -26,7 +26,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
-const __1 = require("../");
+const Channels_1 = require("../Channels");
+const Generator_1 = require("../Generator");
 const class_1 = require("../../class");
 const Joi = __importStar(require("joi"));
 let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
@@ -78,8 +79,8 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
 };
 TemplatePreviewHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [__1.ChannelsService,
-        __1.GeneratorService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService,
+        Generator_1.GeneratorService])
 ], TemplatePreviewHandlerService);
 exports.TemplatePreviewHandlerService = TemplatePreviewHandlerService;
 //# sourceMappingURL=TemplatePreviewHandler.js.map

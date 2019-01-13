@@ -8,38 +8,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const S3 = require("aws-sdk/clients/s3");
 const _1 = require("./");
+const service_1 = require("../service");
+const typedi_1 = require("typedi");
 class PresetsCollection {
-    /**
-     * Constructor
-     * @param {IConfigPreset} config
-     */
-    constructor(config) {
-        this.config = config;
+    /** Constructor */
+    constructor() {
         /** @type {Preset[]} The list of preset instances */
         this.presets = [];
-        this.s3service = new S3({
-            region: config.region,
-            accessKeyId: config.key,
-            secretAccessKey: config.secret
-        });
-        this.path = PresetsCollection.path(config);
+        this.apiService = typedi_1.Container.get(service_1.ApiService);
+        this.path = PresetsCollection.path();
     }
-    /**
-     * Returns a singleton for this config
-     * @param {IConfigPreset} config
-     */
-    static getInstance(config) {
+    /** Returns a singleton for this config */
+    static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            const path = PresetsCollection.path(config);
+            const path = PresetsCollection.path();
             // Try to find an existing collection
             const presetsCollection = PresetsCollection.instances.find((m) => m.path === path);
             if (presetsCollection) {
                 return presetsCollection;
             }
             // Create and load a new collection
-            const collection = new PresetsCollection(config);
+            const collection = new PresetsCollection();
             yield collection.load();
             // Keep the collection
             PresetsCollection.instances.push(collection);
@@ -47,41 +37,30 @@ class PresetsCollection {
         });
     }
     /**
-     * Load the preset from S3
+     * Load the presets
      * @return {Promise<void>}
      */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                // Flush presets
-                const presets = [];
-                // List object
-                const objects = (yield this.s3service.listObjects({
-                    Bucket: this.config.bucket,
-                    Prefix: this.config.path
-                })
-                    .promise()).Contents.filter((o) => o.Key.endsWith('.json'));
-                objects.sort((a, b) => a.Key.localeCompare(b.Key));
-                // Load objects
-                for (const object of objects) {
-                    const data = yield this.s3service.getObject({
-                        Bucket: this.config.bucket,
-                        Key: object.Key
-                    })
-                        .promise();
-                    const content = data.Body.toString('utf8');
-                    const preset = JSON.parse(content);
-                    presets.push((new _1.Preset()).fromObject(preset));
-                }
-                this.fromObject(presets);
-            }
-            catch (error) {
-                // First loading => no file => AccessDenied
-                if (error.code === 'NotFound' || error.code === 'AccessDenied') {
-                    return;
-                }
-                throw error;
-            }
+            const presets = yield this.apiService.get('preset', {
+                _page: 0,
+                _limit: 100
+            })
+                .then(response => {
+                return response.data.items
+                    .map((p) => ({
+                    id: p._id,
+                    name: p.name,
+                    icon: p.icon,
+                    models: p.models.map((m) => ({
+                        id: m._id,
+                        name: m.name,
+                        fields: m.fields,
+                        accesses: m.accesses,
+                    }))
+                }));
+            });
+            this.fromObject(presets);
         });
     }
     /**
@@ -109,8 +88,8 @@ class PresetsCollection {
      * Returns a pseudo path
      * @returns {string}
      */
-    static path(config) {
-        return `s3:${config.bucket}:${config.path}`;
+    static path() {
+        return `preset`;
     }
 }
 /** @type {string} The loaded instances */

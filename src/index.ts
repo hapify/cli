@@ -6,12 +6,21 @@ import chalk from 'chalk';
 import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
-import { GeneratorService, OptionsService, LoggerService, WriterService, HttpServerService, ChannelsService } from './service';
+import {
+  GeneratorService,
+  OptionsService,
+  LoggerService,
+  WriterService,
+  HttpServerService,
+  ChannelsService,
+  GlobalConfigService
+} from './service';
 
 // ############################################
 // Get services
 const program: CommanderStatic = Commander.default;
 const generator = Container.get(GeneratorService);
+const globalConfig = Container.get(GlobalConfigService);
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
 const writer = Container.get(WriterService);
@@ -34,7 +43,42 @@ program
   .version('0.3.0')
   .description('Hapify Command Line Tool')
   .option('--debug', 'enable debug mode')
-  .option('-d, --dir <path>', 'change the working directory');
+  .option('-d, --dir <path>', 'change the working directory')
+  .option('-k, --key <secret>', 'define the api key to use (override global key)');
+
+program
+  .command('config')
+  .alias('f')
+  .description('Define global configuration')
+  .option('--apiKey <secret>', 'define the api key to use for every commands')
+  .action(async (cmd) => { try { options.setCommand(cmd);
+
+    // ---------------------------------
+    // Action starts
+    // Get actual values
+    const data = globalConfig.getData();
+
+    const updates = [];
+    
+    // Update values
+    if (cmd.apiKey) {
+      data.apiKey = cmd.apiKey;
+      updates.push('apiKey');
+    }
+    
+    // Store values
+    globalConfig.setData(data);
+    
+    if (updates.length) {
+      logger.success(`Did update global configuration: ${updates.join(', ')}`);
+    } else {
+      logger.warning(`Nothing updated`);
+    }
+    // Action Ends
+    // ---------------------------------
+
+    logger.time(); } catch (error) { logger.handle(error); }
+  });
 
 program
   .command('list')
@@ -66,7 +110,7 @@ program
       const mc = c.length > 1;
       const m = await c[0].modelsCollection.list();
       const mm = m.length > 1;
-      let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} in ${cPath(modelsPath)}`;
+      let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} of ${cPath(modelsPath)}`;
       if (m.length === 0) {
         message += `\nThere is no model yet.`;
       } else {

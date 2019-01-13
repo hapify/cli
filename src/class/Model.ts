@@ -1,3 +1,4 @@
+import md5 from 'md5';
 import { IModel, IField, ISerilizable, Access, IAccesses } from '../interface';
 import { Field } from './';
 
@@ -43,5 +44,9 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
       fields: this.fields.map((field: Field): IField => field.toObject()),
       accesses: this.accesses
     };
+  }
+  /** Create a hash for the model */
+  public hash() {
+    return md5(JSON.stringify(this.toObject()));
   }
 }

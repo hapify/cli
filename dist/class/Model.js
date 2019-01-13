@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const md5_1 = __importDefault(require("md5"));
 const interface_1 = require("../interface");
 const _1 = require("./");
 class Model {
@@ -36,6 +40,10 @@ class Model {
             fields: this.fields.map((field) => field.toObject()),
             accesses: this.accesses
         };
+    }
+    /** Create a hash for the model */
+    hash() {
+        return md5_1.default(JSON.stringify(this.toObject()));
     }
 }
 exports.Model = Model;

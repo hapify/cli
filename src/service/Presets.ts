@@ -1,6 +1,5 @@
 import { Service } from 'typedi';
 import { PresetsCollection } from '../class';
-import { ConfigPreset } from '../config';
 
 @Service()
 export class PresetsService {
@@ -17,6 +16,6 @@ export class PresetsService {
    * @throws {Error}
    */
   public async collection(): Promise<PresetsCollection> {
-    return await PresetsCollection.getInstance(ConfigPreset);
+    return await PresetsCollection.getInstance();
   }
 }

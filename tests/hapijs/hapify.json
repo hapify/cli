@@ -1,12 +1,6 @@
 {
   "validatorPath": "hapify/validator.js",
-  "models": {
-    "key": "AKIAJNB2JZQWEW3KG6JA",
-    "secret": "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",
-    "region": "us-east-1",
-    "bucket": "hapify-storage",
-    "path": "models/cli-dev.json"
-  },
+  "project": "5c38bdc2917d3a00100ae7da",
   "templates": [
     {
       "name": "Count",

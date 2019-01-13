@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, IChannel } from '../../interface';
-import { ChannelsService } from '../';
+import { ChannelsService } from '../Channels';
 import * as Joi from 'joi';
 
 @Service()
@@ -31,7 +31,7 @@ export class SetChannelsHandlerService implements IWebSocketHandler {
         input: Joi.string().required(),
         content: Joi.string().required().allow('')
       })).required()
-    })).min(1);
+    })).min(0);
   }
 
   /** @inheritDoc */

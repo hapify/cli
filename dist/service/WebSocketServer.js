@@ -32,7 +32,8 @@ const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));
 const url_1 = require("url");
 const Joi = __importStar(require("joi"));
-const _1 = require("./");
+const websocket_handlers_1 = require("./websocket-handlers");
+const Logger_1 = require("./Logger");
 const typedi_2 = require("typedi");
 let WebSocketServerService = class WebSocketServerService {
     /**
@@ -53,16 +54,16 @@ let WebSocketServerService = class WebSocketServerService {
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
         /** @type {IWebSocketHandler[]} Messages handlers */
         this.handlers = [];
-        this.addHandler(typedi_2.Container.get(_1.GetModelsHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.SetModelsHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.GetChannelsHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.SetChannelsHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.GetPresetsHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.PathPreviewHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.TemplatePreviewHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetModelsHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.SetModelsHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetChannelsHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.SetChannelsHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetPresetsHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.PathPreviewHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.TemplatePreviewHandlerService));
         // this.addHandler(Container.get(ValidateModelHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.GenerateTemplateHandlerService));
-        this.addHandler(typedi_2.Container.get(_1.GenerateChannelHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GenerateTemplateHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GenerateChannelHandlerService));
     }
     /**
      * Starts the http server
@@ -258,7 +259,7 @@ let WebSocketServerService = class WebSocketServerService {
 };
 WebSocketServerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [_1.LoggerService])
+    __metadata("design:paramtypes", [Logger_1.LoggerService])
 ], WebSocketServerService);
 exports.WebSocketServerService = WebSocketServerService;
 //# sourceMappingURL=WebSocketServer.js.map

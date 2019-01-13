@@ -26,7 +26,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
-const __1 = require("../");
+const Channels_1 = require("../Channels");
+const Generator_1 = require("../Generator");
 const Joi = __importStar(require("joi"));
 let PathPreviewHandlerService = class PathPreviewHandlerService {
     /**
@@ -57,14 +58,14 @@ let PathPreviewHandlerService = class PathPreviewHandlerService {
                 (yield (yield this.channelsService.modelsCollection()).find(message.data.model)) :
                 null;
             // Compute the path
-            return this.generatorService.pathPreview(message.data.path, model);
+            return yield this.generatorService.pathPreview(message.data.path, model);
         });
     }
 };
 PathPreviewHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [__1.ChannelsService,
-        __1.GeneratorService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService,
+        Generator_1.GeneratorService])
 ], PathPreviewHandlerService);
 exports.PathPreviewHandlerService = PathPreviewHandlerService;
 //# sourceMappingURL=PathPreviewHandler.js.map
