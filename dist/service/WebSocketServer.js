@@ -112,6 +112,25 @@ let WebSocketServerService = class WebSocketServerService {
                 ws.on('message', (message) => __awaiter(this, void 0, void 0, function* () {
                     try {
                         const decoded = JSON.parse(message);
+                        /*
+                         * Create reply methods, for success and for sending back an error
+                         */
+                        const send = (data, type) => {
+                            ws.send(JSON.stringify({
+                                id: decoded.id,
+                                tag: decoded.tag,
+                                type,
+                                data
+                            }));
+                        };
+                        const handleSuccess = (data) => send(data, 'success');
+                        const handleError = (errorMessage, debugMessage) => {
+                            send({ error: errorMessage }, 'error');
+                            if (debugMessage) {
+                                this.loggerService.debug(`[WS:${id}] ${debugMessage}`);
+                            }
+                            this.loggerService.error(errorMessage);
+                        };
                         // Log for debug
                         this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
                         // Dispatch message to the right handler
@@ -122,52 +141,28 @@ let WebSocketServerService = class WebSocketServerService {
                                 const validation = Joi.validate(decoded.data, handler.validator());
                                 if (validation.error) {
                                     const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        type: 'error',
-                                        data: { error: errorMessage }
-                                    }));
-                                    this.loggerService.debug(`[WS:${id}] Invalid request format`);
-                                    this.loggerService.error(errorMessage);
+                                    handleError(errorMessage, 'Invalid request format');
                                     return;
                                 }
                                 // Return the result to the client
                                 yield handler.handle(decoded)
-                                    .then((result) => {
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        data: result
-                                    }));
-                                })
-                                    .catch((error) => {
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        type: 'error',
-                                        data: { error: error.message }
-                                    }));
-                                    this.loggerService.debug(`[WS:${id}] Error while handling the request`);
-                                    this.loggerService.error(error.message);
-                                });
+                                    .then(handleSuccess)
+                                    .catch((error) => handleError(error.message, 'Error while handling the request'));
                                 handled = true;
                                 break;
                             }
                         }
                         // If message is not handled, send an error to the client
                         if (!handled) {
-                            // Send the error to the client
-                            this.loggerService.debug(`[WS:${id}] Unknown message key ${decoded.id}`);
-                            ws.send(JSON.stringify({
-                                id: decoded.id,
-                                tag: decoded.tag,
-                                type: 'error',
-                                data: { error: `Unknown message key ${decoded.id}` }
-                            }));
+                            handleError(`Unknown message key ${decoded.id}`);
                         }
                     }
                     catch (error) {
+                        ws.send(JSON.stringify({
+                            id: 'error',
+                            type: 'error',
+                            data: { error: error.message }
+                        }));
                         this.loggerService.debug(`[WS:${id}] Error while processing message`);
                         this.loggerService.error(error.message);
                     }
@@ -204,6 +199,17 @@ let WebSocketServerService = class WebSocketServerService {
             yield this.deleteToken();
             this.server = null;
         });
+    }
+    /** Send a message to all websocket clients */
+    broadcast(data, type) {
+        if (!this.started()) {
+            this.loggerService.debug('Cannot broadcast message, server is not started');
+        }
+        for (const client of this.server.clients) {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ id: 'broadcast', type, data }));
+            }
+        }
     }
     /**
      * Denotes if the HTTP server is running
