@@ -1,4 +1,3 @@
-
 export enum SentenceFormat {
   Original,
   SlugHyphen,

@@ -14,7 +14,7 @@ export class ChannelsService {
    * Constructor
    * @param optionsService
    */
-  constructor (private optionsService: OptionsService) {
+  constructor(private optionsService: OptionsService) {
   }
 
   /**

@@ -32,7 +32,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
    * @param {string} path
    * @param {string|null} name
    */
-  constructor(public path: string, name: string|null = null) {
+  constructor(public path: string, name: string | null = null) {
     super();
     this.name = name ? name : Path.basename(path);
     this.id = md5(this.path);
@@ -64,6 +64,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     this.validator = new Validator(this, this.config.validatorPath);
     await this.validator.load();
   }
+
   /** @inheritDoc */
   async save(): Promise<void> {
 
@@ -101,6 +102,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
     Channel.clearEmptyDirectories(Path.join(this.path, Channel.defaultFolder));
   }
+
   /**
    * Denotes if the template should be considered as empty
    * @returns {boolean}
@@ -111,6 +113,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
 
     return validatorIsEmpty && templatesAreEmpty;
   }
+
   /**
    * Remove empty templates
    * @returns {void}
@@ -120,6 +123,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       return !template.isEmpty();
     });
   }
+
   /**
    * Denotes if the config file exists and its templates
    * If something is not valid, it throws an error.
@@ -150,6 +154,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
     }
   }
+
   /**
    * Denotes if the config file exists
    * @param {string} path
@@ -159,6 +164,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     const configPath = Path.join(path, Channel.configFile);
     return Fs.existsSync(configPath);
   }
+
   /**
    * Init a Hapify structure within a directory
    * @param {string} path
@@ -225,6 +231,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
 
     return this;
   }
+
   /** @inheritDoc */
   public toObject(): IChannel {
     return {
@@ -234,6 +241,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       validator: this.validator.content
     };
   }
+
   /**
    * Get all files' absolute path from a directory
    * @param {string} rootPath
@@ -256,6 +264,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       .filter((subPath) => Fs.statSync(subPath).isFile())
       .concat(subFiles);
   }
+
   /**
    * Delete all directories if empty
    * @param {string} rootPath

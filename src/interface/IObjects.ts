@@ -1,4 +1,3 @@
-
 export interface IConfigTemplate {
   /** @type {string} The template's name */
   name: string;
@@ -66,6 +65,7 @@ export class Access {
   static AUTHENTICATED = 'auth';
   static OWNER = 'owner';
   static ADMIN = 'admin';
+
   /**
    * Returns the list of permissions ordered by restriction
    * @return {string[]}
@@ -88,6 +88,7 @@ export interface IAccesses {
   remove: string;
   search: string;
   count: string;
+
   [s: string]: string;
 }
 

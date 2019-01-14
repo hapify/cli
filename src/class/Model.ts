@@ -21,7 +21,8 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
   };
 
   /** Constructor */
-  constructor() {}
+  constructor() {
+  }
 
   /** @inheritDoc */
   public fromObject(object: IModel): Model {
@@ -36,6 +37,7 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
     }
     return this;
   }
+
   /** @inheritDoc */
   public toObject(): IModel {
     return {
@@ -45,6 +47,7 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
       accesses: this.accesses
     };
   }
+
   /** Create a hash for the model */
   public hash() {
     return md5(JSON.stringify(this.toObject()));

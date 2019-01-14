@@ -57,17 +57,29 @@ let OptionsService = class OptionsService {
         return key;
     }
     /** @return {boolean} Denotes if the debug mode is enabled */
-    debug() { return !!this.program.debug; }
+    debug() {
+        return !!this.program.debug;
+    }
     /** @return {number} Get the depth for recursive search */
-    depth() { return this.command.depth; }
+    depth() {
+        return this.command.depth;
+    }
     /** @return {string} Get the output file path */
-    output() { return this.command.output; }
+    output() {
+        return this.command.output;
+    }
     /** @return {number} Get the required http port */
-    port() { return this.command.port; }
+    port() {
+        return this.command.port;
+    }
     /** @return {string} Get the required http hostname */
-    hostname() { return this.command.hostname; }
+    hostname() {
+        return this.command.hostname;
+    }
     /** @return {boolean} Denotes if a new tab should be opened */
-    open() { return !!this.command.open; }
+    open() {
+        return !!this.command.open;
+    }
 };
 OptionsService = __decorate([
     typedi_1.Service(),

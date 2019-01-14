@@ -12,8 +12,8 @@ export class ValidateModelHandlerService implements IWebSocketHandler {
    * @param channelsService
    * @param validatorService
    */
-  constructor (private channelsService: ChannelsService,
-               private validatorService: ValidatorService) {
+  constructor(private channelsService: ChannelsService,
+              private validatorService: ValidatorService) {
   }
 
   /** @inheritDoc */

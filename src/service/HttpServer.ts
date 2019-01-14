@@ -3,6 +3,7 @@ import * as Path from 'path';
 import * as http from 'http';
 import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
+
 const opn = require('opn');
 const DetectPort = require('detect-port');
 
@@ -17,17 +18,23 @@ export class HttpServerService {
   /** @type {number} Start port number */
   private _minPort: number = 4800;
   /** @return {number} Start port getter */
-  get minPort(): number { return this._minPort; }
+  get minPort(): number {
+    return this._minPort;
+  }
 
   /** @type {number} Maximum port number */
   private _maxPort: number = 4820;
   /** @return {number} Maximum port getter */
-  get maxPort(): number { return this._maxPort; }
+  get maxPort(): number {
+    return this._maxPort;
+  }
 
   /** @type {number} Current port number */
   private _port: number = this._minPort;
   /** @return {number} Current port getter */
-  get port(): number { return this._port; }
+  get port(): number {
+    return this._port;
+  }
 
   /** @type {http.Server} The server instance */
   private server: Server;
@@ -40,7 +47,9 @@ export class HttpServerService {
    * @param {WebSocketServerService} webSocketServerService
    */
   constructor(private optionsService: OptionsService,
-              private webSocketServerService: WebSocketServerService) {}
+              private webSocketServerService: WebSocketServerService) {
+  }
+
   /**
    * Starts the http server
    * Check if running before starting
@@ -54,12 +63,12 @@ export class HttpServerService {
 
     // Create server
     this.server = new Server({
-        port: this._port,
-        routes: {
-            files: {
-              relativeTo: this.rootPath
-          }
+      port: this._port,
+      routes: {
+        files: {
+          relativeTo: this.rootPath
         }
+      }
     });
 
     // Create static files handler
@@ -75,14 +84,14 @@ export class HttpServerService {
         }
       }
     });
-    
+
     // Create catch-all fallback
     this.server.ext('onPreResponse', (request: any, h: any) => {
-        const response = request.response;
-        if (response.isBoom && response.output.statusCode === 404) {
-            return h.file('index.html').code(200);
-        }
-        return h.continue;
+      const response = request.response;
+      if (response.isBoom && response.output.statusCode === 404) {
+        return h.file('index.html').code(200);
+      }
+      return h.continue;
     });
 
     // Start server
@@ -96,6 +105,7 @@ export class HttpServerService {
 
     await this.webSocketServerService.serve(this.server.listener);
   }
+
   /**
    * Stops the http server
    * Check if running before stop
@@ -108,6 +118,7 @@ export class HttpServerService {
     await this.server.stop();
     this.server = null;
   }
+
   /**
    * Denotes if the HTTP server is running
    * @return {boolean}
@@ -115,6 +126,7 @@ export class HttpServerService {
   public started(): boolean {
     return this.server && this.serverStarted;
   }
+
   /**
    * Open the browser for the current server
    * Do not open if not started
@@ -123,17 +135,19 @@ export class HttpServerService {
   public open(): void {
     const url = this.url();
     if (url) {
-        opn(url);
+      opn(url);
     }
   }
+
   /**
    * Get the URL of the current session
    * Returns null if not started
    * @return {string|null}
    */
-  public url(): string|null {
+  public url(): string | null {
     return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
   }
+
   /**
    * Test ports and returns the first one available
    * @param {number} increment

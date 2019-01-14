@@ -1,4 +1,3 @@
-
 export interface IFormattedSentences {
   /** @type {string} The sentence as Original */
   raw: string;

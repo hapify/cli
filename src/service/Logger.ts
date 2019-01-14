@@ -9,7 +9,8 @@ export class LoggerService {
    * Constructor
    * @param {OptionsService} optionsService
    */
-  constructor(private optionsService: OptionsService) {}
+  constructor(private optionsService: OptionsService) {
+  }
 
   /**
    * Handle an error
@@ -22,6 +23,7 @@ export class LoggerService {
     console.error(chalk.red(message));
     return this;
   }
+
   /**
    * Display a message
    * @param {string} message
@@ -31,6 +33,7 @@ export class LoggerService {
     console.log(message);
     return this;
   }
+
   /**
    * Display a success message
    * @param {string} message
@@ -40,6 +43,7 @@ export class LoggerService {
     console.log(`${chalk.green('✓')} ${message}`);
     return this;
   }
+
   /**
    * Display an info
    * @param {string} message
@@ -49,6 +53,7 @@ export class LoggerService {
     console.log(`${chalk.blueBright('•')} ${message}`);
     return this;
   }
+
   /**
    * Display an info if in debug mode
    * @param {string} message
@@ -60,6 +65,7 @@ export class LoggerService {
     }
     return this;
   }
+
   /**
    * Display an error
    * @param {string} message
@@ -68,6 +74,7 @@ export class LoggerService {
     console.log(`${chalk.red('✖')} ${message}`);
     return this;
   }
+
   /**
    * Add new lines
    * @param {number} count
@@ -77,6 +84,7 @@ export class LoggerService {
     console.log(`\n`.repeat(count - 1));
     return this;
   }
+
   /**
    * Display an error
    * @param {string} message
@@ -86,6 +94,7 @@ export class LoggerService {
     console.log(`${chalk.yellow('!')} ${message}`);
     return this;
   }
+
   /**
    * Display ascii art
    * @return {LoggerService}
@@ -103,6 +112,7 @@ export class LoggerService {
     ));
     return this;
   }
+
   /**
    * Display the running time
    * @return {LoggerService}

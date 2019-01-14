@@ -13,8 +13,8 @@ export class TemplatePreviewHandlerService implements IWebSocketHandler {
    * @param channelsService
    * @param generatorService
    */
-  constructor (private channelsService: ChannelsService,
-               private generatorService: GeneratorService) {
+  constructor(private channelsService: ChannelsService,
+              private generatorService: GeneratorService) {
   }
 
   /** @inheritDoc */

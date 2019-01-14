@@ -15,7 +15,7 @@ import {
   PathPreviewHandlerService, TemplatePreviewHandlerService,
   ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
 } from './websocket-handlers';
-import { LoggerService } from './Logger'
+import { LoggerService } from './Logger';
 import { IWebSocketHandler, IWebSocketMessage } from '../interface';
 import { Container } from 'typedi';
 
@@ -81,19 +81,16 @@ export class WebSocketServerService {
           const token = url.searchParams.get('token');
           if (!token) {
             cb(false, 401, 'Unauthorized');
-          }
-          else {
+          } else {
             Jwt.verify(token, this.randomSecret, (error: Error, decoded: TokenData) => {
               if (error || decoded.name !== this.randomName) {
                 cb(false, 401, 'Unauthorized');
-              }
-              else {
+              } else {
                 cb(true);
               }
             });
           }
-        }
-        catch (error) {
+        } catch (error) {
           this.loggerService.error(error.message);
           cb(false, 500, 'InternalError');
         }

@@ -41,14 +41,17 @@ export class GlobalConfigService {
     this.load();
     this.validate();
   }
+
   /** Save data to config file */
   private save(): void {
     Fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 4), 'utf8');
   }
+
   /** Load data from config file */
   private load(): void {
     this.data = JSON.parse(<string>Fs.readFileSync(this.filePath, 'utf8'));
   }
+
   /** Validate the current config or scream */
   private validate(data: IGlobalConfig = this.data): void {
     const validation = Joi.validate(data, this.dataValidator);
@@ -57,10 +60,12 @@ export class GlobalConfigService {
       throw new Error(`Global config format error: ${errorMessage}.`);
     }
   }
+
   /** Returns the configs */
   getData(): IGlobalConfig {
     return this.data;
   }
+
   /** Validate and save the configs */
   setData(data: IGlobalConfig): void {
     this.validate(data);

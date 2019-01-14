@@ -5,14 +5,14 @@ import { ApiService } from './Api';
 
 @Service()
 export class GeneratorService {
-  
+
   /** Service to call remote API */
   private apiService: ApiService;
-  
+
   /** Constructor */
   constructor() {
   }
-  
+
   /** Load and returns API Service. Avoid circular dependency */
   api() {
     if (typeof this.apiService === 'undefined') {
@@ -59,23 +59,23 @@ export class GeneratorService {
    *  If the template needs a model and no model is passed
    */
   async run(template: Template, model: Model | null): Promise<IGeneratorResult> {
-    
+
     if (template.needsModel() && !model) {
       throw new Error('Model should be defined for this template');
     }
-    
+
     const payload: any = {
       project: template.channel().config.project,
       templates: [template.toObject()]
     };
-    
+
     if (model) {
       payload.ids = [model.id];
     }
-    
+
     return (await this.api().post('generator/run', payload)).data[0];
   }
-  
+
   /**
    * Compute path from a string
    *
@@ -84,8 +84,8 @@ export class GeneratorService {
    *  Default null
    * @returns {string}
    */
-  async pathPreview(path: string, model: Model|null = null): Promise<string> {
-    const payload = model ? { path, model: model.id } : { path };
+  async pathPreview(path: string, model: Model | null = null): Promise<string> {
+    const payload = model ? {path, model: model.id} : {path};
     return (await this.api().post('generator/path', payload)).data.result;
   }
 

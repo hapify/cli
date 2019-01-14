@@ -50,11 +50,17 @@ let HttpServerService = class HttpServerService {
         this._port = this._minPort;
     }
     /** @return {number} Start port getter */
-    get minPort() { return this._minPort; }
+    get minPort() {
+        return this._minPort;
+    }
     /** @return {number} Maximum port getter */
-    get maxPort() { return this._maxPort; }
+    get maxPort() {
+        return this._maxPort;
+    }
     /** @return {number} Current port getter */
-    get port() { return this._port; }
+    get port() {
+        return this._port;
+    }
     /**
      * Starts the http server
      * Check if running before starting
