@@ -50,9 +50,9 @@ export class HttpServerService {
     if (this.started()) return;
 
     // Choose port
-    this._port = this.optionsService.port() ?
-    this.optionsService.port() : await this.findAvailablePort();
+    this._port = this.optionsService.port() ? this.optionsService.port() : await this.findAvailablePort();
 
+    // Create server
     this.server = new Server({
         port: this._port,
         routes: {
@@ -62,22 +62,32 @@ export class HttpServerService {
         }
     });
 
+    // Create static files handler
     await this.server.register(require('inert'));
-    this.server.ext('onPreResponse', (request: any, h: any) => {
-
-        const response = request.response;
-        if (response.isBoom &&
-            response.output.statusCode === 404) {
+    this.server.route({
+      method: 'GET',
+      path: '/{param*}',
+      handler: {
+        directory: {
+          path: '.',
+          redirectToSlash: true,
+          index: true,
+        }
+      }
+    });
     
+    // Create catch-all fallback
+    this.server.ext('onPreResponse', (request: any, h: any) => {
+        const response = request.response;
+        if (response.isBoom && response.output.statusCode === 404) {
             return h.file('index.html').code(200);
         }
-    
         return h.continue;
     });
 
+    // Start server
     await this.server.start();
     this.serverStarted = true;
-    console.log('Server running at:', this.server.info.uri);
 
     // Bind events
     this.server.listener.on('close', async () => {

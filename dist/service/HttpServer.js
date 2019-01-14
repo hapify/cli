@@ -65,8 +65,8 @@ let HttpServerService = class HttpServerService {
             if (this.started())
                 return;
             // Choose port
-            this._port = this.optionsService.port() ?
-                this.optionsService.port() : yield this.findAvailablePort();
+            this._port = this.optionsService.port() ? this.optionsService.port() : yield this.findAvailablePort();
+            // Create server
             this.server = new hapi_1.Server({
                 port: this._port,
                 routes: {
@@ -75,18 +75,30 @@ let HttpServerService = class HttpServerService {
                     }
                 }
             });
+            // Create static files handler
             yield this.server.register(require('inert'));
+            this.server.route({
+                method: 'GET',
+                path: '/{param*}',
+                handler: {
+                    directory: {
+                        path: '.',
+                        redirectToSlash: true,
+                        index: true,
+                    }
+                }
+            });
+            // Create catch-all fallback
             this.server.ext('onPreResponse', (request, h) => {
                 const response = request.response;
-                if (response.isBoom &&
-                    response.output.statusCode === 404) {
+                if (response.isBoom && response.output.statusCode === 404) {
                     return h.file('index.html').code(200);
                 }
                 return h.continue;
             });
+            // Start server
             yield this.server.start();
             this.serverStarted = true;
-            console.log('Server running at:', this.server.info.uri);
             // Bind events
             this.server.listener.on('close', () => __awaiter(this, void 0, void 0, function* () {
                 yield this.webSocketServerService.stop();
