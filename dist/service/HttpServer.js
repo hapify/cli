@@ -23,17 +23,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
-const http_server_1 = __importDefault(require("http-server"));
 const Options_1 = require("./Options");
 const WebSocketServer_1 = require("./WebSocketServer");
 const opn = require('opn');
 const DetectPort = require('detect-port');
+const hapi_1 = require("hapi");
 let HttpServerService = class HttpServerService {
     /**
      * Constructor
@@ -53,11 +50,17 @@ let HttpServerService = class HttpServerService {
         this._port = this._minPort;
     }
     /** @return {number} Start port getter */
-    get minPort() { return this._minPort; }
+    get minPort() {
+        return this._minPort;
+    }
     /** @return {number} Maximum port getter */
-    get maxPort() { return this._maxPort; }
+    get maxPort() {
+        return this._maxPort;
+    }
     /** @return {number} Current port getter */
-    get port() { return this._port; }
+    get port() {
+        return this._port;
+    }
     /**
      * Starts the http server
      * Check if running before starting
@@ -68,32 +71,45 @@ let HttpServerService = class HttpServerService {
             if (this.started())
                 return;
             // Choose port
-            this._port = this.optionsService.port() ?
-                this.optionsService.port() : yield this.findAvailablePort();
-            const options = {
-                root: this.rootPath,
-                autoIndex: true,
-                showDotfiles: false,
-                showDir: false,
-                cors: true,
-                gzip: true
-            };
+            this._port = this.optionsService.port() ? this.optionsService.port() : yield this.findAvailablePort();
             // Create server
-            this.server = http_server_1.default.createServer(options).server; // wrong typing in @types/http-server
+            this.server = new hapi_1.Server({
+                port: this._port,
+                routes: {
+                    files: {
+                        relativeTo: this.rootPath
+                    }
+                }
+            });
+            // Create static files handler
+            yield this.server.register(require('inert'));
+            this.server.route({
+                method: 'GET',
+                path: '/{param*}',
+                handler: {
+                    directory: {
+                        path: '.',
+                        redirectToSlash: true,
+                        index: true,
+                    }
+                }
+            });
+            // Create catch-all fallback
+            this.server.ext('onPreResponse', (request, h) => {
+                const response = request.response;
+                if (response.isBoom && response.output.statusCode === 404) {
+                    return h.file('index.html').code(200);
+                }
+                return h.continue;
+            });
+            // Start server
+            yield this.server.start();
+            this.serverStarted = true;
             // Bind events
-            this.server.on('close', () => __awaiter(this, void 0, void 0, function* () {
+            this.server.listener.on('close', () => __awaiter(this, void 0, void 0, function* () {
                 yield this.webSocketServerService.stop();
             }));
-            // Start listening
-            this.serverStarted = yield new Promise((resolve, reject) => {
-                this.server.listen(this._port, this.optionsService.hostname(), (error) => {
-                    if (error)
-                        reject(error);
-                    else
-                        resolve(true);
-                });
-            });
-            yield this.webSocketServerService.serve(this.server);
+            yield this.webSocketServerService.serve(this.server.listener);
         });
     }
     /**
@@ -107,14 +123,7 @@ let HttpServerService = class HttpServerService {
                 return;
             this.serverStarted = false;
             // Stop self server
-            yield new Promise((resolve, reject) => {
-                this.server.close((error) => {
-                    if (error)
-                        reject(error);
-                    else
-                        resolve();
-                });
-            });
+            yield this.server.stop();
             this.server = null;
         });
     }

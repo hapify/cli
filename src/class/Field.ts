@@ -37,7 +37,8 @@ export class Field implements ISerilizable<IField, Field> {
   ownership: boolean;
 
   /** Constructor */
-  constructor() {}
+  constructor() {
+  }
 
   /** @inheritDoc */
   public fromObject(object: IField): Field {
@@ -59,6 +60,7 @@ export class Field implements ISerilizable<IField, Field> {
     this.ownership = !!<any>object.ownership;
     return this;
   }
+
   /** @inheritDoc */
   public toObject(): IField {
     return {

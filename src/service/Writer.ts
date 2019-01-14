@@ -9,7 +9,8 @@ import { IGeneratorResult } from '../interface';
 export class WriterService {
 
   /** Constructor */
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * Zip results and write to disk
@@ -35,6 +36,7 @@ export class WriterService {
     mkdirp.sync(Path.dirname(path));
     Fs.writeFileSync(path, content);
   }
+
   /**
    * Write results to disk
    * @param {string} root
@@ -46,6 +48,7 @@ export class WriterService {
       await this.write(root, result);
     }
   }
+
   /**
    * Write on result to disk
    * @param {string} root

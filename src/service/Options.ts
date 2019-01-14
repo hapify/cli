@@ -22,6 +22,7 @@ export class OptionsService {
   setProgram(program: CommanderStatic): void {
     this.program = program;
   }
+
   /**
    * Set command entity
    * @param {commander.Command} command
@@ -29,6 +30,7 @@ export class OptionsService {
   setCommand(command: Command): void {
     this.command = command;
   }
+
   /** @return {string} Return the working directory computed with the --dir option */
   dir(): string {
     if (this.program.dir) {
@@ -39,6 +41,7 @@ export class OptionsService {
     }
     return process.cwd();
   }
+
   /** @return {string} Return the API Key to use (explicit or global) */
   apiKey(): string {
     const key = this.program.key || this.globalConfigService.getData().apiKey;
@@ -47,16 +50,34 @@ export class OptionsService {
     }
     return key;
   }
+
   /** @return {boolean} Denotes if the debug mode is enabled */
-  debug(): boolean { return !!this.program.debug; }
+  debug(): boolean {
+    return !!this.program.debug;
+  }
+
   /** @return {number} Get the depth for recursive search */
-  depth(): number { return this.command.depth; }
+  depth(): number {
+    return this.command.depth;
+  }
+
   /** @return {string} Get the output file path */
-  output(): string { return this.command.output; }
+  output(): string {
+    return this.command.output;
+  }
+
   /** @return {number} Get the required http port */
-  port(): number { return this.command.port; }
+  port(): number {
+    return this.command.port;
+  }
+
   /** @return {string} Get the required http hostname */
-  hostname(): string { return this.command.hostname; }
+  hostname(): string {
+    return this.command.hostname;
+  }
+
   /** @return {boolean} Denotes if a new tab should be opened */
-  open(): boolean { return !!this.command.open; }
+  open(): boolean {
+    return !!this.command.open;
+  }
 }

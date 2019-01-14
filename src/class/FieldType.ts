@@ -1,4 +1,3 @@
-
 export class FieldType {
   static Boolean = 'boolean';
   static Number = 'number';

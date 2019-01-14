@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const md5_1 = __importDefault(require("md5"));
 class SingleSave {
     /** Constructor */
-    constructor() { }
+    constructor() {
+    }
     /**
      * Should be called after loading to hash the content
      * @param {string} data

@@ -42,6 +42,7 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
     this.contentPath = Template.computeContentPath(this);
     return this;
   }
+
   /** @inheritDoc */
   public toObject(): ITemplate {
     return {
@@ -52,6 +53,7 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
       content: this.content
     };
   }
+
   /**
    * Denotes if the template should be considered as empty
    * @returns {boolean}
@@ -61,6 +63,7 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
       || this.content === null
       || this.content.trim().length === 0;
   }
+
   /**
    * Denotes if the template needs a specific model to be generated
    * @returns {boolean}
@@ -68,6 +71,7 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
   public needsModel(): boolean {
     return this.input === TemplateInput.One;
   }
+
   /**
    * Get the extension of the input file
    * @returns {string}
@@ -75,6 +79,7 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
   public extension(): string {
     return Template.computeExtension(this);
   }
+
   /**
    * Get the parent channel
    * @returns {Channel}
@@ -89,6 +94,7 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
     this.content = <string>Fs.readFileSync(contentPath, 'utf8');
     this.didLoad(this.content);
   }
+
   /** @inheritDoc */
   async save(): Promise<void> {
     if (this.shouldSave(this.content)) {
@@ -97,12 +103,13 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
       Fs.writeFileSync(contentPath, this.content, 'utf8');
     }
   }
+
   /**
    * Compute the content path from the dynamic path
    * @param {Template|IConfigTemplate} template
    * @return {string}
    */
-  static computeContentPath(template: Template|IConfigTemplate): string {
+  static computeContentPath(template: Template | IConfigTemplate): string {
     // Get string service
     const stringService: StringService = Container.get(StringService);
     // Apply replacements
@@ -117,12 +124,13 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
 
     return `${path}.${Template.computeExtension(template)}`;
   }
+
   /**
    * Compute the extension of the template
    * @param {Template|IConfigTemplate} template
    * @return {string}
    */
-  private static computeExtension(template: Template|IConfigTemplate): string {
+  private static computeExtension(template: Template | IConfigTemplate): string {
     if (template.engine === TemplateEngine.Hpf) {
       return 'hpf';
     }

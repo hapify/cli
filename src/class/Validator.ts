@@ -22,6 +22,7 @@ export class Validator extends SingleSave implements IStorable {
     this.content = <string>Fs.readFileSync(contentPath, 'utf8');
     this.didLoad(this.content);
   }
+
   /** @inheritDoc */
   async save(): Promise<void> {
     // Leave early
@@ -30,6 +31,7 @@ export class Validator extends SingleSave implements IStorable {
       Fs.writeFileSync(contentPath, this.content, 'utf8');
     }
   }
+
   /**
    * Denotes if the validator should be considered as empty
    * @returns {boolean}

@@ -13,7 +13,8 @@ export class Preset implements ISerilizable<IPreset, Preset>, IPreset {
   models: Model[];
 
   /** Constructor */
-  constructor() {}
+  constructor() {
+  }
 
   /** @inheritDoc */
   public fromObject(object: IPreset): Preset {
@@ -26,6 +27,7 @@ export class Preset implements ISerilizable<IPreset, Preset>, IPreset {
     });
     return this;
   }
+
   /** @inheritDoc */
   public toObject(): IPreset {
     return {

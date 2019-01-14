@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import {ConfigRemote} from '../config';
+import { ConfigRemote } from '../config';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import querystring from 'querystring';
 import { OptionsService } from './Options';

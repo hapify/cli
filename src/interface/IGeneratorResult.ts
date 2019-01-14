@@ -1,4 +1,3 @@
-
 export interface IGeneratorResult {
   /** @type {string} The file path */
   path: string;

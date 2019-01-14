@@ -82,19 +82,16 @@ export class WebSocketServerService {
           const token = url.searchParams.get('token');
           if (!token) {
             cb(false, 401, 'Unauthorized');
-          }
-          else {
+          } else {
             Jwt.verify(token, this.randomSecret, (error: Error, decoded: TokenData) => {
               if (error || decoded.name !== this.randomName) {
                 cb(false, 401, 'Unauthorized');
-              }
-              else {
+              } else {
                 cb(true);
               }
             });
           }
-        }
-        catch (error) {
+        } catch (error) {
           this.loggerService.error(error.message);
           cb(false, 500, 'InternalError');
         }
@@ -109,9 +106,13 @@ export class WebSocketServerService {
 
       // Create a reply method for this connection
       const reply = (id: string, data: any, type?: string, tag?: string) => {
-        const payload: IWebSocketMessage = { id, data };
-        if (type) { payload.type = type; }
-        if (tag) { payload.tag = tag; }
+        const payload: IWebSocketMessage = {id, data};
+        if (type) {
+          payload.type = type;
+        }
+        if (tag) {
+          payload.tag = tag;
+        }
         ws.send(JSON.stringify(payload));
       };
 
@@ -155,7 +156,7 @@ export class WebSocketServerService {
         } catch (error) {
           const dId = decoded && decoded.id ? decoded.id : 'error';
           const tag = decoded && decoded.tag ? decoded.tag : null;
-          reply(dId, { error: error.message }, 'error', tag);
+          reply(dId, {error: error.message}, 'error', tag);
           this.loggerService.debug(`[WS:${id}] Error while processing message`);
           this.loggerService.error(error.message);
         }
@@ -200,7 +201,7 @@ export class WebSocketServerService {
     }
     for (const client of this.server.clients) {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ id: 'broadcast', type, data }));
+        client.send(JSON.stringify({id: 'broadcast', type, data}));
       }
     }
   }

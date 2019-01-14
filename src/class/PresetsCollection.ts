@@ -60,7 +60,7 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
             }))
           }));
       });
-    
+
     this.fromObject(presets);
   }
 
@@ -85,6 +85,7 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
   public toObject(): IPreset[] {
     return this.presets.map((preset: Preset): IPreset => preset.toObject());
   }
+
   /**
    * Returns a pseudo path
    * @returns {string}

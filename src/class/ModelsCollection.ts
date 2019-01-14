@@ -66,14 +66,15 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
     this.fromObject(models);
     this.updateHashes();
   }
+
   /** @inheritDoc */
   async save(): Promise<void> {
-    
+
     // Get models to create
     const toCreate = this.models.filter(m => typeof this.hashes[m.id] === 'undefined');
-    
+
     // Create models and update id
-    for(const model of toCreate) {
+    for (const model of toCreate) {
       const response = await this.apiService.post('model', {
         project: this.project,
         name: model.name,
@@ -87,7 +88,7 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
     const toUpdate = this.models.filter(m => typeof this.hashes[m.id] === 'string' && this.hashes[m.id] !== m.hash());
 
     // Update models
-    for(const model of toUpdate) {
+    for (const model of toUpdate) {
       await this.apiService.patch(`model/${model.id}`, {
         name: model.name,
         fields: model.fields,
@@ -99,12 +100,13 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
     const toDelete = Object.keys(this.hashes).filter(id => !this.models.some(m => m.id === id));
 
     // Delete models
-    for(const id of toDelete) {
+    for (const id of toDelete) {
       await this.apiService.delete(`model/${id}`);
     }
-    
+
     this.updateHashes();
   }
+
   /** Update hashes from models */
   private updateHashes() {
     this.hashes = {};
@@ -112,14 +114,16 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
       this.hashes[model.id] = model.hash();
     }
   }
+
   /**
    * Find a instance with its id
    * @param {string} id
    * @returns {Promise<Model|null>}
    */
-  async find(id: string): Promise<Model|null> {
+  async find(id: string): Promise<Model | null> {
     return this.models.find((instance) => instance.id === id);
   }
+
   /**
    * Returns the list of models
    * @returns {Promise<Model[]>}
@@ -127,6 +131,7 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
   async list(): Promise<Model[]> {
     return this.models;
   }
+
   /** @inheritDoc */
   public fromObject(object: IModel[]): Model[] {
     this.models = object.map((model: IModel): Model => {
@@ -135,10 +140,12 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
     });
     return this.models;
   }
+
   /** @inheritDoc */
   public toObject(): IModel[] {
     return this.models.map((model: Model): IModel => model.toObject());
   }
+
   /**
    * Returns a pseudo path
    * @returns {string}

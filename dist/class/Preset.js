@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
 class Preset {
     /** Constructor */
-    constructor() { }
+    constructor() {
+    }
     /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;

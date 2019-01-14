@@ -7,7 +7,7 @@ export class PresetsService {
   /**
    * Constructor
    */
-  constructor () {
+  constructor() {
   }
 
   /**

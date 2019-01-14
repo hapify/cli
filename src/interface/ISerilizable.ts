@@ -9,6 +9,7 @@ export interface ISerilizable<IT, T> {
    *  Returns this
    */
   fromObject(object: IT): T;
+
   /**
    * Convert the instance to an object
    * @returns {IT}
