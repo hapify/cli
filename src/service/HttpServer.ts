@@ -1,11 +1,12 @@
 import { Service } from 'typedi';
 import * as Path from 'path';
 import * as http from 'http';
-import HttpServer from 'http-server';
 import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
 const opn = require('opn');
 const DetectPort = require('detect-port');
+
+import { Server } from 'hapi';
 
 @Service()
 export class HttpServerService {
@@ -29,7 +30,7 @@ export class HttpServerService {
   get port(): number { return this._port; }
 
   /** @type {http.Server} The server instance */
-  private server: http.Server;
+  private server: Server;
   /** @type {boolean} Denotes if the server is started */
   private serverStarted: boolean;
 
@@ -47,34 +48,43 @@ export class HttpServerService {
    */
   public async serve(): Promise<void> {
     if (this.started()) return;
+
     // Choose port
     this._port = this.optionsService.port() ?
-      this.optionsService.port() : await this.findAvailablePort();
-    const options: HttpServer.Options = {
-      root: this.rootPath,
-      autoIndex: true,
-      showDotfiles: false,
-      showDir: false,
-      cors: true,
-      gzip: true
-    };
+    this.optionsService.port() : await this.findAvailablePort();
 
-    // Create server
-    this.server = (<any>HttpServer.createServer(options)).server; // wrong typing in @types/http-server
+    this.server = new Server({
+        port: this._port,
+        routes: {
+            files: {
+              relativeTo: this.rootPath
+          }
+        }
+    });
+
+    await this.server.register(require('inert'));
+    this.server.ext('onPreResponse', (request: any, h: any) => {
+
+        const response = request.response;
+        if (response.isBoom &&
+            response.output.statusCode === 404) {
+    
+            return h.file('index.html').code(200);
+        }
+    
+        return h.continue;
+    });
+
+    await this.server.start();
+    this.serverStarted = true;
+    console.log('Server running at:', this.server.info.uri);
 
     // Bind events
-    this.server.on('close', async () => {
+    this.server.listener.on('close', async () => {
       await this.webSocketServerService.stop();
     });
 
-    // Start listening
-    this.serverStarted = await <Promise<boolean>>new Promise((resolve, reject) => {
-      this.server.listen(this._port, this.optionsService.hostname(), (error: Error) => {
-        if (error) reject(error);
-        else resolve(true);
-      });
-    });
-    await this.webSocketServerService.serve(this.server);
+    await this.webSocketServerService.serve(this.server.listener);
   }
   /**
    * Stops the http server
@@ -85,12 +95,7 @@ export class HttpServerService {
     if (!this.started()) return;
     this.serverStarted = false;
     // Stop self server
-    await new Promise((resolve, reject) => {
-      this.server.close((error: Error) => {
-        if (error) reject(error);
-        else resolve();
-      });
-    });
+    await this.server.stop();
     this.server = null;
   }
   /**
