@@ -8,6 +8,7 @@ import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
 import * as Joi from 'joi';
+import { ValidationResult } from 'joi';
 import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
@@ -16,7 +17,7 @@ import {
   ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
 } from './websocket-handlers';
 import { LoggerService } from './Logger';
-import { IWebSocketHandler, IWebSocketMessage } from '../interface';
+import { IWebSocketHandler, IWebSocketMessage, WebSocketMessageSchema } from '../interface';
 import { Container } from 'typedi';
 
 interface TokenData {
@@ -100,75 +101,64 @@ export class WebSocketServerService {
 
     this.server.on('connection', (ws: any) => {
 
+      // Create unique id for this connection
       const id = this.makeId();
+
+      // Create a reply method for this connection
+      const reply = (id: string, data: any, type?: string, tag?: string) => {
+        const payload: IWebSocketMessage = {id, data};
+        if (type) {
+          payload.type = type;
+        }
+        if (tag) {
+          payload.tag = tag;
+        }
+        ws.send(JSON.stringify(payload));
+      };
+
       this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
 
       ws.on('message', async (message: string) => {
 
-        try {
+        let decoded: IWebSocketMessage;
 
-          const decoded = <IWebSocketMessage>JSON.parse(message);
+        try {
+          // Decode and verify message
+          const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as ValidationResult<IWebSocketMessage>;
+          if (parsed.error) {
+            throw parsed.error;
+          }
+          decoded = parsed.value;
 
           // Log for debug
           this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
 
           // Dispatch message to the right handler
-          let handled = false;
           for (const handler of this.handlers) {
             if (handler.canHandle(decoded)) {
 
               // Validate the incoming payload
               const validation = Joi.validate(decoded.data, handler.validator());
               if (validation.error) {
-                const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-                ws.send(JSON.stringify({
-                  id: decoded.id,
-                  tag: decoded.tag,
-                  type: 'error',
-                  data: {error: errorMessage}
-                }));
-                this.loggerService.debug(`[WS:${id}] Invalid request format`);
-                this.loggerService.error(errorMessage);
-                return;
+                throw validation.error;
               }
 
               // Return the result to the client
-              await handler.handle(decoded)
-                .then((result) => {
-                  ws.send(JSON.stringify({
-                    id: decoded.id,
-                    tag: decoded.tag,
-                    data: result
-                  }));
-                })
-                .catch((error) => {
-                  ws.send(JSON.stringify({
-                    id: decoded.id,
-                    tag: decoded.tag,
-                    type: 'error',
-                    data: {error: error.message}
-                  }));
-                  this.loggerService.debug(`[WS:${id}] Error while handling the request`);
-                  this.loggerService.error(error.message);
-                });
-              handled = true;
-              break;
+              const data = await handler.handle(decoded);
+              reply(decoded.id, data, 'success', decoded.tag);
+              return;
             }
           }
 
           // If message is not handled, send an error to the client
-          if (!handled) {
-            // Send the error to the client
-            this.loggerService.debug(`[WS:${id}] Unknown message key ${decoded.id}`);
-            ws.send(JSON.stringify({
-              id: decoded.id,
-              tag: decoded.tag,
-              type: 'error',
-              data: {error: `Unknown message key ${decoded.id}`}
-            }));
-          }
+          throw new Error(`Unknown message key ${decoded.id}`);
 
         } catch (error) {
+          const dId = decoded && decoded.id ? decoded.id : 'error';
+          const tag = decoded && decoded.tag ? decoded.tag : null;
+          const payload: any = { message: error.message };
+          if (error.data) { payload.data = error.data; }
+          reply(dId, payload, 'error', tag);
           this.loggerService.debug(`[WS:${id}] Error while processing message`);
           this.loggerService.error(error.message);
         }
@@ -204,6 +194,18 @@ export class WebSocketServerService {
     });
     await this.deleteToken();
     this.server = null;
+  }
+
+  /** Send a message to all websocket clients */
+  public broadcast(data: any, type?: string): void {
+    if (!this.started()) {
+      this.loggerService.debug('Cannot broadcast message, server is not started');
+    }
+    for (const client of this.server.clients) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({id: 'broadcast', type, data}));
+      }
+    }
   }
 
   /**

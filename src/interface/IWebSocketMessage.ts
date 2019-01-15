@@ -1,9 +1,18 @@
+import * as Joi from 'joi';
+
 export interface IWebSocketMessage {
   id: string;
   type?: string;
   tag?: string;
   data: any;
 }
+
+export const WebSocketMessageSchema = Joi.object({
+  id: Joi.string().required(),
+  type: Joi.string().valid(['error', 'success']),
+  tag: Joi.string(),
+  data: Joi.any()
+});
 
 export class WebSocketMessages {
   static GET_MODELS = 'get:models';

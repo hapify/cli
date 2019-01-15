@@ -34,6 +34,7 @@ const url_1 = require("url");
 const Joi = __importStar(require("joi"));
 const websocket_handlers_1 = require("./websocket-handlers");
 const Logger_1 = require("./Logger");
+const interface_1 = require("../interface");
 const typedi_2 = require("typedi");
 let WebSocketServerService = class WebSocketServerService {
     /**
@@ -107,67 +108,56 @@ let WebSocketServerService = class WebSocketServerService {
             };
             this.server = new ws.Server(options);
             this.server.on('connection', (ws) => {
+                // Create unique id for this connection
                 const id = this.makeId();
+                // Create a reply method for this connection
+                const reply = (id, data, type, tag) => {
+                    const payload = { id, data };
+                    if (type) {
+                        payload.type = type;
+                    }
+                    if (tag) {
+                        payload.tag = tag;
+                    }
+                    ws.send(JSON.stringify(payload));
+                };
                 this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
                 ws.on('message', (message) => __awaiter(this, void 0, void 0, function* () {
+                    let decoded;
                     try {
-                        const decoded = JSON.parse(message);
+                        // Decode and verify message
+                        const parsed = Joi.validate(JSON.parse(message), interface_1.WebSocketMessageSchema);
+                        if (parsed.error) {
+                            throw parsed.error;
+                        }
+                        decoded = parsed.value;
                         // Log for debug
                         this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
                         // Dispatch message to the right handler
-                        let handled = false;
                         for (const handler of this.handlers) {
                             if (handler.canHandle(decoded)) {
                                 // Validate the incoming payload
                                 const validation = Joi.validate(decoded.data, handler.validator());
                                 if (validation.error) {
-                                    const errorMessage = validation.error.details.map((v) => v.message).join(', ');
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        type: 'error',
-                                        data: { error: errorMessage }
-                                    }));
-                                    this.loggerService.debug(`[WS:${id}] Invalid request format`);
-                                    this.loggerService.error(errorMessage);
-                                    return;
+                                    throw validation.error;
                                 }
                                 // Return the result to the client
-                                yield handler.handle(decoded)
-                                    .then((result) => {
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        data: result
-                                    }));
-                                })
-                                    .catch((error) => {
-                                    ws.send(JSON.stringify({
-                                        id: decoded.id,
-                                        tag: decoded.tag,
-                                        type: 'error',
-                                        data: { error: error.message }
-                                    }));
-                                    this.loggerService.debug(`[WS:${id}] Error while handling the request`);
-                                    this.loggerService.error(error.message);
-                                });
-                                handled = true;
-                                break;
+                                const data = yield handler.handle(decoded);
+                                reply(decoded.id, data, 'success', decoded.tag);
+                                return;
                             }
                         }
                         // If message is not handled, send an error to the client
-                        if (!handled) {
-                            // Send the error to the client
-                            this.loggerService.debug(`[WS:${id}] Unknown message key ${decoded.id}`);
-                            ws.send(JSON.stringify({
-                                id: decoded.id,
-                                tag: decoded.tag,
-                                type: 'error',
-                                data: { error: `Unknown message key ${decoded.id}` }
-                            }));
-                        }
+                        throw new Error(`Unknown message key ${decoded.id}`);
                     }
                     catch (error) {
+                        const dId = decoded && decoded.id ? decoded.id : 'error';
+                        const tag = decoded && decoded.tag ? decoded.tag : null;
+                        const payload = { message: error.message };
+                        if (error.data) {
+                            payload.data = error.data;
+                        }
+                        reply(dId, payload, 'error', tag);
                         this.loggerService.debug(`[WS:${id}] Error while processing message`);
                         this.loggerService.error(error.message);
                     }
@@ -204,6 +194,17 @@ let WebSocketServerService = class WebSocketServerService {
             yield this.deleteToken();
             this.server = null;
         });
+    }
+    /** Send a message to all websocket clients */
+    broadcast(data, type) {
+        if (!this.started()) {
+            this.loggerService.debug('Cannot broadcast message, server is not started');
+        }
+        for (const client of this.server.clients) {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ id: 'broadcast', type, data }));
+            }
+        }
     }
     /**
      * Denotes if the HTTP server is running
