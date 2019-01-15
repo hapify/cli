@@ -10,6 +10,9 @@ class Preset {
         this.id = object.id;
         this.icon = object.icon;
         this.name = object.name;
+        this.name__fr = object.name__fr;
+        this.description = object.description;
+        this.description__fr = object.description__fr;
         this.models = object.models.map((modelBase) => {
             const model = new _1.Model();
             return model.fromObject(modelBase);
@@ -22,6 +25,9 @@ class Preset {
             id: this.id,
             icon: this.icon,
             name: this.name,
+            name__fr: this.name__fr,
+            description: this.description,
+            description__fr: this.description__fr,
             models: this.models.map((model) => model.toObject()),
         };
     }

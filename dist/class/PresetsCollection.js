@@ -51,6 +51,9 @@ class PresetsCollection {
                     .map((p) => ({
                     id: p._id,
                     name: p.name,
+                    name__fr: p.name__fr,
+                    description: p.description,
+                    description__fr: p.description__fr,
                     icon: p.icon,
                     models: p.models.map((m) => ({
                         id: m._id,

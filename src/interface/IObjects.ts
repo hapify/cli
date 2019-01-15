@@ -126,6 +126,12 @@ export interface IPreset {
   icon: string;
   /** @type {string} The preset's name */
   name: string;
+  /** @type {string} The preset's name in french */
+  name__fr: string;
+  /** @type {string} The preset's name */
+  description: string;
+  /** @type {string} The preset's name in french */
+  description__fr: string;
   /** @type {IModel[]} The models of the preset */
   models: IModel[];
 }

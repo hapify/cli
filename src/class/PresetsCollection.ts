@@ -51,6 +51,9 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
           .map((p: IApiPreset): IPreset => ({
             id: p._id,
             name: p.name,
+            name__fr: p.name__fr,
+            description: p.description,
+            description__fr: p.description__fr,
             icon: p.icon,
             models: p.models.map((m: IApiModel): IModel => ({
               id: m._id,
