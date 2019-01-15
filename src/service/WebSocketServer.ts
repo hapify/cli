@@ -156,7 +156,9 @@ export class WebSocketServerService {
         } catch (error) {
           const dId = decoded && decoded.id ? decoded.id : 'error';
           const tag = decoded && decoded.tag ? decoded.tag : null;
-          reply(dId, {error: error.message}, 'error', tag);
+          const payload: any = { message: error.message };
+          if (error.data) { payload.data = error.data; }
+          reply(dId, payload, 'error', tag);
           this.loggerService.debug(`[WS:${id}] Error while processing message`);
           this.loggerService.error(error.message);
         }
