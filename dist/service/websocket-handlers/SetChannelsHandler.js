@@ -45,6 +45,8 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
         return Joi.array().items(Joi.object({
             id: Joi.string().required(),
             name: Joi.string().required(),
+            description: Joi.string().required().allow(null),
+            logo: Joi.string().required().allow(null),
             validator: Joi.string().required().allow(''),
             templates: Joi.array().items(Joi.object({
                 name: Joi.string().required(),

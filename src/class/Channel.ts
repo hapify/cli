@@ -58,10 +58,10 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       this.name = this.config.name;
     }
     if (this.config.description) {
-      this.name = this.config.description;
+      this.description = this.config.description;
     }
     if (this.config.logo) {
-      this.name = this.config.logo;
+      this.logo = this.config.logo;
     }
 
     // Load each content file
