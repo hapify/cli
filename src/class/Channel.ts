@@ -11,6 +11,10 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
   /** @type {string} */
   public name: string;
   /** @type {string} */
+  private description: string = null;
+  /** @type {string} */
+  private logo: string = null;
+  /** @type {string} */
   public id: string;
   /** @type {string} */
   private static defaultFolder = 'hapify';
@@ -32,7 +36,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
    * @param {string} path
    * @param {string|null} name
    */
-  constructor(public path: string, name: string | null = null) {
+  constructor(public path: string, name: string = null) {
     super();
     this.name = name ? name : Path.basename(path);
     this.id = md5(this.path);
@@ -48,6 +52,17 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     const data = <string>Fs.readFileSync(path, 'utf8');
     this.config = JSON.parse(data);
     this.didLoad(data);
+    
+    // Complete channel infos
+    if (this.config.name) {
+      this.name = this.config.name;
+    }
+    if (this.config.description) {
+      this.name = this.config.description;
+    }
+    if (this.config.logo) {
+      this.name = this.config.logo;
+    }
 
     // Load each content file
     this.templates = [];
@@ -180,6 +195,8 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     }
     const config: IConfig = {
       validatorPath: `${Channel.defaultFolder}/validator.js`,
+      name: 'New channel',
+      description: 'A brand new channel',
       project: 'projectId',
       templates: [
         {
@@ -237,6 +254,8 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     return {
       id: this.id,
       name: this.name,
+      description: this.description,
+      logo: this.logo,
       templates: this.templates.map((template: Template) => template.toObject()),
       validator: this.validator.content
     };

@@ -1,6 +1,9 @@
 {
-  "validatorPath": "hapify/validator.js",
+  "name": "HapiJS",
+  "description": "NodeJS Backend with MongoDB",
+  "logo": "https://hapijs.com/public/img/logo.svg",
   "project": "5c38bdc2917d3a00100ae7da",
+  "validatorPath": "hapify/validator.js",
   "templates": [
     {
       "name": "Count",

@@ -33,6 +33,10 @@ class Channel extends _1.SingleSave {
     constructor(path, name = null) {
         super();
         this.path = path;
+        /** @type {string} */
+        this.description = null;
+        /** @type {string} */
+        this.logo = null;
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
@@ -46,6 +50,16 @@ class Channel extends _1.SingleSave {
             const data = Fs.readFileSync(path, 'utf8');
             this.config = JSON.parse(data);
             this.didLoad(data);
+            // Complete channel infos
+            if (this.config.name) {
+                this.name = this.config.name;
+            }
+            if (this.config.description) {
+                this.name = this.config.description;
+            }
+            if (this.config.logo) {
+                this.name = this.config.logo;
+            }
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
@@ -166,6 +180,8 @@ class Channel extends _1.SingleSave {
             }
             const config = {
                 validatorPath: `${Channel.defaultFolder}/validator.js`,
+                name: 'New channel',
+                description: 'A brand new channel',
                 project: 'projectId',
                 templates: [
                     {
@@ -215,6 +231,8 @@ class Channel extends _1.SingleSave {
         return {
             id: this.id,
             name: this.name,
+            description: this.description,
+            logo: this.logo,
             templates: this.templates.map((template) => template.toObject()),
             validator: this.validator.content
         };

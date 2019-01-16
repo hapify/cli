@@ -14,6 +14,12 @@ export interface IConfig {
   validatorPath: string;
   /** @type {string} The project id containing the models */
   project: string;
+  /** @type {string} The channel's name */
+  name?: string;
+  /** @type {string} The channel's short description */
+  description?: string;
+  /** @type {string} The channel's logo URL */
+  logo?: string;
   /** @type {IConfigTemplate[]} The templates of the channel */
   templates: IConfigTemplate[];
 }
@@ -113,6 +119,10 @@ export interface IChannel {
   id: string;
   /** @type {string} The channel's name */
   name: string;
+  /** @type {string} The channel's short description */
+  description: string;
+  /** @type {string} The channel's logo URL */
+  logo: string;
   /** @type {ITemplate[]} The templates of the channel */
   templates: ITemplate[];
   /** @type {string} The channel's validation script */

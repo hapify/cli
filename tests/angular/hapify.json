@@ -1,6 +1,9 @@
 {
-  "validatorPath": "hapify/validator.js",
+  "name": "Angular",
+  "description": "Angular Frontend with Material",
+  "logo": "https://angular.io/assets/images/logos/angular/angular.svg",
   "project": "5c38bdc2917d3a00100ae7da",
+  "validatorPath": "hapify/validator.js",
   "templates": [
     {
       "name": "All Models Index",
