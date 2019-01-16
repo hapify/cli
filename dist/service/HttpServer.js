@@ -76,6 +76,7 @@ let HttpServerService = class HttpServerService {
             this.server = new hapi_1.Server({
                 port: this._port,
                 routes: {
+                    cors: { credentials: true },
                     files: {
                         relativeTo: this.rootPath
                     }

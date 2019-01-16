@@ -65,6 +65,7 @@ export class HttpServerService {
     this.server = new Server({
       port: this._port,
       routes: {
+        cors: { credentials: true },
         files: {
           relativeTo: this.rootPath
         }
