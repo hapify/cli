@@ -25,6 +25,25 @@ const config_1 = require("../config");
 const axios_1 = __importDefault(require("axios"));
 const querystring_1 = __importDefault(require("querystring"));
 const Options_1 = require("./Options");
+class RichAxiosError {
+    constructor(error) {
+        this.name = 'RichAxiosError';
+        this.stack = error.stack;
+        this.config = error.config;
+        this.code = error.code;
+        this.request = error.request;
+        this.response = error.response;
+        // Get message and payload if possible
+        if (error.response && error.response.data) {
+            this.message = error.response.data.message;
+            this.data = error.response.data.data;
+        }
+        else {
+            this.message = error.message;
+        }
+    }
+}
+exports.RichAxiosError = RichAxiosError;
 let ApiService = class ApiService {
     /** Constructor */
     constructor(optionsService) {
@@ -43,7 +62,7 @@ let ApiService = class ApiService {
                 return yield this.http.get(this.query(url, query), config);
             }
             catch (e) {
-                throw this.wrapError(e);
+                throw new RichAxiosError(e);
             }
         });
     }
@@ -54,7 +73,7 @@ let ApiService = class ApiService {
                 return yield this.http.post(this.query(url, query), payload, config);
             }
             catch (e) {
-                throw this.wrapError(e);
+                throw new RichAxiosError(e);
             }
         });
     }
@@ -65,7 +84,7 @@ let ApiService = class ApiService {
                 return yield this.http.patch(this.query(url, query), payload, config);
             }
             catch (e) {
-                throw this.wrapError(e);
+                throw new RichAxiosError(e);
             }
         });
     }
@@ -76,20 +95,13 @@ let ApiService = class ApiService {
                 return yield this.http.delete(this.query(url, query), config);
             }
             catch (e) {
-                throw this.wrapError(e);
+                throw new RichAxiosError(e);
             }
         });
     }
     /** Helper to return a stringified query */
     query(url, object) {
         return !!object ? `${url}?${querystring_1.default.stringify(object)}` : url;
-    }
-    /** Parse and throw Error */
-    wrapError(error) {
-        if (error.response && error.response.data && error.response.data.message) {
-            error.message = error.response.data.message;
-        }
-        return error;
     }
 };
 ApiService = __decorate([
