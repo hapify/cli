@@ -216,6 +216,7 @@ program
         options.setCommand(cmd);
         // ---------------------------------
         // Action starts
+        yield channelsService.ensureSameProject();
         yield http.serve();
         logger.info(`Server is running at: ${cPath(http.url())}`);
         if (options.open()) {

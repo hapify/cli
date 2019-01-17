@@ -58,6 +58,21 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
         });
     }
     /**
+     * Ensure that all channels refers to the same project
+     * @throws {Error}
+     */
+    ensureSameProject() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const channels = yield this.channels();
+            const firstProject = channels[0].config.project;
+            for (const channel of channels) {
+                if (channel.config.project !== firstProject) {
+                    throw new Error('Channels must refer to the same project');
+                }
+            }
+        });
+    }
+    /**
      * Returns the first models collection
      * @return {ModelsCollection}
      * @throws {Error}

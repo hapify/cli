@@ -231,6 +231,7 @@ program
 
       // ---------------------------------
       // Action starts
+      await channelsService.ensureSameProject();
       await http.serve();
       logger.info(`Server is running at: ${cPath(http.url())}`);
       if (options.open()) {
