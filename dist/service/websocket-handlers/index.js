@@ -7,6 +7,7 @@ __export(require("./GetModelsHandler"));
 __export(require("./SetModelsHandler"));
 __export(require("./GetChannelsHandler"));
 __export(require("./SetChannelsHandler"));
+__export(require("./GetInfoHandler"));
 __export(require("./GetPresetsHandler"));
 __export(require("./PathPreviewHandler"));
 __export(require("./TemplatePreviewHandler"));

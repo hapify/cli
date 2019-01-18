@@ -60,6 +60,7 @@ let WebSocketServerService = class WebSocketServerService {
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetChannelsHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.SetChannelsHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetPresetsHandlerService));
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetInfoHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.PathPreviewHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.TemplatePreviewHandlerService));
         // this.addHandler(Container.get(ValidateModelHandlerService));

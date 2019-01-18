@@ -2,6 +2,7 @@ export * from './GetModelsHandler';
 export * from './SetModelsHandler';
 export * from './GetChannelsHandler';
 export * from './SetChannelsHandler';
+export * from './GetInfoHandler';
 export * from './GetPresetsHandler';
 export * from './PathPreviewHandler';
 export * from './TemplatePreviewHandler';
