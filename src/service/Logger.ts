@@ -19,7 +19,7 @@ export class LoggerService {
    */
   handle(error: Error): LoggerService {
     const message = this.optionsService.debug() ?
-      error.stack.toString() : error.message;
+      `${error.message}\n${error.stack.toString()}` : error.message;
     console.error(chalk.red(message));
     return this;
   }

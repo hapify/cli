@@ -30,7 +30,7 @@ let LoggerService = class LoggerService {
      */
     handle(error) {
         const message = this.optionsService.debug() ?
-            error.stack.toString() : error.message;
+            `${error.message}\n${error.stack.toString()}` : error.message;
         console.error(chalk_1.default.red(message));
         return this;
     }
