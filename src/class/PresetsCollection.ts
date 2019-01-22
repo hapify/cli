@@ -2,6 +2,7 @@ import { IModel, IPreset, ISerilizable } from '../interface';
 import { Preset } from './';
 import { ApiService, IApiModel, IApiPreset } from '../service';
 import { Container } from 'typedi';
+import { ConfigRemote } from '../config';
 
 export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
 
@@ -44,7 +45,7 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
   private async load(): Promise<void> {
     const presets = await this.apiService.get('preset', {
       _page: 0,
-      _limit: 100
+      _limit: ConfigRemote.presetsLimit
     })
       .then(response => {
         return (<IApiPreset[]>response.data.items)

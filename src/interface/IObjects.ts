@@ -169,6 +169,10 @@ export interface ILimits {
 }
 
 export interface IConfigRemote {
-  /** @type {string} The API URL */
+  /** The API URL */
   uri: string;
+  /** The max number of models that can be queried */
+  modelsLimit: number;
+  /** The max number of presets that can be queried */
+  presetsLimit: number;
 }

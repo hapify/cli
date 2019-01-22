@@ -2,6 +2,7 @@ import { IModel, IStorable, ISerilizable } from '../interface';
 import { Model, SingleSave } from './';
 import { ApiService, IApiModel } from '../service';
 import { Container } from 'typedi';
+import { ConfigRemote } from '../config';
 
 export class ModelsCollection extends SingleSave implements IStorable, ISerilizable<IModel[], Model[]> {
 
@@ -50,7 +51,7 @@ export class ModelsCollection extends SingleSave implements IStorable, ISeriliza
   public async load(): Promise<void> {
     const models = await this.apiService.get('model', {
       _page: 0,
-      _limit: 100,
+      _limit: ConfigRemote.modelsLimit,
       project: this.project
     })
       .then(response => {

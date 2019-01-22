@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
 const service_1 = require("../service");
 const typedi_1 = require("typedi");
+const config_1 = require("../config");
 class PresetsCollection {
     /** Constructor */
     constructor() {
@@ -44,7 +45,7 @@ class PresetsCollection {
         return __awaiter(this, void 0, void 0, function* () {
             const presets = yield this.apiService.get('preset', {
                 _page: 0,
-                _limit: 100
+                _limit: config_1.ConfigRemote.presetsLimit
             })
                 .then(response => {
                 return response.data.items
