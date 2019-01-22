@@ -32,7 +32,7 @@ export class InfoService {
       const channel = (await this.channelsService.channels())[0];
       this._project = (await this.api().get(`project/${channel.config.project}`)).data;
     }
-    return this._project
+    return this._project;
   }
 
   /** Get the limits once and returns them */
@@ -40,6 +40,6 @@ export class InfoService {
     if (!this._limits) {
       this._limits = (await this.api().get('generator/limits')).data;
     }
-    return this._limits
+    return this._limits;
   }
 }

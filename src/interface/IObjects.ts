@@ -166,6 +166,8 @@ export interface ILimits {
   models: number;
   /** The max number of allowed fields by models */
   fields: number;
+  /** The max number of allowed templates */
+  templates: number;
 }
 
 export interface IConfigRemote {
