@@ -29,7 +29,7 @@ let LoggerService = class LoggerService {
      * @return {LoggerService}
      */
     handle(error) {
-        let message = '';
+        let message = '✖ ';
         if (error.data) {
             const data = error.data;
             message += `[${data.type}:${data.code}] `;

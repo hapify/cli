@@ -26,7 +26,7 @@ export class LoggerService {
    * @return {LoggerService}
    */
   handle(error: Error): LoggerService {
-    let message = '';
+    let message = '✖ ';
     if ((<RichError>error).data) {
       const data = (<RichError>error).data;
       message += `[${data.type}:${data.code}] `
