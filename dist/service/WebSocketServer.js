@@ -102,7 +102,7 @@ let WebSocketServerService = class WebSocketServerService {
                         }
                     }
                     catch (error) {
-                        this.loggerService.error(error.message);
+                        this.loggerService.handle(error);
                         cb(false, 500, 'InternalError');
                     }
                 }
@@ -178,8 +178,7 @@ let WebSocketServerService = class WebSocketServerService {
                             };
                         }
                         reply(dId, payload, 'error', tag);
-                        this.loggerService.debug(`[WS:${id}] Error while processing message`);
-                        this.loggerService.error(error.message);
+                        this.loggerService.debug(`[WS:${id}] Error while processing message: ${error.message}`);
                     }
                 }));
                 ws.on('close', () => {
@@ -187,7 +186,7 @@ let WebSocketServerService = class WebSocketServerService {
                 });
             });
             this.server.on('error', (error) => {
-                this.loggerService.error(error.message);
+                this.loggerService.handle(error);
             });
             this.serverStarted = true;
             yield this.createToken();

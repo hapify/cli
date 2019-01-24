@@ -2,6 +2,14 @@ import { Service } from 'typedi';
 import chalk from 'chalk';
 import { OptionsService } from './Options';
 
+interface ErrorData {
+  type: string;
+  code: number;
+}
+interface RichError extends Error {
+  data: ErrorData
+}
+
 @Service()
 export class LoggerService {
 
@@ -18,8 +26,15 @@ export class LoggerService {
    * @return {LoggerService}
    */
   handle(error: Error): LoggerService {
-    const message = this.optionsService.debug() ?
-      `${error.message}\n${error.stack.toString()}` : error.message;
+    let message = '';
+    if ((<RichError>error).data) {
+      const data = (<RichError>error).data;
+      message += `[${data.type}:${data.code}] `
+    }
+    message += error.message;
+    if (this.optionsService.debug()) {
+      message += `\n${error.stack.toString()}`;
+    }
     console.error(chalk.red(message));
     return this;
   }

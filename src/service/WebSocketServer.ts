@@ -94,7 +94,7 @@ export class WebSocketServerService {
             });
           }
         } catch (error) {
-          this.loggerService.error(error.message);
+          this.loggerService.handle(error);
           cb(false, 500, 'InternalError');
         }
       }
@@ -185,8 +185,7 @@ export class WebSocketServerService {
           
           reply(dId, payload, 'error', tag);
           
-          this.loggerService.debug(`[WS:${id}] Error while processing message`);
-          this.loggerService.error(error.message);
+          this.loggerService.debug(`[WS:${id}] Error while processing message: ${error.message}`);
         }
 
       });
@@ -197,7 +196,7 @@ export class WebSocketServerService {
     });
 
     this.server.on('error', (error: Error) => {
-      this.loggerService.error(error.message);
+      this.loggerService.handle(error);
     });
 
     this.serverStarted = true;
