@@ -128,6 +128,10 @@ export class WebSocketServerService {
           // Decode and verify message
           const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as ValidationResult<IWebSocketMessage>;
           if (parsed.error) {
+            (parsed.error as any).data = {
+              code: 4002,
+              type: 'CliMessageValidationError'
+            };
             throw parsed.error;
           }
           decoded = parsed.value;
@@ -142,6 +146,10 @@ export class WebSocketServerService {
               // Validate the incoming payload
               const validation = Joi.validate(decoded.data, handler.validator());
               if (validation.error) {
+                (validation.error as any).data = {
+                  code: 4003,
+                  type: 'CliDataValidationError'
+                };
                 throw validation.error;
               }
 
@@ -153,14 +161,30 @@ export class WebSocketServerService {
           }
 
           // If message is not handled, send an error to the client
-          throw new Error(`Unknown message key ${decoded.id}`);
+          const error = new Error(`Unknown message key ${decoded.id}`);
+          (error as any).data = {
+            code: 4003,
+            type: 'CliUnknownMessageError'
+          };
+          throw error;
 
         } catch (error) {
+          
           const dId = decoded && decoded.id ? decoded.id : 'error';
           const tag = decoded && decoded.tag ? decoded.tag : null;
           const payload: any = { message: error.message };
-          if (error.data) { payload.data = error.data; }
+          
+          if (error.data) {
+            payload.data = error.data;
+          } else {
+            payload.data = {
+              code: 4001,
+              type: 'CliInternalError'
+            }
+          }
+          
           reply(dId, payload, 'error', tag);
+          
           this.loggerService.debug(`[WS:${id}] Error while processing message`);
           this.loggerService.error(error.message);
         }
