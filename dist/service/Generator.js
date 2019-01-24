@@ -41,7 +41,7 @@ let GeneratorService = class GeneratorService {
                 project: channel.config.project,
                 templates: channel.templates.map(t => t.toObject())
             });
-            return response.data;
+            return response.data.results;
         });
     }
     /**
@@ -57,7 +57,7 @@ let GeneratorService = class GeneratorService {
                 project: template.channel().config.project,
                 templates: [template.toObject()]
             });
-            return response.data;
+            return response.data.results;
         });
     }
     /**
@@ -81,7 +81,7 @@ let GeneratorService = class GeneratorService {
             if (model) {
                 payload.ids = [model.id];
             }
-            return (yield this.api().post('generator/run', payload)).data[0];
+            return (yield this.api().post('generator/run', payload)).data.results[0];
         });
     }
     /**
