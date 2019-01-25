@@ -223,9 +223,9 @@ program
   });
 
 program
-  .command('create')
-  .alias('c')
-  .description('Create a new Hapify channel in the directory')
+  .command('init')
+  .alias('i')
+  .description('Init a new Hapify channel in the directory')
   .action(async (cmd) => {
     try {
       options.setCommand(cmd);

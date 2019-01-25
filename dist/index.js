@@ -210,9 +210,9 @@ program
     }
 }));
 program
-    .command('create')
-    .alias('c')
-    .description('Create a new Hapify channel in the directory')
+    .command('init')
+    .alias('i')
+    .description('Init a new Hapify channel in the directory')
     .action((cmd) => __awaiter(this, void 0, void 0, function* () {
     try {
         options.setCommand(cmd);
