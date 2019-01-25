@@ -46,36 +46,62 @@ program
   .option('-d, --dir <path>', 'change the working directory')
   .option('-k, --key <secret>', 'define the api key to use (override global key)');
 
+// program
+//   .command('config')
+//   .description('Define global configuration')
+//   .option('--apiKey <secret>', 'define the api key to use for every commands')
+//   .action(async (cmd) => {
+//     try {
+//       options.setCommand(cmd);
+//
+//       // ---------------------------------
+//       // Action starts
+//       // Get actual values
+//       const data = globalConfig.getData();
+//
+//       const updates = [];
+//
+//       // Update values
+//       if (cmd.apiKey) {
+//         data.apiKey = cmd.apiKey;
+//         updates.push('apiKey');
+//       }
+//
+//       // Store values
+//       globalConfig.setData(data);
+//
+//       if (updates.length) {
+//         logger.success(`Did update global configuration: ${updates.join(', ')}`);
+//       } else {
+//         logger.warning(`Nothing updated`);
+//       }
+//       // Action Ends
+//       // ---------------------------------
+//
+//       logger.time();
+//     } catch (error) {
+//       logger.handle(error);
+//     }
+//   });
+
 program
-  .command('config')
-  .alias('f')
-  .description('Define global configuration')
-  .option('--apiKey <secret>', 'define the api key to use for every commands')
-  .action(async (cmd) => {
+  .command('key <key>')
+  .description('Define the api key to use')
+  .action(async (key, cmd) => {
     try {
       options.setCommand(cmd);
 
       // ---------------------------------
       // Action starts
+      
       // Get actual values
       const data = globalConfig.getData();
-
-      const updates = [];
-
-      // Update values
-      if (cmd.apiKey) {
-        data.apiKey = cmd.apiKey;
-        updates.push('apiKey');
-      }
-
+      data.apiKey = key;
+      
       // Store values
       globalConfig.setData(data);
-
-      if (updates.length) {
-        logger.success(`Did update global configuration: ${updates.join(', ')}`);
-      } else {
-        logger.warning(`Nothing updated`);
-      }
+      
+      logger.success(`Did update global api key`);
       // Action Ends
       // ---------------------------------
 
