@@ -169,22 +169,22 @@ export class WebSocketServerService {
           throw error;
 
         } catch (error) {
-          
+
           const dId = decoded && decoded.id ? decoded.id : 'error';
           const tag = decoded && decoded.tag ? decoded.tag : null;
           const payload: any = { message: error.message };
-          
+
           if (error.data) {
             payload.data = error.data;
           } else {
             payload.data = {
               code: 4001,
               type: 'CliInternalError'
-            }
+            };
           }
-          
+
           reply(dId, payload, 'error', tag);
-          
+
           this.loggerService.debug(`[WS:${id}] Error while processing message: ${error.message}`);
         }
 

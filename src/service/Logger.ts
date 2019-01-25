@@ -7,7 +7,7 @@ interface ErrorData {
   code: number;
 }
 interface RichError extends Error {
-  data: ErrorData
+  data: ErrorData;
 }
 
 @Service()
@@ -29,7 +29,7 @@ export class LoggerService {
     let message = '✖ ';
     if ((<RichError>error).data) {
       const data = (<RichError>error).data;
-      message += `[${data.type}:${data.code}] `
+      message += `[${data.type}:${data.code}] `;
     }
     message += error.message;
     if (this.optionsService.debug()) {

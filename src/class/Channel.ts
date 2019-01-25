@@ -52,7 +52,7 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
     const data = <string>Fs.readFileSync(path, 'utf8');
     this.config = JSON.parse(data);
     this.didLoad(data);
-    
+
     // Complete channel infos
     if (this.config.name) {
       this.name = this.config.name;
