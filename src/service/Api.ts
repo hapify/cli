@@ -24,6 +24,7 @@ export interface IApiPreset {
   name__fr: string;
   description: string;
   description__fr: string;
+  slug?: string;
   icon?: string;
   models?: IApiModel[];
 }
