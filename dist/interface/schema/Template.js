@@ -8,17 +8,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Joi = __importStar(require("joi"));
-const engines = ['hpf', 'js'];
-const inputs = ['one', 'all'];
+const enum_1 = require("../../enum");
+const engines = [enum_1.TemplateEngine.Hpf, enum_1.TemplateEngine.JavaScript];
+const inputs = [enum_1.TemplateInput.One, enum_1.TemplateInput.All];
 exports.TemplateSchema = Joi.object({
-    name: Joi.string().required(),
     path: Joi.string().required(),
     engine: Joi.string().valid(engines).required(),
     input: Joi.string().valid(inputs).required(),
     content: Joi.string().required().allow('')
 });
 exports.ConfigTemplateSchema = Joi.object({
-    name: Joi.string().required(),
     path: Joi.string().required(),
     engine: Joi.string().valid(engines).required(),
     input: Joi.string().valid(inputs).required()

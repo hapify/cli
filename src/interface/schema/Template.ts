@@ -1,11 +1,11 @@
 
 import * as Joi from 'joi';
+import { TemplateEngine, TemplateInput } from '../../enum';
 
-const engines = ['hpf', 'js'];
-const inputs = ['one', 'all'];
+const engines = [TemplateEngine.Hpf, TemplateEngine.JavaScript];
+const inputs = [TemplateInput.One, TemplateInput.All];
 
 export const TemplateSchema = Joi.object({
-  name: Joi.string().required(),
   path: Joi.string().required(),
   engine: Joi.string().valid(engines).required(),
   input: Joi.string().valid(inputs).required(),
@@ -13,7 +13,6 @@ export const TemplateSchema = Joi.object({
 });
 
 export const ConfigTemplateSchema = Joi.object({
-  name: Joi.string().required(),
   path: Joi.string().required(),
   engine: Joi.string().valid(engines).required(),
   input: Joi.string().valid(inputs).required()

@@ -194,7 +194,6 @@ class Channel extends _1.SingleSave {
                 project: 'projectId',
                 templates: [
                     {
-                        name: 'Hello World',
                         path: 'models/{model.hyphen}/hello.js',
                         engine: enum_1.TemplateEngine.Hpf,
                         input: enum_1.TemplateInput.One

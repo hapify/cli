@@ -36,7 +36,6 @@ class Template extends _1.SingleSave {
     }
     /** @inheritDoc */
     fromObject(object) {
-        this.name = object.name;
         this.path = object.path;
         this.engine = object.engine;
         this.input = object.input;
@@ -47,7 +46,6 @@ class Template extends _1.SingleSave {
     /** @inheritDoc */
     toObject() {
         return {
-            name: this.name,
             path: this.path,
             engine: this.engine,
             input: this.input,

@@ -209,7 +209,6 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       project: 'projectId',
       templates: [
         {
-          name: 'Hello World',
           path: 'models/{model.hyphen}/hello.js',
           engine: TemplateEngine.Hpf,
           input: TemplateInput.One

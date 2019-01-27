@@ -11,8 +11,6 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
 
   /** @type {string} */
   private static defaultFolder = 'model';
-  /** @type {string} The template's name */
-  name: string;
   /** @type {string} The template's path */
   path: string;
   /** @type {string} The template's type */
@@ -34,7 +32,6 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
 
   /** @inheritDoc */
   public fromObject(object: ITemplate): Template {
-    this.name = object.name;
     this.path = object.path;
     this.engine = object.engine;
     this.input = object.input;
@@ -46,7 +43,6 @@ export class Template extends SingleSave implements IStorable, ISerilizable<ITem
   /** @inheritDoc */
   public toObject(): ITemplate {
     return {
-      name: this.name,
       path: this.path,
       engine: this.engine,
       input: this.input,

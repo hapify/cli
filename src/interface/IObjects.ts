@@ -1,6 +1,4 @@
 export interface IConfigTemplate {
-  /** @type {string} The template's name */
-  name: string;
   /** @type {string} The template's path */
   path: string;
   /** @type {string} The template's type */
