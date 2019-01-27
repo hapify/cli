@@ -178,3 +178,8 @@ export interface IConfigRemote {
   /** The max number of presets that can be queried */
   presetsLimit: number;
 }
+
+export interface IConfigInternal {
+  /** Max duration to process validator */
+  validatorTimeout: number;
+}

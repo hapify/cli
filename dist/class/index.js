@@ -13,4 +13,5 @@ __export(require("./Preset"));
 __export(require("./PresetsCollection"));
 __export(require("./Field"));
 __export(require("./FieldType"));
+__export(require("./RichError"));
 //# sourceMappingURL=index.js.map

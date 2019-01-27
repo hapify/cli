@@ -8,4 +8,5 @@ __export(require("./Field"));
 __export(require("./Access"));
 __export(require("./Channel"));
 __export(require("./Template"));
+__export(require("./ValidatorResult"));
 //# sourceMappingURL=index.js.map

@@ -8,3 +8,4 @@ export * from './Preset';
 export * from './PresetsCollection';
 export * from './Field';
 export * from './FieldType';
+export * from './RichError';
