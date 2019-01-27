@@ -13,7 +13,7 @@ const Field_1 = require("./Field");
 exports.ModelSchema = Joi.object({
     id: Joi.string().required(),
     name: Joi.string().required(),
-    fields: Joi.array().items(Field_1.FieldSchema).required().min(1),
+    fields: Joi.array().items(Field_1.FieldSchema).required().min(0),
     accesses: Access_1.AccessSchema
 });
 //# sourceMappingURL=Model.js.map

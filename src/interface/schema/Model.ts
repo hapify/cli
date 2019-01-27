@@ -6,6 +6,6 @@ import { FieldSchema } from './Field';
 export const ModelSchema = Joi.object({
   id: Joi.string().required(),
   name: Joi.string().required(),
-  fields: Joi.array().items(FieldSchema).required().min(1),
+  fields: Joi.array().items(FieldSchema).required().min(0),
   accesses: AccessSchema
 });
