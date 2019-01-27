@@ -146,9 +146,7 @@ let WebSocketServerService = class WebSocketServerService {
                                 if (validation.error) {
                                     const { error } = validation;
                                     // Transform Joi message
-                                    if (error.details && error.details.length) {
-                                        error.message = error.details.map(d => `${d.message} (${d.path.join('.')})`).join('. ');
-                                    }
+                                    interface_1.TransformValidationMessage(error);
                                     // Add metadata
                                     error.data = {
                                         code: 4003,

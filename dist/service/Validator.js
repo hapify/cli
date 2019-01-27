@@ -59,7 +59,8 @@ let ValidatorService = class ValidatorService {
                 }).runInContext(final);
                 const validation = Joi.validate(result, interface_1.ValidatorResultSchema);
                 if (validation.error) {
-                    throw new class_1.RichError('Invalid validator output. Must returns { errors: string[], warnings: string[] }', {
+                    const original = interface_1.TransformValidationMessage(validation.error).message;
+                    throw new class_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] } [${original}]`, {
                         code: 4007,
                         type: 'ConsoleValidatorOutputError'
                     });

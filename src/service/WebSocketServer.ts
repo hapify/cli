@@ -18,7 +18,7 @@ import {
   ValidateModelHandlerService, GenerateTemplateHandlerService, GenerateChannelHandlerService
 } from './websocket-handlers';
 import { LoggerService } from './Logger';
-import { IWebSocketHandler, IWebSocketMessage, WebSocketMessageSchema } from '../interface';
+import { IWebSocketHandler, IWebSocketMessage, WebSocketMessageSchema, TransformValidationMessage } from '../interface';
 import { Container } from 'typedi';
 
 interface TokenData {
@@ -148,9 +148,7 @@ export class WebSocketServerService {
               if (validation.error) {
                 const { error } = validation;
                 // Transform Joi message
-                if (error.details && error.details.length) {
-                  error.message = error.details.map(d => `${d.message} (${d.path.join('.')})`).join('. ');
-                }
+                TransformValidationMessage(error);
                 // Add metadata
                 (error as any).data = {
                   code: 4003,

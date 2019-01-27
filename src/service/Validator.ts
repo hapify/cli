@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { IValidatorResult, IModel, ValidatorResultSchema } from '../interface';
+import { IValidatorResult, IModel, ValidatorResultSchema, TransformValidationMessage } from '../interface';
 import { ConfigInternal } from '../config';
 import * as ErrorStackParser from 'error-stack-parser';
 import { RichError } from '../class';
@@ -37,8 +37,9 @@ export class ValidatorService {
 
       const validation = Joi.validate(result, ValidatorResultSchema);
       if (validation.error) {
+        const original = TransformValidationMessage(validation.error).message;
         throw new RichError(
-          'Invalid validator output. Must returns { errors: string[], warnings: string[] }',
+          `Invalid validator output. Must return { errors: string[], warnings: string[] } [${original}]`,
           {
             code: 4007,
             type: 'ConsoleValidatorOutputError'
