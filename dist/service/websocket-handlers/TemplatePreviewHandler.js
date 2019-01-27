@@ -49,13 +49,7 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
         return Joi.object({
             model: Joi.string(),
             channel: Joi.string().required(),
-            template: Joi.object({
-                name: Joi.string().required(),
-                path: Joi.string().required(),
-                engine: Joi.string().required(),
-                input: Joi.string().required(),
-                content: Joi.string().required().allow('')
-            }).required()
+            template: interface_1.TemplateSchema.required()
         });
     }
     /** @inheritDoc */

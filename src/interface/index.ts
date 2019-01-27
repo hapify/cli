@@ -8,4 +8,4 @@ export * from './IValidatorResult';
 export * from './IWebSocketMessage';
 export * from './IWebSocketHandler';
 
-export * from 'schema';
+export * from './schema';

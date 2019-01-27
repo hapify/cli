@@ -26,17 +26,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
-const Channels_1 = require("../Channels");
 const Validator_1 = require("../Validator");
 const Joi = __importStar(require("joi"));
 let ValidateModelHandlerService = class ValidateModelHandlerService {
     /**
      * Constructor
-     * @param channelsService
      * @param validatorService
      */
-    constructor(channelsService, validatorService) {
-        this.channelsService = channelsService;
+    constructor(validatorService) {
         this.validatorService = validatorService;
     }
     /** @inheritDoc */
@@ -46,37 +43,21 @@ let ValidateModelHandlerService = class ValidateModelHandlerService {
     /** @inheritDoc */
     validator() {
         return Joi.object({
-            model: Joi.string().required(),
-            channel: Joi.string(),
-            content: Joi.string()
-        }).xor('channel', 'content');
+            model: interface_1.ModelSchema,
+            content: Joi.string().required()
+        });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Get model
-            const model = yield (yield this.channelsService.modelsCollection()).find(message.data.model);
-            if (!model) {
-                throw new Error(`Unable to find model ${message.data.model}`);
-            }
-            // From an existing channel
-            if (message.data.channel) {
-                // Get channel
-                const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
-                if (!channel) {
-                    throw new Error(`Unable to find channel ${message.data.channel}`);
-                }
-                return yield this.validatorService.runForChannel(channel, model);
-            }
             // From content
-            return yield this.validatorService.run(message.data.content, model);
+            return yield this.validatorService.run(message.data.content, message.data.model);
         });
     }
 };
 ValidateModelHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Channels_1.ChannelsService,
-        Validator_1.ValidatorService])
+    __metadata("design:paramtypes", [Validator_1.ValidatorService])
 ], ValidateModelHandlerService);
 exports.ValidateModelHandlerService = ValidateModelHandlerService;
 //# sourceMappingURL=ValidateModelHandler.js.map

@@ -18,7 +18,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const SafeEval = require('safe-eval');
 let ValidatorService = class ValidatorService {
     /**
      * Constructor
@@ -34,30 +33,11 @@ let ValidatorService = class ValidatorService {
      */
     run(script, model) {
         return __awaiter(this, void 0, void 0, function* () {
-            // No script, no error
-            if (typeof script === 'undefined' || script.length === 0) {
-                return {
-                    errors: [],
-                    warnings: []
-                };
-            }
-            const result = SafeEval(`(function() { ${script} })()`, { model: model });
-            if (!(result && result.errors instanceof Array && result.warnings instanceof Array)) {
-                throw new Error('Invalid validator return. Must returns { errors: string[], warnings: string[] }');
-            }
-            return result;
-        });
-    }
-    /**
-     * Run validation on a single model for a single channel
-     *
-     * @param {Channel} channel
-     * @param {IModel} model
-     * @return {Promise<IValidatorResult>}
-     */
-    runForChannel(channel, model) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.run(channel.validator.content, model);
+            /** @todo To be implemented */
+            return {
+                errors: [],
+                warnings: []
+            };
         });
     }
 };

@@ -146,11 +146,17 @@ export class WebSocketServerService {
               // Validate the incoming payload
               const validation = Joi.validate(decoded.data, handler.validator());
               if (validation.error) {
-                (validation.error as any).data = {
+                const { error } = validation;
+                // Transform Joi message
+                if (error.details && error.details.length) {
+                  error.message = error.details.map(d => `${d.message} (${d.path.join('.')})`).join('. ');
+                }
+                // Add metadata
+                (error as any).data = {
                   code: 4003,
                   type: 'CliDataValidationError'
                 };
-                throw validation.error;
+                throw error;
               }
 
               // Return the result to the client

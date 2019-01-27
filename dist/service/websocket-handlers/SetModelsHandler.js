@@ -28,7 +28,6 @@ const typedi_1 = require("typedi");
 const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
-const IObjects_1 = require("../../interface/IObjects");
 let SetModelsHandlerService = class SetModelsHandlerService {
     /**
      * Constructor
@@ -43,37 +42,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     }
     /** @inheritDoc */
     validator() {
-        const accesses = [IObjects_1.Access.ADMIN, IObjects_1.Access.OWNER, IObjects_1.Access.AUTHENTICATED, IObjects_1.Access.GUEST];
-        return Joi.array().items(Joi.object({
-            id: Joi.string().required(),
-            name: Joi.string().required(),
-            fields: Joi.array().items(Joi.object({
-                name: Joi.string().required(),
-                type: Joi.string().required(),
-                subtype: Joi.string().required().allow(null),
-                reference: Joi.string().required().allow(null),
-                primary: Joi.boolean().required(),
-                unique: Joi.boolean().required(),
-                label: Joi.boolean().required(),
-                nullable: Joi.boolean().required(),
-                multiple: Joi.boolean().required(),
-                important: Joi.boolean().required(),
-                searchable: Joi.boolean().required(),
-                sortable: Joi.boolean().required(),
-                isPrivate: Joi.boolean().required(),
-                internal: Joi.boolean().required(),
-                restricted: Joi.boolean().required(),
-                ownership: Joi.boolean().required(),
-            })).required().min(1),
-            accesses: Joi.object({
-                create: Joi.string().valid(accesses).required(),
-                read: Joi.string().valid(accesses).required(),
-                update: Joi.string().valid(accesses).required(),
-                remove: Joi.string().valid(accesses).required(),
-                search: Joi.string().valid(accesses).required(),
-                count: Joi.string().valid(accesses).required(),
-            })
-        })).min(0);
+        return Joi.array().items(interface_1.ModelSchema).min(0);
     }
     /** @inheritDoc */
     handle(message) {

@@ -42,20 +42,7 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
     }
     /** @inheritDoc */
     validator() {
-        return Joi.array().items(Joi.object({
-            id: Joi.string().required(),
-            name: Joi.string().required(),
-            description: Joi.string().required().allow(null),
-            logo: Joi.string().required().allow(null),
-            validator: Joi.string().required().allow(''),
-            templates: Joi.array().items(Joi.object({
-                name: Joi.string().required(),
-                path: Joi.string().required(),
-                engine: Joi.string().required(),
-                input: Joi.string().required(),
-                content: Joi.string().required().allow('')
-            })).required()
-        })).min(0);
+        return Joi.array().items(interface_1.ChannelSchema).min(0);
     }
     /** @inheritDoc */
     handle(message) {
