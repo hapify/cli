@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ITemplate } from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ITemplate, TemplateSchema } from '../../interface';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import { Template } from '../../class';
@@ -27,13 +27,7 @@ export class TemplatePreviewHandlerService implements IWebSocketHandler {
     return Joi.object({
       model: Joi.string(),
       channel: Joi.string().required(),
-      template: Joi.object({
-        name: Joi.string().required(),
-        path: Joi.string().required(),
-        engine: Joi.string().required(),
-        input: Joi.string().required(),
-        content: Joi.string().required().allow('')
-      }).required()
+      template: TemplateSchema.required()
     });
   }
 
