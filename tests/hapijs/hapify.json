@@ -31,11 +31,6 @@
       "input": "one"
     },
     {
-      "path": "src/routes/index.js",
-      "engine": "hpf",
-      "input": "all"
-    },
-    {
       "path": "src/routes/{model.hyphen}/list.js",
       "engine": "hpf",
       "input": "one"
@@ -49,6 +44,11 @@
       "path": "src/routes/{model.hyphen}/update.js",
       "engine": "hpf",
       "input": "one"
+    },
+    {
+      "path": "src/routes/index.js",
+      "engine": "hpf",
+      "input": "all"
     }
   ]
 }
