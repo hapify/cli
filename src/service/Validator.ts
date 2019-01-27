@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { IValidatorResult, IModel, ValidatorResultSchema, TransformValidationMessage } from '../interface';
+import { IValidatorResult, IModel, ValidatorResultSchema } from '../interface';
 import { ConfigInternal } from '../config';
 import * as ErrorStackParser from 'error-stack-parser';
 import { RichError } from '../class';
@@ -23,9 +23,13 @@ export class ValidatorService {
    * @return {Promise<IValidatorResult>}
    */
   async run(content: string, model: IModel): Promise<IValidatorResult> {
+    
+    let result;
+    
+    // Try or die
     try {
       const final = `(function() { \n${content}\n })()`;
-      const result = new SaferEval({ model }, {
+      result = new SaferEval({ model }, {
         filename: 'js-validator.js',
         timeout: ConfigInternal.validatorTimeout,
         lineOffset: -1,
@@ -34,18 +38,6 @@ export class ValidatorService {
           wasm: false,
         }
       }).runInContext(final);
-
-      const validation = Joi.validate(result, ValidatorResultSchema);
-      if (validation.error) {
-        const original = TransformValidationMessage(validation.error).message;
-        throw new RichError(
-          `Invalid validator output. Must return { errors: string[], warnings: string[] } [${original}]`,
-          {
-            code: 4007,
-            type: 'ConsoleValidatorOutputError'
-          }
-        );
-      }
     } catch (error) {
       if  (error.message === 'Script execution timed out.') {
         throw new RichError(`Template processing timed out (${ConfigInternal.validatorTimeout}ms)`, {
@@ -63,6 +55,19 @@ export class ValidatorService {
         columnNumber
       });
     }
+
+    // Check result and return
+    const validation = Joi.validate(result, ValidatorResultSchema);
+    if (validation.error) {
+      throw new RichError(
+        `Invalid validator output. Must return { errors: string[], warnings: string[] }`,
+        {
+          code: 4007,
+          type: 'ConsoleValidatorOutputError'
+        }
+      );
+    }
+    return result;
   }
 
 }

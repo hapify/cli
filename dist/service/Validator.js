@@ -46,9 +46,11 @@ let ValidatorService = class ValidatorService {
      */
     run(content, model) {
         return __awaiter(this, void 0, void 0, function* () {
+            let result;
+            // Try or die
             try {
                 const final = `(function() { \n${content}\n })()`;
-                const result = new SaferEval({ model }, {
+                result = new SaferEval({ model }, {
                     filename: 'js-validator.js',
                     timeout: config_1.ConfigInternal.validatorTimeout,
                     lineOffset: -1,
@@ -57,14 +59,6 @@ let ValidatorService = class ValidatorService {
                         wasm: false,
                     }
                 }).runInContext(final);
-                const validation = Joi.validate(result, interface_1.ValidatorResultSchema);
-                if (validation.error) {
-                    const original = interface_1.TransformValidationMessage(validation.error).message;
-                    throw new class_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] } [${original}]`, {
-                        code: 4007,
-                        type: 'ConsoleValidatorOutputError'
-                    });
-                }
             }
             catch (error) {
                 if (error.message === 'Script execution timed out.') {
@@ -83,6 +77,15 @@ let ValidatorService = class ValidatorService {
                     columnNumber
                 });
             }
+            // Check result and return
+            const validation = Joi.validate(result, interface_1.ValidatorResultSchema);
+            if (validation.error) {
+                throw new class_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
+                    code: 4007,
+                    type: 'ConsoleValidatorOutputError'
+                });
+            }
+            return result;
         });
     }
 };

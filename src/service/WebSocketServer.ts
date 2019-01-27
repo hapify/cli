@@ -59,7 +59,7 @@ export class WebSocketServerService {
     this.addHandler(Container.get(GetInfoHandlerService));
     this.addHandler(Container.get(PathPreviewHandlerService));
     this.addHandler(Container.get(TemplatePreviewHandlerService));
-    // this.addHandler(Container.get(ValidateModelHandlerService));
+    this.addHandler(Container.get(ValidateModelHandlerService));
     this.addHandler(Container.get(GenerateTemplateHandlerService));
     this.addHandler(Container.get(GenerateChannelHandlerService));
   }
