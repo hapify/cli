@@ -64,14 +64,14 @@ let ValidatorService = class ValidatorService {
                 if (error.message === 'Script execution timed out.') {
                     throw new class_1.RichError(`Template processing timed out (${config_1.ConfigInternal.validatorTimeout}ms)`, {
                         code: 4006,
-                        type: 'ConsoleValidatorTimeoutError'
+                        type: 'CliValidatorTimeoutError'
                     });
                 }
                 // Format error
                 const { lineNumber, columnNumber } = ErrorStackParser.parse(error)[0];
                 throw new class_1.RichError(error.message, {
                     code: 4005,
-                    type: 'ConsoleValidatorEvaluationError',
+                    type: 'CliValidatorEvaluationError',
                     details: `Error: ${error.message}. Line: ${lineNumber}, Column: ${columnNumber}`,
                     lineNumber,
                     columnNumber
@@ -82,7 +82,7 @@ let ValidatorService = class ValidatorService {
             if (validation.error) {
                 throw new class_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
                     code: 4007,
-                    type: 'ConsoleValidatorOutputError'
+                    type: 'CliValidatorOutputError'
                 });
             }
             return result;
