@@ -20,10 +20,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Fs = __importStar(require("fs"));
 const Path = __importStar(require("path"));
+const interface_1 = require("../interface");
 const _1 = require("./");
 const enum_1 = require("../enum");
 const md5_1 = __importDefault(require("md5"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
+const Joi = __importStar(require("joi"));
 class Channel extends _1.SingleSave {
     /**
      * Constructor
@@ -143,6 +145,13 @@ class Channel extends _1.SingleSave {
         }
         catch (error) {
             throw new Error(`An error occurred while reading Channel config's at ${path}: ${error.toString()}`);
+        }
+        // Validate the incoming config
+        const validation = Joi.validate(config, interface_1.ConfigSchema);
+        if (validation.error) {
+            // Transform Joi message
+            interface_1.TransformValidationMessage(validation.error);
+            throw validation.error;
         }
         for (const template of config.templates) {
             const contentPath = Path.join(this.templatesPath, _1.Template.computeContentPath(template));

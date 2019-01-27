@@ -9,6 +9,8 @@ __export(require("./Access"));
 __export(require("./Channel"));
 __export(require("./Template"));
 __export(require("./ValidatorResult"));
+__export(require("./Config"));
+__export(require("./GlobalConfig"));
 function TransformValidationMessage(error) {
     if (error.details && error.details.length) {
         error.message = error.details.map(d => `${d.message} (${d.path.join('.')})`).join('. ');

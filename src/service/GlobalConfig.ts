@@ -4,7 +4,7 @@ import * as Fs from 'fs';
 import * as Os from 'os';
 import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
-import { IGlobalConfig } from '../interface';
+import { IGlobalConfig, GlobalConfigSchema } from '../interface';
 
 @Service()
 export class GlobalConfigService {
@@ -17,10 +17,6 @@ export class GlobalConfigService {
   private filePath = Path.join(this.rootPath, this.filename);
   /** Store the config data */
   private data: IGlobalConfig = {};
-  /** Store the config data */
-  private dataValidator = Joi.object({
-    apiKey: Joi.string().min(1)
-  });
 
   /** Constructor */
   constructor() {
@@ -54,7 +50,7 @@ export class GlobalConfigService {
 
   /** Validate the current config or scream */
   private validate(data: IGlobalConfig = this.data): void {
-    const validation = Joi.validate(data, this.dataValidator);
+    const validation = Joi.validate(data, GlobalConfigSchema);
     if (validation.error) {
       const errorMessage = validation.error.details.map((v) => v.message).join(', ');
       throw new Error(`Global config format error: ${errorMessage}.`);

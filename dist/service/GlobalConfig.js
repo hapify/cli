@@ -25,6 +25,7 @@ const Fs = __importStar(require("fs"));
 const Os = __importStar(require("os"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Joi = __importStar(require("joi"));
+const interface_1 = require("../interface");
 let GlobalConfigService = class GlobalConfigService {
     /** Constructor */
     constructor() {
@@ -36,10 +37,6 @@ let GlobalConfigService = class GlobalConfigService {
         this.filePath = Path.join(this.rootPath, this.filename);
         /** Store the config data */
         this.data = {};
-        /** Store the config data */
-        this.dataValidator = Joi.object({
-            apiKey: Joi.string().min(1)
-        });
         this.init();
     }
     /** Create file if not exists */
@@ -66,7 +63,7 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Validate the current config or scream */
     validate(data = this.data) {
-        const validation = Joi.validate(data, this.dataValidator);
+        const validation = Joi.validate(data, interface_1.GlobalConfigSchema);
         if (validation.error) {
             const errorMessage = validation.error.details.map((v) => v.message).join(', ');
             throw new Error(`Global config format error: ${errorMessage}.`);

@@ -8,11 +8,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Joi = __importStar(require("joi"));
+const engines = ['hpf', 'js'];
+const inputs = ['one', 'all'];
 exports.TemplateSchema = Joi.object({
     name: Joi.string().required(),
     path: Joi.string().required(),
-    engine: Joi.string().required(),
-    input: Joi.string().required(),
+    engine: Joi.string().valid(engines).required(),
+    input: Joi.string().valid(inputs).required(),
     content: Joi.string().required().allow('')
+});
+exports.ConfigTemplateSchema = Joi.object({
+    name: Joi.string().required(),
+    path: Joi.string().required(),
+    engine: Joi.string().valid(engines).required(),
+    input: Joi.string().valid(inputs).required()
 });
 //# sourceMappingURL=Template.js.map

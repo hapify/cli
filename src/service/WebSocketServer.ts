@@ -8,7 +8,6 @@ import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
 import * as Joi from 'joi';
-import { ValidationResult } from 'joi';
 import {
   GetModelsHandlerService, SetModelsHandlerService,
   GetChannelsHandlerService, SetChannelsHandlerService,
@@ -126,7 +125,7 @@ export class WebSocketServerService {
 
         try {
           // Decode and verify message
-          const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as ValidationResult<IWebSocketMessage>;
+          const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<IWebSocketMessage>;
           if (parsed.error) {
             (parsed.error as any).data = {
               code: 4002,

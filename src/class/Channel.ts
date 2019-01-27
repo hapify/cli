@@ -1,10 +1,11 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
-import { IChannel, IConfig, ISerilizable, IStorable } from '../interface';
+import { IChannel, IConfig, ISerilizable, IStorable, ConfigSchema, TransformValidationMessage } from '../interface';
 import { ModelsCollection, Template, Validator, SingleSave } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
 import mkdirp from 'mkdirp';
+import * as Joi from 'joi';
 
 export class Channel extends SingleSave implements IStorable, ISerilizable<IChannel, Channel> {
 
@@ -155,6 +156,14 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
     } catch (error) {
       throw new Error(`An error occurred while reading Channel config's at ${path}: ${error.toString()}`);
+    }
+
+    // Validate the incoming config
+    const validation = Joi.validate(config, ConfigSchema);
+    if (validation.error) {
+      // Transform Joi message
+      TransformValidationMessage(validation.error);
+      throw validation.error;
     }
 
     for (const template of config.templates) {

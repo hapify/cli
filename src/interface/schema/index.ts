@@ -6,6 +6,8 @@ export * from './Access';
 export * from './Channel';
 export * from './Template';
 export * from './ValidatorResult';
+export * from './Config';
+export * from './GlobalConfig';
 
 export function TransformValidationMessage(error: ValidationError): ValidationError {
   if (error.details && error.details.length) {
