@@ -51,6 +51,18 @@ let InfoService = class InfoService {
             return this._limits;
         });
     }
+    /** Get the default model field from channel */
+    fields() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this._fields) {
+                // Get defined fields
+                const channels = yield this.channelsService.channels();
+                const channel = channels.find(c => !!c.defaultFields);
+                this._fields = channel ? channel.defaultFields : [];
+            }
+            return this._fields;
+        });
+    }
 };
 InfoService = __decorate([
     typedi_1.Service(),

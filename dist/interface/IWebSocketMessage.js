@@ -18,6 +18,7 @@ class WebSocketMessages {
 }
 WebSocketMessages.GET_MODELS = 'get:models';
 WebSocketMessages.SET_MODELS = 'set:models';
+WebSocketMessages.NEW_MODEL = 'new:model';
 WebSocketMessages.GET_CHANNELS = 'get:channels';
 WebSocketMessages.SET_CHANNELS = 'set:channels';
 WebSocketMessages.GET_PRESETS = 'get:presets';

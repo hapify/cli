@@ -2,7 +2,9 @@ import { Service } from 'typedi';
 import * as Path from 'path';
 import { OptionsService } from './Options';
 import * as Fs from 'fs';
+import * as Hoek from 'hoek';
 import { ModelsCollection, Channel } from '../class';
+import { IField } from '../interface';
 
 @Service()
 export class ChannelsService {
@@ -46,6 +48,30 @@ export class ChannelsService {
 		for (const channel of channels) {
 			if (channel.config.project !== firstProject) {
 				throw new Error('Channels must refer to the same project');
+			}
+		}
+	}
+
+	/**
+	 * Ensure that all channels define the same default fields
+	 * @throws {Error}
+	 */
+	public async ensureSameDefaultFields(): Promise<void> {
+		// Get defined fields
+		const channels = await this.channels();
+		const fieldsGroup = channels
+			.filter(c => !!c.defaultFields)
+			.map(c => c.defaultFields);
+		if (fieldsGroup.length < 2) {
+			return;
+		}
+		// Compare each fields group to the first one
+		const ref = fieldsGroup[0];
+		for (let i = 1; i < fieldsGroup.length; i++) {
+			if (!Hoek.deepEqual(ref, fieldsGroup[i])) {
+				throw new Error(
+					'Default fields must match for all channels if defined'
+				);
 			}
 		}
 	}

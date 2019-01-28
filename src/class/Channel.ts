@@ -6,6 +6,7 @@ import {
 	ISerilizable,
 	IStorable,
 	ConfigSchema,
+	IField,
 	TransformValidationMessage
 } from '../interface';
 import { ModelsCollection, Template, Validator, SingleSave } from './';
@@ -35,6 +36,8 @@ export class Channel extends SingleSave
 	public templates: Template[];
 	/** @type {Template[]} Templates instances */
 	public validator: Validator;
+	/** @type {IField[]} Default models fields */
+	public defaultFields: IField[];
 	/** @type {ModelsCollection} List of models container */
 	public modelsCollection: ModelsCollection;
 	/** @type {string} */
@@ -61,7 +64,7 @@ export class Channel extends SingleSave
 		this.config = JSON.parse(data);
 		this.didLoad(data);
 
-		// Complete channel infos
+		// Complete channel info
 		if (this.config.name) {
 			this.name = this.config.name;
 		}
@@ -70,6 +73,9 @@ export class Channel extends SingleSave
 		}
 		if (this.config.logo) {
 			this.logo = this.config.logo;
+		}
+		if (this.config.defaultFields) {
+			this.defaultFields = this.config.defaultFields;
 		}
 
 		// Load each content file

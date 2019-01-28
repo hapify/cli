@@ -15,6 +15,7 @@ import {
 	SetChannelsHandlerService,
 	GetPresetsHandlerService,
 	GetInfoHandlerService,
+	NewModelHandlerService,
 	PathPreviewHandlerService,
 	TemplatePreviewHandlerService,
 	ValidateModelHandlerService,
@@ -70,6 +71,7 @@ export class WebSocketServerService {
 		this.addHandler(Container.get(SetChannelsHandlerService));
 		this.addHandler(Container.get(GetPresetsHandlerService));
 		this.addHandler(Container.get(GetInfoHandlerService));
+		this.addHandler(Container.get(NewModelHandlerService));
 		this.addHandler(Container.get(PathPreviewHandlerService));
 		this.addHandler(Container.get(TemplatePreviewHandlerService));
 		this.addHandler(Container.get(ValidateModelHandlerService));

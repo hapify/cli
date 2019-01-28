@@ -4,7 +4,6 @@
   "logo": "https://angular.io/assets/images/logos/angular/angular.svg",
   "project": "5c38bdc2917d3a00100ae7da",
   "validatorPath": "hapify/validator.js",
-  "defaultFields": [],
   "templates": [
     {
       "path": "src/app/models/{model.hyphen}/{model.hyphen}-details/{model.hyphen}-details.component.html",

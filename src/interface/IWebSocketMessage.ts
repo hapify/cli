@@ -17,6 +17,7 @@ export const WebSocketMessageSchema = Joi.object({
 export class WebSocketMessages {
 	static GET_MODELS = 'get:models';
 	static SET_MODELS = 'set:models';
+	static NEW_MODEL = 'new:model';
 	static GET_CHANNELS = 'get:channels';
 	static SET_CHANNELS = 'set:channels';
 	static GET_PRESETS = 'get:presets';

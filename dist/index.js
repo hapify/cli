@@ -128,7 +128,8 @@ program
         // Group channels by models collections
         const modelsCollections = {};
         for (const channel of channels) {
-            if (typeof modelsCollections[channel.modelsCollection.path] === 'undefined') {
+            if (typeof modelsCollections[channel.modelsCollection.path] ===
+                'undefined') {
                 modelsCollections[channel.modelsCollection.path] = [];
             }
             modelsCollections[channel.modelsCollection.path].push(channel);
@@ -139,12 +140,16 @@ program
             const mc = c.length > 1;
             const m = yield c[0].modelsCollection.list();
             const mm = m.length > 1;
-            let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} of ${cPath(modelsPath)}`;
+            let message = `Channel${mc ? 's' : ''} ${c
+                .map(c => cChannel(c.name))
+                .join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} of ${cPath(modelsPath)}`;
             if (m.length === 0) {
                 message += `\nThere is no model yet.`;
             }
             else {
-                message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map(m => cModel(m.name)).join('\n- ')}`;
+                message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m
+                    .map(m => cModel(m.name))
+                    .join('\n- ')}`;
             }
             logger.newLine().info(message);
         }
@@ -197,7 +202,8 @@ program
         const channel = new class_1.Channel(options.dir());
         yield channel.load();
         logChannel(channel);
-        const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
+        const outputPath = options.output() ||
+            Path.join(options.dir(), `${channel.name}.zip`);
         const results = yield generator.runChannel(channel);
         yield writer.zip(outputPath, results);
         logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
@@ -242,6 +248,7 @@ program
         // ---------------------------------
         // Action starts
         yield channelsService.ensureSameProject();
+        yield channelsService.ensureSameDefaultFields();
         yield http.serve();
         logger.info(`Server is running at: ${cPath(http.url())}`);
         if (options.open()) {
@@ -264,7 +271,7 @@ if (!process.argv.slice(2).length) {
 }
 // ############################################
 // Init services
-process.on('exit', (code) => {
+process.on('exit', code => {
     http.stop();
 });
 // ############################################

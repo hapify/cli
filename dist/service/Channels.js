@@ -29,6 +29,7 @@ const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const Options_1 = require("./Options");
 const Fs = __importStar(require("fs"));
+const Hoek = __importStar(require("hoek"));
 const class_1 = require("../class");
 let ChannelsService = ChannelsService_1 = class ChannelsService {
     /**
@@ -68,6 +69,29 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             for (const channel of channels) {
                 if (channel.config.project !== firstProject) {
                     throw new Error('Channels must refer to the same project');
+                }
+            }
+        });
+    }
+    /**
+     * Ensure that all channels define the same default fields
+     * @throws {Error}
+     */
+    ensureSameDefaultFields() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Get defined fields
+            const channels = yield this.channels();
+            const fieldsGroup = channels
+                .filter(c => !!c.defaultFields)
+                .map(c => c.defaultFields);
+            if (fieldsGroup.length < 2) {
+                return;
+            }
+            // Compare each fields group to the first one
+            const ref = fieldsGroup[0];
+            for (let i = 1; i < fieldsGroup.length; i++) {
+                if (!Hoek.deepEqual(ref, fieldsGroup[i])) {
+                    throw new Error('Default fields must match for all channels if defined');
                 }
             }
         });

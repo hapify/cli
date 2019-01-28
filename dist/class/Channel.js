@@ -53,7 +53,7 @@ class Channel extends _1.SingleSave {
             const data = Fs.readFileSync(path, 'utf8');
             this.config = JSON.parse(data);
             this.didLoad(data);
-            // Complete channel infos
+            // Complete channel info
             if (this.config.name) {
                 this.name = this.config.name;
             }
@@ -62,6 +62,9 @@ class Channel extends _1.SingleSave {
             }
             if (this.config.logo) {
                 this.logo = this.config.logo;
+            }
+            if (this.config.defaultFields) {
+                this.defaultFields = this.config.defaultFields;
             }
             // Load each content file
             this.templates = [];

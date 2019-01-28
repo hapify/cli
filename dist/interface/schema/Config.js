@@ -20,7 +20,6 @@ exports.ConfigSchema = Joi.object({
     logo: Joi.string(),
     defaultFields: Joi.array()
         .items(Field_1.FieldSchema)
-        .required()
         .min(0),
     templates: Joi.array()
         .items(Template_1.ConfigTemplateSchema)

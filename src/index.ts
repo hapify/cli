@@ -7,13 +7,13 @@ import { CommanderStatic } from 'commander';
 import { Channel } from './class';
 import { Container } from 'typedi';
 import {
-  GeneratorService,
-  OptionsService,
-  LoggerService,
-  WriterService,
-  HttpServerService,
-  ChannelsService,
-  GlobalConfigService
+	GeneratorService,
+	OptionsService,
+	LoggerService,
+	WriterService,
+	HttpServerService,
+	ChannelsService,
+	GlobalConfigService
 } from './service';
 
 // ############################################
@@ -30,7 +30,11 @@ const channelsService = Container.get(ChannelsService);
 // ############################################
 // Common methods
 const logChannel = (channel: Channel) => {
-  logger.info(`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(channel.path)}`);
+	logger.info(
+		`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(
+			channel.path
+		)}`
+	);
 };
 const cChannel = chalk.yellow;
 const cModel = chalk.magentaBright;
@@ -40,11 +44,14 @@ const cHigh = chalk.green;
 // ############################################
 // Define program & actions
 program
-  .version('0.3.0')
-  .description('Hapify Command Line Tool')
-  .option('--debug', 'enable debug mode')
-  .option('-d, --dir <path>', 'change the working directory')
-  .option('-k, --key <secret>', 'define the api key to use (override global key)');
+	.version('0.3.0')
+	.description('Hapify Command Line Tool')
+	.option('--debug', 'enable debug mode')
+	.option('-d, --dir <path>', 'change the working directory')
+	.option(
+		'-k, --key <secret>',
+		'define the api key to use (override global key)'
+	);
 
 // program
 //   .command('config')
@@ -85,211 +92,237 @@ program
 //   });
 
 program
-  .command('key <key>')
-  .description('Define the api key to use')
-  .action(async (key, cmd) => {
-    try {
-      options.setCommand(cmd);
+	.command('key <key>')
+	.description('Define the api key to use')
+	.action(async (key, cmd) => {
+		try {
+			options.setCommand(cmd);
 
-      // ---------------------------------
-      // Action starts
-      
-      // Get actual values
-      const data = globalConfig.getData();
-      data.apiKey = key;
-      
-      // Store values
-      globalConfig.setData(data);
-      
-      logger.success(`Did update global api key`);
-      // Action Ends
-      // ---------------------------------
+			// ---------------------------------
+			// Action starts
 
-      logger.time();
-    } catch (error) {
-      logger.handle(error);
-    }
-  });
+			// Get actual values
+			const data = globalConfig.getData();
+			data.apiKey = key;
 
-program
-  .command('list')
-  .alias('l')
-  .description('List available channels from the current directory')
-  .option('--depth <n>', 'depth to recursively look for channels', 2)
-  .action(async (cmd) => {
-    try {
-      options.setCommand(cmd);
+			// Store values
+			globalConfig.setData(data);
 
-      // ---------------------------------
-      // Action starts
-      const channels = await channelsService.channels();
+			logger.success(`Did update global api key`);
+			// Action Ends
+			// ---------------------------------
 
-      for (const channel of channels) {
-        logChannel(channel);
-      }
-
-      // Group channels by models collections
-      const modelsCollections: { [s: string]: Channel[] } = {};
-      for (const channel of channels) {
-        if (typeof modelsCollections[channel.modelsCollection.path] === 'undefined') {
-          modelsCollections[channel.modelsCollection.path] = [];
-        }
-        modelsCollections[channel.modelsCollection.path].push(channel);
-      }
-
-      const modelsPaths = Object.keys(modelsCollections);
-      for (const modelsPath of modelsPaths) {
-        const c: Channel[] = modelsCollections[modelsPath];
-        const mc = c.length > 1;
-        const m = await c[0].modelsCollection.list();
-        const mm = m.length > 1;
-        let message = `Channel${mc ? 's' : ''} ${c.map(c => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} of ${cPath(modelsPath)}`;
-        if (m.length === 0) {
-          message += `\nThere is no model yet.`;
-        } else {
-          message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map(m => cModel(m.name)).join('\n- ')}`;
-        }
-        logger.newLine().info(message);
-      }
-      logger.newLine();
-
-      // Action Ends
-      // ---------------------------------
-
-      logger.time();
-    } catch (error) {
-      logger.handle(error);
-    }
-  });
+			logger.time();
+		} catch (error) {
+			logger.handle(error);
+		}
+	});
 
 program
-  .command('generate')
-  .alias('g')
-  .description('Generate channel(s) from current directory')
-  .option('--depth <n>', 'depth to recursively look for channels', 2)
-  .action(async (cmd) => {
-    try {
-      options.setCommand(cmd);
+	.command('list')
+	.alias('l')
+	.description('List available channels from the current directory')
+	.option('--depth <n>', 'depth to recursively look for channels', 2)
+	.action(async cmd => {
+		try {
+			options.setCommand(cmd);
 
-      // ---------------------------------
-      // Action starts
-      const channels = await channelsService.channels();
+			// ---------------------------------
+			// Action starts
+			const channels = await channelsService.channels();
 
-      for (const channel of channels) {
-        logChannel(channel);
-      }
+			for (const channel of channels) {
+				logChannel(channel);
+			}
 
-      for (const channel of channels) {
-        const results = await generator.runChannel(channel);
-        await writer.writeMany(channel.path, results);
-        logger.success(`Generated ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)}`);
-      }
-      // Action Ends
-      // ---------------------------------
+			// Group channels by models collections
+			const modelsCollections: { [s: string]: Channel[] } = {};
+			for (const channel of channels) {
+				if (
+					typeof modelsCollections[channel.modelsCollection.path] ===
+					'undefined'
+				) {
+					modelsCollections[channel.modelsCollection.path] = [];
+				}
+				modelsCollections[channel.modelsCollection.path].push(channel);
+			}
 
-      logger.time();
-    } catch (error) {
-      logger.handle(error);
-    }
-  });
+			const modelsPaths = Object.keys(modelsCollections);
+			for (const modelsPath of modelsPaths) {
+				const c: Channel[] = modelsCollections[modelsPath];
+				const mc = c.length > 1;
+				const m = await c[0].modelsCollection.list();
+				const mm = m.length > 1;
+				let message = `Channel${mc ? 's' : ''} ${c
+					.map(c => cChannel(c.name))
+					.join(', ')} use${mc ? '' : 's'} model${
+					mm ? 's' : ''
+				} of ${cPath(modelsPath)}`;
+				if (m.length === 0) {
+					message += `\nThere is no model yet.`;
+				} else {
+					message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m
+						.map(m => cModel(m.name))
+						.join('\n- ')}`;
+				}
+				logger.newLine().info(message);
+			}
+			logger.newLine();
 
-program
-  .command('export')
-  .alias('x')
-  .description('Export channel as ZIP from current directory')
-  .option('-o, --output <path>', 'output file path')
-  .action(async (cmd) => {
-    try {
-      options.setCommand(cmd);
+			// Action Ends
+			// ---------------------------------
 
-      // ---------------------------------
-      // Action starts
-      const channel: Channel = new Channel(options.dir());
-      await channel.load();
-      logChannel(channel);
-
-      const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
-
-      const results = await generator.runChannel(channel);
-      await writer.zip(outputPath, results);
-      logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
-      // Action Ends
-      // ---------------------------------
-
-      logger.time();
-    } catch (error) {
-      logger.handle(error);
-    }
-  });
-
-program
-  .command('init')
-  .alias('i')
-  .description('Init a new Hapify channel in the directory')
-  .action(async (cmd) => {
-    try {
-      options.setCommand(cmd);
-
-      // ---------------------------------
-      // Action starts
-      await Channel.create(options.dir());
-      logger.success(`Created a new channel in ${cPath(options.dir())}`);
-      // Action Ends
-      // ---------------------------------
-
-      logger.time();
-    } catch (error) {
-      logger.handle(error);
-    }
-  });
+			logger.time();
+		} catch (error) {
+			logger.handle(error);
+		}
+	});
 
 program
-  .command('serve')
-  .alias('s')
-  .description('Start Hapify console for channel(s) and models edition')
-  .option('-p, --port <n>', `the required port number (default between ${http.minPort} and ${http.maxPort})`)
-  .option('-H, --hostname <hostname>', `the required hostname`, 'localhost')
-  .option('--no-open', 'do not open a new tab in the browser')
-  .option('--depth <n>', 'depth to recursively look for channels', 2)
-  .action(async (cmd) => {
-    try {
-      options.setCommand(cmd);
+	.command('generate')
+	.alias('g')
+	.description('Generate channel(s) from current directory')
+	.option('--depth <n>', 'depth to recursively look for channels', 2)
+	.action(async cmd => {
+		try {
+			options.setCommand(cmd);
 
-      // ---------------------------------
-      // Action starts
-      await channelsService.ensureSameProject();
-      await http.serve();
-      logger.info(`Server is running at: ${cPath(http.url())}`);
-      if (options.open()) {
-        http.open();
-      }
-      // Action Ends
-      // ---------------------------------
+			// ---------------------------------
+			// Action starts
+			const channels = await channelsService.channels();
 
-      logger.time();
-    } catch (error) {
-      logger.handle(error);
-    }
-  });
+			for (const channel of channels) {
+				logChannel(channel);
+			}
+
+			for (const channel of channels) {
+				const results = await generator.runChannel(channel);
+				await writer.writeMany(channel.path, results);
+				logger.success(
+					`Generated ${cHigh(
+						`${results.length} files`
+					)} for channel ${cChannel(channel.name)}`
+				);
+			}
+			// Action Ends
+			// ---------------------------------
+
+			logger.time();
+		} catch (error) {
+			logger.handle(error);
+		}
+	});
+
+program
+	.command('export')
+	.alias('x')
+	.description('Export channel as ZIP from current directory')
+	.option('-o, --output <path>', 'output file path')
+	.action(async cmd => {
+		try {
+			options.setCommand(cmd);
+
+			// ---------------------------------
+			// Action starts
+			const channel: Channel = new Channel(options.dir());
+			await channel.load();
+			logChannel(channel);
+
+			const outputPath =
+				options.output() ||
+				Path.join(options.dir(), `${channel.name}.zip`);
+
+			const results = await generator.runChannel(channel);
+			await writer.zip(outputPath, results);
+			logger.success(
+				`Generated and zipped ${cHigh(
+					`${results.length} files`
+				)} for channel ${cChannel(channel.name)} to ${cPath(
+					outputPath
+				)}`
+			);
+			// Action Ends
+			// ---------------------------------
+
+			logger.time();
+		} catch (error) {
+			logger.handle(error);
+		}
+	});
+
+program
+	.command('init')
+	.alias('i')
+	.description('Init a new Hapify channel in the directory')
+	.action(async cmd => {
+		try {
+			options.setCommand(cmd);
+
+			// ---------------------------------
+			// Action starts
+			await Channel.create(options.dir());
+			logger.success(`Created a new channel in ${cPath(options.dir())}`);
+			// Action Ends
+			// ---------------------------------
+
+			logger.time();
+		} catch (error) {
+			logger.handle(error);
+		}
+	});
+
+program
+	.command('serve')
+	.alias('s')
+	.description('Start Hapify console for channel(s) and models edition')
+	.option(
+		'-p, --port <n>',
+		`the required port number (default between ${http.minPort} and ${
+			http.maxPort
+		})`
+	)
+	.option('-H, --hostname <hostname>', `the required hostname`, 'localhost')
+	.option('--no-open', 'do not open a new tab in the browser')
+	.option('--depth <n>', 'depth to recursively look for channels', 2)
+	.action(async cmd => {
+		try {
+			options.setCommand(cmd);
+
+			// ---------------------------------
+			// Action starts
+			await channelsService.ensureSameProject();
+			await channelsService.ensureSameDefaultFields();
+			await http.serve();
+			logger.info(`Server is running at: ${cPath(http.url())}`);
+			if (options.open()) {
+				http.open();
+			}
+			// Action Ends
+			// ---------------------------------
+
+			logger.time();
+		} catch (error) {
+			logger.handle(error);
+		}
+	});
 
 // ############################################
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
-  logger.art();
-  program.outputHelp();
-  process.exit();
+	logger.art();
+	program.outputHelp();
+	process.exit();
 }
 
 // ############################################
 // Init services
-process.on('exit', (code) => {
-  http.stop();
+process.on('exit', code => {
+	http.stop();
 });
 
 // ############################################
 // Init services
 options.setProgram(program);
-
 
 // ############################################
 // Start program

@@ -4,6 +4,7 @@ export * from './GetChannelsHandler';
 export * from './SetChannelsHandler';
 export * from './GetInfoHandler';
 export * from './GetPresetsHandler';
+export * from './NewModelHandler';
 export * from './PathPreviewHandler';
 export * from './TemplatePreviewHandler';
 export * from './ValidateModelHandler';

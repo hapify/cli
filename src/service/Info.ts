@@ -1,12 +1,14 @@
 import { Container, Service } from 'typedi';
 import { ApiService } from './Api';
 import { ChannelsService } from './Channels';
-import { ILimits, IProject } from '../interface';
+import { ILimits, IProject, IField } from '../interface';
 
 @Service()
 export class InfoService {
 	/** Stores the project instance */
 	private _project: IProject;
+	/** Stores the default fields */
+	private _fields: IField[];
 	/** Stores the limits */
 	private _limits: ILimits;
 
@@ -41,5 +43,16 @@ export class InfoService {
 			this._limits = (await this.api().get('generator/limits')).data;
 		}
 		return this._limits;
+	}
+
+	/** Get the default model field from channel */
+	async fields(): Promise<IField[]> {
+		if (!this._fields) {
+			// Get defined fields
+			const channels = await this.channelsService.channels();
+			const channel = channels.find(c => !!c.defaultFields);
+			this._fields = channel ? channel.defaultFields : [];
+		}
+		return this._fields;
 	}
 }

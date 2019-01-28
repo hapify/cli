@@ -19,7 +19,7 @@ export interface IConfig {
 	/** @type {string} The channel's logo URL */
 	logo?: string;
 	/** @type {IField[]} A list of model that should be added on each new model */
-	defaultFields: IField[];
+	defaultFields?: IField[];
 	/** @type {IConfigTemplate[]} The templates of the channel */
 	templates: IConfigTemplate[];
 }

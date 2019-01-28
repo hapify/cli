@@ -12,7 +12,6 @@ export const ConfigSchema = Joi.object({
 	logo: Joi.string(),
 	defaultFields: Joi.array()
 		.items(FieldSchema)
-		.required()
 		.min(0),
 	templates: Joi.array()
 		.items(ConfigTemplateSchema)
