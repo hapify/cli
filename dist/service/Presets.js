@@ -19,11 +19,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const class_1 = require("../class");
+const Channels_1 = require("./Channels");
+const Info_1 = require("./Info");
 let PresetsService = class PresetsService {
     /**
      * Constructor
      */
-    constructor() { }
+    constructor(channelsService, infoService) {
+        this.channelsService = channelsService;
+        this.infoService = infoService;
+    }
     /**
      * Returns the presets collection
      * @return {PresetsCollection}
@@ -34,10 +39,56 @@ let PresetsService = class PresetsService {
             return yield class_1.PresetsCollection.getInstance();
         });
     }
+    /**
+     * Apply one preset to models
+     */
+    apply(presetModels) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Add or update each models
+            const updated = [];
+            const created = [];
+            // List
+            const modelsCollection = yield this.channelsService.modelsCollection();
+            const models = yield modelsCollection.list();
+            for (const model of presetModels) {
+                const existing = models.find(m => m.name === model.name);
+                if (existing) {
+                    // Add or skip each fields
+                    const clone = existing.clone();
+                    let edited = false;
+                    for (const field of model.fields) {
+                        if (!clone.fields.some(f => f.name === field.name)) {
+                            clone.fields.push(field);
+                            edited = true;
+                        }
+                    }
+                    if (edited) {
+                        updated.push(clone);
+                    }
+                }
+                else {
+                    const clone = model.clone();
+                    const defaultFields = (yield this.infoService.fields()).map(f => {
+                        const field = new class_1.Field();
+                        field.fromObject(f);
+                        return field;
+                    });
+                    clone.fields = defaultFields.concat(clone.fields);
+                    created.push(clone);
+                }
+            }
+            // Return results
+            return {
+                updated,
+                created
+            };
+        });
+    }
 };
 PresetsService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService,
+        Info_1.InfoService])
 ], PresetsService);
 exports.PresetsService = PresetsService;
 //# sourceMappingURL=Presets.js.map

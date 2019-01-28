@@ -81,6 +81,14 @@ export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
 		return this.presets;
 	}
 
+	/**
+	 * Returns one preset
+	 * @returns {Promise<Preset>}
+	 */
+	async get(id: string): Promise<Preset> {
+		return this.presets.find(p => p.id === id);
+	}
+
 	/** @inheritDoc */
 	public fromObject(object: IPreset[]): Preset[] {
 		this.presets = object.map(

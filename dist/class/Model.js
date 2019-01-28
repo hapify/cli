@@ -58,6 +58,12 @@ class Model {
             count: interface_1.Access.GUEST
         };
     }
+    /** Clone the model to a new reference */
+    clone() {
+        const model = new Model();
+        model.fromObject(this.toObject());
+        return model;
+    }
 }
 exports.Model = Model;
 //# sourceMappingURL=Model.js.map

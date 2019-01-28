@@ -21,6 +21,7 @@ export class WebSocketMessages {
 	static GET_CHANNELS = 'get:channels';
 	static SET_CHANNELS = 'set:channels';
 	static GET_PRESETS = 'get:presets';
+	static APPLY_PRESETS = 'apply:presets';
 	static GET_INFO = 'get:info';
 	static PREVIEW_PATH = 'prv:path';
 	static PREVIEW_TEMPLATE = 'prv:template';

@@ -9,6 +9,7 @@ import { AddressInfo } from 'ws';
 import { URL } from 'url';
 import * as Joi from 'joi';
 import {
+	ApplyPresetHandlerService,
 	GetModelsHandlerService,
 	SetModelsHandlerService,
 	GetChannelsHandlerService,
@@ -65,6 +66,7 @@ export class WebSocketServerService {
 	 * @param {LoggerService} loggerService
 	 */
 	constructor(private loggerService: LoggerService) {
+		this.addHandler(Container.get(ApplyPresetHandlerService));
 		this.addHandler(Container.get(GetModelsHandlerService));
 		this.addHandler(Container.get(SetModelsHandlerService));
 		this.addHandler(Container.get(GetChannelsHandlerService));

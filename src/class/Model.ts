@@ -71,4 +71,11 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
 			count: Access.GUEST
 		};
 	}
+
+	/** Clone the model to a new reference */
+	public clone(): Model {
+		const model = new Model();
+		model.fromObject(this.toObject());
+		return model;
+	}
 }

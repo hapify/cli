@@ -55,6 +55,7 @@ let WebSocketServerService = class WebSocketServerService {
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
         /** @type {IWebSocketHandler[]} Messages handlers */
         this.handlers = [];
+        this.addHandler(typedi_2.Container.get(websocket_handlers_1.ApplyPresetHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetModelsHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.SetModelsHandlerService));
         this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetChannelsHandlerService));

@@ -1,3 +1,4 @@
+export * from './ApplyPresetHandler';
 export * from './GetModelsHandler';
 export * from './SetModelsHandler';
 export * from './GetChannelsHandler';

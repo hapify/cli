@@ -76,6 +76,15 @@ class PresetsCollection {
             return this.presets;
         });
     }
+    /**
+     * Returns one preset
+     * @returns {Promise<Preset>}
+     */
+    get(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.presets.find(p => p.id === id);
+        });
+    }
     /** @inheritDoc */
     fromObject(object) {
         this.presets = object.map((preset) => {
