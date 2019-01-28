@@ -43,7 +43,7 @@ export class PresetsService {
 			const existing = models.find(m => m.name === model.name);
 			if (existing) {
 				// Add or skip each fields
-				const clone = existing.clone();
+				const clone = existing.clone(false);
 				let edited = false;
 				for (const field of model.fields) {
 					if (!clone.fields.some(f => f.name === field.name)) {
@@ -55,7 +55,7 @@ export class PresetsService {
 					updated.push(clone);
 				}
 			} else {
-				const clone = model.clone();
+				const clone = model.clone(true);
 				const defaultFields = (await this.infoService.fields()).map(
 					f => {
 						const field = new Field();

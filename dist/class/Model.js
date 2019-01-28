@@ -59,9 +59,12 @@ class Model {
         };
     }
     /** Clone the model to a new reference */
-    clone() {
+    clone(newId) {
         const model = new Model();
         model.fromObject(this.toObject());
+        if (newId) {
+            model.id = Model.generateTempId();
+        }
         return model;
     }
 }

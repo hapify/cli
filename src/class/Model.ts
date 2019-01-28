@@ -73,9 +73,12 @@ export class Model implements ISerilizable<IModel, Model>, IModel {
 	}
 
 	/** Clone the model to a new reference */
-	public clone(): Model {
+	public clone(newId: boolean): Model {
 		const model = new Model();
 		model.fromObject(this.toObject());
+		if (newId) {
+			model.id = Model.generateTempId();
+		}
 		return model;
 	}
 }
