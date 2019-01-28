@@ -26,6 +26,7 @@ const enum_1 = require("../enum");
 const md5_1 = __importDefault(require("md5"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Joi = __importStar(require("joi"));
+const FieldType_1 = require("./FieldType");
 class Channel extends _1.SingleSave {
     /**
      * Constructor
@@ -192,6 +193,26 @@ class Channel extends _1.SingleSave {
                 name: 'New channel',
                 description: 'A brand new channel',
                 project: 'projectId',
+                defaultFields: [
+                    {
+                        name: 'Id',
+                        type: FieldType_1.FieldType.String,
+                        subtype: null,
+                        reference: null,
+                        primary: true,
+                        unique: false,
+                        label: false,
+                        nullable: false,
+                        multiple: false,
+                        important: false,
+                        searchable: false,
+                        sortable: false,
+                        isPrivate: false,
+                        internal: true,
+                        restricted: false,
+                        ownership: true
+                    }
+                ],
                 templates: [
                     {
                         path: 'models/{model.hyphen}/hello.js',

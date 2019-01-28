@@ -1,11 +1,12 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
-import { IChannel, IConfig, ISerilizable, IStorable, ConfigSchema, TransformValidationMessage } from '../interface';
-import { ModelsCollection, Template, Validator, SingleSave } from './';
-import { TemplateEngine, TemplateInput } from '../enum';
+import {IChannel, IConfig, ISerilizable, IStorable, ConfigSchema, TransformValidationMessage} from '../interface';
+import {ModelsCollection, Template, Validator, SingleSave} from './';
+import {TemplateEngine, TemplateInput} from '../enum';
 import md5 from 'md5';
 import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
+import {FieldType} from './FieldType';
 
 export class Channel extends SingleSave implements IStorable, ISerilizable<IChannel, Channel> {
 
@@ -207,6 +208,26 @@ export class Channel extends SingleSave implements IStorable, ISerilizable<IChan
       name: 'New channel',
       description: 'A brand new channel',
       project: 'projectId',
+      defaultFields: [
+        {
+          name: 'Id',
+          type: FieldType.String,
+          subtype: null,
+          reference: null,
+          primary: true,
+          unique: false,
+          label: false,
+          nullable: false,
+          multiple: false,
+          important: false,
+          searchable: false,
+          sortable: false,
+          isPrivate: false,
+          internal: true,
+          restricted: false,
+          ownership: true
+        }
+      ],
       templates: [
         {
           path: 'models/{model.hyphen}/hello.js',

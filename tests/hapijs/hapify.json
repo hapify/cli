@@ -4,6 +4,44 @@
   "logo": "https://hapijs.com/public/img/logo.svg",
   "project": "5c38bdc2917d3a00100ae7da",
   "validatorPath": "hapify/validator.js",
+  "defaultFields": [
+    {
+      "name": "_id",
+      "type": "string",
+      "subtype": null,
+      "reference": null,
+      "primary": true,
+      "unique": false,
+      "label": false,
+      "nullable": false,
+      "multiple": false,
+      "important": false,
+      "searchable": false,
+      "sortable": false,
+      "isPrivate": false,
+      "internal": true,
+      "restricted": false,
+      "ownership": true
+    },
+    {
+      "name": "created_at",
+      "type": "datetime",
+      "subtype": null,
+      "reference": null,
+      "primary": false,
+      "unique": false,
+      "label": false,
+      "nullable": false,
+      "multiple": false,
+      "important": false,
+      "searchable": false,
+      "sortable": true,
+      "isPrivate": false,
+      "internal": true,
+      "restricted": false,
+      "ownership": false
+    }
+  ],
   "templates": [
     {
       "path": "src/routes/{model.hyphen}/count.js",
