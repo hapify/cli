@@ -44,7 +44,10 @@ let ApplyPresetHandlerService = class ApplyPresetHandlerService {
     /** @inheritDoc */
     validator() {
         return Joi.object({
-            models: Joi.array().items(interface_1.ModelSchema).required().min(0)
+            models: Joi.array()
+                .items(interface_1.ModelSchema)
+                .required()
+                .min(0)
         });
     }
     /** @inheritDoc */
@@ -58,7 +61,7 @@ let ApplyPresetHandlerService = class ApplyPresetHandlerService {
             const results = yield this.presetsService.apply(models);
             return {
                 updated: results.updated.map(m => m.toObject()),
-                created: results.created.map(m => m.toObject()),
+                created: results.created.map(m => m.toObject())
             };
         });
     }
