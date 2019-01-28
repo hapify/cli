@@ -13,7 +13,9 @@ __export(require("./Config"));
 __export(require("./GlobalConfig"));
 function TransformValidationMessage(error) {
     if (error.details && error.details.length) {
-        error.message = error.details.map(d => `${d.message} (${d.path.join('.')})`).join('. ');
+        error.message = error.details
+            .map(d => `${d.message} (${d.path.join('.')})`)
+            .join('. ');
     }
     return error;
 }

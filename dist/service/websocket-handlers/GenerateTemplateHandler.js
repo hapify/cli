@@ -50,19 +50,19 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
     validator() {
         return Joi.object({
             channel: Joi.string().required(),
-            template: Joi.string().required(),
+            template: Joi.string().required()
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get channel
-            const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
+            const channel = (yield this.channelsService.channels()).find(c => c.id === message.data.channel);
             if (!channel) {
                 throw new Error(`Unable to find channel ${message.data.channel}`);
             }
             // Get template
-            const template = channel.templates.find((t) => t.path === message.data.template);
+            const template = channel.templates.find(t => t.path === message.data.template);
             if (!template) {
                 throw new Error(`Unable to find template ${message.data.template}`);
             }

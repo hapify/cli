@@ -21,8 +21,7 @@ const typedi_1 = require("typedi");
 const Api_1 = require("./Api");
 let GeneratorService = class GeneratorService {
     /** Constructor */
-    constructor() {
-    }
+    constructor() { }
     /** Load and returns API Service. Avoid circular dependency */
     api() {
         if (typeof this.apiService === 'undefined') {
@@ -81,7 +80,8 @@ let GeneratorService = class GeneratorService {
             if (model) {
                 payload.ids = [model.id];
             }
-            return (yield this.api().post('generator/run', payload)).data.results[0];
+            return (yield this.api().post('generator/run', payload)).data
+                .results[0];
         });
     }
     /**

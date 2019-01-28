@@ -66,7 +66,7 @@ class Channel extends _1.SingleSave {
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
-                const template = (new _1.Template(this)).fromObject(Object.assign(this.config.templates[i], { content: '' }));
+                const template = new _1.Template(this).fromObject(Object.assign(this.config.templates[i], { content: '' }));
                 yield template.load();
                 this.templates.push(template);
             }
@@ -241,9 +241,9 @@ class Channel extends _1.SingleSave {
         // Do not update name nor id
         // Create or update templates if necessary
         // By keeping the same instances, we will avoid a file saving if the content did not change
-        this.templates = object.templates.map((t) => {
+        this.templates = object.templates.map(t => {
             // Try to find an existing template
-            const existing = this.templates.find((e) => e.path === t.path);
+            const existing = this.templates.find(e => e.path === t.path);
             if (existing) {
                 return existing.fromObject(t);
             }
@@ -273,16 +273,15 @@ class Channel extends _1.SingleSave {
      */
     static listAllFiles(rootPath) {
         // Read the whole directory
-        const entries = Fs.readdirSync(rootPath)
-            .map((dir) => Path.join(rootPath, dir));
+        const entries = Fs.readdirSync(rootPath).map(dir => Path.join(rootPath, dir));
         // Get sub-files
         const subFiles = entries
-            .filter((subPath) => Fs.statSync(subPath).isDirectory())
-            .map((subPath) => Channel.listAllFiles(subPath))
+            .filter(subPath => Fs.statSync(subPath).isDirectory())
+            .map(subPath => Channel.listAllFiles(subPath))
             .reduce((flatten, files) => flatten.concat(files), []);
         // Return files and sub-files
         return entries
-            .filter((subPath) => Fs.statSync(subPath).isFile())
+            .filter(subPath => Fs.statSync(subPath).isFile())
             .concat(subFiles);
     }
     /**
@@ -292,9 +291,9 @@ class Channel extends _1.SingleSave {
     static clearEmptyDirectories(rootPath) {
         // Remove sub-directories
         Fs.readdirSync(rootPath)
-            .map((dir) => Path.join(rootPath, dir))
-            .filter((subPath) => Fs.statSync(subPath).isDirectory())
-            .forEach((subPath) => Channel.clearEmptyDirectories(subPath));
+            .map(dir => Path.join(rootPath, dir))
+            .filter(subPath => Fs.statSync(subPath).isDirectory())
+            .forEach(subPath => Channel.clearEmptyDirectories(subPath));
         // Count remaining files & dirs
         const count = Fs.readdirSync(rootPath).length;
         if (count === 0) {

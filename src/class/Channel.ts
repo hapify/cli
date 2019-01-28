@@ -1,335 +1,376 @@
 import * as Fs from 'fs';
 import * as Path from 'path';
-import {IChannel, IConfig, ISerilizable, IStorable, ConfigSchema, TransformValidationMessage} from '../interface';
-import {ModelsCollection, Template, Validator, SingleSave} from './';
-import {TemplateEngine, TemplateInput} from '../enum';
+import {
+	IChannel,
+	IConfig,
+	ISerilizable,
+	IStorable,
+	ConfigSchema,
+	TransformValidationMessage
+} from '../interface';
+import { ModelsCollection, Template, Validator, SingleSave } from './';
+import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
 import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
-import {FieldType} from './FieldType';
+import { FieldType } from './FieldType';
 
-export class Channel extends SingleSave implements IStorable, ISerilizable<IChannel, Channel> {
+export class Channel extends SingleSave
+	implements IStorable, ISerilizable<IChannel, Channel> {
+	/** @type {string} */
+	public name: string;
+	/** @type {string} */
+	private description: string = null;
+	/** @type {string} */
+	private logo: string = null;
+	/** @type {string} */
+	public id: string;
+	/** @type {string} */
+	private static defaultFolder = 'hapify';
+	/** @type {string} */
+	private static configFile = 'hapify.json';
+	/** @type {IConfig} */
+	public config: IConfig;
+	/** @type {Template[]} Templates instances */
+	public templates: Template[];
+	/** @type {Template[]} Templates instances */
+	public validator: Validator;
+	/** @type {ModelsCollection} List of models container */
+	public modelsCollection: ModelsCollection;
+	/** @type {string} */
+	public templatesPath: string;
 
-  /** @type {string} */
-  public name: string;
-  /** @type {string} */
-  private description: string = null;
-  /** @type {string} */
-  private logo: string = null;
-  /** @type {string} */
-  public id: string;
-  /** @type {string} */
-  private static defaultFolder = 'hapify';
-  /** @type {string} */
-  private static configFile = 'hapify.json';
-  /** @type {IConfig} */
-  public config: IConfig;
-  /** @type {Template[]} Templates instances */
-  public templates: Template[];
-  /** @type {Template[]} Templates instances */
-  public validator: Validator;
-  /** @type {ModelsCollection} List of models container */
-  public modelsCollection: ModelsCollection;
-  /** @type {string} */
-  public templatesPath: string;
+	/**
+	 * Constructor
+	 * @param {string} path
+	 * @param {string|null} name
+	 */
+	constructor(public path: string, name: string = null) {
+		super();
+		this.name = name ? name : Path.basename(path);
+		this.id = md5(this.path);
+		this.templatesPath = Path.join(this.path, Channel.defaultFolder);
+		this.validate();
+	}
 
-  /**
-   * Constructor
-   * @param {string} path
-   * @param {string|null} name
-   */
-  constructor(public path: string, name: string = null) {
-    super();
-    this.name = name ? name : Path.basename(path);
-    this.id = md5(this.path);
-    this.templatesPath = Path.join(this.path, Channel.defaultFolder);
-    this.validate();
-  }
+	/** @inheritDoc */
+	async load(): Promise<void> {
+		// Copy config to instance
+		const path = Path.join(this.path, Channel.configFile);
+		const data = <string>Fs.readFileSync(path, 'utf8');
+		this.config = JSON.parse(data);
+		this.didLoad(data);
 
-  /** @inheritDoc */
-  async load(): Promise<void> {
+		// Complete channel infos
+		if (this.config.name) {
+			this.name = this.config.name;
+		}
+		if (this.config.description) {
+			this.description = this.config.description;
+		}
+		if (this.config.logo) {
+			this.logo = this.config.logo;
+		}
 
-    // Copy config to instance
-    const path = Path.join(this.path, Channel.configFile);
-    const data = <string>Fs.readFileSync(path, 'utf8');
-    this.config = JSON.parse(data);
-    this.didLoad(data);
+		// Load each content file
+		this.templates = [];
+		for (let i = 0; i < this.config.templates.length; i++) {
+			const template = new Template(this).fromObject(
+				Object.assign(this.config.templates[i], { content: '' })
+			);
+			await template.load();
+			this.templates.push(template);
+		}
 
-    // Complete channel infos
-    if (this.config.name) {
-      this.name = this.config.name;
-    }
-    if (this.config.description) {
-      this.description = this.config.description;
-    }
-    if (this.config.logo) {
-      this.logo = this.config.logo;
-    }
+		// Load models
+		this.modelsCollection = await ModelsCollection.getInstance(
+			this.config.project
+		);
 
-    // Load each content file
-    this.templates = [];
-    for (let i = 0; i < this.config.templates.length; i++) {
-      const template = (new Template(this)).fromObject(Object.assign(this.config.templates[i], {content: ''}));
-      await template.load();
-      this.templates.push(template);
-    }
+		// Load validator
+		this.validator = new Validator(this, this.config.validatorPath);
+		await this.validator.load();
+	}
 
-    // Load models
-    this.modelsCollection = await ModelsCollection.getInstance(this.config.project);
+	/** @inheritDoc */
+	async save(): Promise<void> {
+		// Copy all contents to files and update config
+		for (const template of this.templates) {
+			await template.save();
+		}
+		this.config.templates = this.templates.map((m: Template) => {
+			const t = m.toObject();
+			delete t.content;
+			return t;
+		});
 
-    // Load validator
-    this.validator = new Validator(this, this.config.validatorPath);
-    await this.validator.load();
-  }
+		// Write validator
+		await this.validator.save();
+		this.config.validatorPath = this.validator.path;
 
-  /** @inheritDoc */
-  async save(): Promise<void> {
+		// Write file if necessary
+		const data = JSON.stringify(this.config, null, 2);
+		if (this.shouldSave(data)) {
+			const path = `${this.path}/${Channel.configFile}`;
+			Fs.writeFileSync(path, data, 'utf8');
+		}
 
-    // Copy all contents to files and update config
-    for (const template of this.templates) {
-      await template.save();
-    }
-    this.config.templates = this.templates.map((m: Template) => {
-      const t = m.toObject();
-      delete t.content;
-      return t;
-    });
+		// Cleanup files in template path
+		const legitFiles = [Path.join(this.path, this.config.validatorPath)];
+		for (const template of this.templates) {
+			legitFiles.push(
+				Path.join(this.templatesPath, template.contentPath)
+			);
+		}
+		const allFiles = Channel.listAllFiles(
+			Path.join(this.path, Channel.defaultFolder)
+		);
+		for (const filePath of allFiles) {
+			if (legitFiles.indexOf(filePath) < 0) {
+				Fs.unlinkSync(filePath);
+			}
+		}
+		Channel.clearEmptyDirectories(
+			Path.join(this.path, Channel.defaultFolder)
+		);
+	}
 
-    // Write validator
-    await this.validator.save();
-    this.config.validatorPath = this.validator.path;
+	/**
+	 * Denotes if the template should be considered as empty
+	 * @returns {boolean}
+	 */
+	isEmpty(): boolean {
+		const validatorIsEmpty = this.validator.isEmpty();
+		const templatesAreEmpty = this.templates.every(
+			(template: Template): boolean => template.isEmpty()
+		);
 
-    // Write file if necessary
-    const data = JSON.stringify(this.config, null, 2);
-    if (this.shouldSave(data)) {
-      const path = `${this.path}/${Channel.configFile}`;
-      Fs.writeFileSync(path, data, 'utf8');
-    }
+		return validatorIsEmpty && templatesAreEmpty;
+	}
 
-    // Cleanup files in template path
-    const legitFiles = [Path.join(this.path, this.config.validatorPath)];
-    for (const template of this.templates) {
-      legitFiles.push(Path.join(this.templatesPath, template.contentPath));
-    }
-    const allFiles = Channel.listAllFiles(Path.join(this.path, Channel.defaultFolder));
-    for (const filePath of allFiles) {
-      if (legitFiles.indexOf(filePath) < 0) {
-        Fs.unlinkSync(filePath);
-      }
-    }
-    Channel.clearEmptyDirectories(Path.join(this.path, Channel.defaultFolder));
-  }
+	/**
+	 * Remove empty templates
+	 * @returns {void}
+	 */
+	filter(): void {
+		this.templates = this.templates.filter(
+			(template: Template): boolean => {
+				return !template.isEmpty();
+			}
+		);
+	}
 
-  /**
-   * Denotes if the template should be considered as empty
-   * @returns {boolean}
-   */
-  isEmpty(): boolean {
-    const validatorIsEmpty = this.validator.isEmpty();
-    const templatesAreEmpty = this.templates.every((template: Template): boolean => template.isEmpty());
+	/**
+	 * Denotes if the config file exists and its templates
+	 * If something is not valid, it throws an error.
+	 * @throws {Error}
+	 */
+	private validate(): void {
+		const path = Path.join(this.path, Channel.configFile);
+		if (!Fs.existsSync(path)) {
+			throw new Error(`Channel config's path ${path} does not exists.`);
+		}
 
-    return validatorIsEmpty && templatesAreEmpty;
-  }
+		let config: IConfig;
+		try {
+			config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
+		} catch (error) {
+			throw new Error(
+				`An error occurred while reading Channel config's at ${path}: ${error.toString()}`
+			);
+		}
 
-  /**
-   * Remove empty templates
-   * @returns {void}
-   */
-  filter(): void {
-    this.templates = this.templates.filter((template: Template): boolean => {
-      return !template.isEmpty();
-    });
-  }
+		// Validate the incoming config
+		const validation = Joi.validate(config, ConfigSchema);
+		if (validation.error) {
+			// Transform Joi message
+			TransformValidationMessage(validation.error);
+			throw validation.error;
+		}
 
-  /**
-   * Denotes if the config file exists and its templates
-   * If something is not valid, it throws an error.
-   * @throws {Error}
-   */
-  private validate(): void {
-    const path = Path.join(this.path, Channel.configFile);
-    if (!Fs.existsSync(path)) {
-      throw new Error(`Channel config's path ${path} does not exists.`);
-    }
+		for (const template of config.templates) {
+			const contentPath = Path.join(
+				this.templatesPath,
+				Template.computeContentPath(template)
+			);
+			if (!Fs.existsSync(contentPath)) {
+				throw new Error(
+					`Channel template's path ${contentPath} does not exists.`
+				);
+			}
+		}
 
-    let config: IConfig;
-    try {
-      config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
-    } catch (error) {
-      throw new Error(`An error occurred while reading Channel config's at ${path}: ${error.toString()}`);
-    }
+		const validatorPath = Path.join(this.path, config.validatorPath);
+		if (!Fs.existsSync(validatorPath)) {
+			throw new Error(
+				`Channel validator's path ${validatorPath} does not exists.`
+			);
+		}
+	}
 
-    // Validate the incoming config
-    const validation = Joi.validate(config, ConfigSchema);
-    if (validation.error) {
-      // Transform Joi message
-      TransformValidationMessage(validation.error);
-      throw validation.error;
-    }
+	/**
+	 * Denotes if the config file exists
+	 * @param {string} path
+	 * @return {boolean}
+	 */
+	public static configExists(path: string): boolean {
+		const configPath = Path.join(path, Channel.configFile);
+		return Fs.existsSync(configPath);
+	}
 
-    for (const template of config.templates) {
-      const contentPath = Path.join(this.templatesPath, Template.computeContentPath(template));
-      if (!Fs.existsSync(contentPath)) {
-        throw new Error(`Channel template's path ${contentPath} does not exists.`);
-      }
-    }
+	/**
+	 * Init a Hapify structure within a directory
+	 * @param {string} path
+	 * @return {Promise<void>}
+	 */
+	public static async create(path: string): Promise<void> {
+		if (!Fs.existsSync(path)) {
+			throw new Error(`Channel's path ${path} does not exists.`);
+		}
+		const configPath = Path.join(path, Channel.configFile);
+		if (Fs.existsSync(configPath)) {
+			throw new Error(`A channel already exists in this directory.`);
+		}
+		const config: IConfig = {
+			validatorPath: `${Channel.defaultFolder}/validator.js`,
+			name: 'New channel',
+			description: 'A brand new channel',
+			project: 'projectId',
+			defaultFields: [
+				{
+					name: 'Id',
+					type: FieldType.String,
+					subtype: null,
+					reference: null,
+					primary: true,
+					unique: false,
+					label: false,
+					nullable: false,
+					multiple: false,
+					important: false,
+					searchable: false,
+					sortable: false,
+					isPrivate: false,
+					internal: true,
+					restricted: false,
+					ownership: true
+				}
+			],
+			templates: [
+				{
+					path: 'models/{model.hyphen}/hello.js',
+					engine: TemplateEngine.Hpf,
+					input: TemplateInput.One
+				}
+			]
+		};
 
-    const validatorPath = Path.join(this.path, config.validatorPath);
-    if (!Fs.existsSync(validatorPath)) {
-      throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
-    }
-  }
+		// Create dir
+		mkdirp.sync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
 
-  /**
-   * Denotes if the config file exists
-   * @param {string} path
-   * @return {boolean}
-   */
-  public static configExists(path: string): boolean {
-    const configPath = Path.join(path, Channel.configFile);
-    return Fs.existsSync(configPath);
-  }
+		// Dump config file
+		const configData = JSON.stringify(config, null, 2);
+		Fs.writeFileSync(configPath, configData, 'utf8');
 
-  /**
-   * Init a Hapify structure within a directory
-   * @param {string} path
-   * @return {Promise<void>}
-   */
-  public static async create(path: string): Promise<void> {
-    if (!Fs.existsSync(path)) {
-      throw new Error(`Channel's path ${path} does not exists.`);
-    }
-    const configPath = Path.join(path, Channel.configFile);
-    if (Fs.existsSync(configPath)) {
-      throw new Error(`A channel already exists in this directory.`);
-    }
-    const config: IConfig = {
-      validatorPath: `${Channel.defaultFolder}/validator.js`,
-      name: 'New channel',
-      description: 'A brand new channel',
-      project: 'projectId',
-      defaultFields: [
-        {
-          name: 'Id',
-          type: FieldType.String,
-          subtype: null,
-          reference: null,
-          primary: true,
-          unique: false,
-          label: false,
-          nullable: false,
-          multiple: false,
-          important: false,
-          searchable: false,
-          sortable: false,
-          isPrivate: false,
-          internal: true,
-          restricted: false,
-          ownership: true
-        }
-      ],
-      templates: [
-        {
-          path: 'models/{model.hyphen}/hello.js',
-          engine: TemplateEngine.Hpf,
-          input: TemplateInput.One
-        }
-      ]
-    };
+		// Create template file
+		const templateContent = `// Hello <<M A>>`;
+		const templatePath = Path.join(
+			path,
+			Channel.defaultFolder,
+			'models',
+			'model',
+			'hello.js.hpf'
+		);
+		Fs.writeFileSync(templatePath, templateContent, 'utf8');
 
-    // Create dir
-    mkdirp.sync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
+		// Create validator file
+		const validatorContent = `// Models validation script\nreturn { errors: [], warnings: [] };`;
+		const validatorPath = Path.join(
+			path,
+			Channel.defaultFolder,
+			'validator.js'
+		);
+		Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
+	}
 
-    // Dump config file
-    const configData = JSON.stringify(config, null, 2);
-    Fs.writeFileSync(configPath, configData, 'utf8');
+	/** @inheritDoc */
+	public fromObject(object: IChannel): Channel {
+		// Do not update name nor id
+		// Create or update templates if necessary
+		// By keeping the same instances, we will avoid a file saving if the content did not change
+		this.templates = object.templates.map(t => {
+			// Try to find an existing template
+			const existing = this.templates.find(e => e.path === t.path);
+			if (existing) {
+				return existing.fromObject(t);
+			}
+			// Otherwise create a new temaplte
+			const newOne = new Template(this);
+			return newOne.fromObject(t);
+		});
 
-    // Create template file
-    const templateContent = `// Hello <<M A>>`;
-    const templatePath = Path.join(path, Channel.defaultFolder, 'models', 'model', 'hello.js.hpf');
-    Fs.writeFileSync(templatePath, templateContent, 'utf8');
+		// Update validator
+		this.validator.content = object.validator;
 
-    // Create validator file
-    const validatorContent = `// Models validation script\nreturn { errors: [], warnings: [] };`;
-    const validatorPath = Path.join(path, Channel.defaultFolder, 'validator.js');
-    Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
-  }
+		return this;
+	}
 
-  /** @inheritDoc */
-  public fromObject(object: IChannel): Channel {
+	/** @inheritDoc */
+	public toObject(): IChannel {
+		return {
+			id: this.id,
+			name: this.name,
+			description: this.description,
+			logo: this.logo,
+			templates: this.templates.map((template: Template) =>
+				template.toObject()
+			),
+			validator: this.validator.content
+		};
+	}
 
-    // Do not update name nor id
-    // Create or update templates if necessary
-    // By keeping the same instances, we will avoid a file saving if the content did not change
-    this.templates = object.templates.map((t) => {
-      // Try to find an existing template
-      const existing = this.templates.find((e) => e.path === t.path);
-      if (existing) {
-        return existing.fromObject(t);
-      }
-      // Otherwise create a new temaplte
-      const newOne = new Template(this);
-      return newOne.fromObject(t);
-    });
+	/**
+	 * Get all files' absolute path from a directory
+	 * @param {string} rootPath
+	 * @return {string[]}
+	 */
+	private static listAllFiles(rootPath: string): string[] {
+		// Read the whole directory
+		const entries = Fs.readdirSync(rootPath).map(dir =>
+			Path.join(rootPath, dir)
+		);
 
-    // Update validator
-    this.validator.content = object.validator;
+		// Get sub-files
+		const subFiles = entries
+			.filter(subPath => Fs.statSync(subPath).isDirectory())
+			.map(subPath => Channel.listAllFiles(subPath))
+			.reduce(
+				(flatten: string[], files: string[]) => flatten.concat(files),
+				[]
+			);
 
-    return this;
-  }
+		// Return files and sub-files
+		return entries
+			.filter(subPath => Fs.statSync(subPath).isFile())
+			.concat(subFiles);
+	}
 
-  /** @inheritDoc */
-  public toObject(): IChannel {
-    return {
-      id: this.id,
-      name: this.name,
-      description: this.description,
-      logo: this.logo,
-      templates: this.templates.map((template: Template) => template.toObject()),
-      validator: this.validator.content
-    };
-  }
+	/**
+	 * Delete all directories if empty
+	 * @param {string} rootPath
+	 */
+	private static clearEmptyDirectories(rootPath: string): void {
+		// Remove sub-directories
+		Fs.readdirSync(rootPath)
+			.map(dir => Path.join(rootPath, dir))
+			.filter(subPath => Fs.statSync(subPath).isDirectory())
+			.forEach(subPath => Channel.clearEmptyDirectories(subPath));
 
-  /**
-   * Get all files' absolute path from a directory
-   * @param {string} rootPath
-   * @return {string[]}
-   */
-  private static listAllFiles(rootPath: string): string[] {
+		// Count remaining files & dirs
+		const count = Fs.readdirSync(rootPath).length;
 
-    // Read the whole directory
-    const entries = Fs.readdirSync(rootPath)
-      .map((dir) => Path.join(rootPath, dir));
-
-    // Get sub-files
-    const subFiles = entries
-      .filter((subPath) => Fs.statSync(subPath).isDirectory())
-      .map((subPath) => Channel.listAllFiles(subPath))
-      .reduce((flatten: string[], files: string[]) => flatten.concat(files), []);
-
-    // Return files and sub-files
-    return entries
-      .filter((subPath) => Fs.statSync(subPath).isFile())
-      .concat(subFiles);
-  }
-
-  /**
-   * Delete all directories if empty
-   * @param {string} rootPath
-   */
-  private static clearEmptyDirectories(rootPath: string): void {
-
-    // Remove sub-directories
-    Fs.readdirSync(rootPath)
-      .map((dir) => Path.join(rootPath, dir))
-      .filter((subPath) => Fs.statSync(subPath).isDirectory())
-      .forEach((subPath) => Channel.clearEmptyDirectories(subPath));
-
-    // Count remaining files & dirs
-    const count = Fs.readdirSync(rootPath).length;
-
-    if (count === 0) {
-      Fs.rmdirSync(rootPath);
-    }
-  }
+		if (count === 0) {
+			Fs.rmdirSync(rootPath);
+		}
+	}
 }

@@ -93,11 +93,12 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
      */
     static sniff(path, depth = 2, from = path) {
         // Get channels in sub-directories first
-        const channels = depth <= 0 ? [] :
-            Fs.readdirSync(path)
-                .map((dir) => Path.join(path, dir))
-                .filter((subPath) => Fs.statSync(subPath).isDirectory())
-                .map((subPath) => ChannelsService_1.sniff(subPath, depth - 1, from))
+        const channels = depth <= 0
+            ? []
+            : Fs.readdirSync(path)
+                .map(dir => Path.join(path, dir))
+                .filter(subPath => Fs.statSync(subPath).isDirectory())
+                .map(subPath => ChannelsService_1.sniff(subPath, depth - 1, from))
                 .reduce((flatten, channels) => flatten.concat(channels), []);
         // Get channel of current directory if exists
         if (class_1.Channel.configExists(path)) {

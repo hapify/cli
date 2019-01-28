@@ -47,16 +47,16 @@ let PathPreviewHandlerService = class PathPreviewHandlerService {
     validator() {
         return Joi.object({
             model: Joi.string(),
-            path: Joi.string().required(),
+            path: Joi.string().required()
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get model, if any
-            const model = message.data.model ?
-                (yield (yield this.channelsService.modelsCollection()).find(message.data.model)) :
-                null;
+            const model = message.data.model
+                ? yield (yield this.channelsService.modelsCollection()).find(message.data.model)
+                : null;
             // Compute the path
             return yield this.generatorService.pathPreview(message.data.path, model);
         });

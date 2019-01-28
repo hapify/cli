@@ -3,19 +3,17 @@ import { PresetsCollection } from '../class';
 
 @Service()
 export class PresetsService {
+	/**
+	 * Constructor
+	 */
+	constructor() {}
 
-  /**
-   * Constructor
-   */
-  constructor() {
-  }
-
-  /**
-   * Returns the presets collection
-   * @return {PresetsCollection}
-   * @throws {Error}
-   */
-  public async collection(): Promise<PresetsCollection> {
-    return await PresetsCollection.getInstance();
-  }
+	/**
+	 * Returns the presets collection
+	 * @return {PresetsCollection}
+	 * @throws {Error}
+	 */
+	public async collection(): Promise<PresetsCollection> {
+		return await PresetsCollection.getInstance();
+	}
 }

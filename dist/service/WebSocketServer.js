@@ -250,7 +250,9 @@ let WebSocketServerService = class WebSocketServerService {
     createToken() {
         return __awaiter(this, void 0, void 0, function* () {
             const wsAddress = this.server.address();
-            const token = Jwt.sign({ name: this.randomName }, this.randomSecret, { expiresIn: this.tokenExpires });
+            const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
+                expiresIn: this.tokenExpires
+            });
             const data = JSON.stringify({
                 url: `ws://${wsAddress.address}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`
             }, null, 2);

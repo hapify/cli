@@ -34,8 +34,7 @@ const mkdirp_1 = __importDefault(require("mkdirp"));
 const jszip_1 = __importDefault(require("jszip"));
 let WriterService = class WriterService {
     /** Constructor */
-    constructor() {
-    }
+    constructor() { }
     /**
      * Zip results and write to disk
      * @param {string} path

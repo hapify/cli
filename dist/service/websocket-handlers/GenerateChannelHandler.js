@@ -56,7 +56,7 @@ let GenerateChannelHandlerService = class GenerateChannelHandlerService {
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get channel
-            const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
+            const channel = (yield this.channelsService.channels()).find(c => c.id === message.data.channel);
             if (!channel) {
                 throw new Error(`Unable to find channel ${message.data.channel}`);
             }

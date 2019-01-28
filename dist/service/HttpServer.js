@@ -71,7 +71,9 @@ let HttpServerService = class HttpServerService {
             if (this.started())
                 return;
             // Choose port
-            this._port = this.optionsService.port() ? this.optionsService.port() : yield this.findAvailablePort();
+            this._port = this.optionsService.port()
+                ? this.optionsService.port()
+                : yield this.findAvailablePort();
             // Create server
             this.server = new hapi_1.Server({
                 port: this._port,
@@ -91,7 +93,7 @@ let HttpServerService = class HttpServerService {
                     directory: {
                         path: '.',
                         redirectToSlash: true,
-                        index: true,
+                        index: true
                     }
                 }
             });
@@ -152,7 +154,9 @@ let HttpServerService = class HttpServerService {
      * @return {string|null}
      */
     url() {
-        return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
+        return this.started()
+            ? `http://${this.optionsService.hostname()}:${this._port}`
+            : null;
     }
     /**
      * Test ports and returns the first one available
@@ -166,8 +170,9 @@ let HttpServerService = class HttpServerService {
             }
             const requiredPort = this._port + increment;
             const possiblePort = yield DetectPort(requiredPort);
-            return requiredPort !== possiblePort ?
-                this.findAvailablePort(increment + 1) : requiredPort;
+            return requiredPort !== possiblePort
+                ? this.findAvailablePort(increment + 1)
+                : requiredPort;
         });
     }
 };

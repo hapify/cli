@@ -23,8 +23,7 @@ let PresetsService = class PresetsService {
     /**
      * Constructor
      */
-    constructor() {
-    }
+    constructor() { }
     /**
      * Returns the presets collection
      * @return {PresetsCollection}

@@ -42,7 +42,9 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     }
     /** @inheritDoc */
     validator() {
-        return Joi.array().items(interface_1.ModelSchema).min(0);
+        return Joi.array()
+            .items(interface_1.ModelSchema)
+            .min(0);
     }
     /** @inheritDoc */
     handle(message) {

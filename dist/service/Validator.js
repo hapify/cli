@@ -35,8 +35,7 @@ let ValidatorService = class ValidatorService {
     /**
      * Constructor
      */
-    constructor() {
-    }
+    constructor() { }
     /**
      * Run validation on a single model for a single channel
      *
@@ -56,7 +55,7 @@ let ValidatorService = class ValidatorService {
                     lineOffset: -1,
                     contextCodeGeneration: {
                         strings: false,
-                        wasm: false,
+                        wasm: false
                     }
                 }).runInContext(final);
             }

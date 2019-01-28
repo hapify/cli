@@ -9,7 +9,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Joi = __importStar(require("joi"));
 exports.ValidatorResultSchema = Joi.object({
-    errors: Joi.array().items(Joi.string()).required().min(0),
-    warnings: Joi.array().items(Joi.string()).required().min(0)
+    errors: Joi.array()
+        .items(Joi.string())
+        .required()
+        .min(0),
+    warnings: Joi.array()
+        .items(Joi.string())
+        .required()
+        .min(0)
 });
 //# sourceMappingURL=ValidatorResult.js.map

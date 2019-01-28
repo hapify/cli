@@ -42,11 +42,13 @@ let GlobalConfigService = class GlobalConfigService {
     /** Create file if not exists */
     init() {
         // Create path
-        if (!Fs.existsSync(this.rootPath) || !Fs.statSync(this.rootPath).isDirectory()) {
+        if (!Fs.existsSync(this.rootPath) ||
+            !Fs.statSync(this.rootPath).isDirectory()) {
             mkdirp_1.default.sync(this.rootPath);
         }
         // Create file
-        if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {
+        if (!Fs.existsSync(this.filePath) ||
+            !Fs.statSync(this.filePath).isFile()) {
             this.save();
         }
         // Load & validate config
@@ -65,7 +67,9 @@ let GlobalConfigService = class GlobalConfigService {
     validate(data = this.data) {
         const validation = Joi.validate(data, interface_1.GlobalConfigSchema);
         if (validation.error) {
-            const errorMessage = validation.error.details.map((v) => v.message).join(', ');
+            const errorMessage = validation.error.details
+                .map(v => v.message)
+                .join(', ');
             throw new Error(`Global config format error: ${errorMessage}.`);
         }
     }

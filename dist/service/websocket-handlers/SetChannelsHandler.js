@@ -42,7 +42,9 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
     }
     /** @inheritDoc */
     validator() {
-        return Joi.array().items(interface_1.ChannelSchema).min(0);
+        return Joi.array()
+            .items(interface_1.ChannelSchema)
+            .min(0);
     }
     /** @inheritDoc */
     handle(message) {
@@ -53,7 +55,7 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
             const toSaves = message.data;
             // For each new content, get the corresponding channel and save it
             for (const toSave of toSaves) {
-                const channel = channels.find((c) => c.id === toSave.id);
+                const channel = channels.find(c => c.id === toSave.id);
                 // Scream if not found
                 if (!channel) {
                     throw new Error(`Channel not found: ${toSave.name}`);

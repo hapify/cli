@@ -25,7 +25,7 @@ class PresetsCollection {
         return __awaiter(this, void 0, void 0, function* () {
             const path = PresetsCollection.path();
             // Try to find an existing collection
-            const presetsCollection = PresetsCollection.instances.find((m) => m.path === path);
+            const presetsCollection = PresetsCollection.instances.find(m => m.path === path);
             if (presetsCollection) {
                 return presetsCollection;
             }
@@ -43,13 +43,13 @@ class PresetsCollection {
      */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const presets = yield this.apiService.get('preset', {
+            const presets = yield this.apiService
+                .get('preset', {
                 _page: 0,
                 _limit: config_1.ConfigRemote.presetsLimit
             })
                 .then(response => {
-                return response.data.items
-                    .map((p) => ({
+                return response.data.items.map((p) => ({
                     id: p._id,
                     name: p.name,
                     name__fr: p.name__fr,
@@ -60,7 +60,7 @@ class PresetsCollection {
                         id: m._id,
                         name: m.name,
                         fields: m.fields,
-                        accesses: m.accesses,
+                        accesses: m.accesses
                     }))
                 }));
             });

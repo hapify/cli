@@ -16,7 +16,7 @@ class Model {
             update: interface_1.Access.GUEST,
             remove: interface_1.Access.GUEST,
             search: interface_1.Access.GUEST,
-            count: interface_1.Access.GUEST,
+            count: interface_1.Access.GUEST
         };
     }
     /** @inheritDoc */

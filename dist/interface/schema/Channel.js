@@ -12,9 +12,17 @@ const Template_1 = require("./Template");
 exports.ChannelSchema = Joi.object({
     id: Joi.string().required(),
     name: Joi.string().required(),
-    description: Joi.string().required().allow(null),
-    logo: Joi.string().required().allow(null),
-    validator: Joi.string().required().allow(''),
-    templates: Joi.array().items(Template_1.TemplateSchema).required()
+    description: Joi.string()
+        .required()
+        .allow(null),
+    logo: Joi.string()
+        .required()
+        .allow(null),
+    validator: Joi.string()
+        .required()
+        .allow(''),
+    templates: Joi.array()
+        .items(Template_1.TemplateSchema)
+        .required()
 });
 //# sourceMappingURL=Channel.js.map

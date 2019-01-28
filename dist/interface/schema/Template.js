@@ -13,13 +13,23 @@ const engines = [enum_1.TemplateEngine.Hpf, enum_1.TemplateEngine.JavaScript];
 const inputs = [enum_1.TemplateInput.One, enum_1.TemplateInput.All];
 exports.TemplateSchema = Joi.object({
     path: Joi.string().required(),
-    engine: Joi.string().valid(engines).required(),
-    input: Joi.string().valid(inputs).required(),
-    content: Joi.string().required().allow('')
+    engine: Joi.string()
+        .valid(engines)
+        .required(),
+    input: Joi.string()
+        .valid(inputs)
+        .required(),
+    content: Joi.string()
+        .required()
+        .allow('')
 });
 exports.ConfigTemplateSchema = Joi.object({
     path: Joi.string().required(),
-    engine: Joi.string().valid(engines).required(),
-    input: Joi.string().valid(inputs).required()
+    engine: Joi.string()
+        .valid(engines)
+        .required(),
+    input: Joi.string()
+        .valid(inputs)
+        .required()
 });
 //# sourceMappingURL=Template.js.map

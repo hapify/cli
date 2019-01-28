@@ -51,9 +51,9 @@ class Validator extends _1.SingleSave {
      * @returns {boolean}
      */
     isEmpty() {
-        return typeof this.content !== 'string'
-            || this.content === null
-            || this.content.trim().length === 0;
+        return (typeof this.content !== 'string' ||
+            this.content === null ||
+            this.content.trim().length === 0);
     }
 }
 exports.Validator = Validator;

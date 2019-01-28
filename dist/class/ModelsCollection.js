@@ -33,7 +33,7 @@ class ModelsCollection extends _1.SingleSave {
         return __awaiter(this, void 0, void 0, function* () {
             const path = ModelsCollection.path(project);
             // Try to find an existing collection
-            const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
+            const modelsCollection = ModelsCollection.instances.find(m => m.path === path);
             if (modelsCollection) {
                 return modelsCollection;
             }
@@ -48,18 +48,18 @@ class ModelsCollection extends _1.SingleSave {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = yield this.apiService.get('model', {
+            const models = yield this.apiService
+                .get('model', {
                 _page: 0,
                 _limit: config_1.ConfigRemote.modelsLimit,
                 project: this.project
             })
                 .then(response => {
-                return response.data.items
-                    .map((m) => ({
+                return response.data.items.map((m) => ({
                     id: m._id,
                     name: m.name,
                     fields: m.fields,
-                    accesses: m.accesses,
+                    accesses: m.accesses
                 }));
             });
             this.fromObject(models);
@@ -77,18 +77,19 @@ class ModelsCollection extends _1.SingleSave {
                     project: this.project,
                     name: model.name,
                     fields: model.fields,
-                    accesses: model.accesses,
+                    accesses: model.accesses
                 });
                 model.id = response.data._id;
             }
             // Get models to update
-            const toUpdate = this.models.filter(m => typeof this.hashes[m.id] === 'string' && this.hashes[m.id] !== m.hash());
+            const toUpdate = this.models.filter(m => typeof this.hashes[m.id] === 'string' &&
+                this.hashes[m.id] !== m.hash());
             // Update models
             for (const model of toUpdate) {
                 yield this.apiService.patch(`model/${model.id}`, {
                     name: model.name,
                     fields: model.fields,
-                    accesses: model.accesses,
+                    accesses: model.accesses
                 });
             }
             // Get models to delete
@@ -114,7 +115,7 @@ class ModelsCollection extends _1.SingleSave {
      */
     find(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.models.find((instance) => instance.id === id);
+            return this.models.find(instance => instance.id === id);
         });
     }
     /**

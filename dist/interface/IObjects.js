@@ -13,12 +13,7 @@ class Access {
      * @return {string[]}
      */
     static list() {
-        return [
-            Access.ADMIN,
-            Access.OWNER,
-            Access.AUTHENTICATED,
-            Access.GUEST,
-        ];
+        return [Access.ADMIN, Access.OWNER, Access.AUTHENTICATED, Access.GUEST];
     }
 }
 Access.GUEST = 'guest';

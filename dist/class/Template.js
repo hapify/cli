@@ -57,9 +57,9 @@ class Template extends _1.SingleSave {
      * @returns {boolean}
      */
     isEmpty() {
-        return typeof this.content !== 'string'
-            || this.content === null
-            || this.content.trim().length === 0;
+        return (typeof this.content !== 'string' ||
+            this.content === null ||
+            this.content.trim().length === 0);
     }
     /**
      * Denotes if the template needs a specific model to be generated
