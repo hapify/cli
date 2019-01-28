@@ -30,10 +30,10 @@ export class NewModelHandlerService implements IWebSocketHandler {
 	async handle(message: IWebSocketMessage): Promise<IModel> {
 		const model = new Model();
 		model.fromObject({
-			id: Model.guid(),
+			id: Model.generateTempId(),
 			name: message.data.name as string,
 			fields: await this.infoService.fields(),
-			accesses: model.accesses
+			accesses: Model.defaultAccesses()
 		});
 		return model.toObject();
 	}

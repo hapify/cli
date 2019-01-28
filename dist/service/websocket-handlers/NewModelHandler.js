@@ -49,10 +49,10 @@ let NewModelHandlerService = class NewModelHandlerService {
         return __awaiter(this, void 0, void 0, function* () {
             const model = new class_1.Model();
             model.fromObject({
-                id: class_1.Model.guid(),
+                id: class_1.Model.generateTempId(),
                 name: message.data.name,
                 fields: yield this.infoService.fields(),
-                accesses: model.accesses
+                accesses: class_1.Model.defaultAccesses()
             });
             return model.toObject();
         });
