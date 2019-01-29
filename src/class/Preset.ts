@@ -1,7 +1,7 @@
-import { IPreset, IModel, ISerilizable } from '../interface';
+import { IPreset, IModel, ISerializable } from '../interface';
 import { Model } from './';
 
-export class Preset implements ISerilizable<IPreset, Preset>, IPreset {
+export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 	/** @type {string} The model's unique id */
 	id: string;
 	/** @type {string} The preset icon */

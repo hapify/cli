@@ -1,7 +1,7 @@
-import { IField, ISerilizable } from '../interface';
+import { IField, ISerializable } from '../interface';
 import { FieldType } from './';
 
-export class Field implements ISerilizable<IField, Field> {
+export class Field implements ISerializable<IField, Field> {
 	/** @type {string} The field's name */
 	name: string;
 	/** @type {string} The field's type */

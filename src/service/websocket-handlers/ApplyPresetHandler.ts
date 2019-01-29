@@ -3,7 +3,8 @@ import {
 	WebSocketMessages,
 	IWebSocketHandler,
 	IWebSocketMessage,
-	ModelSchema
+	ModelSchema,
+	IModel
 } from '../../interface';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
@@ -34,7 +35,7 @@ export class ApplyPresetHandlerService implements IWebSocketHandler {
 
 	/** @inheritDoc */
 	async handle(message: IWebSocketMessage): Promise<any> {
-		const models = message.data.models.map(m => {
+		const models = message.data.models.map((m: IModel) => {
 			const model = new Model();
 			model.fromObject(m);
 			return model;

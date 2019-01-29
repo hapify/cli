@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { IModel, IField, ISerilizable, Access, IAccesses } from '../interface';
+import { IModel, IField, ISerializable, Access, IAccesses } from '../interface';
 import { Field } from './';
 
 /** Random function */
@@ -8,7 +8,7 @@ function _p8(s?: boolean) {
 	return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p;
 }
 
-export class Model implements ISerilizable<IModel, Model>, IModel {
+export class Model implements ISerializable<IModel, Model>, IModel {
 	/** @type {string} The model's unique id */
 	id: string;
 	/** @type {string} The model's name */

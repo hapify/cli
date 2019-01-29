@@ -3,7 +3,7 @@ import * as Path from 'path';
 import {
 	ITemplate,
 	IStorable,
-	ISerilizable,
+	ISerializable,
 	IConfigTemplate
 } from '../interface';
 import { TemplateInput, TemplateEngine, SentenceFormat } from '../enum';
@@ -13,7 +13,7 @@ import { StringService } from '../service/String';
 import mkdirp from 'mkdirp';
 
 export class Template extends SingleSave
-	implements IStorable, ISerilizable<ITemplate, Template>, ITemplate {
+	implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */
 	private static defaultFolder = 'model';
 	/** @type {string} The template's path */

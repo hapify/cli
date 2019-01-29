@@ -1,10 +1,10 @@
-import { IModel, IPreset, ISerilizable } from '../interface';
+import { IModel, IPreset, ISerializable } from '../interface';
 import { Preset } from './';
 import { ApiService, IApiModel, IApiPreset } from '../service';
 import { Container } from 'typedi';
 import { ConfigRemote } from '../config';
 
-export class PresetsCollection implements ISerilizable<IPreset[], Preset[]> {
+export class PresetsCollection implements ISerializable<IPreset[], Preset[]> {
 	/** @type {Preset[]} The list of preset instances */
 	private presets: Preset[] = [];
 	/** @type {Model[]} Remote API service */

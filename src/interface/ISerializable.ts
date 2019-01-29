@@ -1,7 +1,7 @@
 /**
  * Represent a class that can be stringified and un-stringified
  */
-export interface ISerilizable<IT, T> {
+export interface ISerializable<IT, T> {
 	/**
 	 * Bind properties from the base object to this object
 	 * @param {IT} object

@@ -53,7 +53,7 @@ let ApplyPresetHandlerService = class ApplyPresetHandlerService {
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = message.data.models.map(m => {
+            const models = message.data.models.map((m) => {
                 const model = new class_1.Model();
                 model.fromObject(m);
                 return model;

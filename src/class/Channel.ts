@@ -3,7 +3,7 @@ import * as Path from 'path';
 import {
 	IChannel,
 	IConfig,
-	ISerilizable,
+	ISerializable,
 	IStorable,
 	ConfigSchema,
 	IField,
@@ -17,7 +17,7 @@ import * as Joi from 'joi';
 import { FieldType } from './FieldType';
 
 export class Channel extends SingleSave
-	implements IStorable, ISerilizable<IChannel, Channel> {
+	implements IStorable, ISerializable<IChannel, Channel> {
 	/** @type {string} */
 	public name: string;
 	/** @type {string} */

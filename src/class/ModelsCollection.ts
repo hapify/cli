@@ -1,11 +1,11 @@
-import { IModel, IStorable, ISerilizable } from '../interface';
+import { IModel, IStorable, ISerializable } from '../interface';
 import { Model, SingleSave } from './';
 import { ApiService, IApiModel } from '../service';
 import { Container } from 'typedi';
 import { ConfigRemote } from '../config';
 
 export class ModelsCollection extends SingleSave
-	implements IStorable, ISerilizable<IModel[], Model[]> {
+	implements IStorable, ISerializable<IModel[], Model[]> {
 	/** @type {Model[]} The list of model instances */
 	private models: Model[];
 	/** @type {Model[]} Remote API service */
