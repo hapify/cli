@@ -3,7 +3,6 @@ import {
 	WebSocketMessages,
 	IWebSocketHandler,
 	IWebSocketMessage,
-	ITemplate,
 	TemplateSchema
 } from '../../interface';
 import { ChannelsService } from '../Channels';
@@ -51,9 +50,7 @@ export class TemplatePreviewHandlerService implements IWebSocketHandler {
 			? await channel.modelsCollection.find(message.data.model)
 			: null;
 		// Get template
-		const templateData: ITemplate = message.data.template;
-		const template = new Template(channel);
-		template.fromObject(templateData);
+		const template = new Template(channel, message.data.template);
 		// Compute the path
 		return this.generatorService.run(template, model);
 	}

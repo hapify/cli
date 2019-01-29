@@ -311,7 +311,7 @@ export class Channel extends SingleSave
 			if (existing) {
 				return existing.fromObject(t);
 			}
-			// Otherwise create a new temaplte
+			// Otherwise create a new template
 			return new Template(this, t);
 		});
 

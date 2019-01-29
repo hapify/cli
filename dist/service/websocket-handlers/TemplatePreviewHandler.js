@@ -65,9 +65,7 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
                 ? yield channel.modelsCollection.find(message.data.model)
                 : null;
             // Get template
-            const templateData = message.data.template;
-            const template = new class_1.Template(channel);
-            template.fromObject(templateData);
+            const template = new class_1.Template(channel, message.data.template);
             // Compute the path
             return this.generatorService.run(template, model);
         });

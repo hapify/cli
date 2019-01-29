@@ -250,7 +250,7 @@ class Channel extends _1.SingleSave {
             if (existing) {
                 return existing.fromObject(t);
             }
-            // Otherwise create a new temaplte
+            // Otherwise create a new template
             return new _1.Template(this, t);
         });
         // Update validator
