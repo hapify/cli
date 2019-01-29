@@ -129,15 +129,12 @@ class ModelsCollection extends _1.SingleSave {
     }
     /** @inheritDoc */
     fromObject(object) {
-        this.models = object.map((model) => {
-            const m = new _1.Model();
-            return m.fromObject(model);
-        });
+        this.models = object.map(m => new _1.Model(m));
         return this.models;
     }
     /** @inheritDoc */
     toObject() {
-        return this.models.map((model) => model.toObject());
+        return this.models.map(m => m.toObject());
     }
     /**
      * Returns a pseudo path

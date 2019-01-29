@@ -47,14 +47,12 @@ let NewModelHandlerService = class NewModelHandlerService {
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const model = new class_1.Model();
-            model.fromObject({
+            return (new class_1.Model({
                 id: class_1.Model.generateTempId(),
                 name: message.data.name,
                 fields: yield this.infoService.fields(),
                 accesses: class_1.Model.defaultAccesses()
-            });
-            return model.toObject();
+            })).toObject();
         });
     }
 };

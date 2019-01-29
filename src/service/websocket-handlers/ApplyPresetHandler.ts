@@ -35,11 +35,7 @@ export class ApplyPresetHandlerService implements IWebSocketHandler {
 
 	/** @inheritDoc */
 	async handle(message: IWebSocketMessage): Promise<any> {
-		const models = message.data.models.map((m: IModel) => {
-			const model = new Model();
-			model.fromObject(m);
-			return model;
-		});
+		const models = message.data.models.map((m: IModel) => new Model(m));
 
 		const results = await this.presetsService.apply(models);
 

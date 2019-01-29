@@ -28,13 +28,11 @@ export class NewModelHandlerService implements IWebSocketHandler {
 
 	/** @inheritDoc */
 	async handle(message: IWebSocketMessage): Promise<IModel> {
-		const model = new Model();
-		model.fromObject({
+		return new Model({
 			id: Model.generateTempId(),
 			name: message.data.name as string,
 			fields: await this.infoService.fields(),
 			accesses: Model.defaultAccesses()
-		});
-		return model.toObject();
+		}).toObject();
 	}
 }

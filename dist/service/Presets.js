@@ -68,11 +68,7 @@ let PresetsService = class PresetsService {
                 }
                 else {
                     const clone = model.clone(true);
-                    const defaultFields = (yield this.infoService.fields()).map(f => {
-                        const field = new class_1.Field();
-                        field.fromObject(f);
-                        return field;
-                    });
+                    const defaultFields = (yield this.infoService.fields()).map(f => new class_1.Field(f));
                     clone.fields = defaultFields.concat(clone.fields);
                     created.push(clone);
                 }

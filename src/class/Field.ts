@@ -36,7 +36,11 @@ export class Field implements ISerializable<IField, Field> {
 	ownership: boolean;
 
 	/** Constructor */
-	constructor() {}
+	constructor(object?: IField) {
+		if (object) {
+			this.fromObject(object);
+		}
+	}
 
 	/** @inheritDoc */
 	public fromObject(object: IField): Field {

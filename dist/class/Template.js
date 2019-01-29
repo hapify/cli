@@ -23,16 +23,16 @@ const Path = __importStar(require("path"));
 const enum_1 = require("../enum");
 const _1 = require("./");
 const typedi_1 = require("typedi");
-const String_1 = require("../service/String");
+const service_1 = require("../service");
 const mkdirp_1 = __importDefault(require("mkdirp"));
 class Template extends _1.SingleSave {
-    /**
-     * Constructor
-     * @param {Channel} parent
-     */
-    constructor(parent) {
+    /** Constructor */
+    constructor(parent, object) {
         super();
         this.parent = parent;
+        if (object) {
+            this.fromObject(object);
+        }
     }
     /** @inheritDoc */
     fromObject(object) {
@@ -107,7 +107,7 @@ class Template extends _1.SingleSave {
      */
     static computeContentPath(template) {
         // Get string service
-        const stringService = typedi_1.Container.get(String_1.StringService);
+        const stringService = typedi_1.Container.get(service_1.StringService);
         // Apply replacements
         const path = template.path
             .replace(/{model\.hyphen}/g, stringService.format(Template.defaultFolder, enum_1.SentenceFormat.SlugHyphen))

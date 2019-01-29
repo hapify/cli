@@ -3,7 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
 class Preset {
     /** Constructor */
-    constructor() { }
+    constructor(object) {
+        if (object) {
+            this.fromObject(object);
+        }
+    }
     /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
@@ -12,10 +16,7 @@ class Preset {
         this.name__fr = object.name__fr;
         this.description = object.description;
         this.description__fr = object.description__fr;
-        this.models = object.models.map((modelBase) => {
-            const model = new _1.Model();
-            return model.fromObject(modelBase);
-        });
+        this.models = object.models.map(m => new _1.Model(m));
         return this;
     }
     /** @inheritDoc */
@@ -27,7 +28,7 @@ class Preset {
             name__fr: this.name__fr,
             description: this.description,
             description__fr: this.description__fr,
-            models: this.models.map((model) => model.toObject())
+            models: this.models.map(m => m.toObject())
         };
     }
 }

@@ -9,7 +9,7 @@ import {
 import { TemplateInput, TemplateEngine, SentenceFormat } from '../enum';
 import { Channel, SingleSave } from './';
 import { Container } from 'typedi';
-import { StringService } from '../service/String';
+import { StringService } from '../service';
 import mkdirp from 'mkdirp';
 
 export class Template extends SingleSave
@@ -27,12 +27,12 @@ export class Template extends SingleSave
 	/** @type {string} The template's content */
 	content: string;
 
-	/**
-	 * Constructor
-	 * @param {Channel} parent
-	 */
-	constructor(private parent: Channel) {
+	/** Constructor */
+	constructor(private parent: Channel, object?: ITemplate) {
 		super();
+		if (object) {
+			this.fromObject(object);
+		}
 	}
 
 	/** @inheritDoc */

@@ -18,23 +18,16 @@ class PresetsCollection {
         /** @type {Preset[]} The list of preset instances */
         this.presets = [];
         this.apiService = typedi_1.Container.get(service_1.ApiService);
-        this.path = PresetsCollection.path();
     }
     /** Returns a singleton for this config */
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            const path = PresetsCollection.path();
-            // Try to find an existing collection
-            const presetsCollection = PresetsCollection.instances.find(m => m.path === path);
-            if (presetsCollection) {
-                return presetsCollection;
+            if (!PresetsCollection.instance) {
+                // Create and load a new collection
+                PresetsCollection.instance = new PresetsCollection();
+                yield PresetsCollection.instance.load();
             }
-            // Create and load a new collection
-            const collection = new PresetsCollection();
-            yield collection.load();
-            // Keep the collection
-            PresetsCollection.instances.push(collection);
-            return collection;
+            return PresetsCollection.instance;
         });
     }
     /**
@@ -87,10 +80,7 @@ class PresetsCollection {
     }
     /** @inheritDoc */
     fromObject(object) {
-        this.presets = object.map((preset) => {
-            const m = new _1.Preset();
-            return m.fromObject(preset);
-        });
+        this.presets = object.map(p => new _1.Preset(p));
         return this.presets;
     }
     /** @inheritDoc */
@@ -105,7 +95,5 @@ class PresetsCollection {
         return `preset`;
     }
 }
-/** @type {string} The loaded instances */
-PresetsCollection.instances = [];
 exports.PresetsCollection = PresetsCollection;
 //# sourceMappingURL=PresetsCollection.js.map

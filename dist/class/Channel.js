@@ -69,7 +69,7 @@ class Channel extends _1.SingleSave {
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
-                const template = new _1.Template(this).fromObject(Object.assign(this.config.templates[i], { content: '' }));
+                const template = new _1.Template(this, Object.assign(this.config.templates[i], { content: '' }));
                 yield template.load();
                 this.templates.push(template);
             }
@@ -251,8 +251,7 @@ class Channel extends _1.SingleSave {
                 return existing.fromObject(t);
             }
             // Otherwise create a new temaplte
-            const newOne = new _1.Template(this);
-            return newOne.fromObject(t);
+            return new _1.Template(this, t);
         });
         // Update validator
         this.validator.content = object.validator;

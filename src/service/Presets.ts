@@ -57,11 +57,7 @@ export class PresetsService {
 			} else {
 				const clone = model.clone(true);
 				const defaultFields = (await this.infoService.fields()).map(
-					f => {
-						const field = new Field();
-						field.fromObject(f);
-						return field;
-					}
+					f => new Field(f)
 				);
 				clone.fields = defaultFields.concat(clone.fields);
 				created.push(clone);

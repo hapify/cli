@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { IModel, IField, ISerializable, Access, IAccesses } from '../interface';
+import { IModel, ISerializable, Access, IAccesses } from '../interface';
 import { Field } from './';
 
 /** Random function */
@@ -19,18 +19,17 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 	accesses: IAccesses;
 
 	/** Constructor */
-	constructor() {}
+	constructor(object?: IModel) {
+		if (object) {
+			this.fromObject(object);
+		}
+	}
 
 	/** @inheritDoc */
 	public fromObject(object: IModel): Model {
 		this.id = object.id;
 		this.name = object.name;
-		this.fields = object.fields.map(
-			(fieldBase: IField): Field => {
-				const field = new Field();
-				return field.fromObject(fieldBase);
-			}
-		);
+		this.fields = object.fields.map(f => new Field(f));
 		this.accesses = object.accesses;
 		return this;
 	}
@@ -40,7 +39,7 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 		return {
 			id: this.id,
 			name: this.name,
-			fields: this.fields.map((field: Field): IField => field.toObject()),
+			fields: this.fields.map(f => f.toObject()),
 			accesses: this.accesses
 		};
 	}
@@ -74,11 +73,10 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 
 	/** Clone the model to a new reference */
 	public clone(newId: boolean): Model {
-		const model = new Model();
-		model.fromObject(this.toObject());
+		const object = this.toObject();
 		if (newId) {
-			model.id = Model.generateTempId();
+			object.id = Model.generateTempId();
 		}
-		return model;
+		return new Model(object);
 	}
 }

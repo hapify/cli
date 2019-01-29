@@ -81,7 +81,8 @@ export class Channel extends SingleSave
 		// Load each content file
 		this.templates = [];
 		for (let i = 0; i < this.config.templates.length; i++) {
-			const template = new Template(this).fromObject(
+			const template = new Template(
+				this,
 				Object.assign(this.config.templates[i], { content: '' })
 			);
 			await template.load();
@@ -311,8 +312,7 @@ export class Channel extends SingleSave
 				return existing.fromObject(t);
 			}
 			// Otherwise create a new temaplte
-			const newOne = new Template(this);
-			return newOne.fromObject(t);
+			return new Template(this, t);
 		});
 
 		// Update validator

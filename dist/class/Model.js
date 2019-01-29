@@ -13,15 +13,16 @@ function _p8(s) {
 }
 class Model {
     /** Constructor */
-    constructor() { }
+    constructor(object) {
+        if (object) {
+            this.fromObject(object);
+        }
+    }
     /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
         this.name = object.name;
-        this.fields = object.fields.map((fieldBase) => {
-            const field = new _1.Field();
-            return field.fromObject(fieldBase);
-        });
+        this.fields = object.fields.map(f => new _1.Field(f));
         this.accesses = object.accesses;
         return this;
     }
@@ -30,7 +31,7 @@ class Model {
         return {
             id: this.id,
             name: this.name,
-            fields: this.fields.map((field) => field.toObject()),
+            fields: this.fields.map(f => f.toObject()),
             accesses: this.accesses
         };
     }
@@ -60,12 +61,11 @@ class Model {
     }
     /** Clone the model to a new reference */
     clone(newId) {
-        const model = new Model();
-        model.fromObject(this.toObject());
+        const object = this.toObject();
         if (newId) {
-            model.id = Model.generateTempId();
+            object.id = Model.generateTempId();
         }
-        return model;
+        return new Model(object);
     }
 }
 exports.Model = Model;

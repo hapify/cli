@@ -146,18 +146,13 @@ export class ModelsCollection extends SingleSave
 
 	/** @inheritDoc */
 	public fromObject(object: IModel[]): Model[] {
-		this.models = object.map(
-			(model: IModel): Model => {
-				const m = new Model();
-				return m.fromObject(model);
-			}
-		);
+		this.models = object.map(m => new Model(m));
 		return this.models;
 	}
 
 	/** @inheritDoc */
 	public toObject(): IModel[] {
-		return this.models.map((model: Model): IModel => model.toObject());
+		return this.models.map(m => m.toObject());
 	}
 
 	/**

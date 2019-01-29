@@ -9,34 +9,22 @@ export class PresetsCollection implements ISerializable<IPreset[], Preset[]> {
 	private presets: Preset[] = [];
 	/** @type {Model[]} Remote API service */
 	private apiService: ApiService;
-	/** @type {string} The pseudo path */
-	public path: string;
-	/** @type {string} The loaded instances */
-	private static instances: PresetsCollection[] = [];
+	/** @type {string} The loaded instance */
+	private static instance: PresetsCollection;
 
 	/** Constructor */
 	private constructor() {
 		this.apiService = Container.get(ApiService);
-		this.path = PresetsCollection.path();
 	}
 
 	/** Returns a singleton for this config */
 	public static async getInstance() {
-		const path = PresetsCollection.path();
-		// Try to find an existing collection
-		const presetsCollection = PresetsCollection.instances.find(
-			m => m.path === path
-		);
-		if (presetsCollection) {
-			return presetsCollection;
+		if (!PresetsCollection.instance) {
+			// Create and load a new collection
+			PresetsCollection.instance = new PresetsCollection();
+			await PresetsCollection.instance.load();
 		}
-		// Create and load a new collection
-		const collection = new PresetsCollection();
-		await collection.load();
-		// Keep the collection
-		PresetsCollection.instances.push(collection);
-
-		return collection;
+		return PresetsCollection.instance;
 	}
 
 	/**
@@ -91,12 +79,7 @@ export class PresetsCollection implements ISerializable<IPreset[], Preset[]> {
 
 	/** @inheritDoc */
 	public fromObject(object: IPreset[]): Preset[] {
-		this.presets = object.map(
-			(preset: IPreset): Preset => {
-				const m = new Preset();
-				return m.fromObject(preset);
-			}
-		);
+		this.presets = object.map(p => new Preset(p));
 		return this.presets;
 	}
 

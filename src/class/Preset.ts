@@ -1,4 +1,4 @@
-import { IPreset, IModel, ISerializable } from '../interface';
+import { IPreset, ISerializable } from '../interface';
 import { Model } from './';
 
 export class Preset implements ISerializable<IPreset, Preset>, IPreset {
@@ -18,7 +18,11 @@ export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 	models: Model[];
 
 	/** Constructor */
-	constructor() {}
+	constructor(object?: IPreset) {
+		if (object) {
+			this.fromObject(object);
+		}
+	}
 
 	/** @inheritDoc */
 	public fromObject(object: IPreset): Preset {
@@ -28,12 +32,7 @@ export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 		this.name__fr = object.name__fr;
 		this.description = object.description;
 		this.description__fr = object.description__fr;
-		this.models = object.models.map(
-			(modelBase: IModel): Model => {
-				const model = new Model();
-				return model.fromObject(modelBase);
-			}
-		);
+		this.models = object.models.map(m => new Model(m));
 		return this;
 	}
 
@@ -46,7 +45,7 @@ export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 			name__fr: this.name__fr,
 			description: this.description,
 			description__fr: this.description__fr,
-			models: this.models.map((model: Model): IModel => model.toObject())
+			models: this.models.map(m => m.toObject())
 		};
 	}
 }
