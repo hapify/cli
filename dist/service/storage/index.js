@@ -7,4 +7,5 @@ __export(require("./Presets"));
 __export(require("./Templates"));
 __export(require("./Validator"));
 __export(require("./Channel"));
+__export(require("./Models"));
 //# sourceMappingURL=index.js.map

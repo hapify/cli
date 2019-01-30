@@ -5,15 +5,10 @@ import { IModel, IPreset } from '../../interface';
 
 @Service()
 export class PresetsStorageService {
-	/**
-	 * Constructor
-	 */
+	/** Constructor */
 	constructor(private apiService: ApiService) {}
 
-	/**
-	 * Load the presets from api
-	 * @return {Promise<void>}
-	 */
+	/** Load the presets from api */
 	async list(): Promise<IPreset[]> {
 		return await this.apiService
 			.get('preset', {

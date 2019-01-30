@@ -21,16 +21,11 @@ const typedi_1 = require("typedi");
 const config_1 = require("../../config");
 const Api_1 = require("../Api");
 let PresetsStorageService = class PresetsStorageService {
-    /**
-     * Constructor
-     */
+    /** Constructor */
     constructor(apiService) {
         this.apiService = apiService;
     }
-    /**
-     * Load the presets from api
-     * @return {Promise<void>}
-     */
+    /** Load the presets from api */
     list() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.apiService

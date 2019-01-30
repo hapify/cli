@@ -9,20 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
-const service_1 = require("../service");
 const typedi_1 = require("typedi");
-const config_1 = require("../config");
-class ModelsCollection extends _1.SingleSave {
+const service_1 = require("../service");
+class ModelsCollection {
     /**
      * Constructor
      * @param {string} project
      */
     constructor(project) {
-        super();
         this.project = project;
-        /** @type {string} The loaded instances */
-        this.hashes = {};
-        this.apiService = typedi_1.Container.get(service_1.ApiService);
+        this.storageService = typedi_1.Container.get(service_1.ModelsStorageService);
         this.path = ModelsCollection.path(project);
     }
     /**
@@ -48,65 +44,14 @@ class ModelsCollection extends _1.SingleSave {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = yield this.apiService
-                .get('model', {
-                _page: 0,
-                _limit: config_1.ConfigRemote.modelsLimit,
-                project: this.project
-            })
-                .then(response => {
-                return response.data.items.map((m) => ({
-                    id: m._id,
-                    name: m.name,
-                    fields: m.fields,
-                    accesses: m.accesses
-                }));
-            });
-            this.fromObject(models);
-            this.updateHashes();
+            this.fromObject(yield this.storageService.list(this.project));
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Get models to create
-            const toCreate = this.models.filter(m => typeof this.hashes[m.id] === 'undefined');
-            // Create models and update id
-            for (const model of toCreate) {
-                const response = yield this.apiService.post('model', {
-                    project: this.project,
-                    name: model.name,
-                    fields: model.fields,
-                    accesses: model.accesses
-                });
-                model.id = response.data._id;
-            }
-            // Get models to update
-            const toUpdate = this.models.filter(m => typeof this.hashes[m.id] === 'string' &&
-                this.hashes[m.id] !== m.hash());
-            // Update models
-            for (const model of toUpdate) {
-                yield this.apiService.patch(`model/${model.id}`, {
-                    name: model.name,
-                    fields: model.fields,
-                    accesses: model.accesses
-                });
-            }
-            // Get models to delete
-            const toDelete = Object.keys(this.hashes).filter(id => !this.models.some(m => m.id === id));
-            // Delete models
-            for (const id of toDelete) {
-                yield this.apiService.delete(`model/${id}`);
-            }
-            this.updateHashes();
+            yield this.storageService.set(this.project, this.models.map(m => m.toObject()));
         });
-    }
-    /** Update hashes from models */
-    updateHashes() {
-        this.hashes = {};
-        for (const model of this.models) {
-            this.hashes[model.id] = model.hash();
-        }
     }
     /**
      * Find a instance with its id

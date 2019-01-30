@@ -1,29 +1,25 @@
 import { IModel, IStorable, ISerializable } from '../interface';
-import { Model, SingleSave } from './';
-import { ApiService, IApiModel } from '../service';
+import { Model } from './';
 import { Container } from 'typedi';
-import { ConfigRemote } from '../config';
+import { ModelsStorageService } from '../service';
 
-export class ModelsCollection extends SingleSave
+export class ModelsCollection
 	implements IStorable, ISerializable<IModel[], Model[]> {
 	/** @type {Model[]} The list of model instances */
 	private models: Model[];
-	/** @type {Model[]} Remote API service */
-	private apiService: ApiService;
 	/** @type {string} The pseudo path */
 	public path: string;
 	/** @type {string} The loaded instances */
 	private static instances: ModelsCollection[] = [];
-	/** @type {string} The loaded instances */
-	private hashes: { [id: string]: string } = {};
+	/** Presets storage */
+	private storageService: ModelsStorageService;
 
 	/**
 	 * Constructor
 	 * @param {string} project
 	 */
 	private constructor(public project: string) {
-		super();
-		this.apiService = Container.get(ApiService);
+		this.storageService = Container.get(ModelsStorageService);
 		this.path = ModelsCollection.path(project);
 	}
 
@@ -51,80 +47,15 @@ export class ModelsCollection extends SingleSave
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		const models = await this.apiService
-			.get('model', {
-				_page: 0,
-				_limit: ConfigRemote.modelsLimit,
-				project: this.project
-			})
-			.then(response => {
-				return (<IApiModel[]>response.data.items).map(
-					(m: IApiModel): IModel => ({
-						id: m._id,
-						name: m.name,
-						fields: m.fields,
-						accesses: m.accesses
-					})
-				);
-			});
-
-		this.fromObject(models);
-		this.updateHashes();
+		this.fromObject(await this.storageService.list(this.project));
 	}
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		// Get models to create
-		const toCreate = this.models.filter(
-			m => typeof this.hashes[m.id] === 'undefined'
+		await this.storageService.set(
+			this.project,
+			this.models.map(m => m.toObject())
 		);
-
-		// Create models and update id
-		for (const model of toCreate) {
-			const response = await this.apiService.post('model', {
-				project: this.project,
-				name: model.name,
-				fields: model.fields,
-				accesses: model.accesses
-			});
-			model.id = response.data._id;
-		}
-
-		// Get models to update
-		const toUpdate = this.models.filter(
-			m =>
-				typeof this.hashes[m.id] === 'string' &&
-				this.hashes[m.id] !== m.hash()
-		);
-
-		// Update models
-		for (const model of toUpdate) {
-			await this.apiService.patch(`model/${model.id}`, {
-				name: model.name,
-				fields: model.fields,
-				accesses: model.accesses
-			});
-		}
-
-		// Get models to delete
-		const toDelete = Object.keys(this.hashes).filter(
-			id => !this.models.some(m => m.id === id)
-		);
-
-		// Delete models
-		for (const id of toDelete) {
-			await this.apiService.delete(`model/${id}`);
-		}
-
-		this.updateHashes();
-	}
-
-	/** Update hashes from models */
-	private updateHashes() {
-		this.hashes = {};
-		for (const model of this.models) {
-			this.hashes[model.id] = model.hash();
-		}
 	}
 
 	/**
