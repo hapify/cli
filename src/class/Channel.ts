@@ -1,4 +1,3 @@
-import * as Fs from 'fs';
 import * as Path from 'path';
 import {
 	IChannel,
@@ -11,7 +10,6 @@ import {
 import { ModelsCollection, Template, Validator } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
-import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
 import { FieldType } from './FieldType';
 import { Container } from 'typedi';
@@ -173,22 +171,17 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			Channel.configFile
 		]);
 	}
-	/**
-	 * Init a Hapify structure within a directory
-	 * @param {string} path
-	 * @return {Promise<void>}
-	 */
+	/** Init a Hapify structure within a directory */
 	public static async create(path: string): Promise<void> {
-		if (!Fs.existsSync(path)) {
-			throw new Error(`Channel's path ${path} does not exists.`);
-		}
-		const configPath = Path.join(path, Channel.configFile);
-		if (Fs.existsSync(configPath)) {
+		if (await Channel.configExists(path)) {
 			throw new Error(`A channel already exists in this directory.`);
 		}
-		const config: IConfig = {
+
+		// Create a channel from scratch
+		const channel = new Channel(path);
+		channel.config = {
 			validatorPath: `${Channel.defaultFolder}/validator.js`,
-			name: 'New channel',
+			name: channel.name,
 			description: 'A brand new channel',
 			project: 'projectId',
 			defaultFields: [
@@ -220,32 +213,24 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			]
 		};
 
-		// Create dir
-		mkdirp.sync(Path.join(path, Channel.defaultFolder, 'models', 'model'));
-
-		// Dump config file
-		const configData = JSON.stringify(config, null, 2);
-		Fs.writeFileSync(configPath, configData, 'utf8');
-
-		// Create template file
-		const templateContent = `// Hello <<M A>>`;
-		const templatePath = Path.join(
-			path,
-			Channel.defaultFolder,
-			'models',
-			'model',
-			'hello.js.hpf'
+		// Create template
+		const template = new Template(
+			channel,
+			Object.assign(channel.config.templates[0], {
+				content: '// Hello <<M A>>'
+			})
 		);
-		Fs.writeFileSync(templatePath, templateContent, 'utf8');
+		channel.templates.push(template);
 
-		// Create validator file
-		const validatorContent = `// Models validation script\nreturn { errors: [], warnings: [] };`;
-		const validatorPath = Path.join(
-			path,
-			Channel.defaultFolder,
-			'validator.js'
+		// Create validator
+		channel.validator = new Validator(
+			channel,
+			channel.config.validatorPath
 		);
-		Fs.writeFileSync(validatorPath, validatorContent, 'utf8');
+		channel.validator.content = `// Models validation script\nreturn { errors: [], warnings: [] };`;
+
+		// Save channel
+		await channel.save();
 	}
 
 	/** @inheritDoc */
