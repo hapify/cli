@@ -14,7 +14,7 @@ export class Template
 	/** @type {string} */
 	private static defaultFolder = 'model';
 	/** Template storage */
-	private templatesStorageService: TemplatesStorageService;
+	private storageService: TemplatesStorageService;
 	/** @type {string} The template's path */
 	path: string;
 	/** @type {string} The template's type */
@@ -28,7 +28,7 @@ export class Template
 
 	/** Constructor */
 	constructor(private parent: Channel, object?: ITemplate) {
-		this.templatesStorageService = Container.get(TemplatesStorageService);
+		this.storageService = Container.get(TemplatesStorageService);
 		if (object) {
 			this.fromObject(object);
 		}
@@ -92,14 +92,14 @@ export class Template
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		this.content = await this.templatesStorageService.get(
+		this.content = await this.storageService.get(
 			`${this.parent.templatesPath}/${this.contentPath}`
 		);
 	}
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		await this.templatesStorageService.set(
+		await this.storageService.set(
 			`${this.parent.templatesPath}/${this.contentPath}`,
 			this.content
 		);

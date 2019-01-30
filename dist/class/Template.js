@@ -15,7 +15,7 @@ class Template {
     /** Constructor */
     constructor(parent, object) {
         this.parent = parent;
-        this.templatesStorageService = typedi_1.Container.get(service_1.TemplatesStorageService);
+        this.storageService = typedi_1.Container.get(service_1.TemplatesStorageService);
         if (object) {
             this.fromObject(object);
         }
@@ -71,13 +71,13 @@ class Template {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.content = yield this.templatesStorageService.get(`${this.parent.templatesPath}/${this.contentPath}`);
+            this.content = yield this.storageService.get(`${this.parent.templatesPath}/${this.contentPath}`);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.templatesStorageService.set(`${this.parent.templatesPath}/${this.contentPath}`, this.content);
+            yield this.storageService.set(`${this.parent.templatesPath}/${this.contentPath}`, this.content);
         });
     }
     /**

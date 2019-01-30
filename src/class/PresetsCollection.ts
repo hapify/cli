@@ -8,13 +8,13 @@ export class PresetsCollection
 	/** @type {Preset[]} The list of preset instances */
 	private presets: Preset[] = [];
 	/** Presets storage */
-	private presetsStorageService: PresetsStorageService;
+	private storageService: PresetsStorageService;
 	/** @type {string} The loaded instance */
 	private static instance: PresetsCollection;
 
 	/** Constructor */
 	private constructor() {
-		this.presetsStorageService = Container.get(PresetsStorageService);
+		this.storageService = Container.get(PresetsStorageService);
 	}
 
 	/** Returns a singleton for this config */
@@ -32,7 +32,7 @@ export class PresetsCollection
 	 * @return {Promise<void>}
 	 */
 	async load(): Promise<void> {
-		this.fromObject(await this.presetsStorageService.list());
+		this.fromObject(await this.storageService.list());
 	}
 
 	/** @inheritDoc */

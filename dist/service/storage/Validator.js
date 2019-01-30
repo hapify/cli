@@ -8,10 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const SingleSaveFile_1 = require("./SingleSaveFile");
-let TemplatesStorageService = class TemplatesStorageService extends SingleSaveFile_1.SingleSaveFileStorage {
+let ValidatorStorageService = class ValidatorStorageService extends SingleSaveFile_1.SingleSaveFileStorage {
 };
-TemplatesStorageService = __decorate([
+ValidatorStorageService = __decorate([
     typedi_1.Service()
-], TemplatesStorageService);
-exports.TemplatesStorageService = TemplatesStorageService;
-//# sourceMappingURL=Templates.js.map
+], ValidatorStorageService);
+exports.ValidatorStorageService = ValidatorStorageService;
+//# sourceMappingURL=Validator.js.map

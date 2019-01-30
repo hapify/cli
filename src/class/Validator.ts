@@ -1,34 +1,33 @@
-import * as Fs from 'fs';
 import { IStorable } from '../interface';
-import { Channel, SingleSave } from './';
+import { Channel } from './';
+import { ValidatorStorageService } from '../service';
 
-export class Validator extends SingleSave implements IStorable {
+export class Validator implements IStorable {
 	/** @type {string} The validator's script content */
 	content: string;
+	/** Validator storage */
+	private storageService: ValidatorStorageService;
 
 	/**
 	 * Constructor
 	 * @param {Channel} parent
 	 * @param {string} path
 	 */
-	constructor(private parent: Channel, public path: string) {
-		super();
-	}
+	constructor(private parent: Channel, public path: string) {}
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		const contentPath = `${this.parent.path}/${this.path}`;
-		this.content = <string>Fs.readFileSync(contentPath, 'utf8');
-		this.didLoad(this.content);
+		this.content = await this.storageService.get(
+			`${this.parent.path}/${this.path}`
+		);
 	}
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		// Leave early
-		if (this.shouldSave(this.content)) {
-			const contentPath = `${this.parent.path}/${this.path}`;
-			Fs.writeFileSync(contentPath, this.content, 'utf8');
-		}
+		await this.storageService.set(
+			`${this.parent.path}/${this.path}`,
+			this.content
+		);
 	}
 
 	/**

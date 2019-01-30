@@ -16,7 +16,7 @@ class PresetsCollection {
     constructor() {
         /** @type {Preset[]} The list of preset instances */
         this.presets = [];
-        this.presetsStorageService = typedi_1.Container.get(service_1.PresetsStorageService);
+        this.storageService = typedi_1.Container.get(service_1.PresetsStorageService);
     }
     /** Returns a singleton for this config */
     static getInstance() {
@@ -35,7 +35,7 @@ class PresetsCollection {
      */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.fromObject(yield this.presetsStorageService.list());
+            this.fromObject(yield this.storageService.list());
         });
     }
     /** @inheritDoc */

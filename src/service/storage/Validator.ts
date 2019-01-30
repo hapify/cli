@@ -2,4 +2,4 @@ import { Service } from 'typedi';
 import { SingleSaveFileStorage } from './SingleSaveFile';
 
 @Service()
-export class TemplatesStorageService extends SingleSaveFileStorage {}
+export class ValidatorStorageService extends SingleSaveFileStorage {}
