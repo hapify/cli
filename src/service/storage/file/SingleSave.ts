@@ -29,7 +29,7 @@ export abstract class SingleSaveFileStorage<T> {
 			Fs.writeFileSync(contentPath, content, 'utf8');
 		}
 	}
-	/** Check if the resource exsists */
+	/** Check if the resource exists */
 	async exists(path: FilePath): Promise<boolean> {
 		return Fs.existsSync(JoinPath(path));
 	}

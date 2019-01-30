@@ -52,10 +52,11 @@ export class ModelsCollection
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		await this.storageService.set(
+		const models = await this.storageService.set(
 			this.project,
-			this.models.map(m => m.toObject())
+			this.toObject()
 		);
+		this.fromObject(models);
 	}
 
 	/**

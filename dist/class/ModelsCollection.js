@@ -50,7 +50,8 @@ class ModelsCollection {
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.storageService.set(this.project, this.models.map(m => m.toObject()));
+            const models = yield this.storageService.set(this.project, this.toObject());
+            this.fromObject(models);
         });
     }
     /**
