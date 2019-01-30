@@ -8,6 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const service_1 = require("../service");
+const typedi_1 = require("typedi");
 class Validator {
     /**
      * Constructor
@@ -17,6 +19,7 @@ class Validator {
     constructor(parent, path) {
         this.parent = parent;
         this.path = path;
+        this.storageService = typedi_1.Container.get(service_1.ValidatorStorageService);
     }
     /** @inheritDoc */
     load() {

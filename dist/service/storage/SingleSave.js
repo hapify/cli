@@ -34,11 +34,15 @@ function JoinPath(path) {
 }
 exports.JoinPath = JoinPath;
 let SingleSaveFileStorage = class SingleSaveFileStorage {
+    constructor() {
+        /** The template's content's md5 hash */
+        this.contentMd5 = {};
+    }
     /** Load content from path */
     get(path) {
         return __awaiter(this, void 0, void 0, function* () {
             const contentPath = JoinPath(path);
-            const content = (Fs.readFileSync(Path.join(...contentPath), 'utf8'));
+            const content = (Fs.readFileSync(contentPath, 'utf8'));
             this.didLoad(contentPath, content);
             return yield this.deserialize(content);
         });

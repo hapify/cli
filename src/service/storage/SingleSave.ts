@@ -12,18 +12,16 @@ export function JoinPath(path: FilePath): string {
 @Service()
 export abstract class SingleSaveFileStorage<T> {
 	/** The template's content's md5 hash */
-	private contentMd5: { [bucket: string]: string };
+	private contentMd5: { [bucket: string]: string } = {};
 	/** Load content from path */
-	public async get(path: FilePath): Promise<T> {
+	async get(path: FilePath): Promise<T> {
 		const contentPath = JoinPath(path);
-		const content = <string>(
-			Fs.readFileSync(Path.join(...contentPath), 'utf8')
-		);
+		const content = <string>Fs.readFileSync(contentPath, 'utf8');
 		this.didLoad(contentPath, content);
 		return await this.deserialize(content);
 	}
 	/** Load content from path */
-	public async set(path: FilePath, input: T): Promise<void> {
+	async set(path: FilePath, input: T): Promise<void> {
 		const content = await this.serialize(input);
 		const contentPath = JoinPath(path);
 		if (this.shouldSave(contentPath, content)) {
@@ -32,7 +30,7 @@ export abstract class SingleSaveFileStorage<T> {
 		}
 	}
 	/** Check if the resource exsists */
-	public async exists(path: FilePath): Promise<boolean> {
+	async exists(path: FilePath): Promise<boolean> {
 		return Fs.existsSync(JoinPath(path));
 	}
 	/** Convert content to string before saving */
@@ -44,7 +42,7 @@ export abstract class SingleSaveFileStorage<T> {
 	 * @param {string} bucket
 	 * @param {string} data
 	 */
-	didLoad(bucket: string, data: string): void {
+	protected didLoad(bucket: string, data: string): void {
 		this.contentMd5[bucket] = md5(data);
 	}
 	/**
@@ -54,7 +52,7 @@ export abstract class SingleSaveFileStorage<T> {
 	 * @param {string} data
 	 * @return {boolean}
 	 */
-	shouldSave(bucket: string, data: string): boolean {
+	protected shouldSave(bucket: string, data: string): boolean {
 		const contentMd5 = md5(data);
 		if (
 			typeof this.contentMd5[bucket] === 'undefined' ||
