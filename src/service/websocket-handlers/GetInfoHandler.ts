@@ -6,11 +6,15 @@ import {
 } from '../../interface';
 import * as Joi from 'joi';
 import { InfoService } from '../Info';
+import { GeneratorService } from '../Generator';
 
 @Service()
 export class GetInfoHandlerService implements IWebSocketHandler {
 	/** Constructor */
-	constructor(private infoService: InfoService) {}
+	constructor(
+		private infoService: InfoService,
+		private generatorService: GeneratorService
+	) {}
 
 	/** @inheritDoc */
 	canHandle(message: IWebSocketMessage): boolean {
@@ -26,7 +30,7 @@ export class GetInfoHandlerService implements IWebSocketHandler {
 	async handle(message: IWebSocketMessage): Promise<any> {
 		return {
 			project: await this.infoService.project(),
-			limits: await this.infoService.limits()
+			limits: await this.generatorService.limits()
 		};
 	}
 }

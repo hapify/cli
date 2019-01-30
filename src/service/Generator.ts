@@ -1,5 +1,5 @@
 import { Container, Service } from 'typedi';
-import { IGeneratorResult } from '../interface';
+import { IGeneratorResult, ILimits } from '../interface';
 import { Template, Model, Channel } from '../class';
 import { ApiService } from './Api';
 
@@ -7,6 +7,8 @@ import { ApiService } from './Api';
 export class GeneratorService {
 	/** Service to call remote API */
 	private apiService: ApiService;
+	/** Stores the limits */
+	private _limits: ILimits;
 
 	/** Constructor */
 	constructor() {}
@@ -17,6 +19,14 @@ export class GeneratorService {
 			this.apiService = Container.get(ApiService);
 		}
 		return this.apiService;
+	}
+
+	/** Get the limits once and returns them */
+	async limits(): Promise<ILimits> {
+		if (!this._limits) {
+			this._limits = (await this.api().get('generator/limits')).data;
+		}
+		return this._limits;
 	}
 
 	/**

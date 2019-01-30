@@ -18,34 +18,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const Api_1 = require("./Api");
 const Channels_1 = require("./Channels");
 let InfoService = class InfoService {
     /** Constructor */
     constructor(channelsService) {
         this.channelsService = channelsService;
     }
-    /** Load and returns API Service. Avoid circular dependency */
-    api() {
-        if (typeof this.apiService === 'undefined') {
-            this.apiService = typedi_1.Container.get(Api_1.ApiService);
-        }
-        return this.apiService;
-    }
     /** Get the project once and returns it */
     project() {
         return __awaiter(this, void 0, void 0, function* () {
             const channel = (yield this.channelsService.channels())[0];
             return channel.project.toObject();
-        });
-    }
-    /** Get the limits once and returns them */
-    limits() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this._limits) {
-                this._limits = (yield this.api().get('generator/limits')).data;
-            }
-            return this._limits;
         });
     }
     /** Get the default model field from channel */

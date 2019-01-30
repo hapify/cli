@@ -1,41 +1,19 @@
-import { Container, Service } from 'typedi';
-import { ApiService } from './Api';
+import { Service } from 'typedi';
 import { ChannelsService } from './Channels';
-import { ILimits, IProject, IField } from '../interface';
+import { IProject, IField } from '../interface';
 
 @Service()
 export class InfoService {
 	/** Stores the default fields */
 	private _fields: IField[];
-	/** Stores the limits */
-	private _limits: ILimits;
-
-	/** Service to call remote API */
-	private apiService: ApiService;
 
 	/** Constructor */
 	constructor(private channelsService: ChannelsService) {}
-
-	/** Load and returns API Service. Avoid circular dependency */
-	api() {
-		if (typeof this.apiService === 'undefined') {
-			this.apiService = Container.get(ApiService);
-		}
-		return this.apiService;
-	}
 
 	/** Get the project once and returns it */
 	async project(): Promise<IProject> {
 		const channel = (await this.channelsService.channels())[0];
 		return channel.project.toObject();
-	}
-
-	/** Get the limits once and returns them */
-	async limits(): Promise<ILimits> {
-		if (!this._limits) {
-			this._limits = (await this.api().get('generator/limits')).data;
-		}
-		return this._limits;
 	}
 
 	/** Get the default model field from channel */

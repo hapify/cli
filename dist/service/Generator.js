@@ -29,6 +29,15 @@ let GeneratorService = class GeneratorService {
         }
         return this.apiService;
     }
+    /** Get the limits once and returns them */
+    limits() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this._limits) {
+                this._limits = (yield this.api().get('generator/limits')).data;
+            }
+            return this._limits;
+        });
+    }
     /**
      * Compile for a whole channel
      * @param {Channel} channel
