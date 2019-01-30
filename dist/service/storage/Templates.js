@@ -15,8 +15,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const SingleSaveFile_1 = require("./SingleSaveFile");
-let TemplatesStorageService = class TemplatesStorageService extends SingleSaveFile_1.SingleSaveFileStorage {
+const SingleSave_1 = require("./SingleSave");
+let TemplatesStorageService = class TemplatesStorageService extends SingleSave_1.SingleSaveFileStorage {
     /** @inheritDoc */
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {

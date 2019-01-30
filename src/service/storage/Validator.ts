@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { SingleSaveFileStorage } from './SingleSaveFile';
+import { SingleSaveFileStorage } from './SingleSave';
 
 @Service()
 export class ValidatorStorageService extends SingleSaveFileStorage<string> {

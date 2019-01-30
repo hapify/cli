@@ -23,10 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ChannelStorageService_1;
 const typedi_1 = require("typedi");
-const SingleSaveFile_1 = require("./SingleSaveFile");
+const SingleSave_1 = require("./SingleSave");
 const Path = __importStar(require("path"));
 const Fs = __importStar(require("fs"));
-let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageService extends SingleSaveFile_1.SingleSaveFileStorage {
+let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageService extends SingleSave_1.SingleSaveFileStorage {
     /** @inheritDoc */
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -47,8 +47,8 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
     /** Cleanup unused files */
     cleanup(root, legitFiles) {
         return __awaiter(this, void 0, void 0, function* () {
-            const joinedRoot = SingleSaveFile_1.JoinPath(root);
-            const joinedLegitFiles = legitFiles.map(SingleSaveFile_1.JoinPath);
+            const joinedRoot = SingleSave_1.JoinPath(root);
+            const joinedLegitFiles = legitFiles.map(SingleSave_1.JoinPath);
             const allFiles = ChannelStorageService_1.listAllFiles(joinedRoot);
             for (const filePath of allFiles) {
                 if (joinedLegitFiles.indexOf(filePath) < 0) {

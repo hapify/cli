@@ -60,6 +60,30 @@ let SingleSaveFileStorage = class SingleSaveFileStorage extends SingleSave_1.Sin
             return Fs.existsSync(JoinPath(path));
         });
     }
+    /**
+     * Should be called after loading to hash the content
+     * @param {string} bucket
+     * @param {string} data
+     */
+    didLoad(bucket, data) {
+        this.contentMd5[bucket] = md5(data);
+    }
+    /**
+     * Denotes if the data has changed and update the hash if necessary
+     * This method should not be called twice at the same time as it updates the hash.
+     * @param {string} bucket
+     * @param {string} data
+     * @return {boolean}
+     */
+    shouldSave(bucket, data) {
+        const contentMd5 = md5(data);
+        if (typeof this.contentMd5[bucket] === 'undefined' ||
+            contentMd5 !== this.contentMd5[bucket]) {
+            this.contentMd5[bucket] = contentMd5;
+            return true;
+        }
+        return false;
+    }
 };
 SingleSaveFileStorage = __decorate([
     typedi_1.Service()

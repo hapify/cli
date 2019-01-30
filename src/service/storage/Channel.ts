@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { FilePath, JoinPath, SingleSaveFileStorage } from './SingleSaveFile';
+import { SingleSaveFileStorage, JoinPath, FilePath } from './SingleSave';
 import * as Path from 'path';
 import * as Fs from 'fs';
 import { IConfig } from '../../interface/IObjects';
