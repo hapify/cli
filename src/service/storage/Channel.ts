@@ -2,14 +2,25 @@ import { Service } from 'typedi';
 import { FilePath, JoinPath, SingleSaveFileStorage } from './SingleSaveFile';
 import * as Path from 'path';
 import * as Fs from 'fs';
+import { IConfig } from '../../interface/IObjects';
 
 @Service()
-export class ChannelStorageService extends SingleSaveFileStorage {
-	/**
-	 * Cleanup unused files
-	 * @param root
-	 * @param legitFiles
-	 */
+export class ChannelStorageService extends SingleSaveFileStorage<IConfig> {
+	/** @inheritDoc */
+	protected async serialize(content: IConfig): Promise<string> {
+		return JSON.stringify(content, null, 2);
+	}
+	/** @inheritDoc */
+	protected async deserialize(content: string): Promise<IConfig> {
+		try {
+			return JSON.parse(content);
+		} catch (error) {
+			throw new Error(
+				`An error occurred while parsing Channel configuration: ${error.toString()}`
+			);
+		}
+	}
+	/** Cleanup unused files */
 	async cleanup(root: FilePath, legitFiles: FilePath[]): Promise<void> {
 		const joinedRoot = JoinPath(root);
 		const joinedLegitFiles = legitFiles.map(JoinPath);
@@ -23,12 +34,7 @@ export class ChannelStorageService extends SingleSaveFileStorage {
 
 		ChannelStorageService.clearEmptyDirectories(joinedRoot);
 	}
-
-	/**
-	 * Get all files' absolute path from a directory
-	 * @param {string} rootPath
-	 * @return {string[]}
-	 */
+	/** Get all files' absolute path from a directory */
 	private static listAllFiles(rootPath: string): string[] {
 		// Read the whole directory
 		const entries = Fs.readdirSync(rootPath).map(dir =>
@@ -49,11 +55,7 @@ export class ChannelStorageService extends SingleSaveFileStorage {
 			.filter(subPath => Fs.statSync(subPath).isFile())
 			.concat(subFiles);
 	}
-
-	/**
-	 * Delete all directories if empty
-	 * @param {string} rootPath
-	 */
+	/** Delete all directories if empty */
 	private static clearEmptyDirectories(rootPath: string): void {
 		// Remove sub-directories
 		Fs.readdirSync(rootPath)

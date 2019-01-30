@@ -27,11 +27,24 @@ const SingleSaveFile_1 = require("./SingleSaveFile");
 const Path = __importStar(require("path"));
 const Fs = __importStar(require("fs"));
 let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageService extends SingleSaveFile_1.SingleSaveFileStorage {
-    /**
-     * Cleanup unused files
-     * @param root
-     * @param legitFiles
-     */
+    /** @inheritDoc */
+    serialize(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return JSON.stringify(content, null, 2);
+        });
+    }
+    /** @inheritDoc */
+    deserialize(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return JSON.parse(content);
+            }
+            catch (error) {
+                throw new Error(`An error occurred while parsing Channel configuration: ${error.toString()}`);
+            }
+        });
+    }
+    /** Cleanup unused files */
     cleanup(root, legitFiles) {
         return __awaiter(this, void 0, void 0, function* () {
             const joinedRoot = SingleSaveFile_1.JoinPath(root);
@@ -45,11 +58,7 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
             ChannelStorageService_1.clearEmptyDirectories(joinedRoot);
         });
     }
-    /**
-     * Get all files' absolute path from a directory
-     * @param {string} rootPath
-     * @return {string[]}
-     */
+    /** Get all files' absolute path from a directory */
     static listAllFiles(rootPath) {
         // Read the whole directory
         const entries = Fs.readdirSync(rootPath).map(dir => Path.join(rootPath, dir));
@@ -63,10 +72,7 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
             .filter(subPath => Fs.statSync(subPath).isFile())
             .concat(subFiles);
     }
-    /**
-     * Delete all directories if empty
-     * @param {string} rootPath
-     */
+    /** Delete all directories if empty */
     static clearEmptyDirectories(rootPath) {
         // Remove sub-directories
         Fs.readdirSync(rootPath)

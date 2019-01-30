@@ -47,7 +47,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
     channels() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(this._channels instanceof Array)) {
-                this._channels = ChannelsService_1.sniff(this.optionsService.dir(), this.optionsService.depth());
+                this._channels = yield ChannelsService_1.sniff(this.optionsService.dir(), this.optionsService.depth());
                 if (this._channels.length === 0) {
                     throw new Error('No channel found');
                 }
@@ -116,21 +116,22 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
      * @return {Channel[]}
      */
     static sniff(path, depth = 2, from = path) {
-        // Get channels in sub-directories first
-        const channels = depth <= 0
-            ? []
-            : Fs.readdirSync(path)
-                .map(dir => Path.join(path, dir))
-                .filter(subPath => Fs.statSync(subPath).isDirectory())
-                .map(subPath => ChannelsService_1.sniff(subPath, depth - 1, from))
-                .reduce((flatten, channels) => flatten.concat(channels), []);
-        // Get channel of current directory if exists
-        if (class_1.Channel.configExists(path)) {
-            const name = Path.relative(Path.dirname(from), path);
-            const channel = new class_1.Channel(path, name);
-            channels.push(channel);
-        }
-        return channels;
+        return __awaiter(this, void 0, void 0, function* () {
+            // Get channels in sub-directories first
+            const channels = depth <= 0
+                ? []
+                : (yield Promise.all(Fs.readdirSync(path)
+                    .map(dir => Path.join(path, dir))
+                    .filter(subPath => Fs.statSync(subPath).isDirectory())
+                    .map(subPath => ChannelsService_1.sniff(subPath, depth - 1, from)))).reduce((flatten, channels) => flatten.concat(channels), []);
+            // Get channel of current directory if exists
+            if (yield class_1.Channel.configExists(path)) {
+                const name = Path.relative(Path.dirname(from), path);
+                const channel = new class_1.Channel(path, name);
+                channels.push(channel);
+            }
+            return channels;
+        });
     }
 };
 ChannelsService = ChannelsService_1 = __decorate([

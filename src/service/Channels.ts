@@ -4,7 +4,6 @@ import { OptionsService } from './Options';
 import * as Fs from 'fs';
 import * as Hoek from 'hoek';
 import { ModelsCollection, Channel } from '../class';
-import { IField } from '../interface';
 
 @Service()
 export class ChannelsService {
@@ -24,7 +23,7 @@ export class ChannelsService {
 	 */
 	public async channels(): Promise<Channel[]> {
 		if (!(this._channels instanceof Array)) {
-			this._channels = ChannelsService.sniff(
+			this._channels = await ChannelsService.sniff(
 				this.optionsService.dir(),
 				this.optionsService.depth()
 			);
@@ -94,29 +93,32 @@ export class ChannelsService {
 	 * @param {number} from  Default: path
 	 * @return {Channel[]}
 	 */
-	private static sniff(
+	private static async sniff(
 		path: string,
 		depth: number = 2,
 		from: string = path
-	): Channel[] {
+	): Promise<Channel[]> {
 		// Get channels in sub-directories first
 		const channels: Channel[] =
 			depth <= 0
 				? []
-				: Fs.readdirSync(path)
-						.map(dir => Path.join(path, dir))
-						.filter(subPath => Fs.statSync(subPath).isDirectory())
-						.map(subPath =>
-							ChannelsService.sniff(subPath, depth - 1, from)
-						)
-						.reduce(
-							(flatten: Channel[], channels: Channel[]) =>
-								flatten.concat(channels),
-							[]
-						);
+				: (await Promise.all(
+						Fs.readdirSync(path)
+							.map(dir => Path.join(path, dir))
+							.filter(subPath =>
+								Fs.statSync(subPath).isDirectory()
+							)
+							.map(subPath =>
+								ChannelsService.sniff(subPath, depth - 1, from)
+							)
+				  )).reduce(
+						(flatten: Channel[], channels: Channel[]) =>
+							flatten.concat(channels),
+						[]
+				  );
 
 		// Get channel of current directory if exists
-		if (Channel.configExists(path)) {
+		if (await Channel.configExists(path)) {
 			const name = Path.relative(Path.dirname(from), path);
 			const channel = new Channel(path, name);
 			channels.push(channel);

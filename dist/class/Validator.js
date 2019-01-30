@@ -21,6 +21,7 @@ class Validator {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
+            yield this.validate();
             this.content = yield this.storageService.get([
                 this.parent.path,
                 this.path
@@ -31,6 +32,17 @@ class Validator {
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.storageService.set([this.parent.path, this.path], this.content);
+        });
+    }
+    /**
+     * Check resource validity
+     * @throws {Error}
+     */
+    validate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([this.parent.path, this.path]))) {
+                throw new Error(`Validator's path ${this.parent.path}/${this.path} does not exists.`);
+            }
         });
     }
     /**

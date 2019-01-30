@@ -27,26 +27,40 @@ const md5_1 = __importDefault(require("md5"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Joi = __importStar(require("joi"));
 const FieldType_1 = require("./FieldType");
-class Channel extends _1.SingleSave {
+const typedi_1 = require("typedi");
+const service_1 = require("../service");
+class Channel {
     /**
      * Constructor
      * @param {string} path
      * @param {string|null} name
      */
     constructor(path, name = null) {
-        super();
         this.path = path;
+        this.storageService = typedi_1.Container.get(service_1.ChannelStorageService);
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
-        this.validate();
     }
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
+            // Validate storage
+            yield this.validate();
             // Get config from storage
-            const data = yield this.storageService.get([this.path, Channel.configFile]);
-            this.config = JSON.parse(data);
+            const config = yield this.storageService.get([
+                this.path,
+                Channel.configFile
+            ]);
+            // Validate the incoming config
+            const validation = Joi.validate(config, interface_1.ConfigSchema);
+            if (validation.error) {
+                // Transform Joi message
+                interface_1.TransformValidationMessage(validation.error);
+                throw validation.error;
+            }
+            // Apply configuration
+            this.config = config;
             // Override default name if given
             if (this.config.name) {
                 this.name = this.config.name;
@@ -74,14 +88,14 @@ class Channel extends _1.SingleSave {
             }
             yield this.validator.save();
             // Update configurations
-            this.config.templates = this.templates.map((m) => {
+            this.config.templates = this.templates.map(m => {
                 const t = m.toObject();
                 delete t.content;
                 return t;
             });
             this.config.validatorPath = this.validator.path;
             // Write file if necessary
-            yield this.storageService.set([this.path, Channel.configFile], JSON.stringify(this.config, null, 2));
+            yield this.storageService.set([this.path, Channel.configFile], this.config);
             // Cleanup files in template path
             const legitFiles = this.templates.map(t => [
                 this.templatesPath,
@@ -108,48 +122,24 @@ class Channel extends _1.SingleSave {
         this.templates = this.templates.filter(t => !t.isEmpty());
     }
     /**
-     * Denotes if the config file exists and its templates
-     * If something is not valid, it throws an error.
+     * Check resource validity
      * @throws {Error}
      */
     validate() {
-        const path = Path.join(this.path, Channel.configFile);
-        if (!Fs.existsSync(path)) {
-            throw new Error(`Channel config's path ${path} does not exists.`);
-        }
-        let config;
-        try {
-            config = JSON.parse(Fs.readFileSync(path, 'utf8'));
-        }
-        catch (error) {
-            throw new Error(`An error occurred while reading Channel config's at ${path}: ${error.toString()}`);
-        }
-        // Validate the incoming config
-        const validation = Joi.validate(config, interface_1.ConfigSchema);
-        if (validation.error) {
-            // Transform Joi message
-            interface_1.TransformValidationMessage(validation.error);
-            throw validation.error;
-        }
-        for (const template of config.templates) {
-            const contentPath = Path.join(this.templatesPath, _1.Template.computeContentPath(template));
-            if (!Fs.existsSync(contentPath)) {
-                throw new Error(`Channel template's path ${contentPath} does not exists.`);
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([this.path, Channel.configFile]))) {
+                throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
             }
-        }
-        const validatorPath = Path.join(this.path, config.validatorPath);
-        if (!Fs.existsSync(validatorPath)) {
-            throw new Error(`Channel validator's path ${validatorPath} does not exists.`);
-        }
+        });
     }
-    /**
-     * Denotes if the config file exists
-     * @param {string} path
-     * @return {boolean}
-     */
+    /** Denotes if the config file exists */
     static configExists(path) {
-        const configPath = Path.join(path, Channel.configFile);
-        return Fs.existsSync(configPath);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typedi_1.Container.get(service_1.ChannelStorageService).exists([
+                path,
+                Channel.configFile
+            ]);
+        });
     }
     /**
      * Init a Hapify structure within a directory

@@ -17,6 +17,7 @@ export class Validator implements IStorable {
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
+		await this.validate();
 		this.content = await this.storageService.get([
 			this.parent.path,
 			this.path
@@ -29,6 +30,22 @@ export class Validator implements IStorable {
 			[this.parent.path, this.path],
 			this.content
 		);
+	}
+
+	/**
+	 * Check resource validity
+	 * @throws {Error}
+	 */
+	private async validate(): Promise<void> {
+		if (
+			!(await this.storageService.exists([this.parent.path, this.path]))
+		) {
+			throw new Error(
+				`Validator's path ${this.parent.path}/${
+					this.path
+				} does not exists.`
+			);
+		}
 	}
 
 	/**

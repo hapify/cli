@@ -8,16 +8,16 @@ import {
 	ConfigSchema,
 	TransformValidationMessage
 } from '../interface';
-import { ModelsCollection, Template, Validator, SingleSave } from './';
+import { ModelsCollection, Template, Validator } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
 import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
 import { FieldType } from './FieldType';
+import { Container } from 'typedi';
 import { ChannelStorageService } from '../service';
 
-export class Channel extends SingleSave
-	implements IStorable, ISerializable<IChannel, Channel> {
+export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	/** @type {string} */
 	public name: string;
 	/** @type {string} */
@@ -45,21 +45,33 @@ export class Channel extends SingleSave
 	 * @param {string|null} name
 	 */
 	constructor(public path: string, name: string = null) {
-		super();
+		this.storageService = Container.get(ChannelStorageService);
 		this.name = name ? name : Path.basename(path);
 		this.id = md5(this.path);
 		this.templatesPath = Path.join(this.path, Channel.defaultFolder);
-		this.validate();
 	}
 
 	/** @inheritDoc */
 	async load(): Promise<void> {
+		// Validate storage
+		await this.validate();
+
 		// Get config from storage
-		const data = await this.storageService.get([
+		const config = await this.storageService.get([
 			this.path,
 			Channel.configFile
 		]);
-		this.config = JSON.parse(data);
+
+		// Validate the incoming config
+		const validation = Joi.validate(config, ConfigSchema);
+		if (validation.error) {
+			// Transform Joi message
+			TransformValidationMessage(validation.error);
+			throw validation.error;
+		}
+
+		// Apply configuration
+		this.config = config;
 
 		// Override default name if given
 		if (this.config.name) {
@@ -96,7 +108,7 @@ export class Channel extends SingleSave
 		await this.validator.save();
 
 		// Update configurations
-		this.config.templates = this.templates.map((m: Template) => {
+		this.config.templates = this.templates.map(m => {
 			const t = m.toObject();
 			delete t.content;
 			return t;
@@ -106,7 +118,7 @@ export class Channel extends SingleSave
 		// Write file if necessary
 		await this.storageService.set(
 			[this.path, Channel.configFile],
-			JSON.stringify(this.config, null, 2)
+			this.config
 		);
 
 		// Cleanup files in template path
@@ -140,63 +152,27 @@ export class Channel extends SingleSave
 	}
 
 	/**
-	 * Denotes if the config file exists and its templates
-	 * If something is not valid, it throws an error.
+	 * Check resource validity
 	 * @throws {Error}
 	 */
-	private validate(): void {
-		const path = Path.join(this.path, Channel.configFile);
-		if (!Fs.existsSync(path)) {
-			throw new Error(`Channel config's path ${path} does not exists.`);
-		}
-
-		let config: IConfig;
-		try {
-			config = JSON.parse(<string>Fs.readFileSync(path, 'utf8'));
-		} catch (error) {
+	private async validate(): Promise<void> {
+		if (
+			!(await this.storageService.exists([this.path, Channel.configFile]))
+		) {
 			throw new Error(
-				`An error occurred while reading Channel config's at ${path}: ${error.toString()}`
-			);
-		}
-
-		// Validate the incoming config
-		const validation = Joi.validate(config, ConfigSchema);
-		if (validation.error) {
-			// Transform Joi message
-			TransformValidationMessage(validation.error);
-			throw validation.error;
-		}
-
-		for (const template of config.templates) {
-			const contentPath = Path.join(
-				this.templatesPath,
-				Template.computeContentPath(template)
-			);
-			if (!Fs.existsSync(contentPath)) {
-				throw new Error(
-					`Channel template's path ${contentPath} does not exists.`
-				);
-			}
-		}
-
-		const validatorPath = Path.join(this.path, config.validatorPath);
-		if (!Fs.existsSync(validatorPath)) {
-			throw new Error(
-				`Channel validator's path ${validatorPath} does not exists.`
+				`Channel config's path ${this.path}/${
+					Channel.configFile
+				} does not exists.`
 			);
 		}
 	}
-
-	/**
-	 * Denotes if the config file exists
-	 * @param {string} path
-	 * @return {boolean}
-	 */
-	public static configExists(path: string): boolean {
-		const configPath = Path.join(path, Channel.configFile);
-		return Fs.existsSync(configPath);
+	/** Denotes if the config file exists */
+	public static async configExists(path: string): Promise<boolean> {
+		return await Container.get(ChannelStorageService).exists([
+			path,
+			Channel.configFile
+		]);
 	}
-
 	/**
 	 * Init a Hapify structure within a directory
 	 * @param {string} path

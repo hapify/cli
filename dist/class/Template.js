@@ -69,6 +69,7 @@ class Template {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
+            yield this.validate();
             this.content = yield this.storageService.get([
                 this.parent.templatesPath,
                 this.contentPath
@@ -79,6 +80,20 @@ class Template {
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
+        });
+    }
+    /**
+     * Check resource validity
+     * @throws {Error}
+     */
+    validate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([
+                this.parent.templatesPath,
+                this.contentPath
+            ]))) {
+                throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
+            }
         });
     }
     /**

@@ -90,6 +90,7 @@ export class Template
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
+		await this.validate();
 		this.content = await this.storageService.get([
 			this.parent.templatesPath,
 			this.contentPath
@@ -102,6 +103,25 @@ export class Template
 			[this.parent.templatesPath, this.contentPath],
 			this.content
 		);
+	}
+
+	/**
+	 * Check resource validity
+	 * @throws {Error}
+	 */
+	private async validate(): Promise<void> {
+		if (
+			!(await this.storageService.exists([
+				this.parent.templatesPath,
+				this.contentPath
+			]))
+		) {
+			throw new Error(
+				`Template's path ${this.parent.templatesPath}/${
+					this.contentPath
+				} does not exists.`
+			);
+		}
 	}
 
 	/**

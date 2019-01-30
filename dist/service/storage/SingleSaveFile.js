@@ -40,17 +40,24 @@ let SingleSaveFileStorage = class SingleSaveFileStorage extends SingleSave_1.Sin
             const contentPath = JoinPath(path);
             const content = (Fs.readFileSync(Path.join(...contentPath), 'utf8'));
             this.didLoad(contentPath, content);
-            return content;
+            return yield this.deserialize(content);
         });
     }
     /** Load content from path */
-    set(path, content) {
+    set(path, input) {
         return __awaiter(this, void 0, void 0, function* () {
+            const content = yield this.serialize(input);
             const contentPath = JoinPath(path);
             if (this.shouldSave(contentPath, content)) {
                 mkdirp_1.default.sync(Path.dirname(contentPath));
                 Fs.writeFileSync(contentPath, content, 'utf8');
             }
+        });
+    }
+    /** Check if the resource exsists */
+    exists(path) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return Fs.existsSync(JoinPath(path));
         });
     }
 };
