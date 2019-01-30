@@ -6,7 +6,6 @@ import {
 	ISerializable,
 	IStorable,
 	ConfigSchema,
-	IField,
 	TransformValidationMessage
 } from '../interface';
 import { ModelsCollection, Template, Validator, SingleSave } from './';
@@ -55,13 +54,14 @@ export class Channel extends SingleSave
 
 	/** @inheritDoc */
 	async load(): Promise<void> {
-		// Copy config to instance
-		const path = Path.join(this.path, Channel.configFile);
-		const data = <string>Fs.readFileSync(path, 'utf8');
+		// Get config from storage
+		const data = await this.storageService.get([
+			this.path,
+			Channel.configFile
+		]);
 		this.config = JSON.parse(data);
-		this.didLoad(data);
 
-		// Complete channel info
+		// Override default name if given
 		if (this.config.name) {
 			this.name = this.config.name;
 		}
@@ -127,10 +127,7 @@ export class Channel extends SingleSave
 	 */
 	isEmpty(): boolean {
 		const validatorIsEmpty = this.validator.isEmpty();
-		const templatesAreEmpty = this.templates.every(
-			(template: Template): boolean => template.isEmpty()
-		);
-
+		const templatesAreEmpty = this.templates.every(t => t.isEmpty());
 		return validatorIsEmpty && templatesAreEmpty;
 	}
 
@@ -139,11 +136,7 @@ export class Channel extends SingleSave
 	 * @returns {void}
 	 */
 	filter(): void {
-		this.templates = this.templates.filter(
-			(template: Template): boolean => {
-				return !template.isEmpty();
-			}
-		);
+		this.templates = this.templates.filter(t => !t.isEmpty());
 	}
 
 	/**

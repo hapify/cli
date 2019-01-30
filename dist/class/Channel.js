@@ -44,12 +44,10 @@ class Channel extends _1.SingleSave {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Copy config to instance
-            const path = Path.join(this.path, Channel.configFile);
-            const data = Fs.readFileSync(path, 'utf8');
+            // Get config from storage
+            const data = yield this.storageService.get([this.path, Channel.configFile]);
             this.config = JSON.parse(data);
-            this.didLoad(data);
-            // Complete channel info
+            // Override default name if given
             if (this.config.name) {
                 this.name = this.config.name;
             }
@@ -99,7 +97,7 @@ class Channel extends _1.SingleSave {
      */
     isEmpty() {
         const validatorIsEmpty = this.validator.isEmpty();
-        const templatesAreEmpty = this.templates.every((template) => template.isEmpty());
+        const templatesAreEmpty = this.templates.every(t => t.isEmpty());
         return validatorIsEmpty && templatesAreEmpty;
     }
     /**
@@ -107,9 +105,7 @@ class Channel extends _1.SingleSave {
      * @returns {void}
      */
     filter() {
-        this.templates = this.templates.filter((template) => {
-            return !template.isEmpty();
-        });
+        this.templates = this.templates.filter(t => !t.isEmpty());
     }
     /**
      * Denotes if the config file exists and its templates
