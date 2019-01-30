@@ -7,29 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Fs = __importStar(require("fs"));
-const Path = __importStar(require("path"));
 const enum_1 = require("../enum");
-const _1 = require("./");
 const typedi_1 = require("typedi");
 const service_1 = require("../service");
-const mkdirp_1 = __importDefault(require("mkdirp"));
-class Template extends _1.SingleSave {
+class Template {
     /** Constructor */
     constructor(parent, object) {
-        super();
         this.parent = parent;
+        this.templatesStorageService = typedi_1.Container.get(service_1.TemplatesStorageService);
         if (object) {
             this.fromObject(object);
         }
@@ -85,19 +71,13 @@ class Template extends _1.SingleSave {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
-            this.content = Fs.readFileSync(contentPath, 'utf8');
-            this.didLoad(this.content);
+            this.content = yield this.templatesStorageService.get(`${this.parent.templatesPath}/${this.contentPath}`);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.shouldSave(this.content)) {
-                const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
-                mkdirp_1.default.sync(Path.dirname(contentPath));
-                Fs.writeFileSync(contentPath, this.content, 'utf8');
-            }
+            yield this.templatesStorageService.set(`${this.parent.templatesPath}/${this.contentPath}`, this.content);
         });
     }
     /**

@@ -15,5 +15,6 @@ __export(require("./Writer"));
 __export(require("./HttpServer"));
 __export(require("./Validator"));
 __export(require("./WebSocketServer"));
+__export(require("./storage"));
 __export(require("./websocket-handlers"));
 //# sourceMappingURL=index.js.map

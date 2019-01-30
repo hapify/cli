@@ -1,5 +1,3 @@
-import * as Fs from 'fs';
-import * as Path from 'path';
 import {
 	ITemplate,
 	IStorable,
@@ -7,15 +5,16 @@ import {
 	IConfigTemplate
 } from '../interface';
 import { TemplateInput, TemplateEngine, SentenceFormat } from '../enum';
-import { Channel, SingleSave } from './';
+import { Channel } from './';
 import { Container } from 'typedi';
-import { StringService } from '../service';
-import mkdirp from 'mkdirp';
+import { TemplatesStorageService, StringService } from '../service';
 
-export class Template extends SingleSave
+export class Template
 	implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */
 	private static defaultFolder = 'model';
+	/** Template storage */
+	private templatesStorageService: TemplatesStorageService;
 	/** @type {string} The template's path */
 	path: string;
 	/** @type {string} The template's type */
@@ -29,7 +28,7 @@ export class Template extends SingleSave
 
 	/** Constructor */
 	constructor(private parent: Channel, object?: ITemplate) {
-		super();
+		this.templatesStorageService = Container.get(TemplatesStorageService);
 		if (object) {
 			this.fromObject(object);
 		}
@@ -93,20 +92,17 @@ export class Template extends SingleSave
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		const contentPath = `${this.parent.templatesPath}/${this.contentPath}`;
-		this.content = <string>Fs.readFileSync(contentPath, 'utf8');
-		this.didLoad(this.content);
+		this.content = await this.templatesStorageService.get(
+			`${this.parent.templatesPath}/${this.contentPath}`
+		);
 	}
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		if (this.shouldSave(this.content)) {
-			const contentPath = `${this.parent.templatesPath}/${
-				this.contentPath
-			}`;
-			mkdirp.sync(Path.dirname(contentPath));
-			Fs.writeFileSync(contentPath, this.content, 'utf8');
-		}
+		await this.templatesStorageService.set(
+			`${this.parent.templatesPath}/${this.contentPath}`,
+			this.content
+		);
 	}
 
 	/**

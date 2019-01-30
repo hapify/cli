@@ -11,13 +11,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("./");
 const service_1 = require("../service");
 const typedi_1 = require("typedi");
-const config_1 = require("../config");
 class PresetsCollection {
     /** Constructor */
     constructor() {
         /** @type {Preset[]} The list of preset instances */
         this.presets = [];
-        this.apiService = typedi_1.Container.get(service_1.ApiService);
+        this.presetsStorageService = typedi_1.Container.get(service_1.PresetsStorageService);
     }
     /** Returns a singleton for this config */
     static getInstance() {
@@ -36,28 +35,13 @@ class PresetsCollection {
      */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            const presets = yield this.apiService
-                .get('preset', {
-                _page: 0,
-                _limit: config_1.ConfigRemote.presetsLimit
-            })
-                .then(response => {
-                return response.data.items.map((p) => ({
-                    id: p._id,
-                    name: p.name,
-                    name__fr: p.name__fr,
-                    description: p.description,
-                    description__fr: p.description__fr,
-                    icon: p.icon,
-                    models: p.models.map((m) => ({
-                        id: m._id,
-                        name: m.name,
-                        fields: m.fields,
-                        accesses: m.accesses
-                    }))
-                }));
-            });
-            this.fromObject(presets);
+            this.fromObject(yield this.presetsStorageService.list());
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Nothing to save
         });
     }
     /**
@@ -85,14 +69,7 @@ class PresetsCollection {
     }
     /** @inheritDoc */
     toObject() {
-        return this.presets.map((preset) => preset.toObject());
-    }
-    /**
-     * Returns a pseudo path
-     * @returns {string}
-     */
-    static path() {
-        return `preset`;
+        return this.presets.map(p => p.toObject());
     }
 }
 exports.PresetsCollection = PresetsCollection;

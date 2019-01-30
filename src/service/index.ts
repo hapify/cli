@@ -11,4 +11,5 @@ export * from './HttpServer';
 export * from './Validator';
 export * from './WebSocketServer';
 
+export * from './storage';
 export * from './websocket-handlers';

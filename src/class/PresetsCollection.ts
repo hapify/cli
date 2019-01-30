@@ -1,20 +1,20 @@
-import { IModel, IPreset, ISerializable } from '../interface';
+import { IPreset, ISerializable, IStorable } from '../interface';
 import { Preset } from './';
-import { ApiService, IApiModel, IApiPreset } from '../service';
+import { PresetsStorageService } from '../service';
 import { Container } from 'typedi';
-import { ConfigRemote } from '../config';
 
-export class PresetsCollection implements ISerializable<IPreset[], Preset[]> {
+export class PresetsCollection
+	implements IStorable, ISerializable<IPreset[], Preset[]> {
 	/** @type {Preset[]} The list of preset instances */
 	private presets: Preset[] = [];
-	/** @type {Model[]} Remote API service */
-	private apiService: ApiService;
+	/** Presets storage */
+	private presetsStorageService: PresetsStorageService;
 	/** @type {string} The loaded instance */
 	private static instance: PresetsCollection;
 
 	/** Constructor */
 	private constructor() {
-		this.apiService = Container.get(ApiService);
+		this.presetsStorageService = Container.get(PresetsStorageService);
 	}
 
 	/** Returns a singleton for this config */
@@ -31,34 +31,13 @@ export class PresetsCollection implements ISerializable<IPreset[], Preset[]> {
 	 * Load the presets
 	 * @return {Promise<void>}
 	 */
-	private async load(): Promise<void> {
-		const presets = await this.apiService
-			.get('preset', {
-				_page: 0,
-				_limit: ConfigRemote.presetsLimit
-			})
-			.then(response => {
-				return (<IApiPreset[]>response.data.items).map(
-					(p: IApiPreset): IPreset => ({
-						id: p._id,
-						name: p.name,
-						name__fr: p.name__fr,
-						description: p.description,
-						description__fr: p.description__fr,
-						icon: p.icon,
-						models: p.models.map(
-							(m: IApiModel): IModel => ({
-								id: m._id,
-								name: m.name,
-								fields: m.fields,
-								accesses: m.accesses
-							})
-						)
-					})
-				);
-			});
+	async load(): Promise<void> {
+		this.fromObject(await this.presetsStorageService.list());
+	}
 
-		this.fromObject(presets);
+	/** @inheritDoc */
+	async save(): Promise<void> {
+		// Nothing to save
 	}
 
 	/**
@@ -85,14 +64,6 @@ export class PresetsCollection implements ISerializable<IPreset[], Preset[]> {
 
 	/** @inheritDoc */
 	public toObject(): IPreset[] {
-		return this.presets.map((preset: Preset): IPreset => preset.toObject());
-	}
-
-	/**
-	 * Returns a pseudo path
-	 * @returns {string}
-	 */
-	private static path(): string {
-		return `preset`;
+		return this.presets.map(p => p.toObject());
 	}
 }
