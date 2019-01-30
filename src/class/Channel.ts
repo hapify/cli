@@ -13,7 +13,7 @@ import md5 from 'md5';
 import * as Joi from 'joi';
 import { FieldType } from './FieldType';
 import { Container } from 'typedi';
-import { ChannelStorageService } from '../service';
+import { ChannelFileStorageService } from '../service';
 
 export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	/** @type {string} */
@@ -35,7 +35,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	/** @type {string} */
 	public templatesPath: string;
 	/** Channel storage */
-	private storageService: ChannelStorageService;
+	private storageService: ChannelFileStorageService;
 
 	/**
 	 * Constructor
@@ -43,7 +43,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	 * @param {string|null} name
 	 */
 	constructor(public path: string, name: string = null) {
-		this.storageService = Container.get(ChannelStorageService);
+		this.storageService = Container.get(ChannelFileStorageService);
 		this.name = name ? name : Path.basename(path);
 		this.id = md5(this.path);
 		this.templatesPath = Path.join(this.path, Channel.defaultFolder);
@@ -166,7 +166,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	}
 	/** Denotes if the config file exists */
 	public static async configExists(path: string): Promise<boolean> {
-		return await Container.get(ChannelStorageService).exists([
+		return await Container.get(ChannelFileStorageService).exists([
 			path,
 			Channel.configFile
 		]);

@@ -18,9 +18,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const config_1 = require("../../config");
-const Api_1 = require("../Api");
-let PresetsStorageService = class PresetsStorageService {
+const config_1 = require("../../../config");
+const Api_1 = require("../../Api");
+let PresetsApiStorageService = class PresetsApiStorageService {
     /** Constructor */
     constructor(apiService) {
         this.apiService = apiService;
@@ -52,9 +52,9 @@ let PresetsStorageService = class PresetsStorageService {
         });
     }
 };
-PresetsStorageService = __decorate([
+PresetsApiStorageService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [Api_1.ApiService])
-], PresetsStorageService);
-exports.PresetsStorageService = PresetsStorageService;
+], PresetsApiStorageService);
+exports.PresetsApiStorageService = PresetsApiStorageService;
 //# sourceMappingURL=Presets.js.map

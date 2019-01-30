@@ -21,12 +21,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ChannelStorageService_1;
+var ChannelFileStorageService_1;
 const typedi_1 = require("typedi");
 const SingleSave_1 = require("./SingleSave");
 const Path = __importStar(require("path"));
 const Fs = __importStar(require("fs"));
-let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageService extends SingleSave_1.SingleSaveFileStorage {
+let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileStorageService extends SingleSave_1.SingleSaveFileStorage {
     /** @inheritDoc */
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,13 +49,13 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
         return __awaiter(this, void 0, void 0, function* () {
             const joinedRoot = SingleSave_1.JoinPath(root);
             const joinedLegitFiles = legitFiles.map(SingleSave_1.JoinPath);
-            const allFiles = ChannelStorageService_1.listAllFiles(joinedRoot);
+            const allFiles = ChannelFileStorageService_1.listAllFiles(joinedRoot);
             for (const filePath of allFiles) {
                 if (joinedLegitFiles.indexOf(filePath) < 0) {
                     Fs.unlinkSync(filePath);
                 }
             }
-            ChannelStorageService_1.clearEmptyDirectories(joinedRoot);
+            ChannelFileStorageService_1.clearEmptyDirectories(joinedRoot);
         });
     }
     /** Get all files' absolute path from a directory */
@@ -65,7 +65,7 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
         // Get sub-files
         const subFiles = entries
             .filter(subPath => Fs.statSync(subPath).isDirectory())
-            .map(subPath => ChannelStorageService_1.listAllFiles(subPath))
+            .map(subPath => ChannelFileStorageService_1.listAllFiles(subPath))
             .reduce((flatten, files) => flatten.concat(files), []);
         // Return files and sub-files
         return entries
@@ -78,7 +78,7 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
         Fs.readdirSync(rootPath)
             .map(dir => Path.join(rootPath, dir))
             .filter(subPath => Fs.statSync(subPath).isDirectory())
-            .forEach(subPath => ChannelStorageService_1.clearEmptyDirectories(subPath));
+            .forEach(subPath => ChannelFileStorageService_1.clearEmptyDirectories(subPath));
         // Count remaining files & dirs
         const count = Fs.readdirSync(rootPath).length;
         if (count === 0) {
@@ -86,8 +86,8 @@ let ChannelStorageService = ChannelStorageService_1 = class ChannelStorageServic
         }
     }
 };
-ChannelStorageService = ChannelStorageService_1 = __decorate([
+ChannelFileStorageService = ChannelFileStorageService_1 = __decorate([
     typedi_1.Service()
-], ChannelStorageService);
-exports.ChannelStorageService = ChannelStorageService;
+], ChannelFileStorageService);
+exports.ChannelFileStorageService = ChannelFileStorageService;
 //# sourceMappingURL=Channel.js.map

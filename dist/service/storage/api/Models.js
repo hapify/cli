@@ -20,13 +20,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ModelsStorageService_1;
+var ModelsApiStorageService_1;
 const md5_1 = __importDefault(require("md5"));
 const typedi_1 = require("typedi");
-const config_1 = require("../../config");
-const Api_1 = require("../Api");
-const class_1 = require("../../class");
-let ModelsStorageService = ModelsStorageService_1 = class ModelsStorageService {
+const config_1 = require("../../../config");
+const Api_1 = require("../../Api");
+const class_1 = require("../../../class");
+let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorageService {
     /** Constructor */
     constructor(apiService) {
         this.apiService = apiService;
@@ -71,7 +71,7 @@ let ModelsStorageService = ModelsStorageService_1 = class ModelsStorageService {
             }
             // Get models to update
             const toUpdate = models.filter(m => typeof this.hashes[m.id] === 'string' &&
-                this.hashes[m.id] !== ModelsStorageService_1.hash(m));
+                this.hashes[m.id] !== ModelsApiStorageService_1.hash(m));
             // Update models
             for (const model of toUpdate) {
                 yield this.apiService.patch(`model/${model.id}`, {
@@ -93,7 +93,7 @@ let ModelsStorageService = ModelsStorageService_1 = class ModelsStorageService {
     updateHashes(models) {
         this.hashes = {};
         for (const model of models) {
-            this.hashes[model.id] = ModelsStorageService_1.hash(model);
+            this.hashes[model.id] = ModelsApiStorageService_1.hash(model);
         }
     }
     /** Create a hash for the model */
@@ -101,9 +101,9 @@ let ModelsStorageService = ModelsStorageService_1 = class ModelsStorageService {
         return md5_1.default(JSON.stringify(new class_1.Model(model).toObject()));
     }
 };
-ModelsStorageService = ModelsStorageService_1 = __decorate([
+ModelsApiStorageService = ModelsApiStorageService_1 = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [Api_1.ApiService])
-], ModelsStorageService);
-exports.ModelsStorageService = ModelsStorageService;
+], ModelsApiStorageService);
+exports.ModelsApiStorageService = ModelsApiStorageService;
 //# sourceMappingURL=Models.js.map

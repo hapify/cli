@@ -13,6 +13,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -20,12 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const md5_1 = __importDefault(require("md5"));
 const typedi_1 = require("typedi");
-const SingleSave_1 = require("./SingleSave");
 const Fs = __importStar(require("fs"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Path = __importStar(require("path"));
@@ -33,12 +33,16 @@ function JoinPath(path) {
     return path instanceof Array ? Path.join(...path) : path;
 }
 exports.JoinPath = JoinPath;
-let SingleSaveFileStorage = class SingleSaveFileStorage extends SingleSave_1.SingleSave {
+let SingleSaveFileStorage = class SingleSaveFileStorage {
+    constructor() {
+        /** The template's content's md5 hash */
+        this.contentMd5 = {};
+    }
     /** Load content from path */
     get(path) {
         return __awaiter(this, void 0, void 0, function* () {
             const contentPath = JoinPath(path);
-            const content = (Fs.readFileSync(Path.join(...contentPath), 'utf8'));
+            const content = Fs.readFileSync(contentPath, 'utf8');
             this.didLoad(contentPath, content);
             return yield this.deserialize(content);
         });
@@ -66,7 +70,7 @@ let SingleSaveFileStorage = class SingleSaveFileStorage extends SingleSave_1.Sin
      * @param {string} data
      */
     didLoad(bucket, data) {
-        this.contentMd5[bucket] = md5(data);
+        this.contentMd5[bucket] = md5_1.default(data);
     }
     /**
      * Denotes if the data has changed and update the hash if necessary
@@ -76,7 +80,7 @@ let SingleSaveFileStorage = class SingleSaveFileStorage extends SingleSave_1.Sin
      * @return {boolean}
      */
     shouldSave(bucket, data) {
-        const contentMd5 = md5(data);
+        const contentMd5 = md5_1.default(data);
         if (typeof this.contentMd5[bucket] === 'undefined' ||
             contentMd5 !== this.contentMd5[bucket]) {
             this.contentMd5[bucket] = contentMd5;
@@ -89,4 +93,4 @@ SingleSaveFileStorage = __decorate([
     typedi_1.Service()
 ], SingleSaveFileStorage);
 exports.SingleSaveFileStorage = SingleSaveFileStorage;
-//# sourceMappingURL=SingleSaveFile.js.map
+//# sourceMappingURL=SingleSave.js.map

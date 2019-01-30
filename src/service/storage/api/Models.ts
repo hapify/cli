@@ -1,12 +1,12 @@
 import md5 from 'md5';
 import { Service } from 'typedi';
-import { ConfigRemote } from '../../config';
-import { ApiService, IApiModel } from '../Api';
-import { IModel } from '../../interface';
-import { Model } from '../../class';
+import { ConfigRemote } from '../../../config';
+import { ApiService, IApiModel } from '../../Api';
+import { IModel } from '../../../interface';
+import { Model } from '../../../class';
 
 @Service()
-export class ModelsStorageService {
+export class ModelsApiStorageService {
 	/** The models fingerprints */
 	private hashes: { [id: string]: string } = {};
 	/** Constructor */
@@ -57,7 +57,7 @@ export class ModelsStorageService {
 		const toUpdate = models.filter(
 			m =>
 				typeof this.hashes[m.id] === 'string' &&
-				this.hashes[m.id] !== ModelsStorageService.hash(m)
+				this.hashes[m.id] !== ModelsApiStorageService.hash(m)
 		);
 
 		// Update models
@@ -86,7 +86,7 @@ export class ModelsStorageService {
 	private updateHashes(models: IModel[]) {
 		this.hashes = {};
 		for (const model of models) {
-			this.hashes[model.id] = ModelsStorageService.hash(model);
+			this.hashes[model.id] = ModelsApiStorageService.hash(model);
 		}
 	}
 

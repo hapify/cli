@@ -19,7 +19,7 @@ class Validator {
     constructor(parent, path) {
         this.parent = parent;
         this.path = path;
-        this.storageService = typedi_1.Container.get(service_1.ValidatorStorageService);
+        this.storageService = typedi_1.Container.get(service_1.ValidatorFileStorageService);
     }
     /** @inheritDoc */
     load() {

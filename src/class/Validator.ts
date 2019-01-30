@@ -1,13 +1,13 @@
 import { IStorable } from '../interface';
 import { Channel } from './';
-import { ValidatorStorageService } from '../service';
+import { ValidatorFileStorageService } from '../service';
 import { Container } from 'typedi';
 
 export class Validator implements IStorable {
 	/** @type {string} The validator's script content */
 	content: string;
 	/** Validator storage */
-	private storageService: ValidatorStorageService;
+	private storageService: ValidatorFileStorageService;
 
 	/**
 	 * Constructor
@@ -15,7 +15,7 @@ export class Validator implements IStorable {
 	 * @param {string} path
 	 */
 	constructor(private parent: Channel, public path: string) {
-		this.storageService = Container.get(ValidatorStorageService);
+		this.storageService = Container.get(ValidatorFileStorageService);
 	}
 
 	/** @inheritDoc */

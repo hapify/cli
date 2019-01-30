@@ -15,7 +15,7 @@ class Template {
     /** Constructor */
     constructor(parent, object) {
         this.parent = parent;
-        this.storageService = typedi_1.Container.get(service_1.TemplatesStorageService);
+        this.storageService = typedi_1.Container.get(service_1.TemplatesFileStorageService);
         if (object) {
             this.fromObject(object);
         }

@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const SingleSave_1 = require("./SingleSave");
-let TemplatesStorageService = class TemplatesStorageService extends SingleSave_1.SingleSaveFileStorage {
+let ValidatorFileStorageService = class ValidatorFileStorageService extends SingleSave_1.SingleSaveFileStorage {
     /** @inheritDoc */
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,8 +30,8 @@ let TemplatesStorageService = class TemplatesStorageService extends SingleSave_1
         });
     }
 };
-TemplatesStorageService = __decorate([
+ValidatorFileStorageService = __decorate([
     typedi_1.Service()
-], TemplatesStorageService);
-exports.TemplatesStorageService = TemplatesStorageService;
-//# sourceMappingURL=Templates.js.map
+], ValidatorFileStorageService);
+exports.ValidatorFileStorageService = ValidatorFileStorageService;
+//# sourceMappingURL=Validator.js.map

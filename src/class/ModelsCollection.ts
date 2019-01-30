@@ -1,7 +1,7 @@
 import { IModel, IStorable, ISerializable } from '../interface';
 import { Model } from './';
 import { Container } from 'typedi';
-import { ModelsStorageService } from '../service';
+import { ModelsApiStorageService } from '../service';
 
 export class ModelsCollection
 	implements IStorable, ISerializable<IModel[], Model[]> {
@@ -12,14 +12,14 @@ export class ModelsCollection
 	/** @type {string} The loaded instances */
 	private static instances: ModelsCollection[] = [];
 	/** Presets storage */
-	private storageService: ModelsStorageService;
+	private storageService: ModelsApiStorageService;
 
 	/**
 	 * Constructor
 	 * @param {string} project
 	 */
 	private constructor(public project: string) {
-		this.storageService = Container.get(ModelsStorageService);
+		this.storageService = Container.get(ModelsApiStorageService);
 		this.path = ModelsCollection.path(project);
 	}
 

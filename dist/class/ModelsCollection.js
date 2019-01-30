@@ -18,7 +18,7 @@ class ModelsCollection {
      */
     constructor(project) {
         this.project = project;
-        this.storageService = typedi_1.Container.get(service_1.ModelsStorageService);
+        this.storageService = typedi_1.Container.get(service_1.ModelsApiStorageService);
         this.path = ModelsCollection.path(project);
     }
     /**

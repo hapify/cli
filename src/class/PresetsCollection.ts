@@ -1,6 +1,6 @@
 import { IPreset, ISerializable, IStorable } from '../interface';
 import { Preset } from './';
-import { PresetsStorageService } from '../service';
+import { PresetsApiStorageService } from '../service';
 import { Container } from 'typedi';
 
 export class PresetsCollection
@@ -8,13 +8,13 @@ export class PresetsCollection
 	/** @type {Preset[]} The list of preset instances */
 	private presets: Preset[] = [];
 	/** Presets storage */
-	private storageService: PresetsStorageService;
+	private storageService: PresetsApiStorageService;
 	/** @type {string} The loaded instance */
 	private static instance: PresetsCollection;
 
 	/** Constructor */
 	private constructor() {
-		this.storageService = Container.get(PresetsStorageService);
+		this.storageService = Container.get(PresetsApiStorageService);
 	}
 
 	/** Returns a singleton for this config */

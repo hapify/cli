@@ -35,7 +35,7 @@ class Channel {
      */
     constructor(path, name = null) {
         this.path = path;
-        this.storageService = typedi_1.Container.get(service_1.ChannelStorageService);
+        this.storageService = typedi_1.Container.get(service_1.ChannelFileStorageService);
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
@@ -133,7 +133,7 @@ class Channel {
     /** Denotes if the config file exists */
     static configExists(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield typedi_1.Container.get(service_1.ChannelStorageService).exists([
+            return yield typedi_1.Container.get(service_1.ChannelFileStorageService).exists([
                 path,
                 Channel.configFile
             ]);

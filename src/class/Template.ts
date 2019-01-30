@@ -7,14 +7,14 @@ import {
 import { TemplateInput, TemplateEngine, SentenceFormat } from '../enum';
 import { Channel } from './';
 import { Container } from 'typedi';
-import { TemplatesStorageService, StringService } from '../service';
+import { TemplatesFileStorageService, StringService } from '../service';
 
 export class Template
 	implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */
 	private static defaultFolder = 'model';
 	/** Template storage */
-	private storageService: TemplatesStorageService;
+	private storageService: TemplatesFileStorageService;
 	/** @type {string} The template's path */
 	path: string;
 	/** @type {string} The template's type */
@@ -28,7 +28,7 @@ export class Template
 
 	/** Constructor */
 	constructor(private parent: Channel, object?: ITemplate) {
-		this.storageService = Container.get(TemplatesStorageService);
+		this.storageService = Container.get(TemplatesFileStorageService);
 		if (object) {
 			this.fromObject(object);
 		}

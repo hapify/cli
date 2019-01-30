@@ -1,10 +1,10 @@
 import { Service } from 'typedi';
-import { ConfigRemote } from '../../config';
-import { ApiService, IApiModel, IApiPreset } from '../Api';
-import { IModel, IPreset } from '../../interface';
+import { ConfigRemote } from '../../../config';
+import { ApiService, IApiModel, IApiPreset } from '../../Api';
+import { IModel, IPreset } from '../../../interface';
 
 @Service()
-export class PresetsStorageService {
+export class PresetsApiStorageService {
 	/** Constructor */
 	constructor(private apiService: ApiService) {}
 

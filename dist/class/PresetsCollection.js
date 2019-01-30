@@ -16,7 +16,7 @@ class PresetsCollection {
     constructor() {
         /** @type {Preset[]} The list of preset instances */
         this.presets = [];
-        this.storageService = typedi_1.Container.get(service_1.PresetsStorageService);
+        this.storageService = typedi_1.Container.get(service_1.PresetsApiStorageService);
     }
     /** Returns a singleton for this config */
     static getInstance() {

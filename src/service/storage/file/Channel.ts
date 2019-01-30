@@ -2,10 +2,10 @@ import { Service } from 'typedi';
 import { SingleSaveFileStorage, JoinPath, FilePath } from './SingleSave';
 import * as Path from 'path';
 import * as Fs from 'fs';
-import { IConfig } from '../../interface/IObjects';
+import { IConfig } from '../../../interface';
 
 @Service()
-export class ChannelStorageService extends SingleSaveFileStorage<IConfig> {
+export class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
 	/** @inheritDoc */
 	protected async serialize(content: IConfig): Promise<string> {
 		return JSON.stringify(content, null, 2);
@@ -25,14 +25,14 @@ export class ChannelStorageService extends SingleSaveFileStorage<IConfig> {
 		const joinedRoot = JoinPath(root);
 		const joinedLegitFiles = legitFiles.map(JoinPath);
 
-		const allFiles = ChannelStorageService.listAllFiles(joinedRoot);
+		const allFiles = ChannelFileStorageService.listAllFiles(joinedRoot);
 		for (const filePath of allFiles) {
 			if (joinedLegitFiles.indexOf(filePath) < 0) {
 				Fs.unlinkSync(filePath);
 			}
 		}
 
-		ChannelStorageService.clearEmptyDirectories(joinedRoot);
+		ChannelFileStorageService.clearEmptyDirectories(joinedRoot);
 	}
 	/** Get all files' absolute path from a directory */
 	private static listAllFiles(rootPath: string): string[] {
@@ -44,7 +44,7 @@ export class ChannelStorageService extends SingleSaveFileStorage<IConfig> {
 		// Get sub-files
 		const subFiles = entries
 			.filter(subPath => Fs.statSync(subPath).isDirectory())
-			.map(subPath => ChannelStorageService.listAllFiles(subPath))
+			.map(subPath => ChannelFileStorageService.listAllFiles(subPath))
 			.reduce(
 				(flatten: string[], files: string[]) => flatten.concat(files),
 				[]
@@ -62,7 +62,7 @@ export class ChannelStorageService extends SingleSaveFileStorage<IConfig> {
 			.map(dir => Path.join(rootPath, dir))
 			.filter(subPath => Fs.statSync(subPath).isDirectory())
 			.forEach(subPath =>
-				ChannelStorageService.clearEmptyDirectories(subPath)
+				ChannelFileStorageService.clearEmptyDirectories(subPath)
 			);
 
 		// Count remaining files & dirs
