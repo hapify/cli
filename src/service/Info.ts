@@ -5,8 +5,6 @@ import { ILimits, IProject, IField } from '../interface';
 
 @Service()
 export class InfoService {
-	/** Stores the project instance */
-	private _project: IProject;
 	/** Stores the default fields */
 	private _fields: IField[];
 	/** Stores the limits */
@@ -28,13 +26,8 @@ export class InfoService {
 
 	/** Get the project once and returns it */
 	async project(): Promise<IProject> {
-		if (!this._project) {
-			const channel = (await this.channelsService.channels())[0];
-			this._project = (await this.api().get(
-				`project/${channel.config.project}`
-			)).data;
-		}
-		return this._project;
+		const channel = (await this.channelsService.channels())[0];
+		return channel.project.toObject();
 	}
 
 	/** Get the limits once and returns them */

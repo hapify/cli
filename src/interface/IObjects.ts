@@ -125,31 +125,31 @@ export interface IChannel {
 }
 
 export interface IPreset {
-	/** @type {string} The preset's unique id */
+	/** The preset's unique id */
 	id: string;
-	/** @type {string} The preset icon */
+	/** The preset icon */
 	icon: string;
-	/** @type {string} The preset's name */
+	/** The preset's name */
 	name: string;
-	/** @type {string} The preset's name in french */
+	/** The preset's name in french */
 	name__fr: string;
-	/** @type {string} The preset's name */
+	/**The preset's name */
 	description: string;
-	/** @type {string} The preset's name in french */
+	/** The preset's name in french */
 	description__fr: string;
-	/** @type {IModel[]} The models of the preset */
+	/** The models of the preset */
 	models: IModel[];
 }
 
 export interface IProject {
 	/** The project's unique id */
-	created_at: number | Date;
+	id: string;
+	/** The project's creation date */
+	created_at: number;
 	/** The project's name */
 	name: string;
 	/** The project's description */
 	description?: string | null;
-	/** The project's owner paylaod */
-	owner: string | any;
 }
 
 export interface ILimits {

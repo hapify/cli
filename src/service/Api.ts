@@ -26,12 +26,20 @@ export interface IApiPreset {
 	created_at?: number;
 	version?: string;
 	name?: string;
-	name__fr: string;
-	description: string;
-	description__fr: string;
+	name__fr?: string;
+	description?: string;
+	description__fr?: string;
 	slug?: string;
 	icon?: string;
 	models?: IApiModel[];
+}
+
+export interface IApiProject {
+	_id?: string;
+	created_at?: number;
+	name?: string;
+	description?: string | null;
+	owner?: string | any;
 }
 
 type ErrorData = { [k: string]: any };

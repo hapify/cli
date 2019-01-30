@@ -7,7 +7,7 @@ import {
 	ConfigSchema,
 	TransformValidationMessage
 } from '../interface';
-import { ModelsCollection, Template, Validator } from './';
+import { ModelsCollection, Project, Template, Validator } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
 import * as Joi from 'joi';
@@ -30,6 +30,8 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	public templates: Template[];
 	/** @type {Template[]} Templates instances */
 	public validator: Validator;
+	/** @type {Project} Current project */
+	public project: Project;
 	/** @type {ModelsCollection} List of models container */
 	public modelsCollection: ModelsCollection;
 	/** @type {string} */
@@ -76,6 +78,10 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			this.name = this.config.name;
 		}
 
+		// Load project
+		this.project = new Project(this);
+		await this.project.load();
+
 		// Load each content file
 		this.templates = [];
 		for (let i = 0; i < this.config.templates.length; i++) {
@@ -104,6 +110,9 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			await template.save();
 		}
 		await this.validator.save();
+
+		// Save project (no effect)
+		await this.project.save();
 
 		// Update configurations
 		this.config.templates = this.templates.map(m => {

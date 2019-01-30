@@ -57,8 +57,6 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
     /** Send models to API if necessary */
     set(project, models) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(models.map((m) => ({ id: m.id, name: m.name })));
-            console.log(this.hashes);
             // Get models to create
             const toCreate = models.filter(m => typeof this.hashes[m.id] === 'undefined');
             // Create models and update id

@@ -63,6 +63,9 @@ class Channel {
             if (this.config.name) {
                 this.name = this.config.name;
             }
+            // Load project
+            this.project = new _1.Project(this);
+            yield this.project.load();
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
@@ -85,6 +88,8 @@ class Channel {
                 yield template.save();
             }
             yield this.validator.save();
+            // Save project (no effect)
+            yield this.project.save();
             // Update configurations
             this.config.templates = this.templates.map(m => {
                 const t = m.toObject();

@@ -10,6 +10,7 @@ __export(require("./Model"));
 __export(require("./ModelsCollection"));
 __export(require("./Preset"));
 __export(require("./PresetsCollection"));
+__export(require("./Project"));
 __export(require("./Field"));
 __export(require("./FieldType"));
 __export(require("./RichError"));

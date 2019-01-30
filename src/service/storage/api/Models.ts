@@ -37,9 +37,6 @@ export class ModelsApiStorageService {
 
 	/** Send models to API if necessary */
 	async set(project: string, models: IModel[]): Promise<IModel[]> {
-		console.log(models.map((m: IModel) => ({ id: m.id, name: m.name })));
-		console.log(this.hashes);
-
 		// Get models to create
 		const toCreate = models.filter(
 			m => typeof this.hashes[m.id] === 'undefined'

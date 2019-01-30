@@ -2,7 +2,7 @@ import { IPreset, ISerializable } from '../interface';
 import { Model } from './';
 
 export class Preset implements ISerializable<IPreset, Preset>, IPreset {
-	/** @type {string} The model's unique id */
+	/** @type {string} The preset's unique id */
 	id: string;
 	/** @type {string} The preset icon */
 	icon: string;

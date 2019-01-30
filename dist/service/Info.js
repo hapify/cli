@@ -35,11 +35,8 @@ let InfoService = class InfoService {
     /** Get the project once and returns it */
     project() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this._project) {
-                const channel = (yield this.channelsService.channels())[0];
-                this._project = (yield this.api().get(`project/${channel.config.project}`)).data;
-            }
-            return this._project;
+            const channel = (yield this.channelsService.channels())[0];
+            return channel.project.toObject();
         });
     }
     /** Get the limits once and returns them */
