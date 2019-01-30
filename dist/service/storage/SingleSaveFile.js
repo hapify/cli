@@ -29,18 +29,24 @@ const SingleSave_1 = require("./SingleSave");
 const Fs = __importStar(require("fs"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Path = __importStar(require("path"));
+function JoinPath(path) {
+    return path instanceof Array ? Path.join(...path) : path;
+}
+exports.JoinPath = JoinPath;
 let SingleSaveFileStorage = class SingleSaveFileStorage extends SingleSave_1.SingleSave {
     /** Load content from path */
-    get(contentPath) {
+    get(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            const content = Fs.readFileSync(contentPath, 'utf8');
+            const contentPath = JoinPath(path);
+            const content = (Fs.readFileSync(Path.join(...contentPath), 'utf8'));
             this.didLoad(contentPath, content);
             return content;
         });
     }
     /** Load content from path */
-    set(contentPath, content) {
+    set(path, content) {
         return __awaiter(this, void 0, void 0, function* () {
+            const contentPath = JoinPath(path);
             if (this.shouldSave(contentPath, content)) {
                 mkdirp_1.default.sync(Path.dirname(contentPath));
                 Fs.writeFileSync(contentPath, content, 'utf8');

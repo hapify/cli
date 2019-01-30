@@ -83,36 +83,27 @@ class Channel extends _1.SingleSave {
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Copy all contents to files and update config
+            // Saves subs instances
             for (const template of this.templates) {
                 yield template.save();
             }
+            yield this.validator.save();
+            // Update configurations
             this.config.templates = this.templates.map((m) => {
                 const t = m.toObject();
                 delete t.content;
                 return t;
             });
-            // Write validator
-            yield this.validator.save();
             this.config.validatorPath = this.validator.path;
             // Write file if necessary
-            const data = JSON.stringify(this.config, null, 2);
-            if (this.shouldSave(data)) {
-                const path = `${this.path}/${Channel.configFile}`;
-                Fs.writeFileSync(path, data, 'utf8');
-            }
+            yield this.storageService.set([this.path, Channel.configFile], JSON.stringify(this.config, null, 2));
             // Cleanup files in template path
-            const legitFiles = [Path.join(this.path, this.config.validatorPath)];
-            for (const template of this.templates) {
-                legitFiles.push(Path.join(this.templatesPath, template.contentPath));
-            }
-            const allFiles = Channel.listAllFiles(Path.join(this.path, Channel.defaultFolder));
-            for (const filePath of allFiles) {
-                if (legitFiles.indexOf(filePath) < 0) {
-                    Fs.unlinkSync(filePath);
-                }
-            }
-            Channel.clearEmptyDirectories(Path.join(this.path, Channel.defaultFolder));
+            const legitFiles = this.templates.map(t => [
+                this.templatesPath,
+                t.contentPath
+            ]);
+            legitFiles.push([this.path, this.config.validatorPath]);
+            yield this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
         });
     }
     /**
@@ -267,40 +258,6 @@ class Channel extends _1.SingleSave {
             templates: this.templates.map((template) => template.toObject()),
             validator: this.validator.content
         };
-    }
-    /**
-     * Get all files' absolute path from a directory
-     * @param {string} rootPath
-     * @return {string[]}
-     */
-    static listAllFiles(rootPath) {
-        // Read the whole directory
-        const entries = Fs.readdirSync(rootPath).map(dir => Path.join(rootPath, dir));
-        // Get sub-files
-        const subFiles = entries
-            .filter(subPath => Fs.statSync(subPath).isDirectory())
-            .map(subPath => Channel.listAllFiles(subPath))
-            .reduce((flatten, files) => flatten.concat(files), []);
-        // Return files and sub-files
-        return entries
-            .filter(subPath => Fs.statSync(subPath).isFile())
-            .concat(subFiles);
-    }
-    /**
-     * Delete all directories if empty
-     * @param {string} rootPath
-     */
-    static clearEmptyDirectories(rootPath) {
-        // Remove sub-directories
-        Fs.readdirSync(rootPath)
-            .map(dir => Path.join(rootPath, dir))
-            .filter(subPath => Fs.statSync(subPath).isDirectory())
-            .forEach(subPath => Channel.clearEmptyDirectories(subPath));
-        // Count remaining files & dirs
-        const count = Fs.readdirSync(rootPath).length;
-        if (count === 0) {
-            Fs.rmdirSync(rootPath);
-        }
     }
 }
 /** @type {string} */

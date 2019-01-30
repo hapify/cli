@@ -15,6 +15,7 @@ import md5 from 'md5';
 import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
 import { FieldType } from './FieldType';
+import { ChannelStorageService } from '../service';
 
 export class Channel extends SingleSave
 	implements IStorable, ISerializable<IChannel, Channel> {
@@ -42,6 +43,8 @@ export class Channel extends SingleSave
 	public modelsCollection: ModelsCollection;
 	/** @type {string} */
 	public templatesPath: string;
+	/** Channel storage */
+	private storageService: ChannelStorageService;
 
 	/**
 	 * Constructor
@@ -101,44 +104,35 @@ export class Channel extends SingleSave
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		// Copy all contents to files and update config
+		// Saves subs instances
 		for (const template of this.templates) {
 			await template.save();
 		}
+		await this.validator.save();
+
+		// Update configurations
 		this.config.templates = this.templates.map((m: Template) => {
 			const t = m.toObject();
 			delete t.content;
 			return t;
 		});
-
-		// Write validator
-		await this.validator.save();
 		this.config.validatorPath = this.validator.path;
 
 		// Write file if necessary
-		const data = JSON.stringify(this.config, null, 2);
-		if (this.shouldSave(data)) {
-			const path = `${this.path}/${Channel.configFile}`;
-			Fs.writeFileSync(path, data, 'utf8');
-		}
+		await this.storageService.set(
+			[this.path, Channel.configFile],
+			JSON.stringify(this.config, null, 2)
+		);
 
 		// Cleanup files in template path
-		const legitFiles = [Path.join(this.path, this.config.validatorPath)];
-		for (const template of this.templates) {
-			legitFiles.push(
-				Path.join(this.templatesPath, template.contentPath)
-			);
-		}
-		const allFiles = Channel.listAllFiles(
-			Path.join(this.path, Channel.defaultFolder)
-		);
-		for (const filePath of allFiles) {
-			if (legitFiles.indexOf(filePath) < 0) {
-				Fs.unlinkSync(filePath);
-			}
-		}
-		Channel.clearEmptyDirectories(
-			Path.join(this.path, Channel.defaultFolder)
+		const legitFiles = this.templates.map(t => [
+			this.templatesPath,
+			t.contentPath
+		]);
+		legitFiles.push([this.path, this.config.validatorPath]);
+		await this.storageService.cleanup(
+			[this.path, Channel.defaultFolder],
+			legitFiles
 		);
 	}
 
@@ -333,50 +327,5 @@ export class Channel extends SingleSave
 			),
 			validator: this.validator.content
 		};
-	}
-
-	/**
-	 * Get all files' absolute path from a directory
-	 * @param {string} rootPath
-	 * @return {string[]}
-	 */
-	private static listAllFiles(rootPath: string): string[] {
-		// Read the whole directory
-		const entries = Fs.readdirSync(rootPath).map(dir =>
-			Path.join(rootPath, dir)
-		);
-
-		// Get sub-files
-		const subFiles = entries
-			.filter(subPath => Fs.statSync(subPath).isDirectory())
-			.map(subPath => Channel.listAllFiles(subPath))
-			.reduce(
-				(flatten: string[], files: string[]) => flatten.concat(files),
-				[]
-			);
-
-		// Return files and sub-files
-		return entries
-			.filter(subPath => Fs.statSync(subPath).isFile())
-			.concat(subFiles);
-	}
-
-	/**
-	 * Delete all directories if empty
-	 * @param {string} rootPath
-	 */
-	private static clearEmptyDirectories(rootPath: string): void {
-		// Remove sub-directories
-		Fs.readdirSync(rootPath)
-			.map(dir => Path.join(rootPath, dir))
-			.filter(subPath => Fs.statSync(subPath).isDirectory())
-			.forEach(subPath => Channel.clearEmptyDirectories(subPath));
-
-		// Count remaining files & dirs
-		const count = Fs.readdirSync(rootPath).length;
-
-		if (count === 0) {
-			Fs.rmdirSync(rootPath);
-		}
 	}
 }

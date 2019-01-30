@@ -43,9 +43,7 @@ class Template {
      * @returns {boolean}
      */
     isEmpty() {
-        return (typeof this.content !== 'string' ||
-            this.content === null ||
-            this.content.trim().length === 0);
+        return (typeof this.content !== 'string' || this.content.trim().length === 0);
     }
     /**
      * Denotes if the template needs a specific model to be generated
@@ -71,13 +69,16 @@ class Template {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.content = yield this.storageService.get(`${this.parent.templatesPath}/${this.contentPath}`);
+            this.content = yield this.storageService.get([
+                this.parent.templatesPath,
+                this.contentPath
+            ]);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.storageService.set(`${this.parent.templatesPath}/${this.contentPath}`, this.content);
+            yield this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
         });
     }
     /**

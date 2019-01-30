@@ -17,15 +17,16 @@ export class Validator implements IStorable {
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		this.content = await this.storageService.get(
-			`${this.parent.path}/${this.path}`
-		);
+		this.content = await this.storageService.get([
+			this.parent.path,
+			this.path
+		]);
 	}
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
 		await this.storageService.set(
-			`${this.parent.path}/${this.path}`,
+			[this.parent.path, this.path],
 			this.content
 		);
 	}
@@ -36,9 +37,7 @@ export class Validator implements IStorable {
 	 */
 	public isEmpty(): boolean {
 		return (
-			typeof this.content !== 'string' ||
-			this.content === null ||
-			this.content.trim().length === 0
+			typeof this.content !== 'string' || this.content.trim().length === 0
 		);
 	}
 }

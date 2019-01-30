@@ -6,4 +6,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./Presets"));
 __export(require("./Templates"));
 __export(require("./Validator"));
+__export(require("./Channel"));
 //# sourceMappingURL=index.js.map

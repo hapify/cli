@@ -21,13 +21,16 @@ class Validator {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.content = yield this.storageService.get(`${this.parent.path}/${this.path}`);
+            this.content = yield this.storageService.get([
+                this.parent.path,
+                this.path
+            ]);
         });
     }
     /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.storageService.set(`${this.parent.path}/${this.path}`, this.content);
+            yield this.storageService.set([this.parent.path, this.path], this.content);
         });
     }
     /**
@@ -35,9 +38,7 @@ class Validator {
      * @returns {boolean}
      */
     isEmpty() {
-        return (typeof this.content !== 'string' ||
-            this.content === null ||
-            this.content.trim().length === 0);
+        return (typeof this.content !== 'string' || this.content.trim().length === 0);
     }
 }
 exports.Validator = Validator;
