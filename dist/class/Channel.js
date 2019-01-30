@@ -36,10 +36,6 @@ class Channel extends _1.SingleSave {
     constructor(path, name = null) {
         super();
         this.path = path;
-        /** @type {string} */
-        this.description = null;
-        /** @type {string} */
-        this.logo = null;
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
@@ -56,15 +52,6 @@ class Channel extends _1.SingleSave {
             // Complete channel info
             if (this.config.name) {
                 this.name = this.config.name;
-            }
-            if (this.config.description) {
-                this.description = this.config.description;
-            }
-            if (this.config.logo) {
-                this.logo = this.config.logo;
-            }
-            if (this.config.defaultFields) {
-                this.defaultFields = this.config.defaultFields;
             }
             // Load each content file
             this.templates = [];
@@ -253,8 +240,8 @@ class Channel extends _1.SingleSave {
         return {
             id: this.id,
             name: this.name,
-            description: this.description,
-            logo: this.logo,
+            description: this.config.description || null,
+            logo: this.config.logo || null,
             templates: this.templates.map((template) => template.toObject()),
             validator: this.validator.content
         };

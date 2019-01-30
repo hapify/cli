@@ -22,10 +22,6 @@ export class Channel extends SingleSave
 	/** @type {string} */
 	public name: string;
 	/** @type {string} */
-	private description: string = null;
-	/** @type {string} */
-	private logo: string = null;
-	/** @type {string} */
 	public id: string;
 	/** @type {string} */
 	private static defaultFolder = 'hapify';
@@ -37,8 +33,6 @@ export class Channel extends SingleSave
 	public templates: Template[];
 	/** @type {Template[]} Templates instances */
 	public validator: Validator;
-	/** @type {IField[]} Default models fields */
-	public defaultFields: IField[];
 	/** @type {ModelsCollection} List of models container */
 	public modelsCollection: ModelsCollection;
 	/** @type {string} */
@@ -70,15 +64,6 @@ export class Channel extends SingleSave
 		// Complete channel info
 		if (this.config.name) {
 			this.name = this.config.name;
-		}
-		if (this.config.description) {
-			this.description = this.config.description;
-		}
-		if (this.config.logo) {
-			this.logo = this.config.logo;
-		}
-		if (this.config.defaultFields) {
-			this.defaultFields = this.config.defaultFields;
 		}
 
 		// Load each content file
@@ -320,8 +305,8 @@ export class Channel extends SingleSave
 		return {
 			id: this.id,
 			name: this.name,
-			description: this.description,
-			logo: this.logo,
+			description: this.config.description || null,
+			logo: this.config.logo || null,
 			templates: this.templates.map((template: Template) =>
 				template.toObject()
 			),

@@ -82,8 +82,8 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             // Get defined fields
             const channels = yield this.channels();
             const fieldsGroup = channels
-                .filter(c => !!c.defaultFields)
-                .map(c => c.defaultFields);
+                .filter(c => !!c.config.defaultFields)
+                .map(c => c.config.defaultFields);
             if (fieldsGroup.length < 2) {
                 return;
             }

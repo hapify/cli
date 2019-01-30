@@ -50,8 +50,8 @@ export class InfoService {
 		if (!this._fields) {
 			// Get defined fields
 			const channels = await this.channelsService.channels();
-			const channel = channels.find(c => !!c.defaultFields);
-			this._fields = channel ? channel.defaultFields : [];
+			const channel = channels.find(c => !!c.config.defaultFields);
+			this._fields = channel ? channel.config.defaultFields : [];
 		}
 		return this._fields;
 	}
