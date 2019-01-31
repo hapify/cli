@@ -79,8 +79,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		}
 
 		// Load project
-		this.project = new Project(this);
-		await this.project.load();
+		this.project = await Project.getInstance(this.config.project);
 
 		// Load each content file
 		this.templates = [];

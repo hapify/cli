@@ -90,7 +90,7 @@ class ModelsCollection {
         return `project:${project}`;
     }
 }
-/** @type {string} The loaded instances */
+/** The loaded instances */
 ModelsCollection.instances = [];
 exports.ModelsCollection = ModelsCollection;
 //# sourceMappingURL=ModelsCollection.js.map

@@ -64,8 +64,7 @@ class Channel {
                 this.name = this.config.name;
             }
             // Load project
-            this.project = new _1.Project(this);
-            yield this.project.load();
+            this.project = yield _1.Project.getInstance(this.config.project);
             // Load each content file
             this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {

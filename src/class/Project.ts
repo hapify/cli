@@ -1,6 +1,5 @@
 import { IProject, ISerializable, IStorable } from '../interface';
 import { ProjectApiStorageService } from '../service';
-import { Channel } from './';
 import { Container } from 'typedi';
 
 export class Project
@@ -17,13 +16,24 @@ export class Project
 	owner: string | any;
 	/** Project storage */
 	private storageService: ProjectApiStorageService;
+	/** The loaded instances */
+	private static instances: { [id: string]: Project } = {};
 
 	/** Constructor */
-	constructor(private parent: Channel, object?: IProject) {
+	private constructor(private project: string) {
 		this.storageService = Container.get(ProjectApiStorageService);
-		if (object) {
-			this.fromObject(object);
+	}
+
+	/**
+	 * Returns a singleton for this config
+	 * @param {string} project
+	 */
+	public static async getInstance(project: string) {
+		if (!this.instances[project]) {
+			this.instances[project] = new Project(project);
+			await this.instances[project].load();
 		}
+		return this.instances[project];
 	}
 
 	/** @inheritDoc */
@@ -47,9 +57,7 @@ export class Project
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		this.fromObject(
-			await this.storageService.get(this.parent.config.project)
-		);
+		this.fromObject(await this.storageService.get(this.project));
 	}
 
 	/** @inheritDoc */

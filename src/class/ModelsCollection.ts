@@ -9,7 +9,7 @@ export class ModelsCollection
 	private models: Model[];
 	/** @type {string} The pseudo path */
 	public path: string;
-	/** @type {string} The loaded instances */
+	/** The loaded instances */
 	private static instances: ModelsCollection[] = [];
 	/** Presets storage */
 	private storageService: ModelsApiStorageService;
