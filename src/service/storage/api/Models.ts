@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { ConfigRemote } from '../../../config';
 import { ApiService, IApiModel } from '../../Api';
 import { IModel } from '../../../interface';
-import { Model } from '../../../class';
+import { Model, FieldType } from '../../../class';
 
 @Service()
 export class ModelsApiStorageService {
@@ -42,6 +42,9 @@ export class ModelsApiStorageService {
 			m => typeof this.hashes[m.id] === 'undefined'
 		);
 
+		// Init map to match temp id to real id
+		const createdMap: { [id: string]: string } = {};
+
 		// Create models and update id
 		for (const model of toCreate) {
 			const response = await this.apiService.post('model', {
@@ -51,6 +54,31 @@ export class ModelsApiStorageService {
 				accesses: model.accesses
 			});
 			model.id = response.data._id;
+			createdMap[model.id] = response.data._id;
+		}
+
+		/** Change references from temp id to real id and denotes if a change was made */
+		const changeReferencesToNewModels = (m: IModel): boolean => {
+			let changed = false;
+			for (const f of m.fields) {
+				if (
+					f.type === FieldType.Entity &&
+					typeof createdMap[f.reference] === 'string'
+				) {
+					f.reference = createdMap[f.reference];
+					changed = true;
+				}
+			}
+			return changed;
+		};
+
+		// Update created references
+		for (const model of toCreate) {
+			if (changeReferencesToNewModels(model)) {
+				await this.apiService.patch(`model/${model.id}`, {
+					fields: model.fields
+				});
+			}
 		}
 
 		// Get models to update
@@ -62,6 +90,7 @@ export class ModelsApiStorageService {
 
 		// Update models
 		for (const model of toUpdate) {
+			changeReferencesToNewModels(model);
 			await this.apiService.patch(`model/${model.id}`, {
 				name: model.name,
 				fields: model.fields,
