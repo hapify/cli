@@ -37,13 +37,15 @@ export class ModelsApiStorageService {
 
 	/** Send models to API if necessary */
 	async set(project: string, models: IModel[]): Promise<IModel[]> {
+		// Init map to match temp id to real id
+		const referencesMap: { [id: string]: string } = {};
+
+		// ========================================================
+		// CREATION
 		// Get models to create
 		const toCreate = models.filter(
 			m => typeof this.hashes[m.id] === 'undefined'
 		);
-
-		// Init map to match temp id to real id
-		const createdMap: { [id: string]: string } = {};
 
 		// Create models and update id
 		for (const model of toCreate) {
@@ -53,60 +55,67 @@ export class ModelsApiStorageService {
 				fields: model.fields,
 				accesses: model.accesses
 			});
+			referencesMap[model.id] = response.data._id;
 			model.id = response.data._id;
-			createdMap[model.id] = response.data._id;
 		}
+		// ========================================================
 
-		/** Change references from temp id to real id and denotes if a change was made */
-		const changeReferencesToNewModels = (m: IModel): boolean => {
-			let changed = false;
-			for (const f of m.fields) {
-				if (
-					f.type === FieldType.Entity &&
-					typeof createdMap[f.reference] === 'string'
-				) {
-					f.reference = createdMap[f.reference];
-					changed = true;
-				}
-			}
-			return changed;
-		};
-
-		// Update created references
-		for (const model of toCreate) {
-			if (changeReferencesToNewModels(model)) {
-				await this.apiService.patch(`model/${model.id}`, {
-					fields: model.fields
-				});
-			}
+		// ========================================================
+		// DELETION
+		// Get models to delete
+		const toDelete = Object.keys(this.hashes).filter(
+			id => !models.some(m => m.id === id)
+		);
+		// Delete models
+		for (const id of toDelete) {
+			await this.apiService.delete(`model/${id}`);
+			referencesMap[id] = null;
 		}
+		// ========================================================
 
+		// ========================================================
+		// UPDATE
 		// Get models to update
 		const toUpdate = models.filter(
 			m =>
 				typeof this.hashes[m.id] === 'string' &&
 				this.hashes[m.id] !== ModelsApiStorageService.hash(m)
 		);
-
 		// Update models
 		for (const model of toUpdate) {
-			changeReferencesToNewModels(model);
 			await this.apiService.patch(`model/${model.id}`, {
 				name: model.name,
 				fields: model.fields,
 				accesses: model.accesses
 			});
 		}
+		// ========================================================
 
-		// Get models to delete
-		const toDelete = Object.keys(this.hashes).filter(
-			id => !models.some(m => m.id === id)
-		);
-
-		// Delete models
-		for (const id of toDelete) {
-			await this.apiService.delete(`model/${id}`);
+		// ========================================================
+		// UPDATE REFERENCES
+		/** Change references from temp id to real id and denotes if a change was made */
+		const changeReferencesToNewModels = (m: IModel): boolean => {
+			let changed = false;
+			for (const f of m.fields) {
+				if (
+					f.type === FieldType.Entity &&
+					typeof referencesMap[f.reference] !== 'undefined'
+				) {
+					f.reference = referencesMap[f.reference];
+					changed = true;
+				}
+			}
+			return changed;
+		};
+		// Parse all models and change references
+		for (const model of models) {
+			if (changeReferencesToNewModels(model)) {
+				await this.apiService.patch(`model/${model.id}`, {
+					fields: model.fields
+				});
+			}
 		}
+		// ========================================================
 
 		this.updateHashes(models);
 

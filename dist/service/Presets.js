@@ -50,13 +50,22 @@ let PresetsService = class PresetsService {
             // List
             const modelsCollection = yield this.channelsService.modelsCollection();
             const models = yield modelsCollection.list();
+            const referencesMap = {};
             for (const model of presetModels) {
                 const existing = models.find(m => m.name === model.name);
                 if (existing) {
+                    // Save incoming reference to existing reference
+                    referencesMap[model.id] = existing.id;
                     // Add or skip each fields
                     const clone = existing.clone(false);
+                    const existingHasPrimary = existing.fields.some(f => f.primary);
                     let edited = false;
                     for (const field of model.fields) {
+                        // Prevent adding primary key if already exists
+                        if (existingHasPrimary && field.primary) {
+                            continue;
+                        }
+                        // Add this field if nothing with the same name was found
                         if (!clone.fields.some(f => f.name === field.name)) {
                             clone.fields.push(field);
                             edited = true;
@@ -67,12 +76,35 @@ let PresetsService = class PresetsService {
                     }
                 }
                 else {
+                    // Clone model with new id
                     const clone = model.clone(true);
+                    // Save incoming reference to existing reference
+                    referencesMap[model.id] = clone.id;
                     const defaultFields = (yield this.infoService.fields()).map(f => new class_1.Field(f));
+                    // Apply special properties to primary field
+                    const defaultPrimary = defaultFields.find(f => f.primary);
+                    const clonePrimary = clone.fields.find(f => f.primary);
+                    if (defaultPrimary && clonePrimary) {
+                        // Apply clone primary properties to default primary
+                        defaultPrimary.ownership = clonePrimary.ownership;
+                        // Remove primary from clone
+                        clone.fields = clone.fields.filter(f => !f.primary);
+                    }
                     clone.fields = defaultFields.concat(clone.fields);
                     created.push(clone);
                 }
             }
+            // Change references to existing models
+            const changeReferencesToNewModels = (m) => {
+                for (const f of m.fields) {
+                    if (f.type === class_1.FieldType.Entity &&
+                        typeof referencesMap[f.reference] === 'string') {
+                        f.reference = referencesMap[f.reference];
+                    }
+                }
+            };
+            updated.forEach(changeReferencesToNewModels);
+            created.forEach(changeReferencesToNewModels);
             // Return results
             return {
                 updated,

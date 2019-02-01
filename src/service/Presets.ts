@@ -38,16 +38,23 @@ export class PresetsService {
 		// List
 		const modelsCollection = await this.channelsService.modelsCollection();
 		const models = await modelsCollection.list();
-		const existingMap: { [id: string]: string } = {};
+		const referencesMap: { [id: string]: string } = {};
 
 		for (const model of presetModels) {
 			const existing = models.find(m => m.name === model.name);
 			if (existing) {
+				// Save incoming reference to existing reference
+				referencesMap[model.id] = existing.id;
 				// Add or skip each fields
-				existingMap[model.id] = existing.id;
 				const clone = existing.clone(false);
+				const existingHasPrimary = existing.fields.some(f => f.primary);
 				let edited = false;
 				for (const field of model.fields) {
+					// Prevent adding primary key if already exists
+					if (existingHasPrimary && field.primary) {
+						continue;
+					}
+					// Add this field if nothing with the same name was found
 					if (!clone.fields.some(f => f.name === field.name)) {
 						clone.fields.push(field);
 						edited = true;
@@ -57,7 +64,11 @@ export class PresetsService {
 					updated.push(clone);
 				}
 			} else {
+				// Clone model with new id
 				const clone = model.clone(true);
+				// Save incoming reference to existing reference
+				referencesMap[model.id] = clone.id;
+
 				const defaultFields = (await this.infoService.fields()).map(
 					f => new Field(f)
 				);
@@ -78,18 +89,18 @@ export class PresetsService {
 		}
 
 		// Change references to existing models
-		const changeReferencesToExistingModels = (m: Model) => {
+		const changeReferencesToNewModels = (m: Model) => {
 			for (const f of m.fields) {
 				if (
 					f.type === FieldType.Entity &&
-					typeof existingMap[f.reference] === 'string'
+					typeof referencesMap[f.reference] === 'string'
 				) {
-					f.reference = existingMap[f.reference];
+					f.reference = referencesMap[f.reference];
 				}
 			}
 		};
-		updated.forEach(changeReferencesToExistingModels);
-		created.forEach(changeReferencesToExistingModels);
+		updated.forEach(changeReferencesToNewModels);
+		created.forEach(changeReferencesToNewModels);
 
 		// Return results
 		return {
