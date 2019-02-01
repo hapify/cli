@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { PresetsCollection, Model, Field } from '../class';
+import { PresetsCollection, Model, Field, FieldType } from '../class';
 import { ChannelsService } from './Channels';
 import { InfoService } from './Info';
 
@@ -38,11 +38,13 @@ export class PresetsService {
 		// List
 		const modelsCollection = await this.channelsService.modelsCollection();
 		const models = await modelsCollection.list();
+		const existingMap: { [id: string]: string } = {};
 
 		for (const model of presetModels) {
 			const existing = models.find(m => m.name === model.name);
 			if (existing) {
 				// Add or skip each fields
+				existingMap[model.id] = existing.id;
 				const clone = existing.clone(false);
 				let edited = false;
 				for (const field of model.fields) {
@@ -63,7 +65,6 @@ export class PresetsService {
 				// Apply special properties to primary field
 				const defaultPrimary = defaultFields.find(f => f.primary);
 				const clonePrimary = clone.fields.find(f => f.primary);
-
 				if (defaultPrimary && clonePrimary) {
 					// Apply clone primary properties to default primary
 					defaultPrimary.ownership = clonePrimary.ownership;
@@ -75,6 +76,20 @@ export class PresetsService {
 				created.push(clone);
 			}
 		}
+
+		// Change references to existing models
+		const changeReferencesToExistingModels = (m: Model) => {
+			for (const f of m.fields) {
+				if (
+					f.type === FieldType.Entity &&
+					typeof existingMap[f.reference] === 'string'
+				) {
+					f.reference = existingMap[f.reference];
+				}
+			}
+		};
+		updated.forEach(changeReferencesToExistingModels);
+		created.forEach(changeReferencesToExistingModels);
 
 		// Return results
 		return {
