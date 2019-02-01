@@ -59,6 +59,18 @@ export class PresetsService {
 				const defaultFields = (await this.infoService.fields()).map(
 					f => new Field(f)
 				);
+
+				// Apply special properties to primary field
+				const defaultPrimary = defaultFields.find(f => f.primary);
+				const clonePrimary = clone.fields.find(f => f.primary);
+
+				if (defaultPrimary && clonePrimary) {
+					// Apply clone primary properties to default primary
+					defaultPrimary.ownership = clonePrimary.ownership;
+					// Remove primary from clone
+					clone.fields = clone.fields.filter(f => !f.primary);
+				}
+
 				clone.fields = defaultFields.concat(clone.fields);
 				created.push(clone);
 			}
