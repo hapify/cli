@@ -37,7 +37,7 @@ program
     .action(command_1.KeyCommand);
 program
     .command('list')
-    .alias('l')
+    .alias('ls')
     .description('List available channels from the current directory')
     .option('--depth <n>', 'depth to recursively look for channels', 2)
     .action(command_1.ListCommand);
