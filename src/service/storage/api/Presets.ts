@@ -3,18 +3,36 @@ import { ConfigRemote } from '../../../config';
 import { ApiService, IApiModel, IApiPreset } from '../../Api';
 import { IModel, IPreset } from '../../../interface';
 
+interface PresetsSearchParams {
+	_page?: string | number;
+	_limit?: string | number;
+	_sort?: string;
+	_order?: string;
+	_id?: string[];
+	version?: string;
+	name?: string;
+	slug?: string;
+	models?: string[];
+}
+
 @Service()
 export class PresetsApiStorageService {
 	/** Constructor */
 	constructor(private apiService: ApiService) {}
 
 	/** Load the presets from api */
-	async list(): Promise<IPreset[]> {
+	async list(searchParams: PresetsSearchParams = {}): Promise<IPreset[]> {
 		return await this.apiService
-			.get('preset', {
-				_page: 0,
-				_limit: ConfigRemote.presetsLimit
-			})
+			.get(
+				'preset',
+				Object.assign(
+					{
+						_page: 0,
+						_limit: ConfigRemote.presetsLimit
+					},
+					searchParams
+				)
+			)
 			.then(response => {
 				return (<IApiPreset[]>response.data.items).map(
 					(p: IApiPreset): IPreset => ({

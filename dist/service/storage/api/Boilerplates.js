@@ -20,41 +20,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const config_1 = require("../../../config");
 const Api_1 = require("../../Api");
-let PresetsApiStorageService = class PresetsApiStorageService {
+let BoilerplatesApiStorageService = class BoilerplatesApiStorageService {
     /** Constructor */
     constructor(apiService) {
         this.apiService = apiService;
     }
-    /** Load the presets from api */
+    /** Load the boilerplates from api */
     list(searchParams = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.apiService
-                .get('preset', Object.assign({
+                .get('boilerplate', Object.assign({
                 _page: 0,
-                _limit: config_1.ConfigRemote.presetsLimit
+                _limit: config_1.ConfigRemote.boilerplatesLimit
             }, searchParams))
                 .then(response => {
                 return response.data.items.map((p) => ({
                     id: p._id,
+                    slug: p.slug,
                     name: p.name,
-                    name__fr: p.name__fr,
-                    description: p.description,
-                    description__fr: p.description__fr,
-                    icon: p.icon,
-                    models: p.models.map((m) => ({
-                        id: m._id,
-                        name: m.name,
-                        fields: m.fields,
-                        accesses: m.accesses
-                    }))
+                    git_url: p.git_url
                 }));
             });
         });
     }
 };
-PresetsApiStorageService = __decorate([
+BoilerplatesApiStorageService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [Api_1.ApiService])
-], PresetsApiStorageService);
-exports.PresetsApiStorageService = PresetsApiStorageService;
-//# sourceMappingURL=Presets.js.map
+], BoilerplatesApiStorageService);
+exports.BoilerplatesApiStorageService = BoilerplatesApiStorageService;
+//# sourceMappingURL=Boilerplates.js.map

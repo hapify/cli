@@ -56,6 +56,18 @@ export class BoilerplatesCollection
 		return this.boilerplates.find(p => p.id === id);
 	}
 
+	/**
+	 * Returns one boilerplate by its slug
+	 * @returns {Promise<Boilerplate>}
+	 */
+	async getBySlug(slug: string): Promise<Boilerplate> {
+		const data = await this.storageService.list({
+			_limit: 1,
+			slug
+		});
+		return data.length ? new Boilerplate(data[0]) : null;
+	}
+
 	/** @inheritDoc */
 	public fromObject(object: IBoilerplate[]): Boilerplate[] {
 		this.boilerplates = object.map(p => new Boilerplate(p));
