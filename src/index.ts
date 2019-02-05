@@ -11,6 +11,7 @@ import {
 	InitCommand,
 	KeyCommand,
 	ListCommand,
+	NewCommand,
 	ServeCommand
 } from './command';
 
@@ -64,6 +65,30 @@ program
 	.description('Export channel as ZIP from current directory')
 	.option('-o, --output <path>', 'output file path')
 	.action(ExportCommand);
+
+program
+	.command('new')
+	.alias('n')
+	.option('-p, --project <id>', 'id of the project to use')
+	.option('--project-name <name>', 'name of the project to create')
+	.option(
+		'--project-desc <description>',
+		'description of the project to create (name must be defined)'
+	)
+	.option('-b, --boilerplate <slug>', 'slug-name of the boilerplate to clone')
+	.option('--boilerplate-id <id>', 'id of the boilerplate to clone')
+	.option('--boilerplate-url <url>', 'url of the boilerplate to clone')
+	.option(
+		'--preset [id]',
+		'ids of presets to preload',
+		(val, acc) => {
+			acc.push(val);
+			return acc;
+		},
+		[]
+	)
+	.description('Clone and init a boilerplate')
+	.action(NewCommand);
 
 program
 	.command('init')
