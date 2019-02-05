@@ -133,12 +133,23 @@ export interface IPreset {
 	name: string;
 	/** The preset's name in french */
 	name__fr: string;
-	/**The preset's name */
+	/** The preset's name */
 	description: string;
 	/** The preset's name in french */
 	description__fr: string;
 	/** The models of the preset */
 	models: IModel[];
+}
+
+export interface IBoilerplate {
+	/** The boilerplate's unique id */
+	id: string;
+	/** The boilerplate sluh */
+	slug: string;
+	/** The boilerplate's name */
+	name: string;
+	/** The boilerplate's repository url */
+	git_url: string;
 }
 
 export interface IProject {
@@ -172,6 +183,8 @@ export interface IConfigRemote {
 	modelsLimit: number;
 	/** The max number of presets that can be queried */
 	presetsLimit: number;
+	/** The max number of boilerplates that can be queried */
+	boilerplatesLimit: number;
 }
 
 export interface IConfigInternal {

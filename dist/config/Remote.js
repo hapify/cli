@@ -5,6 +5,7 @@ exports.ConfigRemote = {
     uri: 'https://api.staging.hapify.io/v1',
     // modelsLimit: 100,
     modelsLimit: 120,
-    presetsLimit: 100
+    presetsLimit: 100,
+    boilerplatesLimit: 100
 };
 //# sourceMappingURL=Remote.js.map
