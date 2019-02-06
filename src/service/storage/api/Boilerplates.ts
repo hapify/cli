@@ -1,14 +1,9 @@
 import { Service } from 'typedi';
-import { ConfigRemote } from '../../../config';
-import { ApiService, IApiBoilerplate } from '../../Api';
 import { IBoilerplate } from '../../../interface';
+import { BaseSearchParams, BaseApiStorageService } from './Base';
+import { ConfigRemote } from '../../../config';
 
-interface BoilerplatesSearchParams {
-	_page?: string | number;
-	_limit?: string | number;
-	_sort?: string;
-	_order?: string;
-	_id?: string[];
+interface BoilerplatesSearchParams extends BaseSearchParams {
 	owner?: string;
 	premium?: string | boolean;
 	name?: string;
@@ -17,36 +12,57 @@ interface BoilerplatesSearchParams {
 	technologies?: string[];
 	features?: string[];
 }
+export interface IApiBoilerplate {
+	_id?: string;
+	created_at?: number | Date;
+	owner?: string | any;
+	premium?: boolean;
+	name?: string;
+	name__fr?: string | null;
+	slug?: string;
+	short_description?: string | null;
+	short_description__fr?: string | null;
+	description?: string | null;
+	description__fr?: string | null;
+	price?: string | null;
+	git_url?: string | null;
+	contact_url?: string | null;
+	more_url?: string | null;
+	type?: string | any | null;
+	technologies?: string[] | any[];
+	features?: string[] | any[];
+}
 
 @Service()
-export class BoilerplatesApiStorageService {
-	/** Constructor */
-	constructor(private apiService: ApiService) {}
+export class BoilerplatesApiStorageService extends BaseApiStorageService<
+	IBoilerplate,
+	IApiBoilerplate,
+	BoilerplatesSearchParams
+> {
+	/** @inheritDoc */
+	protected defaultSearchParams(): any {
+		const s = super.defaultSearchParams();
+		s._limit = ConfigRemote.boilerplatesLimit;
+		return s;
+	}
 
-	/** Load the boilerplates from api */
-	async list(
-		searchParams: BoilerplatesSearchParams = {}
-	): Promise<IBoilerplate[]> {
-		return await this.apiService
-			.get(
-				'boilerplate',
-				Object.assign(
-					{
-						_page: 0,
-						_limit: ConfigRemote.boilerplatesLimit
-					},
-					searchParams
-				)
-			)
-			.then(response => {
-				return (<IApiBoilerplate[]>response.data.items).map(
-					(p: IApiBoilerplate): IBoilerplate => ({
-						id: p._id,
-						slug: p.slug,
-						name: p.name,
-						git_url: p.git_url
-					})
-				);
-			});
+	/** @inheritDoc */
+	protected path(): string {
+		return 'boilerplate';
+	}
+
+	/** @inheritDoc */
+	protected fromApi(object: IApiBoilerplate): IBoilerplate {
+		return {
+			id: object._id,
+			slug: object.slug,
+			name: object.name,
+			git_url: object.git_url
+		};
+	}
+
+	/** @inheritDoc */
+	protected toApi(object: IBoilerplate): IApiBoilerplate {
+		return {}; // Nothing to send
 	}
 }

@@ -1,57 +1,52 @@
 import { Service } from 'typedi';
-import { ApiService, IApiProject } from '../../Api';
 import { IProject } from '../../../interface';
+import { BaseSearchParams, BaseApiStorageService } from './Base';
 import { ConfigRemote } from '../../../config';
 
-interface ProjectsSearchParams {
-	_page?: string | number;
-	_limit?: string | number;
-	_sort?: string;
-	_order?: string;
-	_id?: string[];
+interface ProjectsSearchParams extends BaseSearchParams {
 	name?: string;
+}
+export interface IApiProject {
+	_id?: string;
+	created_at?: number;
+	name?: string;
+	description?: string | null;
+	owner?: string | any;
 }
 
 @Service()
-export class ProjectsApiStorageService {
-	/** Constructor */
-	constructor(private apiService: ApiService) {}
+export class ProjectsApiStorageService extends BaseApiStorageService<
+	IProject,
+	IApiProject,
+	ProjectsSearchParams
+> {
+	/** @inheritDoc */
+	protected defaultSearchParams(): any {
+		const s = super.defaultSearchParams();
+		s._limit = ConfigRemote.projectsLimit;
+		return s;
+	}
 
-	/** Load the project from api */
-	async get(project: string): Promise<IProject> {
-		const output: IApiProject = (await this.apiService.get(
-			`project/${project}`
-		)).data;
+	/** @inheritDoc */
+	protected path(): string {
+		return 'project';
+	}
+
+	/** @inheritDoc */
+	protected fromApi(object: IApiProject): IProject {
 		return {
-			id: output._id,
-			created_at: output.created_at,
-			name: output.name,
-			description: output.description
+			id: object._id,
+			created_at: object.created_at,
+			name: object.name,
+			description: object.description
 		};
 	}
 
-	/** Load the projects from api */
-	async list(searchParams: ProjectsSearchParams = {}): Promise<IProject[]> {
-		return await this.apiService
-			.get(
-				'project',
-				Object.assign(
-					{
-						_page: 0,
-						_limit: ConfigRemote.projectsLimit
-					},
-					searchParams
-				)
-			)
-			.then(response => {
-				return (<IApiProject[]>response.data.items).map(
-					(p: IApiProject): IProject => ({
-						id: p._id,
-						created_at: p.created_at,
-						name: p.name,
-						description: p.description
-					})
-				);
-			});
+	/** @inheritDoc */
+	protected toApi(object: IProject): IApiProject {
+		return {
+			name: object.name,
+			description: object.description
+		};
 	}
 }
