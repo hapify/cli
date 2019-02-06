@@ -68,7 +68,7 @@ function NewCommand(cmd) {
                     {
                         name: 'description',
                         message: 'Enter a project description',
-                        when: (answer) => !answer.id,
+                        when: (answer) => !answer.id
                     }
                 ]);
                 qProject.id = answer.id;
@@ -116,7 +116,10 @@ function NewCommand(cmd) {
             }
             else {
                 // Get presets from remote
-                const list = (yield (yield presets.collection()).list()).map(p => ({ name: p.name, value: p.id }));
+                const list = (yield (yield presets.collection()).list()).map(p => ({
+                    name: p.name,
+                    value: p.id
+                }));
                 qPresets = (yield Inquirer.prompt([
                     {
                         name: 'presets',

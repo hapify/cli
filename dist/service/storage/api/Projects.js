@@ -50,7 +50,7 @@ let ProjectsApiStorageService = class ProjectsApiStorageService {
                     id: p._id,
                     created_at: p.created_at,
                     name: p.name,
-                    description: p.description,
+                    description: p.description
                 }));
             });
         });
