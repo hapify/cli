@@ -37,10 +37,6 @@ let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.Bas
             }))
         };
     }
-    /** @inheritDoc */
-    toApi(object) {
-        return {}; // Nothing to send
-    }
 };
 PresetsApiStorageService = __decorate([
     typedi_1.Service()

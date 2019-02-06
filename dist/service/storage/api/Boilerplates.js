@@ -29,10 +29,6 @@ let BoilerplatesApiStorageService = class BoilerplatesApiStorageService extends 
             git_url: object.git_url
         };
     }
-    /** @inheritDoc */
-    toApi(object) {
-        return {}; // Nothing to send
-    }
 };
 BoilerplatesApiStorageService = __decorate([
     typedi_1.Service()

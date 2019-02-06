@@ -29,13 +29,6 @@ let ProjectsApiStorageService = class ProjectsApiStorageService extends Base_1.B
             description: object.description
         };
     }
-    /** @inheritDoc */
-    toApi(object) {
-        return {
-            name: object.name,
-            description: object.description
-        };
-    }
 };
 ProjectsApiStorageService = __decorate([
     typedi_1.Service()

@@ -47,7 +47,7 @@ export class ModelsCollection
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		this.fromObject(await this.storageService.list(this.project));
+		this.fromObject(await this.storageService.forProject(this.project));
 	}
 
 	/** @inheritDoc */

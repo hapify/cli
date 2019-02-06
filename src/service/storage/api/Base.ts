@@ -25,10 +25,10 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> {
 	 * @param {I} payload
 	 * @return {Promise<T>}
 	 */
-	async create(payload: T): Promise<T> {
+	async create(payload: I): Promise<T> {
 		const output: I = (await this.apiService.post(
 			`${this.path()}`,
-			this.toApi(payload)
+			payload
 		)).data;
 		return this.fromApi(output);
 	}
@@ -39,11 +39,8 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> {
 	 * @param {T} payload
 	 * @return {Promise<any>}
 	 */
-	async update(id: string, payload: T): Promise<void> {
-		await this.apiService.patch(
-			`${this.path()}/${id}`,
-			this.toApi(payload)
-		);
+	async update(id: string, payload: I): Promise<void> {
+		await this.apiService.patch(`${this.path()}/${id}`, payload);
 	}
 
 	/**
@@ -101,10 +98,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> {
 		)).data.total;
 	}
 
-	/**
-	 * Get the default search params (limit, page, etc...)
-	 * @return {string}
-	 */
+	/** Get the default search params (limit, page, etc...) */
 	protected defaultSearchParams(): any {
 		return {
 			_page: 0,
@@ -112,21 +106,9 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> {
 		};
 	}
 
-	/**
-	 * Returns the base URI for this model
-	 * @return {string}
-	 */
+	/** Returns the base URI for this model */
 	protected abstract path(): string;
 
-	/**
-	 * Convert an incoming payload to an internal payload
-	 * @return {string}
-	 */
+	/** Convert an incoming payload to an internal payload */
 	protected abstract fromApi(object: I): T;
-
-	/**
-	 * Convert an internal payload to an api payload
-	 * @return {string}
-	 */
-	protected abstract toApi(object: T): I;
 }

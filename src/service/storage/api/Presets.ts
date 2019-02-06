@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { IPreset, IModel } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
 import { ConfigRemote } from '../../../config';
-import { IApiModel } from '../../Api';
+import { IApiModel } from './Models';
 
 interface PresetsSearchParams extends BaseSearchParams {
 	version?: string;
@@ -59,10 +59,5 @@ export class PresetsApiStorageService extends BaseApiStorageService<
 				})
 			)
 		};
-	}
-
-	/** @inheritDoc */
-	protected toApi(object: IPreset): IApiPreset {
-		return {}; // Nothing to send
 	}
 }

@@ -4,7 +4,6 @@ import { BaseSearchParams, BaseApiStorageService } from './Base';
 import { ConfigRemote } from '../../../config';
 
 interface BoilerplatesSearchParams extends BaseSearchParams {
-	owner?: string;
 	premium?: string | boolean;
 	name?: string;
 	slug?: string;
@@ -59,10 +58,5 @@ export class BoilerplatesApiStorageService extends BaseApiStorageService<
 			name: object.name,
 			git_url: object.git_url
 		};
-	}
-
-	/** @inheritDoc */
-	protected toApi(object: IBoilerplate): IApiBoilerplate {
-		return {}; // Nothing to send
 	}
 }

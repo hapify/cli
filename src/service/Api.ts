@@ -9,18 +9,6 @@ import axios, {
 import querystring from 'querystring';
 import { OptionsService } from './Options';
 
-export interface IApiModel {
-	_id?: string;
-	created_at?: number;
-	updated_at?: number | null;
-	version?: string;
-	owner?: string | any;
-	project?: string | any;
-	name?: string;
-	fields?: any[];
-	accesses?: any;
-}
-
 type ErrorData = { [k: string]: any };
 export class RichAxiosError implements AxiosError {
 	name: string;

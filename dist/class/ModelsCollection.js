@@ -44,7 +44,7 @@ class ModelsCollection {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.fromObject(yield this.storageService.list(this.project));
+            this.fromObject(yield this.storageService.forProject(this.project));
         });
     }
     /** @inheritDoc */

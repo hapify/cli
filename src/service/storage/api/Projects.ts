@@ -41,12 +41,4 @@ export class ProjectsApiStorageService extends BaseApiStorageService<
 			description: object.description
 		};
 	}
-
-	/** @inheritDoc */
-	protected toApi(object: IProject): IApiProject {
-		return {
-			name: object.name,
-			description: object.description
-		};
-	}
 }

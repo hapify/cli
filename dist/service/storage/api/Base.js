@@ -31,7 +31,7 @@ let BaseApiStorageService = class BaseApiStorageService {
      */
     create(payload) {
         return __awaiter(this, void 0, void 0, function* () {
-            const output = (yield this.apiService.post(`${this.path()}`, this.toApi(payload))).data;
+            const output = (yield this.apiService.post(`${this.path()}`, payload)).data;
             return this.fromApi(output);
         });
     }
@@ -43,7 +43,7 @@ let BaseApiStorageService = class BaseApiStorageService {
      */
     update(id, payload) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.apiService.patch(`${this.path()}/${id}`, this.toApi(payload));
+            yield this.apiService.patch(`${this.path()}/${id}`, payload);
         });
     }
     /**
@@ -95,10 +95,7 @@ let BaseApiStorageService = class BaseApiStorageService {
             return (yield this.apiService.get(`${this.path()}/count`, Object.assign(this.defaultSearchParams(), searchParams))).data.total;
         });
     }
-    /**
-     * Get the default search params (limit, page, etc...)
-     * @return {string}
-     */
+    /** Get the default search params (limit, page, etc...) */
     defaultSearchParams() {
         return {
             _page: 0,
