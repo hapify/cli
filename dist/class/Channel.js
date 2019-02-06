@@ -134,6 +134,20 @@ class Channel {
             }
         });
     }
+    /** Change project in config file */
+    static changeProject(path, project) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!Channel.configExists(path)) {
+                throw new Error(`Cannot find config file in ${path}`);
+            }
+            const storage = typedi_1.Container.get(service_1.ChannelFileStorageService);
+            // Get config from storage
+            const config = yield storage.get([path, Channel.configFile]);
+            // Set value and save config
+            config.project = project;
+            yield storage.set([path, Channel.configFile], config);
+        });
+    }
     /** Denotes if the config file exists */
     static configExists(path) {
         return __awaiter(this, void 0, void 0, function* () {

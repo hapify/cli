@@ -62,6 +62,19 @@ class ProjectsCollection {
             return this.projects.find(p => p.id === id);
         });
     }
+    /**
+     * Returns one project
+     * @returns {Promise<Project>}
+     */
+    add(name, description) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const object = yield this.storageService.create({
+                name,
+                description: description.length ? description : null
+            });
+            return new _1.Project(object);
+        });
+    }
     /** @inheritDoc */
     fromObject(object) {
         this.projects = object.map(p => new _1.Project(p));

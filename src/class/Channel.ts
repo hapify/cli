@@ -172,6 +172,22 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			);
 		}
 	}
+
+	/** Change project in config file */
+	public static async changeProject(
+		path: string,
+		project: string
+	): Promise<void> {
+		if (!Channel.configExists(path)) {
+			throw new Error(`Cannot find config file in ${path}`);
+		}
+		const storage = Container.get(ChannelFileStorageService);
+		// Get config from storage
+		const config = await storage.get([path, Channel.configFile]);
+		// Set value and save config
+		config.project = project;
+		await storage.set([path, Channel.configFile], config);
+	}
 	/** Denotes if the config file exists */
 	public static async configExists(path: string): Promise<boolean> {
 		return await Container.get(ChannelFileStorageService).exists([

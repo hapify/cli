@@ -54,6 +54,46 @@ class ModelsCollection {
             this.fromObject(models);
         });
     }
+    /** Add one or more object to the stack */
+    add(object) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (object instanceof Array) {
+                for (const o of object) {
+                    yield this.add(o);
+                }
+            }
+            else {
+                this.models.push(new _1.Model(object));
+            }
+        });
+    }
+    /** Upsert one or more object to the stack */
+    update(object) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (object instanceof Array) {
+                for (const o of object) {
+                    yield this.update(o);
+                }
+            }
+            else {
+                yield this.remove(object);
+                yield this.add(object);
+            }
+        });
+    }
+    /** Remove an existing object */
+    remove(object) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (object instanceof Array) {
+                for (const o of object) {
+                    yield this.remove(o);
+                }
+            }
+            else {
+                this.models = this.models.filter(i => i.id === object.id);
+            }
+        });
+    }
     /**
      * Find a instance with its id
      * @param {string} id

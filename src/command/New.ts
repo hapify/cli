@@ -5,10 +5,15 @@ import {
 	LoggerService,
 	PresetsService,
 	BoilerplatesService,
-	ProjectsService
+	ProjectsService,
+	ChannelsService
 } from '../service';
 import { cPath } from './helpers';
 import * as Inquirer from 'inquirer';
+import * as Fs from 'fs';
+import { Channel } from '../class';
+
+const SimpleGit = require('simple-git/promise');
 
 // ############################################
 // Get services
@@ -17,6 +22,7 @@ const logger = Container.get(LoggerService);
 const presets = Container.get(PresetsService);
 const boilerplates = Container.get(BoilerplatesService);
 const projects = Container.get(ProjectsService);
+const channels = Container.get(ChannelsService);
 
 interface ProjectQuery {
 	id?: string;
@@ -28,11 +34,6 @@ interface BoilerplateQuery {
 	slug?: string;
 	url?: string;
 }
-interface Query {
-	project: ProjectQuery;
-	boilerplate: BoilerplateQuery;
-	presets: string[];
-}
 
 export async function NewCommand(cmd: Command) {
 	try {
@@ -43,7 +44,20 @@ export async function NewCommand(cmd: Command) {
 		let qPresets: string[] = [];
 
 		// ---------------------------------
+		// Verify current dir
+		const currentDir = options.dir();
+		const files = Fs.readdirSync(currentDir);
+		if (files.length) {
+			throw new Error(
+				'Current folder is not empty, cannot create a new project.'
+			);
+		}
+
+		// ---------------------------------
 		// Action starts
+		const projectsCollection = await projects.collection();
+		const boilerplatesCollection = await boilerplates.collection();
+		const presetsCollection = await presets.collection();
 
 		// =================================
 		// Get project
@@ -54,9 +68,10 @@ export async function NewCommand(cmd: Command) {
 			qProject.description = cmd.projectDescription;
 		} else {
 			// Get projects from remote
-			const list = (await (await projects.collection()).list()).map(
-				b => ({ name: b.name, value: b.id })
-			);
+			const list = (await projectsCollection.list()).map(b => ({
+				name: b.name,
+				value: b.id
+			}));
 			const answer: any = await Inquirer.prompt([
 				{
 					name: 'id',
@@ -96,9 +111,10 @@ export async function NewCommand(cmd: Command) {
 			qBoilerplate.url = cmd.boilerplateUrl;
 		} else {
 			// Get boilerplates from remote
-			const list = (await (await boilerplates.collection()).list()).map(
-				b => ({ name: b.name, value: b.git_url })
-			);
+			const list = (await boilerplatesCollection.list()).map(b => ({
+				name: b.name,
+				value: b.git_url
+			}));
 
 			qBoilerplate.url = ((await Inquirer.prompt([
 				{
@@ -127,7 +143,7 @@ export async function NewCommand(cmd: Command) {
 			qPresets = cmd.preset;
 		} else {
 			// Get presets from remote
-			const list = (await (await presets.collection()).list()).map(p => ({
+			const list = (await presetsCollection.list()).map(p => ({
 				name: p.name,
 				value: p.id
 			}));
@@ -135,7 +151,7 @@ export async function NewCommand(cmd: Command) {
 			qPresets = ((await Inquirer.prompt([
 				{
 					name: 'presets',
-					message: 'Choose some preset to preload in your project',
+					message: 'Choose some presets to preload in your project',
 					type: 'checkbox',
 					choices: list,
 					when: () => list.length > 0
@@ -143,16 +159,78 @@ export async function NewCommand(cmd: Command) {
 			])) as any).presets;
 		}
 
-		const query: Query = {
-			project: qProject,
-			boilerplate: qBoilerplate,
-			presets: qPresets
-		};
+		// =================================
+		// Check validity
+		if (!qProject.id && !qProject.name) {
+			throw new Error('No project is defined');
+		}
+		if (!qBoilerplate.id && !qBoilerplate.slug && !qBoilerplate.url) {
+			throw new Error('No boilerplate is defined');
+		}
 
-		logger.info(JSON.stringify(query, null, 4));
+		// =================================
+		// Create project if necessary
+		if (!qProject.id) {
+			const project = await projectsCollection.add(
+				qProject.name,
+				qProject.description
+			);
+			qProject.id = project.id;
+		}
+
+		// =================================
+		// Get boilerplate URL
+		if (!qBoilerplate.url) {
+			let boilerplate;
+			if (qBoilerplate.slug) {
+				boilerplate = await boilerplatesCollection.getBySlug(
+					qBoilerplate.slug
+				);
+			} else if (qBoilerplate.id) {
+				boilerplate = await boilerplatesCollection.get(qBoilerplate.id);
+			}
+			if (!boilerplate) {
+				throw new Error('Boilerplate not found');
+			}
+			qBoilerplate.url = boilerplate.git_url;
+		}
+
+		// =================================
+		// Clone git repo
+		const git = SimpleGit(currentDir);
+		await git.clone(qBoilerplate.url, currentDir);
+
+		// =================================
+		// Init & validate channel for this new folder
+		await Channel.changeProject(currentDir, qProject.id);
+		const modelsCollection = await channels.modelsCollection();
+
+		// =================================
+		// Get models and apply presets if necessary
+		if (qPresets && qPresets.length) {
+			const models = await modelsCollection.list();
+			// If the project already has models, ignore add presets
+			if (models.length) {
+				logger.warning(
+					'Project already contains models. Ignore presets import.'
+				);
+			} else {
+				// Get and apply presets
+				for (const id of qPresets) {
+					const preset = await presetsCollection.get(id);
+					const results = await presets.apply(preset.models);
+					await modelsCollection.add(results.created);
+					await modelsCollection.update(results.updated);
+				}
+				// Save models
+				await modelsCollection.save();
+			}
+		}
 
 		logger.success(
-			`Created a new dynamic boilerplate in ${cPath(options.dir())}`
+			`Created a new dynamic boilerplate in ${cPath(
+				currentDir
+			)}. Run 'hpf serve' to edit.`
 		);
 		// Action Ends
 		// ---------------------------------

@@ -56,6 +56,18 @@ export class ProjectsCollection
 		return this.projects.find(p => p.id === id);
 	}
 
+	/**
+	 * Returns one project
+	 * @returns {Promise<Project>}
+	 */
+	async add(name: string, description: string): Promise<Project> {
+		const object = await this.storageService.create({
+			name,
+			description: description.length ? description : null
+		});
+		return new Project(object);
+	}
+
 	/** @inheritDoc */
 	public fromObject(object: IProject[]): Project[] {
 		this.projects = object.map(p => new Project(p));
