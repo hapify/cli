@@ -47,7 +47,7 @@ export class ModelsCollection
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		this.fromObject(await this.storageService.list(this.project));
+		this.fromObject(await this.storageService.forProject(this.project));
 	}
 
 	/** @inheritDoc */
@@ -57,6 +57,38 @@ export class ModelsCollection
 			this.toObject()
 		);
 		this.fromObject(models);
+	}
+
+	/** Add one or more object to the stack */
+	public async add(object: IModel | IModel[]): Promise<void> {
+		if (object instanceof Array) {
+			for (const o of object) {
+				await this.add(o);
+			}
+		} else {
+			this.models.push(new Model(object));
+		}
+	}
+	/** Upsert one or more object to the stack */
+	public async update(object: IModel | IModel[]): Promise<void> {
+		if (object instanceof Array) {
+			for (const o of object) {
+				await this.update(o);
+			}
+		} else {
+			await this.remove(object);
+			await this.add(object);
+		}
+	}
+	/** Remove an existing object */
+	public async remove(object: IModel | IModel[]): Promise<void> {
+		if (object instanceof Array) {
+			for (const o of object) {
+				await this.remove(o);
+			}
+		} else {
+			this.models = this.models.filter(i => i.id === object.id);
+		}
 	}
 
 	/**

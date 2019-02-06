@@ -1,57 +1,63 @@
 import { Service } from 'typedi';
+import { IPreset, IModel } from '../../../interface';
+import { BaseSearchParams, BaseApiStorageService } from './Base';
 import { ConfigRemote } from '../../../config';
-import { ApiService, IApiModel, IApiPreset } from '../../Api';
-import { IModel, IPreset } from '../../../interface';
+import { IApiModel } from './Models';
 
-interface PresetsSearchParams {
-	_page?: string | number;
-	_limit?: string | number;
-	_sort?: string;
-	_order?: string;
-	_id?: string[];
+interface PresetsSearchParams extends BaseSearchParams {
 	version?: string;
 	name?: string;
 	slug?: string;
 	models?: string[];
 }
+export interface IApiPreset {
+	_id?: string;
+	created_at?: number;
+	version?: string;
+	name?: string;
+	name__fr?: string;
+	description?: string;
+	description__fr?: string;
+	slug?: string;
+	icon?: string;
+	models?: IApiModel[];
+}
 
 @Service()
-export class PresetsApiStorageService {
-	/** Constructor */
-	constructor(private apiService: ApiService) {}
+export class PresetsApiStorageService extends BaseApiStorageService<
+	IPreset,
+	IApiPreset,
+	PresetsSearchParams
+> {
+	/** @inheritDoc */
+	protected defaultSearchParams(): any {
+		const s = super.defaultSearchParams();
+		s._limit = ConfigRemote.presetsLimit;
+		return s;
+	}
 
-	/** Load the presets from api */
-	async list(searchParams: PresetsSearchParams = {}): Promise<IPreset[]> {
-		return await this.apiService
-			.get(
-				'preset',
-				Object.assign(
-					{
-						_page: 0,
-						_limit: ConfigRemote.presetsLimit
-					},
-					searchParams
-				)
+	/** @inheritDoc */
+	protected path(): string {
+		return 'preset';
+	}
+
+	/** @inheritDoc */
+	protected fromApi(object: IApiPreset): IPreset {
+		return {
+			id: object._id,
+			name: object.name,
+			name__fr: object.name__fr,
+			description: object.description,
+			description__fr: object.description__fr,
+			icon: object.icon,
+			models: object.models.map(
+				(m: IApiModel): IModel => ({
+					id: m._id,
+					name: m.name,
+					fields: m.fields,
+					accesses: m.accesses
+				})
 			)
-			.then(response => {
-				return (<IApiPreset[]>response.data.items).map(
-					(p: IApiPreset): IPreset => ({
-						id: p._id,
-						name: p.name,
-						name__fr: p.name__fr,
-						description: p.description,
-						description__fr: p.description__fr,
-						icon: p.icon,
-						models: p.models.map(
-							(m: IApiModel): IModel => ({
-								id: m._id,
-								name: m.name,
-								fields: m.fields,
-								accesses: m.accesses
-							})
-						)
-					})
-				);
-			});
+		};
 	}
 }

@@ -6,5 +6,6 @@ export const ConfigRemote: IConfigRemote = {
 	// modelsLimit: 100,
 	modelsLimit: 120,
 	presetsLimit: 100,
+	projectsLimit: 100,
 	boilerplatesLimit: 100
 };

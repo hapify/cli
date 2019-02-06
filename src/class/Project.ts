@@ -1,5 +1,5 @@
 import { IProject, ISerializable, IStorable } from '../interface';
-import { ProjectApiStorageService } from '../service';
+import { ProjectsApiStorageService } from '../service';
 import { Container } from 'typedi';
 
 export class Project
@@ -15,13 +15,16 @@ export class Project
 	/** The project's owner payload */
 	owner: string | any;
 	/** Project storage */
-	private storageService: ProjectApiStorageService;
+	private storageService: ProjectsApiStorageService;
 	/** The loaded instances */
 	private static instances: { [id: string]: Project } = {};
 
 	/** Constructor */
-	private constructor(private project: string) {
-		this.storageService = Container.get(ProjectApiStorageService);
+	constructor(object?: IProject) {
+		if (object) {
+			this.fromObject(object);
+		}
+		this.storageService = Container.get(ProjectsApiStorageService);
 	}
 
 	/**
@@ -30,7 +33,8 @@ export class Project
 	 */
 	public static async getInstance(project: string) {
 		if (!this.instances[project]) {
-			this.instances[project] = new Project(project);
+			this.instances[project] = new Project();
+			this.instances[project].id = project;
 			await this.instances[project].load();
 		}
 		return this.instances[project];
@@ -57,7 +61,7 @@ export class Project
 
 	/** @inheritDoc */
 	public async load(): Promise<void> {
-		this.fromObject(await this.storageService.get(this.project));
+		this.fromObject(await this.storageService.get(this.id));
 	}
 
 	/** @inheritDoc */

@@ -27,7 +27,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	/** @type {IConfig} */
 	public config: IConfig;
 	/** @type {Template[]} Templates instances */
-	public templates: Template[];
+	public templates: Template[] = [];
 	/** @type {Template[]} Templates instances */
 	public validator: Validator;
 	/** @type {Project} Current project */
@@ -82,7 +82,6 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		this.project = await Project.getInstance(this.config.project);
 
 		// Load each content file
-		this.templates = [];
 		for (let i = 0; i < this.config.templates.length; i++) {
 			const template = new Template(
 				this,
@@ -109,9 +108,6 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			await template.save();
 		}
 		await this.validator.save();
-
-		// Save project (no effect)
-		await this.project.save();
 
 		// Update configurations
 		this.config.templates = this.templates.map(m => {
@@ -172,6 +168,22 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			);
 		}
 	}
+
+	/** Change project in config file */
+	public static async changeProject(
+		path: string,
+		project: string
+	): Promise<void> {
+		if (!Channel.configExists(path)) {
+			throw new Error(`Cannot find config file in ${path}`);
+		}
+		const storage = Container.get(ChannelFileStorageService);
+		// Get config from storage
+		const config = await storage.get([path, Channel.configFile]);
+		// Set value and save config
+		config.project = project;
+		await storage.set([path, Channel.configFile], config);
+	}
 	/** Denotes if the config file exists */
 	public static async configExists(path: string): Promise<boolean> {
 		return await Container.get(ChannelFileStorageService).exists([
@@ -180,7 +192,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		]);
 	}
 	/** Init a Hapify structure within a directory */
-	public static async create(path: string): Promise<void> {
+	public static async create(path: string): Promise<Channel> {
 		if (await Channel.configExists(path)) {
 			throw new Error(`A channel already exists in this directory.`);
 		}
@@ -209,7 +221,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 					isPrivate: false,
 					internal: true,
 					restricted: false,
-					ownership: true
+					ownership: false
 				}
 			],
 			templates: [
@@ -238,7 +250,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		channel.validator.content = `// Models validation script\nreturn { errors: [], warnings: [] };`;
 
 		// Save channel
-		await channel.save();
+		return channel;
 	}
 
 	/** @inheritDoc */

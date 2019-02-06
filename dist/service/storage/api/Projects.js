@@ -9,29 +9,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
 const config_1 = require("../../../config");
-let BoilerplatesApiStorageService = class BoilerplatesApiStorageService extends Base_1.BaseApiStorageService {
+let ProjectsApiStorageService = class ProjectsApiStorageService extends Base_1.BaseApiStorageService {
     /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
-        s._limit = config_1.ConfigRemote.boilerplatesLimit;
+        s._limit = config_1.ConfigRemote.projectsLimit;
         return s;
     }
     /** @inheritDoc */
     path() {
-        return 'boilerplate';
+        return 'project';
     }
     /** @inheritDoc */
     fromApi(object) {
         return {
             id: object._id,
-            slug: object.slug,
+            created_at: object.created_at,
             name: object.name,
-            git_url: object.git_url
+            description: object.description
         };
     }
 };
-BoilerplatesApiStorageService = __decorate([
+ProjectsApiStorageService = __decorate([
     typedi_1.Service()
-], BoilerplatesApiStorageService);
-exports.BoilerplatesApiStorageService = BoilerplatesApiStorageService;
-//# sourceMappingURL=Boilerplates.js.map
+], ProjectsApiStorageService);
+exports.ProjectsApiStorageService = ProjectsApiStorageService;
+//# sourceMappingURL=Projects.js.map

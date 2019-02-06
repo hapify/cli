@@ -1,36 +1,39 @@
-import md5 from 'md5';
 import { Service } from 'typedi';
-import { ConfigRemote } from '../../../config';
-import { ApiService, IApiModel } from '../../Api';
 import { IModel } from '../../../interface';
-import { Model, FieldType } from '../../../class';
+import { BaseSearchParams, BaseApiStorageService } from './Base';
+import { ConfigRemote } from '../../../config';
+import md5 from 'md5';
+import { FieldType, Model } from '../../../class';
+
+interface ModelsSearchParams extends BaseSearchParams {
+	version?: string;
+	project?: string;
+	name?: string;
+}
+export interface IApiModel {
+	_id?: string;
+	created_at?: number;
+	updated_at?: number | null;
+	version?: string;
+	owner?: string | any;
+	project?: string | any;
+	name?: string;
+	fields?: any[];
+	accesses?: any;
+}
 
 @Service()
-export class ModelsApiStorageService {
+export class ModelsApiStorageService extends BaseApiStorageService<
+	IModel,
+	IApiModel,
+	ModelsSearchParams
+> {
 	/** The models fingerprints */
 	private hashes: { [id: string]: string } = {};
-	/** Constructor */
-	constructor(private apiService: ApiService) {}
 
-	/** Load the models from api */
-	async list(project: string): Promise<IModel[]> {
-		const models: IModel[] = await await this.apiService
-			.get('model', {
-				_page: 0,
-				_limit: ConfigRemote.modelsLimit,
-				project: project
-			})
-			.then(response => {
-				return (<IApiModel[]>response.data.items).map(
-					(m: IApiModel): IModel => ({
-						id: m._id,
-						name: m.name,
-						fields: m.fields,
-						accesses: m.accesses
-					})
-				);
-			});
-
+	/** Load the models from api for a specific project */
+	async forProject(project: string): Promise<IModel[]> {
+		const models: IModel[] = await this.list({ project });
 		this.updateHashes(models);
 		return models;
 	}
@@ -49,14 +52,14 @@ export class ModelsApiStorageService {
 
 		// Create models and update id
 		for (const model of toCreate) {
-			const response = await this.apiService.post('model', {
+			const response = await this.create({
 				project: project,
 				name: model.name,
 				fields: model.fields,
 				accesses: model.accesses
 			});
-			referencesMap[model.id] = response.data._id;
-			model.id = response.data._id;
+			referencesMap[model.id] = response.id;
+			model.id = response.id;
 		}
 		// ========================================================
 
@@ -68,7 +71,7 @@ export class ModelsApiStorageService {
 		);
 		// Delete models
 		for (const id of toDelete) {
-			await this.apiService.delete(`model/${id}`);
+			await this.remove(id);
 			referencesMap[id] = null;
 		}
 		// ========================================================
@@ -83,7 +86,7 @@ export class ModelsApiStorageService {
 		);
 		// Update models
 		for (const model of toUpdate) {
-			await this.apiService.patch(`model/${model.id}`, {
+			await this.update(model.id, {
 				name: model.name,
 				fields: model.fields,
 				accesses: model.accesses
@@ -110,7 +113,7 @@ export class ModelsApiStorageService {
 		// Parse all models and change references
 		for (const model of models) {
 			if (changeReferencesToNewModels(model)) {
-				await this.apiService.patch(`model/${model.id}`, {
+				await this.update(model.id, {
 					fields: model.fields
 				});
 			}
@@ -134,5 +137,27 @@ export class ModelsApiStorageService {
 	/** Create a hash for the model */
 	private static hash(model: IModel): string {
 		return md5(JSON.stringify(new Model(model).toObject()));
+	}
+
+	/** @inheritDoc */
+	protected defaultSearchParams(): any {
+		const s = super.defaultSearchParams();
+		s._limit = ConfigRemote.modelsLimit;
+		return s;
+	}
+
+	/** @inheritDoc */
+	protected path(): string {
+		return 'model';
+	}
+
+	/** @inheritDoc */
+	protected fromApi(object: IApiModel): IModel {
+		return {
+			id: object._id,
+			name: object.name,
+			fields: object.fields,
+			accesses: object.accesses
+		};
 	}
 }

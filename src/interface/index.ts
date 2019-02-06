@@ -7,5 +7,6 @@ export * from './IGlobalConfig';
 export * from './IValidatorResult';
 export * from './IWebSocketMessage';
 export * from './IWebSocketHandler';
+export * from './IStorageService';
 
 export * from './schema';

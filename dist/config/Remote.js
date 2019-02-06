@@ -6,6 +6,7 @@ exports.ConfigRemote = {
     // modelsLimit: 100,
     modelsLimit: 120,
     presetsLimit: 100,
+    projectsLimit: 100,
     boilerplatesLimit: 100
 };
 //# sourceMappingURL=Remote.js.map

@@ -18,28 +18,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const Api_1 = require("../../Api");
-let ProjectApiStorageService = class ProjectApiStorageService {
-    /** Constructor */
-    constructor(apiService) {
-        this.apiService = apiService;
-    }
-    /** Load the project from api */
-    get(project) {
+const class_1 = require("../class");
+let BoilerplatesService = class BoilerplatesService {
+    /**
+     * Constructor
+     */
+    constructor() { }
+    /**
+     * Returns the boilerplates collection
+     * @return {BoilerplatesCollection}
+     * @throws {Error}
+     */
+    collection() {
         return __awaiter(this, void 0, void 0, function* () {
-            const output = (yield this.apiService.get(`project/${project}`)).data;
-            return {
-                id: output._id,
-                created_at: output.created_at,
-                name: output.name,
-                description: output.description
-            };
+            return yield class_1.BoilerplatesCollection.getInstance();
         });
     }
 };
-ProjectApiStorageService = __decorate([
+BoilerplatesService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Api_1.ApiService])
-], ProjectApiStorageService);
-exports.ProjectApiStorageService = ProjectApiStorageService;
-//# sourceMappingURL=Project.js.map
+    __metadata("design:paramtypes", [])
+], BoilerplatesService);
+exports.BoilerplatesService = BoilerplatesService;
+//# sourceMappingURL=Boilerplates.js.map
