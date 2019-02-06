@@ -48,7 +48,7 @@ function NewCommand(cmd) {
             // Action starts
             const projectsCollection = yield projects.collection();
             const boilerplatesCollection = yield boilerplates.collection();
-            const presetsCollection = (yield presets.collection());
+            const presetsCollection = yield presets.collection();
             // =================================
             // Get project
             if (cmd.project) {
@@ -60,7 +60,10 @@ function NewCommand(cmd) {
             }
             else {
                 // Get projects from remote
-                const list = (yield projectsCollection.list()).map(b => ({ name: b.name, value: b.id }));
+                const list = (yield projectsCollection.list()).map(b => ({
+                    name: b.name,
+                    value: b.id
+                }));
                 const answer = yield Inquirer.prompt([
                     {
                         name: 'id',
@@ -102,7 +105,10 @@ function NewCommand(cmd) {
             }
             else {
                 // Get boilerplates from remote
-                const list = (yield boilerplatesCollection.list()).map(b => ({ name: b.name, value: b.git_url }));
+                const list = (yield boilerplatesCollection.list()).map(b => ({
+                    name: b.name,
+                    value: b.git_url
+                }));
                 qBoilerplate.url = (yield Inquirer.prompt([
                     {
                         name: 'url',
@@ -180,7 +186,7 @@ function NewCommand(cmd) {
             // =================================
             // Init & validate channel for this new folder
             yield class_1.Channel.changeProject(currentDir, qProject.id);
-            const modelsCollection = (yield channels.modelsCollection());
+            const modelsCollection = yield channels.modelsCollection();
             // =================================
             // Get models and apply presets if necessary
             if (qPresets && qPresets.length) {
