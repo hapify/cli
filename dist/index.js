@@ -71,6 +71,9 @@ program
 program
     .command('init')
     .alias('i')
+    .option('-p, --project <id>', 'id of the project to use')
+    .option('--project-name <name>', 'name of the project to create')
+    .option('--project-desc <description>', 'description of the project to create (name must be defined)')
     .description('Init a new Hapify channel in the directory')
     .action(command_1.InitCommand);
 program

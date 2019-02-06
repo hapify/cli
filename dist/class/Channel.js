@@ -35,6 +35,8 @@ class Channel {
      */
     constructor(path, name = null) {
         this.path = path;
+        /** @type {Template[]} Templates instances */
+        this.templates = [];
         this.storageService = typedi_1.Container.get(service_1.ChannelFileStorageService);
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
@@ -66,7 +68,6 @@ class Channel {
             // Load project
             this.project = yield _1.Project.getInstance(this.config.project);
             // Load each content file
-            this.templates = [];
             for (let i = 0; i < this.config.templates.length; i++) {
                 const template = new _1.Template(this, Object.assign(this.config.templates[i], { content: '' }));
                 yield template.load();
@@ -87,8 +88,6 @@ class Channel {
                 yield template.save();
             }
             yield this.validator.save();
-            // Save project (no effect)
-            yield this.project.save();
             // Update configurations
             this.config.templates = this.templates.map(m => {
                 const t = m.toObject();
@@ -187,7 +186,7 @@ class Channel {
                         isPrivate: false,
                         internal: true,
                         restricted: false,
-                        ownership: true
+                        ownership: false
                     }
                 ],
                 templates: [
@@ -207,7 +206,7 @@ class Channel {
             channel.validator = new _1.Validator(channel, channel.config.validatorPath);
             channel.validator.content = `// Models validation script\nreturn { errors: [], warnings: [] };`;
             // Save channel
-            yield channel.save();
+            return channel;
         });
     }
     /** @inheritDoc */
