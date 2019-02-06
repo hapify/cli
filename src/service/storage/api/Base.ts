@@ -1,5 +1,6 @@
 import { Service } from 'typedi';
 import { ApiService } from '../../Api';
+import { IStorageService } from '../../../interface';
 
 /** Used to export and import search params */
 export interface BaseSearchParams {
@@ -11,12 +12,13 @@ export interface BaseSearchParams {
 }
 
 @Service()
-/**
+export abstract class /**
  * T: Internal interface
  * I: Api Interface
  * S: Search params
  */
-export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> {
+BaseApiStorageService<T, I, S extends BaseSearchParams>
+	implements IStorageService<T> {
 	/** Constructor */
 	constructor(private apiService: ApiService) {}
 
