@@ -1,14 +1,22 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService } from '../service';
+import {
+	OptionsService,
+	LoggerService,
+	PresetsService,
+	BoilerplatesService,
+	ProjectsService
+} from '../service';
 import { cPath } from './helpers';
 import * as Inquirer from 'inquirer';
-import { BoilerplatesCollection, PresetsCollection } from '../class';
 
 // ############################################
 // Get services
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
+const presets = Container.get(PresetsService);
+const boilerplates = Container.get(BoilerplatesService);
+const projects = Container.get(ProjectsService);
 
 interface ProjectQuery {
 	id?: string;
@@ -37,6 +45,7 @@ export async function NewCommand(cmd: Command) {
 		// ---------------------------------
 		// Action starts
 
+		// =================================
 		// Get project
 		if (cmd.project) {
 			qProject.id = cmd.project;
@@ -44,21 +53,40 @@ export async function NewCommand(cmd: Command) {
 			qProject.name = cmd.projectName;
 			qProject.description = cmd.projectDescription;
 		} else {
-			const answer = await Inquirer.prompt([
+			// Get projects from remote
+			const list = (await (await projects.collection()).list()).map(
+				b => ({ name: b.name, value: b.id })
+			);
+			const answer: any = await Inquirer.prompt([
+				{
+					name: 'id',
+					message: 'Choose a project',
+					type: 'list',
+					choices: [
+						{ name: 'Create a new project', value: null },
+						new Inquirer.Separator(),
+						...list
+					],
+					when: () => list.length > 0
+				},
 				{
 					name: 'name',
 					message: 'Enter a project name',
+					when: (answer: any) => !answer.id,
 					validate: input => input.length > 0
 				},
 				{
 					name: 'description',
-					message: 'Enter a project description'
+					message: 'Enter a project description',
+					when: (answer: any) => !answer.id
 				}
 			]);
+			qProject.id = answer.id;
 			qProject.name = answer.name;
 			qProject.description = answer.description;
 		}
 
+		// =================================
 		// Get boilerplate
 		if (cmd.boilerplate) {
 			qBoilerplate.slug = cmd.boilerplate;
@@ -68,47 +96,51 @@ export async function NewCommand(cmd: Command) {
 			qBoilerplate.url = cmd.boilerplateUrl;
 		} else {
 			// Get boilerplates from remote
-			const boilerplates = (await (await BoilerplatesCollection.getInstance()).list()).map(
+			const list = (await (await boilerplates.collection()).list()).map(
 				b => ({ name: b.name, value: b.git_url })
 			);
 
-			qBoilerplate.url = (await Inquirer.prompt([
+			qBoilerplate.url = ((await Inquirer.prompt([
 				{
 					name: 'url',
 					message: 'Choose a boilerplate',
 					type: 'list',
 					choices: [
-						{ name: 'Enter URL', value: null },
+						{ name: 'Enter a Git URL', value: null },
 						new Inquirer.Separator(),
-						...boilerplates
-					]
+						...list
+					],
+					when: () => list.length > 0
 				},
 				{
 					name: 'url',
 					message: 'Enter boilerplate URL',
-					when: answer => !answer.url,
+					when: (answer: any) => !answer.url,
 					validate: input => input.length > 0
 				}
-			])).url;
+			])) as any).url;
 		}
 
+		// =================================
 		// Get presets
 		if (cmd.preset && cmd.preset.length) {
 			qPresets = cmd.preset;
 		} else {
 			// Get presets from remote
-			const presets = (await (await PresetsCollection.getInstance()).list()).map(
-				p => ({ name: p.name, value: p.id })
-			);
+			const list = (await (await presets.collection()).list()).map(p => ({
+				name: p.name,
+				value: p.id
+			}));
 
-			qPresets = (await Inquirer.prompt([
+			qPresets = ((await Inquirer.prompt([
 				{
 					name: 'presets',
 					message: 'Choose some preset to preload in your project',
 					type: 'checkbox',
-					choices: presets
+					choices: list,
+					when: () => list.length > 0
 				}
-			])).presets;
+			])) as any).presets;
 		}
 
 		const query: Query = {

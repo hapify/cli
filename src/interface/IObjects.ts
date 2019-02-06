@@ -183,6 +183,8 @@ export interface IConfigRemote {
 	modelsLimit: number;
 	/** The max number of presets that can be queried */
 	presetsLimit: number;
+	/** The max number of projects that can be queried */
+	projectsLimit: number;
 	/** The max number of boilerplates that can be queried */
 	boilerplatesLimit: number;
 }

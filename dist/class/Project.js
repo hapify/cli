@@ -12,9 +12,11 @@ const service_1 = require("../service");
 const typedi_1 = require("typedi");
 class Project {
     /** Constructor */
-    constructor(project) {
-        this.project = project;
-        this.storageService = typedi_1.Container.get(service_1.ProjectApiStorageService);
+    constructor(object) {
+        if (object) {
+            this.fromObject(object);
+        }
+        this.storageService = typedi_1.Container.get(service_1.ProjectsApiStorageService);
     }
     /**
      * Returns a singleton for this config
@@ -23,7 +25,8 @@ class Project {
     static getInstance(project) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.instances[project]) {
-                this.instances[project] = new Project(project);
+                this.instances[project] = new Project();
+                this.instances[project].id = project;
                 yield this.instances[project].load();
             }
             return this.instances[project];
@@ -49,7 +52,7 @@ class Project {
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.fromObject(yield this.storageService.get(this.project));
+            this.fromObject(yield this.storageService.get(this.id));
         });
     }
     /** @inheritDoc */

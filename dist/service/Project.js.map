@@ -1,0 +1,1 @@
+{"version":3,"file":"Project.js","sourceRoot":"","sources":["../../src/service/Project.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;AAAA,mCAAiC;AACjC,oCAA8C;AAG9C,IAAa,eAAe,GAA5B,MAAa,eAAe;IAC3B;;OAEG;IACH,gBAAe,CAAC;IAEhB;;;;OAIG;IACG,UAAU;;YACf,OAAO,MAAM,0BAAkB,CAAC,WAAW,EAAE,CAAC;QAC/C,CAAC;KAAA;CACD,CAAA;AAdY,eAAe;IAD3B,gBAAO,EAAE;;GACG,eAAe,CAc3B;AAdY,0CAAe"}

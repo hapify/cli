@@ -19,11 +19,13 @@ const typedi_1 = require("typedi");
 const service_1 = require("../service");
 const helpers_1 = require("./helpers");
 const Inquirer = __importStar(require("inquirer"));
-const class_1 = require("../class");
 // ############################################
 // Get services
 const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
+const presets = typedi_1.Container.get(service_1.PresetsService);
+const boilerplates = typedi_1.Container.get(service_1.BoilerplatesService);
+const projects = typedi_1.Container.get(service_1.ProjectsService);
 function NewCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -33,6 +35,7 @@ function NewCommand(cmd) {
             let qPresets = [];
             // ---------------------------------
             // Action starts
+            // =================================
             // Get project
             if (cmd.project) {
                 qProject.id = cmd.project;
@@ -42,20 +45,37 @@ function NewCommand(cmd) {
                 qProject.description = cmd.projectDescription;
             }
             else {
+                // Get projects from remote
+                const list = (yield (yield projects.collection()).list()).map(b => ({ name: b.name, value: b.id }));
                 const answer = yield Inquirer.prompt([
+                    {
+                        name: 'id',
+                        message: 'Choose a project',
+                        type: 'list',
+                        choices: [
+                            { name: 'Create a new project', value: null },
+                            new Inquirer.Separator(),
+                            ...list
+                        ],
+                        when: () => list.length > 0
+                    },
                     {
                         name: 'name',
                         message: 'Enter a project name',
+                        when: (answer) => !answer.id,
                         validate: input => input.length > 0
                     },
                     {
                         name: 'description',
-                        message: 'Enter a project description'
+                        message: 'Enter a project description',
+                        when: (answer) => !answer.id,
                     }
                 ]);
+                qProject.id = answer.id;
                 qProject.name = answer.name;
                 qProject.description = answer.description;
             }
+            // =================================
             // Get boilerplate
             if (cmd.boilerplate) {
                 qBoilerplate.slug = cmd.boilerplate;
@@ -68,39 +88,42 @@ function NewCommand(cmd) {
             }
             else {
                 // Get boilerplates from remote
-                const boilerplates = (yield (yield class_1.BoilerplatesCollection.getInstance()).list()).map(b => ({ name: b.name, value: b.git_url }));
+                const list = (yield (yield boilerplates.collection()).list()).map(b => ({ name: b.name, value: b.git_url }));
                 qBoilerplate.url = (yield Inquirer.prompt([
                     {
                         name: 'url',
                         message: 'Choose a boilerplate',
                         type: 'list',
                         choices: [
-                            { name: 'Enter URL', value: null },
+                            { name: 'Enter a Git URL', value: null },
                             new Inquirer.Separator(),
-                            ...boilerplates
-                        ]
+                            ...list
+                        ],
+                        when: () => list.length > 0
                     },
                     {
                         name: 'url',
                         message: 'Enter boilerplate URL',
-                        when: answer => !answer.url,
+                        when: (answer) => !answer.url,
                         validate: input => input.length > 0
                     }
                 ])).url;
             }
+            // =================================
             // Get presets
             if (cmd.preset && cmd.preset.length) {
                 qPresets = cmd.preset;
             }
             else {
                 // Get presets from remote
-                const presets = (yield (yield class_1.PresetsCollection.getInstance()).list()).map(p => ({ name: p.name, value: p.id }));
+                const list = (yield (yield presets.collection()).list()).map(p => ({ name: p.name, value: p.id }));
                 qPresets = (yield Inquirer.prompt([
                     {
                         name: 'presets',
                         message: 'Choose some preset to preload in your project',
                         type: 'checkbox',
-                        choices: presets
+                        choices: list,
+                        when: () => list.length > 0
                     }
                 ])).presets;
             }

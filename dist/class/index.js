@@ -13,6 +13,7 @@ __export(require("./PresetsCollection"));
 __export(require("./Boilerplate"));
 __export(require("./BoilerplatesCollection"));
 __export(require("./Project"));
+__export(require("./ProjectsCollection"));
 __export(require("./Field"));
 __export(require("./FieldType"));
 __export(require("./RichError"));

@@ -19,6 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Api_1 = require("../../Api");
+const config_1 = require("../../../config");
 let ProjectsApiStorageService = class ProjectsApiStorageService {
     /** Constructor */
     constructor(apiService) {
@@ -36,10 +37,28 @@ let ProjectsApiStorageService = class ProjectsApiStorageService {
             };
         });
     }
+    /** Load the projects from api */
+    list(searchParams = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.apiService
+                .get('project', Object.assign({
+                _page: 0,
+                _limit: config_1.ConfigRemote.projectsLimit
+            }, searchParams))
+                .then(response => {
+                return response.data.items.map((p) => ({
+                    id: p._id,
+                    created_at: p.created_at,
+                    name: p.name,
+                    description: p.description,
+                }));
+            });
+        });
+    }
 };
 ProjectsApiStorageService = __decorate([
     typedi_1.Service(),
     __metadata("design:paramtypes", [Api_1.ApiService])
 ], ProjectsApiStorageService);
 exports.ProjectsApiStorageService = ProjectsApiStorageService;
-//# sourceMappingURL=Project.js.map
+//# sourceMappingURL=Projects.js.map

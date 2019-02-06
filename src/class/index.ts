@@ -8,6 +8,7 @@ export * from './PresetsCollection';
 export * from './Boilerplate';
 export * from './BoilerplatesCollection';
 export * from './Project';
+export * from './ProjectsCollection';
 export * from './Field';
 export * from './FieldType';
 export * from './RichError';
