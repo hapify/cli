@@ -54,6 +54,15 @@ program
     .option('-o, --output <path>', 'output file path')
     .action(command_1.ExportCommand);
 program
+    .command('import')
+    .alias('m')
+    .description('Import pre-defined models from cloud')
+    .option('--preset [id]', 'ids of presets to preload', (val, acc) => {
+    acc.push(val);
+    return acc;
+}, [])
+    .action(command_1.ImportCommand);
+program
     .command('new')
     .alias('n')
     .option('-p, --project <id>', 'id of the project to use')

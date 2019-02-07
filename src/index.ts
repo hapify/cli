@@ -12,6 +12,7 @@ import {
 	KeyCommand,
 	ListCommand,
 	NewCommand,
+	ImportCommand,
 	ServeCommand
 } from './command';
 
@@ -65,6 +66,21 @@ program
 	.description('Export channel as ZIP from current directory')
 	.option('-o, --output <path>', 'output file path')
 	.action(ExportCommand);
+
+program
+	.command('import')
+	.alias('m')
+	.description('Import pre-defined models from cloud')
+	.option(
+		'--preset [id]',
+		'ids of presets to preload',
+		(val, acc) => {
+			acc.push(val);
+			return acc;
+		},
+		[]
+	)
+	.action(ImportCommand);
 
 program
 	.command('new')
