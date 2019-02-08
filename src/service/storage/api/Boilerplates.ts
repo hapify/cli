@@ -21,6 +21,7 @@ export interface IApiBoilerplate {
 	slug?: string;
 	short_description?: string | null;
 	short_description__fr?: string | null;
+	logo?: string | any | null;
 	description?: string | null;
 	description__fr?: string | null;
 	price?: string | null;
