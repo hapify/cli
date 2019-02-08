@@ -13,7 +13,8 @@ import {
 	ListCommand,
 	NewCommand,
 	ImportCommand,
-	ServeCommand
+	ServeCommand,
+	PatchCommand
 } from './command';
 
 // ############################################
@@ -117,6 +118,14 @@ program
 	)
 	.description('Init a new Hapify channel in the directory')
 	.action(InitCommand);
+
+program
+	.command('patch')
+	.alias('p')
+	.description(
+		'Compute patch between two commits and apply it to another branch'
+	)
+	.action(PatchCommand);
 
 program
 	.command('serve')

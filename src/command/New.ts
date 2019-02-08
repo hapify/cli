@@ -26,6 +26,8 @@ export async function NewCommand(cmd: Command) {
 	try {
 		options.setCommand(cmd);
 
+		// ---------------------------------
+		// Action starts
 		const qProject: ProjectQuery = {};
 		const qBoilerplate: BoilerplateQuery = {};
 

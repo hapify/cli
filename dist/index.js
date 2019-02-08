@@ -86,6 +86,11 @@ program
     .description('Init a new Hapify channel in the directory')
     .action(command_1.InitCommand);
 program
+    .command('patch')
+    .alias('p')
+    .description('Compute patch between two commits and apply it to another branch')
+    .action(command_1.PatchCommand);
+program
     .command('serve')
     .alias('s')
     .description('Start Hapify console for channel(s) and models edition')

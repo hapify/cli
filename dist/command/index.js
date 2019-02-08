@@ -11,5 +11,6 @@ __export(require("./Init"));
 __export(require("./Key"));
 __export(require("./List"));
 __export(require("./New"));
+__export(require("./Patch"));
 __export(require("./Serve"));
 //# sourceMappingURL=index.js.map

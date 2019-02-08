@@ -6,4 +6,5 @@ export * from './Init';
 export * from './Key';
 export * from './List';
 export * from './New';
+export * from './Patch';
 export * from './Serve';

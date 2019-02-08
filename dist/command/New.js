@@ -30,6 +30,8 @@ function NewCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             options.setCommand(cmd);
+            // ---------------------------------
+            // Action starts
             const qProject = {};
             const qBoilerplate = {};
             // ---------------------------------

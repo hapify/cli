@@ -4,6 +4,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./Boilerplate"));
+__export(require("./Diff"));
 __export(require("./Preset"));
 __export(require("./Project"));
 //# sourceMappingURL=index.js.map
