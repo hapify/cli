@@ -1,6 +1,12 @@
 import { Command } from 'commander';
 import * as Inquirer from 'inquirer';
 import { SimpleGit } from 'simple-git/promise';
+import { exec } from 'child_process';
+import * as util from 'util';
+import { Container } from 'typedi';
+import { OptionsService } from '../../service';
+
+const options = Container.get(OptionsService);
 
 export interface DiffQuery {
 	from?: string;
@@ -35,6 +41,7 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 				new Inquirer.Separator(),
 				...commits
 			],
+			default: commits.length > 1 ? commits[1].value : null,
 			when: () => commits.length > 0
 		},
 		{
@@ -55,6 +62,7 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 				new Inquirer.Separator(),
 				...commits
 			],
+			default: commits.length > 0 ? commits[0].value : null,
 			when: () => commits.length > 0
 		},
 		{
@@ -74,14 +82,35 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 			default: 'develop'
 		}
 	])) as any).destination;
-
-	console.log(qDiff);
 }
 export async function ApplyDiff(
 	qDiff: DiffQuery,
 	git: SimpleGit
 ): Promise<string> {
-	return `git checkout ${qDiff.destination} && git format-patch --stdout ${
-		qDiff.from
-	}..${qDiff.to} | git am -3 -k`;
+	const command = `git format-patch --stdout ${qDiff.from}..${
+		qDiff.to
+	} | git am -3 -k`;
+	const confirm = ((await Inquirer.prompt([
+		{
+			name: 'confirm',
+			message: `Confirm run command: "${command}" on branch ${
+				qDiff.destination
+			}`,
+			type: 'confirm',
+			default: false
+		}
+	])) as any).confirm;
+
+	if (confirm) {
+		await git.checkout(qDiff.destination);
+		const { stdout, stderr } = await util.promisify(exec)(command, {
+			cwd: options.dir()
+		});
+		if (stderr && stderr.length) {
+			throw new Error(`${stderr}\n${stdout}`);
+		}
+		return stdout;
+	}
+
+	return null;
 }

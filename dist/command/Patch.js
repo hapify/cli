@@ -31,9 +31,14 @@ function PatchCommand(cmd) {
             // Get source and destination
             yield question_1.AskDiff(cmd, qDiif, git);
             // =================================
-            // Get source and destination
-            const command = yield question_1.ApplyDiff(qDiif, git);
-            logger.info(`Run this command:\n${command}`);
+            // Run patch
+            const result = yield question_1.ApplyDiff(qDiif, git);
+            if (result === null) {
+                logger.info('Aborted');
+            }
+            else {
+                logger.success(`Success:\n${result}`);
+            }
             // Action Ends
             // ---------------------------------
             logger.time();

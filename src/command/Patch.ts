@@ -28,9 +28,13 @@ export async function PatchCommand(cmd: Command) {
 		await AskDiff(cmd, qDiif, git);
 
 		// =================================
-		// Get source and destination
-		const command = await ApplyDiff(qDiif, git);
-		logger.info(`Run this command:\n${command}`);
+		// Run patch
+		const result = await ApplyDiff(qDiif, git);
+		if (result === null) {
+			logger.info('Aborted');
+		} else {
+			logger.success(`Success:\n${result}`);
+		}
 
 		// Action Ends
 		// ---------------------------------

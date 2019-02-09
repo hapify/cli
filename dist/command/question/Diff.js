@@ -16,6 +16,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Inquirer = __importStar(require("inquirer"));
+const child_process_1 = require("child_process");
+const util = __importStar(require("util"));
+const typedi_1 = require("typedi");
+const service_1 = require("../../service");
+const options = typedi_1.Container.get(service_1.OptionsService);
 function AskDiff(cmd, qDiff, git) {
     return __awaiter(this, void 0, void 0, function* () {
         const branches = yield git.branchLocal();
@@ -39,6 +44,7 @@ function AskDiff(cmd, qDiff, git) {
                     new Inquirer.Separator(),
                     ...commits
                 ],
+                default: commits.length > 1 ? commits[1].value : null,
                 when: () => commits.length > 0
             },
             {
@@ -58,6 +64,7 @@ function AskDiff(cmd, qDiff, git) {
                     new Inquirer.Separator(),
                     ...commits
                 ],
+                default: commits.length > 0 ? commits[0].value : null,
                 when: () => commits.length > 0
             },
             {
@@ -76,13 +83,31 @@ function AskDiff(cmd, qDiff, git) {
                 default: 'develop'
             }
         ])).destination;
-        console.log(qDiff);
     });
 }
 exports.AskDiff = AskDiff;
 function ApplyDiff(qDiff, git) {
     return __awaiter(this, void 0, void 0, function* () {
-        return `git checkout ${qDiff.destination} && git format-patch --stdout ${qDiff.from}..${qDiff.to} | git am -3 -k`;
+        const command = `git format-patch --stdout ${qDiff.from}..${qDiff.to} | git am -3 -k`;
+        const confirm = (yield Inquirer.prompt([
+            {
+                name: 'confirm',
+                message: `Confirm run command: "${command}" on branch ${qDiff.destination}`,
+                type: 'confirm',
+                default: false
+            }
+        ])).confirm;
+        if (confirm) {
+            yield git.checkout(qDiff.destination);
+            const { stdout, stderr } = yield util.promisify(child_process_1.exec)(command, {
+                cwd: options.dir()
+            });
+            if (stderr && stderr.length) {
+                throw new Error(`${stderr}\n${stdout}`);
+            }
+            return stdout;
+        }
+        return null;
     });
 }
 exports.ApplyDiff = ApplyDiff;

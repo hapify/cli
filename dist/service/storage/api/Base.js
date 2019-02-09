@@ -19,7 +19,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Api_1 = require("../../Api");
-let BaseApiStorageService = class BaseApiStorageService {
+let BaseApiStorageService = 
+/**
+ * T: Internal interface
+ * I: Api Interface
+ * S: Search params
+ */
+class BaseApiStorageService {
     /** Constructor */
     constructor(apiService) {
         this.apiService = apiService;
@@ -104,12 +110,14 @@ let BaseApiStorageService = class BaseApiStorageService {
     }
 };
 BaseApiStorageService = __decorate([
-    typedi_1.Service(),
+    typedi_1.Service()
+    /**
+     * T: Internal interface
+     * I: Api Interface
+     * S: Search params
+     */
+    ,
     __metadata("design:paramtypes", [Api_1.ApiService])
-], /**
- * T: Internal interface
- * I: Api Interface
- * S: Search params
- */ BaseApiStorageService);
+], BaseApiStorageService);
 exports.BaseApiStorageService = BaseApiStorageService;
 //# sourceMappingURL=Base.js.map
