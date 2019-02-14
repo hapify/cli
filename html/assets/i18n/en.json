@@ -100,8 +100,8 @@
 	"preset-confirm_import-h2": "Collection import",
 	"preset-confirm_import-p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec eros metus.",
 	"preset-confirm_import-card-h2": "Sur ?",
-	"preset-diff_import-title-creations": "Creations",
-	"preset-diff_import-title-updates": "Updates",
+	"preset-diff_import-title-creations": "Created models",
+	"preset-diff_import-title-updates": "Updated models",
 	"preset-diff_import-field": "field",
 	"preset-diff_import-fields": "fields"
 }

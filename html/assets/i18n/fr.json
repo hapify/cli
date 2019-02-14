@@ -100,8 +100,8 @@
 	"preset-confirm_import-h2": "Importation d'une collection",
 	"preset-confirm_import-p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec eros metus.",
 	"preset-confirm_import-card-h2": "Sûr ?",
-	"preset-diff_import-title-creations": "Créations",
-	"preset-diff_import-title-updates": "Modifications",
+	"preset-diff_import-title-creations": "Modèles créés",
+	"preset-diff_import-title-updates": "Modèles modifiés",
 	"preset-diff_import-field": "champs",
 	"preset-diff_import-fields": "champs"
 }
