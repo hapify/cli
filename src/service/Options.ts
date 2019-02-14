@@ -2,6 +2,8 @@ import { Service } from 'typedi';
 import { Command, CommanderStatic } from 'commander';
 import * as Path from 'path';
 import { GlobalConfigService } from './GlobalConfig';
+import { IRemoteConfig } from '../interface';
+import { RemoteConfigProduction, RemoteConfigStaging } from '../config';
 
 @Service()
 export class OptionsService {
@@ -27,6 +29,13 @@ export class OptionsService {
 	 */
 	setCommand(command: Command): void {
 		this.command = command;
+	}
+
+	/** Returns the remote config depending on --staging parameters */
+	remoteConfig(): IRemoteConfig {
+		return !!this.program.staging
+			? RemoteConfigStaging
+			: RemoteConfigProduction;
 	}
 
 	/** @return {string} Return the working directory computed with the --dir option */

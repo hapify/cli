@@ -1,5 +1,4 @@
 import { Service } from 'typedi';
-import { ConfigRemote } from '../config';
 import axios, {
 	AxiosError,
 	AxiosInstance,
@@ -44,7 +43,7 @@ export class ApiService {
 	/** Constructor */
 	constructor(private optionsService: OptionsService) {
 		this.http = axios.create({
-			baseURL: ConfigRemote.uri,
+			baseURL: this.optionsService.remoteConfig().uri,
 			headers: {
 				'X-Api-Key': this.optionsService.apiKey()
 			}

@@ -29,7 +29,8 @@ const http = Container.get(HttpServerService);
 program
 	.version('0.3.0')
 	.description('Hapify Command Line Tool')
-	.option('--debug', 'enable debug mode')
+	.option('--staging', 'use staging api', false)
+	.option('--debug', 'enable debug mode', false)
 	.option('-d, --dir <path>', 'change the working directory')
 	.option(
 		'-k, --key <secret>',
@@ -146,6 +147,7 @@ program
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
 	logger.art();
+	logger.newLine();
 	program.outputHelp();
 	process.exit();
 }

@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { IBoilerplate } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
-import { ConfigRemote } from '../../../config';
 
 interface BoilerplatesSearchParams extends BaseSearchParams {
 	premium?: string | boolean;
@@ -42,7 +41,7 @@ export class BoilerplatesApiStorageService extends BaseApiStorageService<
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
-		s._limit = ConfigRemote.boilerplatesLimit;
+		s._limit = this.remoteConfig.boilerplatesLimit;
 		return s;
 	}
 

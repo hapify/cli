@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { IModel } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
-import { ConfigRemote } from '../../../config';
 import md5 from 'md5';
 import { FieldType, Model } from '../../../class';
 
@@ -142,7 +141,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
-		s._limit = ConfigRemote.modelsLimit;
+		s._limit = this.remoteConfig.modelsLimit;
 		return s;
 	}
 

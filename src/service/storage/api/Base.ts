@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
+import { OptionsService } from '../../Options';
 import { ApiService } from '../../Api';
-import { IStorageService } from '../../../interface';
+import { IRemoteConfig, IStorageService } from '../../../interface';
 
 /** Used to export and import search params */
 export interface BaseSearchParams {
@@ -12,15 +13,23 @@ export interface BaseSearchParams {
 }
 
 @Service()
-export abstract class /**
+/**
  * T: Internal interface
  * I: Api Interface
  * S: Search params
  */
-BaseApiStorageService<T, I, S extends BaseSearchParams>
+export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
 	implements IStorageService<T> {
+	/** Stores the remote config to use */
+	protected remoteConfig: IRemoteConfig;
+
 	/** Constructor */
-	constructor(private apiService: ApiService) {}
+	constructor(
+		private apiService: ApiService,
+		private optionsService: OptionsService
+	) {
+		this.remoteConfig = optionsService.remoteConfig();
+	}
 
 	/**
 	 * Create a new model

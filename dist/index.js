@@ -23,7 +23,8 @@ const http = typedi_1.Container.get(service_1.HttpServerService);
 program
     .version('0.3.0')
     .description('Hapify Command Line Tool')
-    .option('--debug', 'enable debug mode')
+    .option('--staging', 'use staging api', false)
+    .option('--debug', 'enable debug mode', false)
     .option('-d, --dir <path>', 'change the working directory')
     .option('-k, --key <secret>', 'define the api key to use (override global key)');
 program
@@ -103,6 +104,7 @@ program
 // If no arguments, show help
 if (!process.argv.slice(2).length) {
     logger.art();
+    logger.newLine();
     program.outputHelp();
     process.exit();
 }

@@ -19,6 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const GlobalConfig_1 = require("./GlobalConfig");
+const config_1 = require("../config");
 let OptionsService = class OptionsService {
     /** Constructor */
     constructor(globalConfigService) {
@@ -37,6 +38,10 @@ let OptionsService = class OptionsService {
      */
     setCommand(command) {
         this.command = command;
+    }
+    /** Returns the remote config depending on --staging parameters */
+    remoteConfig() {
+        return !!this.program.staging ? config_1.RemoteConfigStaging : config_1.RemoteConfigProduction;
     }
     /** @return {string} Return the working directory computed with the --dir option */
     dir() {

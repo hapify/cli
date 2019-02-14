@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { IProject } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
-import { ConfigRemote } from '../../../config';
 
 interface ProjectsSearchParams extends BaseSearchParams {
 	name?: string;
@@ -23,7 +22,7 @@ export class ProjectsApiStorageService extends BaseApiStorageService<
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
-		s._limit = ConfigRemote.projectsLimit;
+		s._limit = this.remoteConfig.projectsLimit;
 		return s;
 	}
 

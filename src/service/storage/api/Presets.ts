@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { IPreset, IModel } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
-import { ConfigRemote } from '../../../config';
 import { IApiModel } from './Models';
 
 interface PresetsSearchParams extends BaseSearchParams {
@@ -32,7 +31,7 @@ export class PresetsApiStorageService extends BaseApiStorageService<
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
-		s._limit = ConfigRemote.presetsLimit;
+		s._limit = this.remoteConfig.presetsLimit;
 		return s;
 	}
 

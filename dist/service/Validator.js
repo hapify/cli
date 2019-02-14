@@ -51,7 +51,7 @@ let ValidatorService = class ValidatorService {
                 const final = `(function() { \n${content}\n })()`;
                 result = new SaferEval({ model }, {
                     filename: 'js-validator.js',
-                    timeout: config_1.ConfigInternal.validatorTimeout,
+                    timeout: config_1.InternalConfig.validatorTimeout,
                     lineOffset: -1,
                     contextCodeGeneration: {
                         strings: false,
@@ -61,7 +61,7 @@ let ValidatorService = class ValidatorService {
             }
             catch (error) {
                 if (error.message === 'Script execution timed out.') {
-                    throw new class_1.RichError(`Template processing timed out (${config_1.ConfigInternal.validatorTimeout}ms)`, {
+                    throw new class_1.RichError(`Template processing timed out (${config_1.InternalConfig.validatorTimeout}ms)`, {
                         code: 4006,
                         type: 'CliValidatorTimeoutError'
                     });

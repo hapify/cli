@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { IValidatorResult, IModel, ValidatorResultSchema } from '../interface';
-import { ConfigInternal } from '../config';
+import { InternalConfig } from '../config';
 import * as ErrorStackParser from 'error-stack-parser';
 import { RichError } from '../class';
 const { SaferEval } = require('safer-eval');
@@ -30,7 +30,7 @@ export class ValidatorService {
 				{ model },
 				{
 					filename: 'js-validator.js',
-					timeout: ConfigInternal.validatorTimeout,
+					timeout: InternalConfig.validatorTimeout,
 					lineOffset: -1,
 					contextCodeGeneration: {
 						strings: false,
@@ -42,7 +42,7 @@ export class ValidatorService {
 			if (error.message === 'Script execution timed out.') {
 				throw new RichError(
 					`Template processing timed out (${
-						ConfigInternal.validatorTimeout
+						InternalConfig.validatorTimeout
 					}ms)`,
 					{
 						code: 4006,

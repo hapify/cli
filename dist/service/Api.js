@@ -21,7 +21,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const config_1 = require("../config");
 const axios_1 = __importDefault(require("axios"));
 const querystring_1 = __importDefault(require("querystring"));
 const Options_1 = require("./Options");
@@ -49,7 +48,7 @@ let ApiService = class ApiService {
     constructor(optionsService) {
         this.optionsService = optionsService;
         this.http = axios_1.default.create({
-            baseURL: config_1.ConfigRemote.uri,
+            baseURL: this.optionsService.remoteConfig().uri,
             headers: {
                 'X-Api-Key': this.optionsService.apiKey()
             }

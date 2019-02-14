@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
-const config_1 = require("../../../config");
 let BoilerplatesApiStorageService = class BoilerplatesApiStorageService extends Base_1.BaseApiStorageService {
     /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
-        s._limit = config_1.ConfigRemote.boilerplatesLimit;
+        s._limit = this.remoteConfig.boilerplatesLimit;
         return s;
     }
     /** @inheritDoc */

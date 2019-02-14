@@ -1,5 +1,5 @@
-import { IConfigInternal } from '../interface';
+import { IInternalConfig } from '../interface';
 
-export const ConfigInternal: IConfigInternal = {
+export const InternalConfig: IInternalConfig = {
 	validatorTimeout: 1000
 };

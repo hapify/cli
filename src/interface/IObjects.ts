@@ -176,7 +176,7 @@ export interface ILimits {
 	templates: number;
 }
 
-export interface IConfigRemote {
+export interface IRemoteConfig {
 	/** The API URL */
 	uri: string;
 	/** The max number of models that can be queried */
@@ -189,7 +189,7 @@ export interface IConfigRemote {
 	boilerplatesLimit: number;
 }
 
-export interface IConfigInternal {
+export interface IInternalConfig {
 	/** Max duration to process validator */
 	validatorTimeout: number;
 }

@@ -20,7 +20,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ModelsApiStorageService_1;
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
-const config_1 = require("../../../config");
 const md5_1 = __importDefault(require("md5"));
 const class_1 = require("../../../class");
 let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorageService extends Base_1.BaseApiStorageService {
@@ -124,7 +123,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
     /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
-        s._limit = config_1.ConfigRemote.modelsLimit;
+        s._limit = this.remoteConfig.modelsLimit;
         return s;
     }
     /** @inheritDoc */
