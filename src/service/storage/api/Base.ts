@@ -13,12 +13,12 @@ export interface BaseSearchParams {
 }
 
 @Service()
-/**
+export abstract class /**
  * T: Internal interface
  * I: Api Interface
  * S: Search params
  */
-export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
+BaseApiStorageService<T, I, S extends BaseSearchParams>
 	implements IStorageService<T> {
 	/** Stores the remote config to use */
 	protected remoteConfig: IRemoteConfig;

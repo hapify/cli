@@ -4,6 +4,10 @@
 
 ### Added
 - Handle scenarios.
+- Add command new.
+- Add command patch.
+- Add command key.
+- Add command config.
 
 ### Changed
 - Use remote models storage.

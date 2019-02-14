@@ -41,7 +41,9 @@ let OptionsService = class OptionsService {
     }
     /** Returns the remote config depending on --staging parameters */
     remoteConfig() {
-        return !!this.program.staging ? config_1.RemoteConfigStaging : config_1.RemoteConfigProduction;
+        return !!this.program.staging
+            ? config_1.RemoteConfigStaging
+            : config_1.RemoteConfigProduction;
     }
     /** @return {string} Return the working directory computed with the --dir option */
     dir() {
