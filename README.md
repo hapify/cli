@@ -128,10 +128,6 @@ If you already know presets Ids, you can run:
 hpf import --preset ab123 --preset bd456
 ```
 
-```bash
-hpf export -o /path/to/file.zip
-```
-
 #### Clone a boilerplate and start a new project
 
 ```bash
