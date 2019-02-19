@@ -184,6 +184,8 @@ This command uses `git format-patch` and `git am`.
 hpf patch
 ```
 
+This will prompt a form to let you choose the source branch and commits then destination branch.
+
 #### Start the console
 
 Run this command to edit models and templates.
