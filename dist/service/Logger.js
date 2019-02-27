@@ -125,8 +125,10 @@ let LoggerService = class LoggerService {
      * @return {LoggerService}
      */
     time() {
-        const message = `Process ran in ${process.uptime()}`;
-        console.log(message);
+        if (this.optionsService.debug()) {
+            const message = `Process ran in ${process.uptime()}`;
+            console.log(message);
+        }
         return this;
     }
 };

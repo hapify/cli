@@ -13,4 +13,5 @@ __export(require("./List"));
 __export(require("./New"));
 __export(require("./Patch"));
 __export(require("./Serve"));
+__export(require("./Use"));
 //# sourceMappingURL=index.js.map

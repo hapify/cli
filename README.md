@@ -173,6 +173,24 @@ _Options_
 -   `--project-name <name>`: The project's name to create
 -   `--project-desc <description>`: The project's description to create
 
+#### Define project to use in a channel
+
+```bash
+hpf use
+```
+
+Alias: `hpf u`
+
+Change the project used by one or more existing channels.
+It will change the project's id in file `hapify.json` for each found channels.
+This will prompt a form to select or create the project to use.
+
+_Options_
+
+-   `-p <id>`, `--project <id>`: The project to use (if already created)
+-   `--project-name <name>`: The project's name to create
+-   `--project-desc <description>`: The project's description to create
+
 #### Patch source code with new models
 
 During the development process, you may want to add, edit or remove some models.
