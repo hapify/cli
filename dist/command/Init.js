@@ -17,6 +17,7 @@ const question_1 = require("./question");
 // Get services
 const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
+const channelsService = typedi_1.Container.get(service_1.ChannelsService);
 function InitCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -33,8 +34,8 @@ function InitCommand(cmd) {
             yield question_1.SetupProject(qProject);
             // =================================
             // Set project in channel and save
-            channel.config.project = qProject.id;
             yield channel.save();
+            yield channelsService.changeProject(qProject.id, channel.path);
             logger.success(`Initialized a dynamic boilerplate in ${helpers_1.cPath(options.dir())}`);
             // Action Ends
             // ---------------------------------

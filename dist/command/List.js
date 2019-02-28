@@ -43,7 +43,7 @@ function ListCommand(cmd) {
                 const mm = m.length > 1;
                 let message = `Channel${mc ? 's' : ''} ${c
                     .map(c => helpers_1.cChannel(c.name))
-                    .join(', ')} use${mc ? '' : 's'} model${mm ? 's' : ''} of ${helpers_1.cPath(modelsPath)}`;
+                    .join(', ')} use${mc ? '' : 's'} models of ${helpers_1.cPath(modelsPath)}`;
                 if (m.length === 0) {
                     message += `\nThere is no model yet.`;
                 }

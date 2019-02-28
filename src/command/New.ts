@@ -1,9 +1,8 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService } from '../service';
+import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
 import * as Fs from 'fs';
-import { Channel } from '../class';
 import {
 	ProjectQuery,
 	AskProject,
@@ -21,6 +20,7 @@ const SimpleGit = require('simple-git/promise');
 // Get services
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
+const channelsService = Container.get(ChannelsService);
 
 export async function NewCommand(cmd: Command) {
 	try {
@@ -68,7 +68,7 @@ export async function NewCommand(cmd: Command) {
 
 		// =================================
 		// Init & validate channel for this new folder
-		await Channel.changeProject(currentDir, qProject.id);
+		await channelsService.changeProject(qProject.id);
 
 		// =================================
 		// Get models and apply presets if necessary

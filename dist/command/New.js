@@ -19,13 +19,13 @@ const typedi_1 = require("typedi");
 const service_1 = require("../service");
 const helpers_1 = require("./helpers");
 const Fs = __importStar(require("fs"));
-const class_1 = require("../class");
 const question_1 = require("./question");
 const SimpleGit = require('simple-git/promise');
 // ############################################
 // Get services
 const options = typedi_1.Container.get(service_1.OptionsService);
 const logger = typedi_1.Container.get(service_1.LoggerService);
+const channelsService = typedi_1.Container.get(service_1.ChannelsService);
 function NewCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -62,7 +62,7 @@ function NewCommand(cmd) {
             yield git.clone(qBoilerplate.url, currentDir);
             // =================================
             // Init & validate channel for this new folder
-            yield class_1.Channel.changeProject(currentDir, qProject.id);
+            yield channelsService.changeProject(qProject.id);
             // =================================
             // Get models and apply presets if necessary
             yield question_1.ApplyPreset(qPresets);

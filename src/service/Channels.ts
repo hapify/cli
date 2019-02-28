@@ -76,6 +76,30 @@ export class ChannelsService {
 	}
 
 	/**
+	 * Change project in all found channels from a given or current dir
+	 * Returns modified channels
+	 * Defined path for a specific channel
+	 */
+	public async changeProject(project: string, path?: string): Promise<void> {
+		if (path) {
+			await Channel.changeProject(path, project);
+		}
+		// Try to find channels
+		else {
+			const channels = await ChannelsService.sniff(
+				this.optionsService.dir(),
+				this.optionsService.depth()
+			);
+			if (channels.length === 0) {
+				throw new Error('No channel found');
+			}
+			for (const channel of channels) {
+				await Channel.changeProject(channel.path, project);
+			}
+		}
+	}
+
+	/**
 	 * Returns the first models collection
 	 * @return {ModelsCollection}
 	 * @throws {Error}

@@ -21,21 +21,22 @@ function UseCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             options.setCommand(cmd);
+            // ---------------------------------
+            // Action starts
             const qProject = {};
-            // =================================
-            // Init channel to change
-            const channels = yield channelsService.channels();
-            for (const channel of channels) {
-                helpers_1.logChannel(channel);
-            }
             // =================================
             // Get project
             yield question_1.AskProject(cmd, qProject);
             // =================================
+            // Create project if necessary
+            yield question_1.SetupProject(qProject);
+            // =================================
             // Set project in channel and save
+            yield channelsService.changeProject(qProject.id);
+            // =================================
+            // Log changes
+            const channels = yield channelsService.channels();
             for (const channel of channels) {
-                channel.config.project = qProject.id;
-                yield channel.save();
                 logger.success(`Did set project ${helpers_1.cHigh(qProject.id)} for channel ${helpers_1.cChannel(channel.name)}`);
             }
             // Action Ends

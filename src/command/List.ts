@@ -42,9 +42,9 @@ export async function ListCommand(cmd: Command) {
 			const mm = m.length > 1;
 			let message = `Channel${mc ? 's' : ''} ${c
 				.map(c => cChannel(c.name))
-				.join(', ')} use${mc ? '' : 's'} model${
-				mm ? 's' : ''
-			} of ${cPath(modelsPath)}`;
+				.join(', ')} use${mc ? '' : 's'} models of ${cPath(
+				modelsPath
+			)}`;
 			if (m.length === 0) {
 				message += `\nThere is no model yet.`;
 			} else {

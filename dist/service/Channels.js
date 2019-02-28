@@ -97,6 +97,28 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
         });
     }
     /**
+     * Change project in all found channels from a given or current dir
+     * Returns modified channels
+     * Defined path for a specific channel
+     */
+    changeProject(project, path) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (path) {
+                yield class_1.Channel.changeProject(path, project);
+            }
+            // Try to find channels
+            else {
+                const channels = yield ChannelsService_1.sniff(this.optionsService.dir(), this.optionsService.depth());
+                if (channels.length === 0) {
+                    throw new Error('No channel found');
+                }
+                for (const channel of channels) {
+                    yield class_1.Channel.changeProject(channel.path, project);
+                }
+            }
+        });
+    }
+    /**
      * Returns the first models collection
      * @return {ModelsCollection}
      * @throws {Error}
