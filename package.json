@@ -1,7 +1,7 @@
 {
 	"name": "hapify-cli",
 	"version": "0.4.0",
-	"description": "",
+	"description": "Command Line Interface for Hapify Cloud",
 	"main": "dist/index.js",
 	"bin": {
 		"hpf": "bin/index.js"
@@ -23,12 +23,11 @@
 		"hapify",
 		"cli"
 	],
-	"private": true,
-	"author": "Edouard Demotes <e.demotes@gmail.com>",
+	"private": false,
+	"author": "Tractr <hapify@tractr.net>",
 	"license": "ISC",
 	"homepage": "https://bitbucket.org/tractrs/hapify-cli#readme",
 	"dependencies": {
-		"aws-sdk": "^2.325.0",
 		"axios": "^0.18.0",
 		"chalk": "^2.4.1",
 		"commander": "^2.17.1",
