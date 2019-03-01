@@ -103,5 +103,14 @@
 	"preset-diff_import-title-creations": "Modèles créés",
 	"preset-diff_import-title-updates": "Modèles modifiés",
 	"preset-diff_import-field": "champs",
-	"preset-diff_import-fields": "champs"
+	"preset-diff_import-fields": "champs",
+	"dialog_premium-cta": "Aller sur Mon Plan",
+	"dialog_premium-h2": "Besoin d'un surclassement ?",
+	"error_code-5007": "",
+	"error_code-5008": "",
+	"error_code-5009": "",
+	"presets_models_count": "Ce scénario contient le modèle suivant :",
+	"presets_models_count_0": "Ce scénario ne contient aucun modèle.",
+	"presets_models_count_plural": "Ce scénario contient les modèles suivant :",
+	"dialog_premium-p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eget commodo diam."
 }

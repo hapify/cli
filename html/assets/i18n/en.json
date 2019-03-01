@@ -103,5 +103,14 @@
 	"preset-diff_import-title-creations": "Created models",
 	"preset-diff_import-title-updates": "Updated models",
 	"preset-diff_import-field": "field",
-	"preset-diff_import-fields": "fields"
+	"preset-diff_import-fields": "fields",
+	"dialog_premium-cta": "Go to My Plan",
+	"dialog_premium-h2": "Need an upgrade ?",
+	"error_code-5007": "",
+	"error_code-5008": "",
+	"error_code-5009": "",
+	"presets_models_count": "",
+	"presets_models_count_0": "",
+	"presets_models_count_plural": "",
+	"dialog_premium-p": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eget commodo diam."
 }
