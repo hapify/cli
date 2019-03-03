@@ -1,5 +1,7 @@
+node_modules
 packages
 src
+lib
 tests
 
 .gitignore
@@ -12,6 +14,7 @@ tslint.json
 .prettierrc
 
 build.sh
+Gruntfile.js
 
 ERRORS.md
 CHANGELOG.md
