@@ -5,15 +5,16 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				banner:
-					'/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+					'/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+				mangle: true
 			},
 			build: {
 				files: [
 					{
 						expand: true,
-						src: 'lib/**/*.js',
-						dest: 'dist/*',
-						cwd: './'
+						src: '**/*.js',
+						dest: 'dist',
+						cwd: 'lib'
 					}
 				]
 			}
