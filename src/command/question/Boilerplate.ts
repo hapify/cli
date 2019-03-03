@@ -6,7 +6,7 @@ import { BoilerplatesService } from '../../service';
 export interface BoilerplateQuery {
 	id?: string;
 	slug?: string;
-	url?: string;
+	urls?: string[];
 }
 export async function AskBoilerplate(
 	cmd: Command,
@@ -21,36 +21,17 @@ export async function AskBoilerplate(
 	} else if (cmd.boilerplateId) {
 		qBoilerplate.id = cmd.boilerplateId;
 	} else if (cmd.boilerplateUrl) {
-		qBoilerplate.url = cmd.boilerplateUrl;
+		qBoilerplate.urls = [cmd.boilerplateUrl];
 	} else {
 		// Get boilerplates from remote
 		const list = (await boilerplatesCollection.list()).map(b => ({
 			name: b.name,
 			value: b.git_url
 		}));
-
-		qBoilerplate.url = ((await Inquirer.prompt([
-			{
-				name: 'url',
-				message: 'Choose a boilerplate',
-				type: 'list',
-				choices: [
-					{ name: 'Enter a Git URL', value: null },
-					new Inquirer.Separator(),
-					...list
-				],
-				when: () => list.length > 0
-			},
-			{
-				name: 'url',
-				message: 'Enter boilerplate URL',
-				when: (answer: any) => !answer.url,
-				validate: input => input.length > 0
-			}
-		])) as any).url;
+		await addBoilerplate(list, qBoilerplate);
 	}
 
-	if (!qBoilerplate.id && !qBoilerplate.slug && !qBoilerplate.url) {
+	if (!qBoilerplate.id && !qBoilerplate.slug && !qBoilerplate.urls) {
 		throw new Error('No boilerplate is defined');
 	}
 }
@@ -59,7 +40,7 @@ export async function FindBoilerplate(qBoilerplate: BoilerplateQuery) {
 		BoilerplatesService
 	).collection();
 
-	if (!qBoilerplate.url) {
+	if (!qBoilerplate.urls) {
 		let boilerplate;
 		if (qBoilerplate.slug) {
 			boilerplate = await boilerplatesCollection.getBySlug(
@@ -71,6 +52,51 @@ export async function FindBoilerplate(qBoilerplate: BoilerplateQuery) {
 		if (!boilerplate) {
 			throw new Error('Boilerplate not found');
 		}
-		qBoilerplate.url = boilerplate.git_url;
+		qBoilerplate.urls = [boilerplate.git_url];
+	}
+}
+async function addBoilerplate(
+	list: { name: string; value: string }[],
+	qBoilerplate: BoilerplateQuery
+) {
+	const answer = (await Inquirer.prompt([
+		{
+			name: 'url',
+			message: 'Choose a boilerplate',
+			type: 'list',
+			choices: [
+				{ name: 'Enter a Git URL', value: null },
+				new Inquirer.Separator(),
+				...list
+			],
+			when: () => list.length > 0
+		},
+		{
+			name: 'url',
+			message: 'Enter boilerplate URL',
+			when: (answer: any) => !answer.url,
+			validate: input => input.length > 0
+		},
+		{
+			name: 'more',
+			message: 'Add another boilerplate?',
+			type: 'confirm',
+			default: false
+		}
+	])) as any;
+
+	// Create if first one
+	if (!qBoilerplate.urls) {
+		qBoilerplate.urls = [];
+	}
+
+	// Avoid duplicates
+	if (qBoilerplate.urls.indexOf(answer.url) < 0) {
+		qBoilerplate.urls.push(answer.url);
+	}
+
+	// Push more if needed
+	if (answer.more) {
+		await addBoilerplate(list, qBoilerplate);
 	}
 }

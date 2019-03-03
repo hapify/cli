@@ -2,7 +2,9 @@ import { Container } from 'typedi';
 import { Command } from 'commander';
 import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
+import * as Rimraf from 'rimraf';
 import * as Fs from 'fs';
+import * as Path from 'path';
 import {
 	ProjectQuery,
 	AskProject,
@@ -15,6 +17,11 @@ import {
 } from './question';
 
 const SimpleGit = require('simple-git/promise');
+
+const GetDirectories = (s: string) =>
+	Fs.readdirSync(s)
+		.map((n: string) => Path.join(s, n))
+		.filter((d: string) => Fs.lstatSync(s).isDirectory());
 
 // ############################################
 // Get services
@@ -63,8 +70,21 @@ export async function NewCommand(cmd: Command) {
 
 		// =================================
 		// Clone git repo
+		// Init & validate channel for this new folder
 		const git = SimpleGit(currentDir);
-		await git.clone(qBoilerplate.url, currentDir);
+		const count = qBoilerplate.urls.length;
+		if (count > 1) {
+			for (const url of qBoilerplate.urls) {
+				await git.clone(url);
+			}
+			const dirs = GetDirectories(currentDir);
+			for (const dir of dirs) {
+				Rimraf.sync(Path.join(dir, '.git'));
+			}
+		} else {
+			await git.clone(qBoilerplate.urls[0], currentDir);
+			Rimraf.sync(Path.join(currentDir, '.git'));
+		}
 
 		// =================================
 		// Init & validate channel for this new folder
@@ -75,9 +95,9 @@ export async function NewCommand(cmd: Command) {
 		await ApplyPreset(qPresets);
 
 		logger.success(
-			`Created a new dynamic boilerplate in ${cPath(
-				currentDir
-			)}. Run 'hpf serve' to edit.`
+			`Created ${count} new dynamic boilerplate${
+				count > 1 ? 's' : ''
+			} in ${cPath(currentDir)}. Run 'hpf serve' to edit.`
 		);
 		// Action Ends
 		// ---------------------------------

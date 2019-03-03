@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-03-02 */
+/*! hapify-cli 2019-03-03 */
 
 "use strict";function __export(e){for(var r in e)exports.hasOwnProperty(r)||(exports[r]=e[r])}Object.defineProperty(exports,"__esModule",{value:!0}),__export(require("./Presets")),__export(require("./Boilerplates")),__export(require("./Models")),__export(require("./Projects"));

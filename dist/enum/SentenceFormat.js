@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-03-02 */
+/*! hapify-cli 2019-03-03 */
 
 "use strict";var SentenceFormat;Object.defineProperty(exports,"__esModule",{value:!0}),function(e){e[e.Original=0]="Original",e[e.SlugHyphen=1]="SlugHyphen",e[e.SlugHyphenUpperCase=2]="SlugHyphenUpperCase",e[e.SlugUnderscore=3]="SlugUnderscore",e[e.SlugUnderscoreUpperCase=4]="SlugUnderscoreUpperCase",e[e.SlugOneWord=5]="SlugOneWord",e[e.WordsUpperCase=6]="WordsUpperCase",e[e.WordsLowerCase=7]="WordsLowerCase",e[e.UpperCamelCase=8]="UpperCamelCase",e[e.LowerCamelCase=9]="LowerCamelCase"}(SentenceFormat=exports.SentenceFormat||(exports.SentenceFormat={}));
