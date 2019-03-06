@@ -8,6 +8,8 @@ export interface IConfigTemplate {
 }
 
 export interface IConfig {
+	/** @type {string} The channel's configuration version */
+	version: string;
 	/** @type {string} The channel's validation script path */
 	validatorPath: string;
 	/** @type {string} The project id containing the models */

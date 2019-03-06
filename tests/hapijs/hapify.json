@@ -1,4 +1,5 @@
 {
+  "version": "1",
   "name": "HapiJS",
   "description": "NodeJS Backend with MongoDB",
   "logo": "https://hapijs.com/public/img/logo.svg",

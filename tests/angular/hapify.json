@@ -1,4 +1,5 @@
 {
+  "version": "1",
   "name": "Angular",
   "description": "Angular Frontend with Material",
   "logo": "https://angular.io/assets/images/logos/angular/angular.svg",

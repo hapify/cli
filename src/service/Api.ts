@@ -41,13 +41,19 @@ export class ApiService {
 	private http: AxiosInstance;
 
 	/** Constructor */
-	constructor(private optionsService: OptionsService) {
-		this.http = axios.create({
-			baseURL: this.optionsService.remoteConfig().uri,
-			headers: {
-				'X-Api-Key': this.optionsService.apiKey()
-			}
-		});
+	constructor(private optionsService: OptionsService) {}
+
+	/** Create and get the http client */
+	client() {
+		if (!this.http) {
+			this.http = axios.create({
+				baseURL: this.optionsService.remoteConfig().uri,
+				headers: {
+					'X-Api-Key': this.optionsService.apiKey()
+				}
+			});
+		}
+		return this.http;
 	}
 
 	/** Get */
@@ -57,7 +63,7 @@ export class ApiService {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse> {
 		try {
-			return await this.http.get(this.query(url, query), config);
+			return await this.client().get(this.query(url, query), config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
@@ -71,7 +77,7 @@ export class ApiService {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse> {
 		try {
-			return await this.http.post(
+			return await this.client().post(
 				this.query(url, query),
 				payload,
 				config
@@ -89,7 +95,7 @@ export class ApiService {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse> {
 		try {
-			return await this.http.patch(
+			return await this.client().patch(
 				this.query(url, query),
 				payload,
 				config
@@ -106,7 +112,7 @@ export class ApiService {
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse> {
 		try {
-			return await this.http.delete(this.query(url, query), config);
+			return await this.client().delete(this.query(url, query), config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}

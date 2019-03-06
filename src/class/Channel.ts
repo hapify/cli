@@ -200,6 +200,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		// Create a channel from scratch
 		const channel = new Channel(path);
 		channel.config = {
+			version: '1',
 			validatorPath: `${Channel.defaultFolder}/validator.js`,
 			name: channel.name,
 			description: 'A brand new channel',

@@ -2,7 +2,12 @@ import { ConfigTemplateSchema } from './Template';
 import * as Joi from 'joi';
 import { FieldSchema } from './Field';
 
+const Versions = ['1'];
+
 export const ConfigSchema = Joi.object({
+	version: Joi.string()
+		.valid(Versions)
+		.required(),
 	validatorPath: Joi.string().required(),
 	project: Joi.string()
 		.hex()
