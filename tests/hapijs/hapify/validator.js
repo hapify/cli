@@ -54,12 +54,12 @@ if (model.fields.filter((f) => f.multiple && f.type !== 'entity').length) {
 }
 
 // -----------------------------
-// Important fields
-if (model.fields.filter((f) => f.important && f.type !== 'entity').length) {
-    errors.push('Important fields can only be entities references');
+// Embedded fields
+if (model.fields.filter((f) => f.embedded && f.type !== 'entity').length) {
+    errors.push('Embedded fields can only be entities references');
 }
-if (model.fields.filter((f) => f.important && f.hidden).length) {
-    errors.push('Important fields cannot be private');
+if (model.fields.filter((f) => f.embedded && f.hidden).length) {
+    errors.push('Embedded fields cannot be private');
 }
 
 return {

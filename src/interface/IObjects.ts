@@ -45,8 +45,8 @@ export interface IField {
 	nullable: boolean;
 	/** @type {boolean} Denotes if the field is an array of values */
 	multiple: boolean;
-	/** @type {boolean} Indicate whether the field is important (should be always exposed explicitly) */
-	important: boolean;
+	/** @type {boolean} Indicate whether the field is embedded (should be always exposed explicitly) */
+	embedded: boolean;
 	/** @type {boolean} Indicate whether the field is searchable or not */
 	searchable: boolean;
 	/** @type {boolean} Indicate whether the field is sortable or not */

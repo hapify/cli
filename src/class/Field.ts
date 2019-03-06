@@ -20,8 +20,8 @@ export class Field implements ISerializable<IField, Field> {
 	nullable: boolean;
 	/** @type {boolean} Denotes if the field is an array of values */
 	multiple: boolean;
-	/** @type {boolean} Indicate whether the field is important (should be always exposed explicitly) */
-	important: boolean;
+	/** @type {boolean} Indicate whether the field is embedded (should be always exposed explicitly) */
+	embedded: boolean;
 	/** @type {boolean} Indicate whether the field is searchable or not */
 	searchable: boolean;
 	/** @type {boolean} Indicate whether the field is sortable or not */
@@ -53,7 +53,7 @@ export class Field implements ISerializable<IField, Field> {
 		this.label = !!(<any>object.label);
 		this.nullable = !!(<any>object.nullable);
 		this.multiple = !!(<any>object.multiple);
-		this.important = !!(<any>object.important);
+		this.embedded = !!(<any>object.embedded);
 		this.searchable = !!(<any>object.searchable);
 		this.sortable = !!(<any>object.sortable);
 		this.hidden = !!(<any>object.hidden);
@@ -75,7 +75,7 @@ export class Field implements ISerializable<IField, Field> {
 			label: this.label,
 			nullable: this.nullable,
 			multiple: this.multiple,
-			important: this.important,
+			embedded: this.embedded,
 			searchable: this.searchable,
 			sortable: this.sortable,
 			hidden: this.hidden,

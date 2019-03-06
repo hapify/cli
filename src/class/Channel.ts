@@ -216,7 +216,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 					label: false,
 					nullable: false,
 					multiple: false,
-					important: false,
+					embedded: false,
 					searchable: false,
 					sortable: false,
 					hidden: false,
