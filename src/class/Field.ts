@@ -27,7 +27,7 @@ export class Field implements ISerializable<IField, Field> {
 	/** @type {boolean} Indicate whether the field is sortable or not */
 	sortable: boolean;
 	/** @type {boolean} Indicate whether the field is private (should not be exposed) */
-	isPrivate: boolean;
+	hidden: boolean;
 	/** @type {boolean} Indicate whether the field is for an internal use only (should not be defined by an user) */
 	internal: boolean;
 	/** @type {boolean} Indicate whether the field is restricted to authorized roles (should only be defined by an admin) */
@@ -56,7 +56,7 @@ export class Field implements ISerializable<IField, Field> {
 		this.important = !!(<any>object.important);
 		this.searchable = !!(<any>object.searchable);
 		this.sortable = !!(<any>object.sortable);
-		this.isPrivate = !!(<any>object.isPrivate);
+		this.hidden = !!(<any>object.hidden);
 		this.internal = !!(<any>object.internal);
 		this.restricted = !!(<any>object.restricted);
 		this.ownership = !!(<any>object.ownership);
@@ -78,7 +78,7 @@ export class Field implements ISerializable<IField, Field> {
 			important: this.important,
 			searchable: this.searchable,
 			sortable: this.sortable,
-			isPrivate: this.isPrivate,
+			hidden: this.hidden,
 			internal: this.internal,
 			restricted: this.restricted,
 			ownership: this.ownership

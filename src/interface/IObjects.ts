@@ -52,7 +52,7 @@ export interface IField {
 	/** @type {boolean} Indicate whether the field is sortable or not */
 	sortable: boolean;
 	/** @type {boolean} Indicate whether the field is private (should not be exposed) */
-	isPrivate: boolean;
+	hidden: boolean;
 	/** @type {boolean} Indicate whether the field is for an internal use only (should not be defined by an user) */
 	internal: boolean;
 	/** @type {boolean} Indicate whether the field is restricted to authorized roles (should only be defined by an admin) */

@@ -41,7 +41,7 @@ function __create(model) {
 function __read(model) {
     const modelKey = model.names.underscore;
     return model.fields.list
-        .filter((f) => !(f.isPrivate || f.primary))
+        .filter((f) => !(f.hidden || f.primary))
         .reduce((p, f) => {
             const key = f.names.underscore;
             p[`${modelKey}_title_${key}`] = `${f.names.wordsUpper}`;
@@ -111,7 +111,7 @@ function __filter(model) {
 function __list(model) {
     const modelKey = model.names.underscore;
     return model.fields.list
-        .filter((f) => !(f.isPrivate))
+        .filter((f) => !(f.hidden))
         .reduce((p, f) => {
             const key = f.names.underscore;
             p[`${modelKey}_list_title_${key}`] = `${f.names.wordsUpper}`;

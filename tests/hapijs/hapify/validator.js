@@ -30,7 +30,7 @@ if (primary) {
     if (primary.multiple) {
         errors.push('Primary key cannot be multiple');
     }
-    if (primary.isPrivate) {
+    if (primary.hidden) {
         errors.push('Primary key cannot be private');
     }
     if (primary.searchable) {
@@ -58,7 +58,7 @@ if (model.fields.filter((f) => f.multiple && f.type !== 'entity').length) {
 if (model.fields.filter((f) => f.important && f.type !== 'entity').length) {
     errors.push('Important fields can only be entities references');
 }
-if (model.fields.filter((f) => f.important && f.isPrivate).length) {
+if (model.fields.filter((f) => f.important && f.hidden).length) {
     errors.push('Important fields cannot be private');
 }
 
