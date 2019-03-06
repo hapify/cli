@@ -135,49 +135,49 @@ export class Template
 		// Apply replacements
 		const path = template.path
 			.replace(
-				/{model\.hyphen}/g,
+				/{kebab}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.SlugHyphen
 				)
 			)
 			.replace(
-				/{model\.hyphenUpper}/g,
+				/{big}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.SlugHyphenUpperCase
 				)
 			)
 			.replace(
-				/{model\.underscore}/g,
+				/{snake}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.SlugUnderscore
 				)
 			)
 			.replace(
-				/{model\.underscoreUpper}/g,
+				/{constant}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.SlugUnderscoreUpperCase
 				)
 			)
 			.replace(
-				/{model\.oneWord}/g,
+				/{compact}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.SlugOneWord
 				)
 			)
 			.replace(
-				/{model\.upperCamel}/g,
+				/{pascal}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.UpperCamelCase
 				)
 			)
 			.replace(
-				/{model\.lowerCamel}/g,
+				/{camel}/g,
 				stringService.format(
 					Template.defaultFolder,
 					SentenceFormat.LowerCamelCase

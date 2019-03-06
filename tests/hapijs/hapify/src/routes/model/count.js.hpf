@@ -86,7 +86,7 @@ module.exports = {
  
 <<< 
 function joiValidator(f) {
-    const prop = f.names.underscore;
+    const prop = f.names.snake;
     let v = "";
     
     if (f.type === "boolean") v = `${prop}: Joi.boolean(),`;
@@ -106,6 +106,6 @@ function joiValidator(f) {
     return v;
 }
 function validList(fs) {
-    return fs.map(function(f) { return "'"+f.names.underscore+"'"; }).join(', ');
+    return fs.map(function(f) { return "'"+f.names.snake+"'"; }).join(', ');
 }
 >>>

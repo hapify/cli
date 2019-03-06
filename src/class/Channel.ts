@@ -227,7 +227,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			],
 			templates: [
 				{
-					path: 'models/{model.hyphen}/hello.js',
+					path: 'models/{kebab}/hello.js',
 					engine: TemplateEngine.Hpf,
 					input: TemplateInput.One
 				}

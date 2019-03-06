@@ -443,18 +443,18 @@ export class StringService {
 	public formatSentences(value: string): IFormattedSentences {
 		return {
 			raw: this.format(value, SentenceFormat.Original),
-			hyphen: this.format(value, SentenceFormat.SlugHyphen),
-			hyphenUpper: this.format(value, SentenceFormat.SlugHyphenUpperCase),
+			kebab: this.format(value, SentenceFormat.SlugHyphen),
+			big: this.format(value, SentenceFormat.SlugHyphenUpperCase),
 			underscore: this.format(value, SentenceFormat.SlugUnderscore),
-			underscoreUpper: this.format(
+			constant: this.format(
 				value,
 				SentenceFormat.SlugUnderscoreUpperCase
 			),
-			oneWord: this.format(value, SentenceFormat.SlugOneWord),
-			wordsUpper: this.format(value, SentenceFormat.WordsUpperCase),
-			wordsLower: this.format(value, SentenceFormat.WordsLowerCase),
-			upperCamel: this.format(value, SentenceFormat.UpperCamelCase),
-			lowerCamel: this.format(value, SentenceFormat.LowerCamelCase)
+			compact: this.format(value, SentenceFormat.SlugOneWord),
+			capital: this.format(value, SentenceFormat.WordsUpperCase),
+			lower: this.format(value, SentenceFormat.WordsLowerCase),
+			pascal: this.format(value, SentenceFormat.UpperCamelCase),
+			camel: this.format(value, SentenceFormat.LowerCamelCase)
 		};
 	}
 

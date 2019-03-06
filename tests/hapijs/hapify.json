@@ -45,42 +45,42 @@
   ],
   "templates": [
     {
-      "path": "src/routes/{model.hyphen}/count.js",
+      "path": "src/routes/{kebab}/count.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/create.js",
+      "path": "src/routes/{kebab}/create.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/delete.js",
+      "path": "src/routes/{kebab}/delete.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/inc.js",
+      "path": "src/routes/{kebab}/inc.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/index.js",
+      "path": "src/routes/{kebab}/index.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/list.js",
+      "path": "src/routes/{kebab}/list.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/read.js",
+      "path": "src/routes/{kebab}/read.js",
       "engine": "hpf",
       "input": "one"
     },
     {
-      "path": "src/routes/{model.hyphen}/update.js",
+      "path": "src/routes/{kebab}/update.js",
       "engine": "hpf",
       "input": "one"
     },

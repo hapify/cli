@@ -2,21 +2,21 @@ export interface IFormattedSentences {
 	/** @type {string} The sentence as Original */
 	raw: string;
 	/** @type {string} The sentence as SlugHyphen */
-	hyphen: string;
+	kebab: string;
 	/** @type {string} The sentence as SlugHyphenUpperCase */
-	hyphenUpper: string;
+	big: string;
 	/** @type {string} The sentence as SlugUnderscore */
 	underscore: string;
 	/** @type {string} The sentence as SlugUnderscoreUpperCase */
-	underscoreUpper: string;
+	constant: string;
 	/** @type {string} The sentence as SlugOneWord */
-	oneWord: string;
+	compact: string;
 	/** @type {string} The sentence as WordsUpperCase */
-	wordsUpper: string;
+	capital: string;
 	/** @type {string} The sentence as WordsLowerCase */
-	wordsLower: string;
+	lower: string;
 	/** @type {string} The sentence as UpperCamelCase */
-	upperCamel: string;
+	pascal: string;
 	/** @type {string} The sentence as LowerCamelCase */
-	lowerCamel: string;
+	camel: string;
 }
