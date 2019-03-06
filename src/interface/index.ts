@@ -1,5 +1,5 @@
 export * from './IObjects';
-export * from './IFormattedSentences';
+export * from './IStringVariants';
 export * from './IStorable';
 export * from './ISerializable';
 export * from './IGeneratorResult';

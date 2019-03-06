@@ -1,0 +1,1 @@
+{"version":3,"file":"RichError.js","sourceRoot":"","sources":["../../src/class/RichError.ts"],"names":[],"mappings":";;AAQA,MAAa,SAAS;IAMrB,YAAY,OAAe,EAAE,IAAoB;QAChD,IAAI,CAAC,IAAI,GAAG,WAAW,CAAC;QACxB,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;QACvB,IAAI,IAAI,EAAE;YACT,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;SACjB;IACF,CAAC;CACD;AAbD,8BAaC"}
