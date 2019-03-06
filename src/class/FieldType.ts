@@ -4,6 +4,8 @@ export class FieldType {
 	static String = 'string';
 	static DateTime = 'datetime';
 	static Entity = 'entity';
+	static Object = 'object';
+	static File = 'file';
 }
 
 export class FieldSubType {
@@ -17,6 +19,7 @@ export class FieldSubType {
 	static String = {
 		Email: 'email',
 		Password: 'password',
+		Url: 'url',
 		Text: 'text',
 		RichText: 'rich'
 	};
@@ -25,4 +28,11 @@ export class FieldSubType {
 		Time: 'time'
 	};
 	static Entity = {};
+	static Object = {};
+	static File = {
+		Image: 'image',
+		Video: 'video',
+		Audio: 'audio',
+		Document: 'document'
+	};
 }
