@@ -6,13 +6,13 @@
  
 const Joi = require('joi');
 const MongoDB = require('mongodb');
-<<? F ip>>
+<<? F hd>>
 const <<M AA>>Projection = require('./inc').projection;
 <<?>>
 
 <<# Includes projections for all embedded (forced non-private) dependencies that have private fields >>
 <<@ D em d>>
-    <<? d.f ip>>
+    <<? d.f hd>>
 const <<d AA>>Projection = require('../<<d a-a>>/inc').projection;
     <<?>>
 <<@>>
@@ -100,7 +100,7 @@ module.exports = {
  
         // Get <<M a>> list from database
         const cursor = request.server.db.collection('<<M a_a>>')
-            .find(filter<<? F ip>>, { projection: <<M AA>>Projection() }<<?>>)
+            .find(filter<<? F hd>>, { projection: <<M AA>>Projection() }<<?>>)
             .skip(skip)
             .limit(request.query._limit);
  
@@ -122,7 +122,7 @@ module.exports = {
                 {
                     col: '<<r.m a_a>>',
                     prop: '<<r a_a>>'<<? r ml>>,
-                    multiple: true<<?>><<? r.m.f ip>>,
+                    multiple: true<<?>><<? r.m.f hd>>,
                     projection: <<r.m AA>>Projection()
         <<?>>
                 },
