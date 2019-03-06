@@ -35,18 +35,18 @@ program
 	.option('-d, --dir <path>', 'change the working directory')
 	.option(
 		'-k, --key <secret>',
-		'define the api key to use (override global key)'
+		'override global api key for this command (If you want to define your api key permanently, you should use command "hpf key")'
 	);
 
 program
 	.command('config')
 	.description('Define global configuration')
-	.option('--apiKey <secret>', 'define the api key to use for every commands')
+	.option('--apiKey <secret>', 'define the api key to use permanently')
 	.action(ConfigCommand);
 
 program
 	.command('key <key>')
-	.description('Define the api key to use')
+	.description('Define the api key to use permanently')
 	.action(KeyCommand);
 
 program

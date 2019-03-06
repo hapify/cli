@@ -24,7 +24,7 @@ To check the installed version, run `hpf --version`.
 -   `-V`, `--version`: output the version number
 -   `--debug`: enable debug mode
 -   `-d <path>`, `--dir <path>`: change the working directory. This path can be absolute or relative to the current path
--   `-k <secret>`, `--key <secret>`: force usage of an API key rather than the one defined in global config (via command `hpf key` or `hpf config --apiKey`)
+-   `-k <secret>`, `--key <secret>`: force usage of an API key rather than the one defined in global config. If you want to define your api key permanently, you should use command `hpf key`)
 -   `-h`, `--help`: show help
 
 ### Commands
