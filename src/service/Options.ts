@@ -55,7 +55,7 @@ export class OptionsService {
 			this.program.key || this.globalConfigService.getData().apiKey;
 		if (!key) {
 			throw new Error(
-				'Please define an API Key using command "hpf config" or the option "--key"'
+				'Please define an API Key using command "hpf key" or the option "--key"'
 			);
 		}
 		return key;
