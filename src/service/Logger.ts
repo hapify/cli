@@ -113,19 +113,25 @@ export class LoggerService {
 	 * @return {LoggerService}
 	 */
 	art(): LoggerService {
-		console.log(
-			chalk.magentaBright(
-				'  _    _             _  __       \n' +
-					' | |  | |           (_)/ _|      \n' +
-					' | |__| | __ _ _ __  _| |_ _   _ \n' +
-					" |  __  |/ _` | '_ \\| |  _| | | |\n" +
-					' | |  | | (_| | |_) | | | | |_| |\n' +
-					' |_|  |_|\\__,_| .__/|_|_|  \\__, |\n' +
-					'              | |           __/ |\n' +
-					'              |_|          |___/ '
-			)
-		);
+		console.log(this.getArt());
 		return this;
+	}
+
+	/**
+	 * Get ascii art
+	 * @return {string}
+	 */
+	getArt(): string {
+		return chalk.magentaBright(
+			'  _    _             _  __       \n' +
+				' | |  | |           (_)/ _|      \n' +
+				' | |__| | __ _ _ __  _| |_ _   _ \n' +
+				" |  __  |/ _` | '_ \\| |  _| | | |\n" +
+				' | |  | | (_| | |_) | | | | |_| |\n' +
+				' |_|  |_|\\__,_| .__/|_|_|  \\__, |\n' +
+				'              | |           __/ |\n' +
+				'              |_|          |___/ '
+		);
 	}
 
 	/**

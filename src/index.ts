@@ -157,15 +157,6 @@ program
 	.action(ServeCommand);
 
 // ############################################
-// If no arguments, show help
-if (!process.argv.slice(2).length) {
-	logger.art();
-	logger.newLine();
-	program.outputHelp();
-	process.exit();
-}
-
-// ############################################
 // Init services
 process.on('exit', code => {
 	http.stop();
@@ -177,4 +168,11 @@ options.setProgram(program);
 
 // ############################################
 // Start program
-program.parse(process.argv);
+const parsed = program.parse(process.argv);
+
+// If no command, show help
+if (!parsed.args.length) {
+	program.outputHelp(help => {
+		return `${logger.getArt()}\n\n${help}`;
+	});
+}
