@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-03-06 */
+/*! hapify-cli 2019-03-07 */
 
 "use strict";function __export(e){for(var r in e)exports.hasOwnProperty(r)||(exports[r]=e[r])}Object.defineProperty(exports,"__esModule",{value:!0}),__export(require("./Config")),__export(require("./Export")),__export(require("./Import")),__export(require("./Generate")),__export(require("./Init")),__export(require("./Key")),__export(require("./List")),__export(require("./New")),__export(require("./Patch")),__export(require("./Serve")),__export(require("./Use"));

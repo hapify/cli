@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-03-06 */
+/*! hapify-cli 2019-03-07 */
 
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});class TemplateInput{}TemplateInput.One="one",TemplateInput.All="all",exports.TemplateInput=TemplateInput;

@@ -46,7 +46,7 @@
 	"template_input_all": "Tous",
 	"template_input_one": "Un seul",
 	"error_dismiss-action": "Ok",
-	"channels_show_validator": "Ouvrir le validateur de code",
+	"channels_show_validator": "Ouvrir le validateur de modèle",
 	"tree_add_new_path_placeholder": "Nouveau chemin (Ex: assets/main.ts)",
 	"tree_add_new_path_tooltip": "Définir le nom du chemin avant de le soumettre",
 	"error_code-1001": "",
