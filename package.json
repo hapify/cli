@@ -25,7 +25,7 @@
 	],
 	"private": false,
 	"author": "Tractr <hapify@tractr.net>",
-	"license": "ISC",
+	"license": "https://www.hapify.io/terms",
 	"homepage": "https://bitbucket.org/tractrs/hapify-cli#readme",
 	"dependencies": {
 		"axios": "^0.18.0",
