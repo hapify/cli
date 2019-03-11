@@ -5,14 +5,14 @@
  */
  
 module.exports = {
-<<? F ip>>
+<<? F hd>>
     projection: () => ({
-    <<? M pMPr>>
-        <<@ F /pr/ip f>>
+    <<? M pMHd>>
+        <<@ F /pr/hd f>>
         <<f a_a>>: true,
         <<@>>
     <<??>>
-        <<@ F ip f>>
+        <<@ F hd f>>
         <<f a_a>>: false,
         <<@>>
     <<?>>

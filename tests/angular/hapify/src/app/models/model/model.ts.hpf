@@ -1,11 +1,11 @@
 import {Helpers} from '@app/shared';
 import {Subject} from 'rxjs/Subject';
-<<@ D !(ip*in) d>>
+<<@ D !(hd*in) d>>
 import {<<d AA>>, <<d AA>>Interface} from '../<<d a-a>>/<<d a-a>>';
 <<@>>
  
 export interface <<M AA>>Interface {
-<<@ F !(ip*in) f>>
+<<@ F !(hd*in) f>>
   <<f a_a>>?: <<=type(f)>>;
 <<@>>
 }
@@ -98,7 +98,7 @@ export class <<M AA>> extends Subject<void> {
    */
   toObject(): <<M AA>>Interface {
     const props = Object.assign({}, this.props);
-<<@ F nu/ip f>>
+<<@ F nu/hd f>>
     <<? f tS>>
     if (typeof props.<<f a_a>> !== 'string' || props.<<f a_a>>.length === 0) {
         props.<<f a_a>> = null;
@@ -144,12 +144,12 @@ export class <<M AA>> extends Subject<void> {
     const payload = this.toObject();
 
 <<# Remove public data that cannot be sent to the API >>
-<<@ F in/ip f>>
+<<@ F in/hd f>>
     delete payload.<<f a_a>>;
 <<@>>
 
 <<# Remove private data that have been entered >>
-<<@ F ip/nu f>>
+<<@ F hd/nu f>>
     if (payload.<<f a_a>> === null) { delete payload.<<f a_a>>; }
 <<@>>
 
@@ -179,7 +179,7 @@ function type(f) {
   else if (f.type === "datetime") out += "number | Date";
   else if (f.type === "entity") {
     const m = f.multiple ? "[]" : "";
-    out += `string${m} | ${f.m.names.upperCamel}${m} | ${f.m.names.upperCamel}Interface${m}`;
+    out += `string${m} | ${f.m.names.pascal}${m} | ${f.m.names.pascal}Interface${m}`;
   }
   else out += "any";
  
@@ -189,7 +189,7 @@ function type(f) {
 }
 function labels() {
     return root.f.lb
-        .map(lb => "${this.props."+lb.names.underscore+"}")
+        .map(lb => "${this.props."+lb.names.snake+"}")
         .join(' ');
 }
 >>>

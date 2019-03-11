@@ -1,8 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class TemplateInput {
-}
-TemplateInput.One = 'one';
-TemplateInput.All = 'all';
-exports.TemplateInput = TemplateInput;
-//# sourceMappingURL=TemplateInput.js.map
+/*! hapify-cli 2019-03-11 */
+
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class TemplateInput{}TemplateInput.One="one",TemplateInput.All="all",exports.TemplateInput=TemplateInput;

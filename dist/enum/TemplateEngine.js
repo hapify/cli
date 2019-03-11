@@ -1,8 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class TemplateEngine {
-}
-TemplateEngine.Hpf = 'hpf';
-TemplateEngine.JavaScript = 'js';
-exports.TemplateEngine = TemplateEngine;
-//# sourceMappingURL=TemplateEngine.js.map
+/*! hapify-cli 2019-03-11 */
+
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class TemplateEngine{}TemplateEngine.Hpf="hpf",TemplateEngine.JavaScript="js",exports.TemplateEngine=TemplateEngine;

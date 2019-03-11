@@ -1,26 +1,3 @@
-"use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./String"));
-__export(require("./Channels"));
-__export(require("./Options"));
-__export(require("./Logger"));
-__export(require("./Writer"));
-__export(require("./HttpServer"));
-__export(require("./Validator"));
-__export(require("./WebSocketServer"));
-__export(require("./generators/JsGenerator"));
-__export(require("./generators/HpfGenerator"));
-__export(require("./generators/Generator"));
-__export(require("./websocket-handlers/GetModelsHandler"));
-__export(require("./websocket-handlers/SetModelsHandler"));
-__export(require("./websocket-handlers/GetChannelsHandler"));
-__export(require("./websocket-handlers/SetChannelsHandler"));
-__export(require("./websocket-handlers/PathPreviewHandler"));
-__export(require("./websocket-handlers/TemplatePreviewHandler"));
-__export(require("./websocket-handlers/ValidateModelHandler"));
-__export(require("./websocket-handlers/GenerateTemplateHandler"));
-__export(require("./websocket-handlers/GenerateChannelHandler"));
-//# sourceMappingURL=index.js.map
+/*! hapify-cli 2019-03-11 */
+
+"use strict";function __export(e){for(var r in e)exports.hasOwnProperty(r)||(exports[r]=e[r])}Object.defineProperty(exports,"__esModule",{value:!0}),__export(require("./String")),__export(require("./Boilerplates")),__export(require("./Api")),__export(require("./Channels")),__export(require("./Generator")),__export(require("./GlobalConfig")),__export(require("./Presets")),__export(require("./Projects")),__export(require("./Options")),__export(require("./Logger")),__export(require("./Writer")),__export(require("./HttpServer")),__export(require("./Validator")),__export(require("./WebSocketServer")),__export(require("./storage")),__export(require("./websocket-handlers"));

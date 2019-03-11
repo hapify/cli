@@ -1,3 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=IWebSocketHandler.js.map
+/*! hapify-cli 2019-03-11 */
+
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});

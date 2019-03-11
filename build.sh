@@ -2,11 +2,6 @@
 
 DIR=$(cd "$(dirname "$0")"; pwd);
 
-echo "Copy hapify-syntax"
-rm -rf $DIR/libs/syntax
-mkdir -p $DIR/libs/syntax/src
-cp -r $DIR/packages/hapify-syntax/* $DIR/libs/syntax
-
 echo "Build hapify-cli-console..."
 echo "... Remove local node_modules"
 rm -rf $DIR/node_modules

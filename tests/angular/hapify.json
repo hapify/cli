@@ -1,197 +1,164 @@
 {
+  "version": "1",
+  "name": "Angular",
+  "description": "Angular Frontend with Material",
+  "logo": "https://angular.io/assets/images/logos/angular/angular.svg",
+  "project": "5c7019c998ebdb001075f1ed",
   "validatorPath": "hapify/validator.js",
-  "models": {
-    "key": "AKIAJNB2JZQWEW3KG6JA",
-    "secret": "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",
-    "region": "us-east-1",
-    "bucket": "hapify-storage",
-    "path": "models/cli-dev.json"
-  },
   "templates": [
     {
-      "name": "All Models Index",
+      "path": "src/app/models/{kebab}/{kebab}-details/{kebab}-details.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-details/{kebab}-details.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-filters/{kebab}-filters.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-filters/{kebab}-filters.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-form/{kebab}-form.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-form/{kebab}-form.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-search-params.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-select/{kebab}-select.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-select/{kebab}-select.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-table/{kebab}-table.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-table/{kebab}-table.component.scss",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}-table/{kebab}-table.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}.service.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}/{kebab}.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/{kebab}/{kebab}.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/index.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-create/{kebab}-create.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-create/{kebab}-create.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-edit/{kebab}-edit.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-edit/{kebab}-edit.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-list/{kebab}-list.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-list/{kebab}-list.component.scss",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-list/{kebab}-list.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-read/{kebab}-read.component.html",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
+      "path": "src/app/models/{kebab}/views/{kebab}-read/{kebab}-read.component.ts",
+      "engine": "hpf",
+      "input": "one"
+    },
+    {
       "path": "src/app/models/index.ts",
       "engine": "hpf",
       "input": "all"
     },
     {
-      "name": "All Models Module",
-      "path": "src/app/models/models.module.ts",
-      "engine": "hpf",
-      "input": "all"
-    },
-    {
-      "name": "All Models Routing",
       "path": "src/app/models/models-routing.module.ts",
       "engine": "hpf",
       "input": "all"
     },
     {
-      "name": "English JSON",
-      "path": "src/assets/i18n/en.json",
-      "engine": "js",
+      "path": "src/app/models/models.module.ts",
+      "engine": "hpf",
       "input": "all"
     },
     {
-      "name": "Models Index",
-      "path": "src/app/models/{model.hyphen}/index.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Details Html",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-details/{model.hyphen}-details.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Details Ts",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-details/{model.hyphen}-details.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Filters Html",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-filters/{model.hyphen}-filters.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Filters Ts",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-filters/{model.hyphen}-filters.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Form Html",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-form/{model.hyphen}-form.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Form Ts",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-form/{model.hyphen}-form.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Html",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}/{model.hyphen}.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Select Html",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-select/{model.hyphen}-select.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Select Ts",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-select/{model.hyphen}-select.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Table Html",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-table/{model.hyphen}-table.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Table Scss",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-table/{model.hyphen}-table.component.scss",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Table Ts",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-table/{model.hyphen}-table.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Model Ts",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}/{model.hyphen}.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Search Params",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}-search-params.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models Service",
-      "path": "src/app/models/{model.hyphen}/{model.hyphen}.service.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View Create Html",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-create/{model.hyphen}-create.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View Create Ts",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-create/{model.hyphen}-create.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View Edit Html",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-edit/{model.hyphen}-edit.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View Edit Ts",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-edit/{model.hyphen}-edit.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View List Html",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-list/{model.hyphen}-list.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View List Scss",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-list/{model.hyphen}-list.component.scss",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View List Ts",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-list/{model.hyphen}-list.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View Read Html",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-read/{model.hyphen}-read.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Models View Read Ts",
-      "path": "src/app/models/{model.hyphen}/views/{model.hyphen}-read/{model.hyphen}-read.component.ts",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "name": "Shared Models",
       "path": "src/app/shared/models.ts",
       "engine": "hpf",
+      "input": "all"
+    },
+    {
+      "path": "src/assets/i18n/en.json",
+      "engine": "js",
       "input": "all"
     }
   ]

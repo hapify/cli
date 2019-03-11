@@ -30,7 +30,7 @@ if (primary) {
     if (primary.multiple) {
         errors.push('Primary key cannot be multiple');
     }
-    if (primary.isPrivate) {
+    if (primary.hidden) {
         errors.push('Primary key cannot be private');
     }
     if (primary.searchable) {
@@ -54,12 +54,12 @@ if (model.fields.filter((f) => f.multiple && f.type !== 'entity').length) {
 }
 
 // -----------------------------
-// Important fields
-if (model.fields.filter((f) => f.important && f.type !== 'entity').length) {
-    errors.push('Important fields can only be entities references');
+// Embedded fields
+if (model.fields.filter((f) => f.embedded && f.type !== 'entity').length) {
+    errors.push('Embedded fields can only be entities references');
 }
-if (model.fields.filter((f) => f.important && f.isPrivate).length) {
-    errors.push('Important fields cannot be private');
+if (model.fields.filter((f) => f.embedded && f.hidden).length) {
+    errors.push('Embedded fields cannot be private');
 }
 
 return {

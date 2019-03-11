@@ -6,13 +6,13 @@
  
 const Joi = require('joi');
 const MongoDB = require('mongodb');
-<<? F ip>>
+<<? F hd>>
 const <<M AA>>Projection = require('./inc').projection;
 <<?>>
 
-<<# Includes projections for all important (forced non-private) dependencies that have private fields >>
-<<@ D im d>>
-    <<? d.f ip>>
+<<# Includes projections for all embedded (forced non-private) dependencies that have private fields >>
+<<@ D em d>>
+    <<? d.f hd>>
 const <<d AA>>Projection = require('../<<d a-a>>/inc').projection;
     <<?>>
 <<@>>
@@ -100,7 +100,7 @@ module.exports = {
  
         // Get <<M a>> list from database
         const cursor = request.server.db.collection('<<M a_a>>')
-            .find(filter<<? F ip>>, { projection: <<M AA>>Projection() }<<?>>)
+            .find(filter<<? F hd>>, { projection: <<M AA>>Projection() }<<?>>)
             .skip(skip)
             .limit(request.query._limit);
  
@@ -113,16 +113,16 @@ module.exports = {
         const results = await cursor.toArray();
         const total = await cursor.count();
 
-<<? F tE*im>>
+<<? F tE*em>>
  
         // Convert reference fields
         await request.server.utils.Entity
             .populateList(request.server.db, results, [
-    <<@ F tE*im r>>
+    <<@ F tE*em r>>
                 {
                     col: '<<r.m a_a>>',
                     prop: '<<r a_a>>'<<? r ml>>,
-                    multiple: true<<?>><<? r.m.f ip>>,
+                    multiple: true<<?>><<? r.m.f hd>>,
                     projection: <<r.m AA>>Projection()
         <<?>>
                 },
@@ -142,7 +142,7 @@ module.exports = {
  
 <<< 
 function joiValidator(f) {
-    const prop = f.names.underscore;
+    const prop = f.names.snake;
     let v = "";
     
     if (f.type === "boolean") v = `${prop}: Joi.boolean(),`;
