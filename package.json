@@ -15,18 +15,14 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"prettier": "./node_modules/.bin/prettier --write \"**/*{.ts,.json,.css,.scss,.html}\""
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+ssh://git@bitbucket.org/tractrs/hapify-cli.git"
-	},
 	"keywords": [
 		"hapify",
 		"cli"
 	],
 	"private": false,
 	"author": "Tractr <hapify@tractr.net>",
-	"license": "https://www.hapify.io/terms",
-	"homepage": "https://bitbucket.org/tractrs/hapify-cli#readme",
+	"license": "UNLICENSED",
+	"homepage": "https://www.hapify.io",
 	"dependencies": {
 		"axios": "^0.18.0",
 		"case": "^1.6.1",
