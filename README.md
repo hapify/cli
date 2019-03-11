@@ -1,4 +1,4 @@
-# Hapify
+# Hapify CLI
 
 ## Description
 
@@ -10,8 +10,7 @@ It exposes a web-based console for models definition and templates writing.
 
 ### Installation
 
-You need to install this package globally to have the `hpf` command.
-To do so, run this:
+You need to install this package globally to have the `hpf` command:
 
 ```bash
 npm install -g hapify-cli
@@ -35,8 +34,8 @@ To check the installed version, run `hpf --version`.
 hpf config [options]
 ```
 
-This will store your one or more global configuration in `~/.hapify/config.json`.
-If the file does not exists, it will create it.
+This command stores your one (or more) global configuration in `~/.hapify/config.json`.
+If the file does not exists, it will be automatically created.
 
 _Available configuration_
 
@@ -58,12 +57,12 @@ hpf list
 
 Alias: `hpf ls`
 
-This will display what is visible for the CLI from this directory.
-This shows the list of channels and the list of models used by those channels.
+This command displays what is visible for the CLI from this directory.
+It shows the list of channels and the list of models used by those channels.
 
 The CLI looks for `hapify.json` files to auto-detect channels.
 It recurses over sub-directories. Default depth is `2`.
-To change this, use the `depth` option.
+To modify this value, use the `depth` option.
 
 ```bash
 hpf list --depth 3
@@ -71,7 +70,7 @@ hpf list --depth 3
 
 _Note:_
 You are not supposed to run the CLI with different models sets.
-If you do this, the first found set will be used.
+If this is the case, the first found set will be used.
 
 #### Generate the code
 
@@ -81,7 +80,7 @@ hpf generate
 
 Alias: `hpf g`
 
-This will generate all found channels from theirs templates and models.
+This command generates all found channels from theirs templates and models.
 To define the depth to look for channels, use this option: `--depth <n>`. Default is `2`.
 
 ```bash
@@ -96,11 +95,11 @@ hpf export
 
 Alias: `hpf x`
 
-This will generate the channel from its templates and its models.
+This command generates the channel from its templates and its models.
 Then it saves the generated files in a zip file.
 To run this command you must be in the channel directory, next to the `hapify.json` file.
 
-By default, the zip file has the name of the channel, ie the folder name.
+By default, the zip file has the channel's name, ie the folder name.
 Example: `angular-admin/angular-admin.zip`.
 You can define a custom path with this option: `-o, --output <path>`.
 
@@ -116,13 +115,13 @@ hpf import
 
 Alias: `hpf m`
 
-Use this command to import pre-defined models from the Cloud database (call presets).
-This command will show the list of available sets of models.
-Press space bar to add a set to import and enter to confirm.
+Use this command to import pre-defined models from the Cloud database (called presets).
+This command displays the list of available presets of models.
+Press space bar to select a preset to import and enter to confirm.
 
 _Import presets from ids_
 
-If you already know presets Ids, you can run:
+Alternatively, you can import presets from their Ids (visible in [Hapify Hub](https://hub.hapify.io/))
 
 ```bash
 hpf import --preset ab123 --preset bd456
@@ -136,8 +135,8 @@ hpf new
 
 Alias: `hpf n`
 
-This command will clone a boilerplate using git and configure it.
-It will also prompt a form to:
+This command let you clone and configure a boilerplate.
+It will prompt a form to:
 
 -   select a boilerpalte
 -   select or create the project to use
@@ -145,7 +144,7 @@ It will also prompt a form to:
 
 _Options_
 
--   `-p <id>`, `--project <id>`: The project to use (if already created)
+-   `-p <id>`, `--project <id>`: The project to use (if already existing)
 -   `--project-name <name>`: The project's name to create
 -   `--project-desc <description>`: The project's description to create
 -   `-b <slug>`, `--boilerplate <slug>`: The slug name of the boilerplate to clone
@@ -163,9 +162,9 @@ hpf init
 
 Alias: `hpf i`
 
-This will create a new Hapify files structure in the current directory.
+This command creates a new Hapify files structure in the current directory.
 It creates a file `hapify.json` and a folder `hapify` containing a template `models/model/hello.js.hpf`.
-This will prompt a form to select or create the project to use.
+It will prompt a form to select or create a project.
 
 _Options_
 
@@ -182,8 +181,8 @@ hpf use
 Alias: `hpf u`
 
 Change the project used by one or more existing channels.
-It will change the project's id in file `hapify.json` for each found channels.
-This will prompt a form to select or create the project to use.
+It changes the project's id in file `hapify.json` for each found channels.
+It will prompt a form to select or create the project to use.
 
 _Options_
 
