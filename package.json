@@ -1,6 +1,6 @@
 {
 	"name": "hapify-cli",
-	"version": "0.4.2",
+	"version": "0.4.3",
 	"description": "Command Line Interface for Hapify Cloud",
 	"main": "dist/index.js",
 	"bin": {
@@ -21,7 +21,7 @@
 	],
 	"private": false,
 	"author": "Tractr <hapify@tractr.net>",
-	"license": "UNLICENSED",
+	"license": "LicenseRef-LICENSE",
 	"homepage": "https://www.hapify.io",
 	"dependencies": {
 		"axios": "^0.18.0",

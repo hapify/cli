@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-03-11 */
+/*! hapify-cli 2019-03-13 */
 
 "use strict";var __importStar=this&&this.__importStar||function(r){if(r&&r.__esModule)return r;var e={};if(null!=r)for(var i in r)Object.hasOwnProperty.call(r,i)&&(e[i]=r[i]);return e.default=r,e};Object.defineProperty(exports,"__esModule",{value:!0});const Joi=__importStar(require("joi"));exports.ValidatorResultSchema=Joi.object({errors:Joi.array().items(Joi.string()).required().min(0),warnings:Joi.array().items(Joi.string()).required().min(0)});
