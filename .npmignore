@@ -4,6 +4,9 @@ src
 lib
 tests
 
+.idea
+.vscode
+
 .gitignore
 .gitmodules
 
