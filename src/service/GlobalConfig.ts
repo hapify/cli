@@ -62,7 +62,14 @@ export class GlobalConfigService {
 		const validation = Joi.validate(data, GlobalConfigSchema);
 		if (validation.error) {
 			const errorMessage = validation.error.details
-				.map(v => v.message)
+				.map(v => {
+					if (v.context.key === 'apiKey') {
+						return `${
+							v.message
+						}. Please visit https://www.hapify.io/my-key`;
+					}
+					return v.message;
+				})
 				.join(', ');
 			throw new Error(`Global config format error: ${errorMessage}.`);
 		}
