@@ -40,6 +40,7 @@ If the file does not exists, it will be automatically created.
 _Available configuration_
 
 -   `hpf config --apiKey <secret>`: define the API key to use for every commands. This is equivalent to `hpf key <key>`.
+-   `hpf config --apiUrl <url>`: override default api url.
 
 #### Set global API key
 
