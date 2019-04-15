@@ -4,6 +4,8 @@ import { FieldType } from './';
 export class Field implements ISerializable<IField, Field> {
 	/** @type {string} The field's name */
 	name: string;
+	/** @type {string} The field's notes */
+	notes?: string;
 	/** @type {string} The field's type */
 	type: string;
 	/** @type {string} The field's subtype */
@@ -45,6 +47,7 @@ export class Field implements ISerializable<IField, Field> {
 	/** @inheritDoc */
 	public fromObject(object: IField): Field {
 		this.name = object.name;
+		this.notes = object.notes || null;
 		this.type = object.type;
 		this.subtype = object.subtype;
 		this.reference = object.reference;
@@ -67,6 +70,7 @@ export class Field implements ISerializable<IField, Field> {
 	public toObject(): IField {
 		return {
 			name: this.name,
+			notes: this.notes || null,
 			type: this.type,
 			subtype: this.subtype,
 			reference: this.type === FieldType.Entity ? this.reference : null,

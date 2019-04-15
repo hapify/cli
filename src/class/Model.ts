@@ -12,6 +12,8 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 	id: string;
 	/** @type {string} The model's name */
 	name: string;
+	/** @type {string} The model's notes */
+	notes?: string;
 	/** @type {Field[]} The fields of the model */
 	fields: Field[];
 	/** @type IAccesses The model privacy access */
@@ -28,6 +30,7 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 	public fromObject(object: IModel): Model {
 		this.id = object.id;
 		this.name = object.name;
+		this.notes = object.notes || null;
 		this.fields = object.fields.map(f => new Field(f));
 		this.accesses = object.accesses;
 		return this;
@@ -38,6 +41,7 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 		return {
 			id: this.id,
 			name: this.name,
+			notes: this.notes || null,
 			fields: this.fields.map(f => f.toObject()),
 			accesses: this.accesses
 		};

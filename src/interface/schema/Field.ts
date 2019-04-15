@@ -2,6 +2,7 @@ import * as Joi from 'joi';
 
 export const FieldSchema = Joi.object({
 	name: Joi.string().required(),
+	notes: Joi.string().allow(null),
 	type: Joi.string().required(),
 	subtype: Joi.string()
 		.required()

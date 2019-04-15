@@ -17,6 +17,7 @@ export interface IApiModel {
 	owner?: string | any;
 	project?: string | any;
 	name?: string;
+	notes?: string;
 	fields?: any[];
 	accesses?: any;
 }
@@ -54,6 +55,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 			const response = await this.create({
 				project: project,
 				name: model.name,
+				notes: model.notes || null,
 				fields: model.fields,
 				accesses: model.accesses
 			});
@@ -87,6 +89,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		for (const model of toUpdate) {
 			await this.update(model.id, {
 				name: model.name,
+				notes: model.notes || null,
 				fields: model.fields,
 				accesses: model.accesses
 			});
@@ -155,6 +158,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		return {
 			id: object._id,
 			name: object.name,
+			notes: object.notes || null,
 			fields: object.fields,
 			accesses: object.accesses
 		};

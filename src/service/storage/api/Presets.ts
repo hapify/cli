@@ -53,6 +53,7 @@ export class PresetsApiStorageService extends BaseApiStorageService<
 				(m: IApiModel): IModel => ({
 					id: m._id,
 					name: m.name,
+					notes: m.notes || null,
 					fields: m.fields,
 					accesses: m.accesses
 				})

@@ -29,6 +29,8 @@ export interface IConfig {
 export interface IField {
 	/** @type {string} The field's name */
 	name: string;
+	/** @type {string} The field's notes */
+	notes?: string;
 	/** @type {string} The field's type */
 	type: string;
 	/** @type {string} The field's subtype */
@@ -100,6 +102,8 @@ export interface IModel {
 	id: string;
 	/** @type {string} The model's name */
 	name: string;
+	/** @type {string} The model's notes */
+	notes?: string;
 	/** @type {IField[]} The fields of the model */
 	fields: IField[];
 	/** @type IAccesses The model privacy access */
