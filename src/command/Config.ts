@@ -24,6 +24,10 @@ export async function ConfigCommand(cmd: Command) {
 			data.apiKey = cmd.apiKey;
 			updates.push('apiKey');
 		}
+		if (cmd.apiUrl) {
+			data.apiUrl = cmd.apiUrl;
+			updates.push('apiUrl');
+		}
 
 		// Store values
 		globalConfig.setData(data);

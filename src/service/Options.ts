@@ -3,7 +3,7 @@ import { Command, CommanderStatic } from 'commander';
 import * as Path from 'path';
 import { GlobalConfigService } from './GlobalConfig';
 import { IRemoteConfig } from '../interface';
-import { RemoteConfigProduction, RemoteConfigStaging } from '../config';
+import { RemoteConfig } from '../config';
 
 @Service()
 export class OptionsService {
@@ -31,11 +31,11 @@ export class OptionsService {
 		this.command = command;
 	}
 
-	/** Returns the remote config depending on --staging parameters */
+	/** Returns the remote config and override defaults with global config (if any) */
 	remoteConfig(): IRemoteConfig {
-		return !!this.program.staging
-			? RemoteConfigStaging
-			: RemoteConfigProduction;
+		const configs = Object.assign({}, RemoteConfig);
+		configs.uri = this.apiUrl();
+		return configs;
 	}
 
 	/** @return {string} Return the working directory computed with the --dir option */
@@ -59,6 +59,12 @@ export class OptionsService {
 			);
 		}
 		return key;
+	}
+
+	/** @return {string} Return the API URL to use or default URL */
+	apiUrl(): string {
+		const url = this.globalConfigService.getData().apiUrl;
+		return url || RemoteConfig.uri;
 	}
 
 	/** @return {boolean} Denotes if the debug mode is enabled */

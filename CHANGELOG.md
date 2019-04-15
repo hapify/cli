@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+-   Add command's option `config --apiUrl`.
+
+### Changed
+
+### Removed
+
+-   Remove option `--staging`.
+
 ## [0.4.0] - 2019-03-11
 
 ### Added

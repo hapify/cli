@@ -30,7 +30,6 @@ const http = Container.get(HttpServerService);
 program
 	.version('0.4.5')
 	.description('Hapify Command Line Tool')
-	.option('--staging', 'use staging api', false)
 	.option('--debug', 'enable debug mode', false)
 	.option('-d, --dir <path>', 'change the working directory')
 	.option(
@@ -42,6 +41,7 @@ program
 	.command('config')
 	.description('Define global configuration')
 	.option('--apiKey <secret>', 'define the api key to use permanently')
+	.option('--apiUrl <url>', 'override default api url')
 	.action(ConfigCommand);
 
 program
