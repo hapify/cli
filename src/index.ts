@@ -28,7 +28,7 @@ const http = Container.get(HttpServerService);
 // ############################################
 // Define program & actions
 program
-	.version('0.4.5')
+	.version('0.5.0')
 	.description('Hapify Command Line Tool')
 	.option('--debug', 'enable debug mode', false)
 	.option('-d, --dir <path>', 'change the working directory')
