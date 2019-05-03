@@ -105,5 +105,15 @@
 	"preset-diff_import-title-updates": "preset-diff_import-title-updates",
 	"presets_details": "presets_details",
 	"tooltip_embedded": "tooltip_embedded",
-	"tooltip_hidden": "tooltip_hidden"
+	"tooltip_hidden": "tooltip_hidden",
+	"notes_title": "notes_title",
+	"model_copy_clipboard": "model_copy_clipboard",
+	"common_paste_model": "common_paste_model",
+	"clipboard_copy-success": "clipboard_copy-success",
+	"clipboard_not-supported": "clipboard_not-supported",
+	"clipboard_paste-success": "clipboard_paste-success",
+	"common_model_filter-field": "common_model_filter-field",
+	"common_model_filter-name": "common_model_filter-name",
+	"common_model_filter-ref": "common_model_filter-ref",
+	"common_model_filter-ref-none": "common_model_filter-ref-none"
 }
