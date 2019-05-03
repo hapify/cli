@@ -112,8 +112,8 @@
 	"clipboard_copy-success": "Model {{model}} copied to clipboard",
 	"clipboard_not-supported": "Cannot access clipboard",
 	"clipboard_paste-success": "Model {{model}} pasted from clipboard",
-	"common_model_filter-field": "Filter by field",
-	"common_model_filter-name": "Filter by name",
-	"common_model_filter-ref": "Filter by reference",
+	"common_model_filter-field": "Field",
+	"common_model_filter-name": "Name",
+	"common_model_filter-ref": "Reference",
 	"common_model_filter-ref-none": "-"
 }

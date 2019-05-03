@@ -112,8 +112,8 @@
 	"clipboard_copy-success": "Modèle {{model}} copié dans le presse-papier",
 	"clipboard_not-supported": "Presse-papier non supporté",
 	"clipboard_paste-success": "Modèle {{model}} collé depuis le presse-papier",
-	"common_model_filter-field": "Filtrer par champ",
-	"common_model_filter-name": "Filtrer par nom",
-	"common_model_filter-ref": "Filtrer par référence",
+	"common_model_filter-field": "Champ",
+	"common_model_filter-name": "Nom",
+	"common_model_filter-ref": "Référence",
 	"common_model_filter-ref-none": "-"
 }
