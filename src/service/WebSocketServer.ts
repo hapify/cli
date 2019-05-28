@@ -31,6 +31,7 @@ import {
 	TransformValidationMessage
 } from '../interface';
 import { Container } from 'typedi';
+import { OptionsService } from './Options';
 
 interface TokenData {
 	name: string;
@@ -63,9 +64,13 @@ export class WebSocketServerService {
 
 	/**
 	 * Constructor
+	 * @param {OptionsService} optionsService
 	 * @param {LoggerService} loggerService
 	 */
-	constructor(private loggerService: LoggerService) {
+	constructor(
+		private optionsService: OptionsService,
+		private loggerService: LoggerService
+	) {
 		this.addHandler(Container.get(ApplyPresetHandlerService));
 		this.addHandler(Container.get(GetModelsHandlerService));
 		this.addHandler(Container.get(SetModelsHandlerService));
@@ -306,7 +311,7 @@ export class WebSocketServerService {
 		});
 		const data = JSON.stringify(
 			{
-				url: `ws://${wsAddress.address}:${wsAddress.port}${
+				url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${
 					this.baseUri
 				}?token=${encodeURIComponent(token)}`
 			},
