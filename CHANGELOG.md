@@ -8,6 +8,8 @@
 
 ### Changed
 
+-   Fix Websocket server address for windows
+
 ### Removed
 
 -   Remove option `--staging`.
