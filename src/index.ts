@@ -118,7 +118,16 @@ program
 		'--project-desc <description>',
 		'description of the project to create (name must be defined)'
 	)
-	.description('Init a new Hapify channel in the directory')
+	.option('--boilerplate-name <name>', 'name of the boilerplate to init')
+	.option(
+		'--boilerplate-desc <description>',
+		'description of the boilerplate to init'
+	)
+	.option(
+		'--boilerplate-logo <url>',
+		'url of the logo of the boilerplate to init'
+	)
+	.description('Init a new Hapify boilerplate in the directory')
 	.action(InitCommand);
 
 program

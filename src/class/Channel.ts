@@ -192,7 +192,12 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		]);
 	}
 	/** Init a Hapify structure within a directory */
-	public static async create(path: string): Promise<Channel> {
+	public static async create(
+		path: string,
+		name?: string,
+		description?: string,
+		logo?: string
+	): Promise<Channel> {
 		if (await Channel.configExists(path)) {
 			throw new Error(`A channel already exists in this directory.`);
 		}
@@ -202,8 +207,9 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		channel.config = {
 			version: '1',
 			validatorPath: `${Channel.defaultFolder}/validator.js`,
-			name: channel.name,
-			description: 'A brand new channel',
+			name: name || channel.name,
+			description: description || 'A new dynamic boilerplate',
+			logo: logo || undefined,
 			project: 'projectId',
 			defaultFields: [
 				{
