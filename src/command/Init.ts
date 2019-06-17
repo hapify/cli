@@ -50,9 +50,7 @@ export async function InitCommand(cmd: Command) {
 		await channel.save();
 		await channelsService.changeProject(qProject.id, channel.path);
 
-		logger.success(
-			`Initialized a dynamic boilerplate in ${cPath(options.dir())}`
-		);
+		logger.success(`Initialized a channel in ${cPath(options.dir())}`);
 		// Action Ends
 		// ---------------------------------
 

@@ -208,7 +208,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			version: '1',
 			validatorPath: `${Channel.defaultFolder}/validator.js`,
 			name: name || channel.name,
-			description: description || 'A new dynamic boilerplate',
+			description: description || 'A new Hapify channel',
 			logo: logo || undefined,
 			project: 'projectId',
 			defaultFields: [

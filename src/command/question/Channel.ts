@@ -15,25 +15,25 @@ export async function DescribeChannel(
 	const answer = (await Inquirer.prompt([
 		{
 			name: 'name',
-			message: 'Enter the boilerplate name',
-			when: () => !cmd.boilerplateName,
+			message: 'Enter the channel name',
+			when: () => !cmd.channelName,
 			default: null
 		},
 		{
 			name: 'description',
 			message: 'Enter a description',
-			when: () => !cmd.boilerplateDesc && !cmd.boilerplateName,
+			when: () => !cmd.channelDesc && !cmd.channelName,
 			default: null
 		},
 		{
 			name: 'logo',
 			message: 'Enter a logo URL',
-			when: () => !cmd.boilerplateLogo && !cmd.boilerplateName,
+			when: () => !cmd.channelLogo && !cmd.channelName,
 			default: null
 		}
 	])) as any;
 
-	qChannelDescription.name = cmd.boilerplateName || answer.name;
-	qChannelDescription.description = cmd.boilerplateDesc || answer.description;
-	qChannelDescription.logo = cmd.boilerplateLogo || answer.logo;
+	qChannelDescription.name = cmd.channelName || answer.name;
+	qChannelDescription.description = cmd.channelDesc || answer.description;
+	qChannelDescription.logo = cmd.channelLogo || answer.logo;
 }

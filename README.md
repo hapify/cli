@@ -172,6 +172,9 @@ _Options_
 -   `-p <id>`, `--project <id>`: The project to use (if already created)
 -   `--project-name <name>`: The project's name to create
 -   `--project-desc <description>`: The project's description to create
+-   `--channel-name <name>`: The name of the channel to init
+-   `--channel-desc <description>`: The description of the channel to init
+-   `--channel-logo <url>`: The URL of the logo of the channel to init
 
 #### Define project to use in a channel
 
