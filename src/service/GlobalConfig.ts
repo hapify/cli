@@ -64,9 +64,7 @@ export class GlobalConfigService {
 			const errorMessage = validation.error.details
 				.map(v => {
 					if (v.context.key === 'apiKey') {
-						return `${
-							v.message
-						}. Please visit https://www.hapify.io/my-key`;
+						return `${v.message}. Please visit https://www.hapify.io/my-key`;
 					}
 					return v.message;
 				})

@@ -117,9 +117,7 @@ export class Template
 			]))
 		) {
 			throw new Error(
-				`Template's path ${this.parent.templatesPath}/${
-					this.contentPath
-				} does not exists.`
+				`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`
 			);
 		}
 	}

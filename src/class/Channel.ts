@@ -162,9 +162,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			!(await this.storageService.exists([this.path, Channel.configFile]))
 		) {
 			throw new Error(
-				`Channel config's path ${this.path}/${
-					Channel.configFile
-				} does not exists.`
+				`Channel config's path ${this.path}/${Channel.configFile} does not exists.`
 			);
 		}
 	}
