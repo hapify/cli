@@ -41,9 +41,7 @@ export class ValidatorService {
 		} catch (error) {
 			if (error.message === 'Script execution timed out.') {
 				throw new RichError(
-					`Template processing timed out (${
-						InternalConfig.validatorTimeout
-					}ms)`,
+					`Template processing timed out (${InternalConfig.validatorTimeout}ms)`,
 					{
 						code: 4006,
 						type: 'CliValidatorTimeoutError'
@@ -57,9 +55,7 @@ export class ValidatorService {
 			throw new RichError(error.message, {
 				code: 4005,
 				type: 'CliValidatorEvaluationError',
-				details: `Error: ${
-					error.message
-				}. Line: ${lineNumber}, Column: ${columnNumber}`,
+				details: `Error: ${error.message}. Line: ${lineNumber}, Column: ${columnNumber}`,
 				lineNumber,
 				columnNumber
 			});

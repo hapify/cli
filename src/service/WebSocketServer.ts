@@ -172,9 +172,7 @@ export class WebSocketServerService {
 
 					// Log for debug
 					this.loggerService.debug(
-						`[WS:${id}] Did receive websocket message: ${
-							decoded.id
-						}`
+						`[WS:${id}] Did receive websocket message: ${decoded.id}`
 					);
 
 					// Dispatch message to the right handler
@@ -230,9 +228,7 @@ export class WebSocketServerService {
 					reply(dId, payload, 'error', tag);
 
 					this.loggerService.debug(
-						`[WS:${id}] Error while processing message: ${
-							error.message
-						}`
+						`[WS:${id}] Error while processing message: ${error.message}`
 					);
 				}
 			});

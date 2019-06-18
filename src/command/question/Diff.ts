@@ -87,15 +87,11 @@ export async function ApplyDiff(
 	qDiff: DiffQuery,
 	git: SimpleGit
 ): Promise<string> {
-	const command = `git format-patch --stdout ${qDiff.from}..${
-		qDiff.to
-	} | git am -3 -k`;
+	const command = `git format-patch --stdout ${qDiff.from}..${qDiff.to} | git am -3 -k`;
 	const confirm = ((await Inquirer.prompt([
 		{
 			name: 'confirm',
-			message: `Confirm run command: "${command}" on branch ${
-				qDiff.destination
-			}`,
+			message: `Confirm run command: "${command}" on branch ${qDiff.destination}`,
 			type: 'confirm',
 			default: false
 		}

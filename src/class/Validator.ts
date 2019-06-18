@@ -44,9 +44,7 @@ export class Validator implements IStorable {
 			!(await this.storageService.exists([this.parent.path, this.path]))
 		) {
 			throw new Error(
-				`Validator's path ${this.parent.path}/${
-					this.path
-				} does not exists.`
+				`Validator's path ${this.parent.path}/${this.path} does not exists.`
 			);
 		}
 	}
