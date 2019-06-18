@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import * as Path from 'path';
 import { OptionsService } from './Options';
 import * as Fs from 'fs';
-import * as Hoek from 'hoek';
+import * as Hoek from '@hapi/hoek';
 import { ModelsCollection, Channel } from '../class';
 
 @Service()

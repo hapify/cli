@@ -7,7 +7,7 @@ import { WebSocketServerService } from './WebSocketServer';
 const opn = require('opn');
 const DetectPort = require('detect-port');
 
-import { Server } from 'hapi';
+import { Server } from '@hapi/hapi';
 
 @Service()
 export class HttpServerService {
@@ -79,7 +79,7 @@ export class HttpServerService {
 		});
 
 		// Create static files handler
-		await this.server.register(require('inert'));
+		await this.server.register(require('@hapi/inert'));
 		this.server.route({
 			method: 'GET',
 			path: '/{param*}',
@@ -165,9 +165,7 @@ export class HttpServerService {
 	private async findAvailablePort(increment: number = 0): Promise<number> {
 		if (this._port > this._maxPort) {
 			throw new Error(
-				`Reached maximum port number ${
-					this._maxPort
-				} to start HTTP server`
+				`Reached maximum port number ${this._maxPort} to start HTTP server`
 			);
 		}
 		const requiredPort = this._port + increment;
