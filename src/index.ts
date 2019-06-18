@@ -28,7 +28,7 @@ const http = Container.get(HttpServerService);
 // ############################################
 // Define program & actions
 program
-	.version('0.5.2')
+	.version('0.5.3')
 	.description('Hapify Command Line Tool')
 	.option('--debug', 'enable debug mode', false)
 	.option('-d, --dir <path>', 'change the working directory')
@@ -153,9 +153,7 @@ program
 	.description('Start Hapify console for channel(s) and models edition')
 	.option(
 		'-p, --port <n>',
-		`the required port number (default between ${http.minPort} and ${
-			http.maxPort
-		})`
+		`the required port number (default between ${http.minPort} and ${http.maxPort})`
 	)
 	.option('-H, --hostname <hostname>', `the required hostname`, 'localhost')
 	.option('--no-open', 'do not open a new tab in the browser')
