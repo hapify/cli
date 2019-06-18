@@ -28,7 +28,7 @@ const http = Container.get(HttpServerService);
 // ############################################
 // Define program & actions
 program
-	.version('0.5.1')
+	.version('0.5.2')
 	.description('Hapify Command Line Tool')
 	.option('--debug', 'enable debug mode', false)
 	.option('-d, --dir <path>', 'change the working directory')
@@ -118,6 +118,12 @@ program
 		'--project-desc <description>',
 		'description of the project to create (name must be defined)'
 	)
+	.option('--channel-name <name>', 'name of the channel to init')
+	.option(
+		'--channel-desc <description>',
+		'description of the channel to init'
+	)
+	.option('--channel-logo <url>', 'url of the logo of the channel to init')
 	.description('Init a new Hapify channel in the directory')
 	.action(InitCommand);
 

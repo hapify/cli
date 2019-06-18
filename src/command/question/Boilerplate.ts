@@ -75,7 +75,7 @@ async function addBoilerplate(
 			name: 'url',
 			message: 'Enter boilerplate URL',
 			when: (answer: any) => !answer.url,
-			validate: input => input.length > 0
+			validate: (input: any) => input.length > 0
 		},
 		{
 			name: 'more',

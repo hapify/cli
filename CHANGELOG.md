@@ -5,6 +5,8 @@
 ### Added
 
 -   Add command's option `config --apiUrl`.
+-   Add command's options `init --channel--name --channel--desc --channel--logo`.
+-   Add prompt options for command `init` (name, description and logo).
 
 ### Changed
 

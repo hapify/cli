@@ -1,6 +1,6 @@
 {
 	"name": "hapify-cli",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "Command Line Interface for Hapify Cloud",
 	"main": "dist/index.js",
 	"bin": {

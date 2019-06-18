@@ -3,7 +3,13 @@ import { Container } from 'typedi';
 import { Command } from 'commander';
 import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
-import { ProjectQuery, AskProject, SetupProject } from './question';
+import {
+	ProjectQuery,
+	AskProject,
+	SetupProject,
+	DescribeChannel,
+	ChannelDescriptionQuery
+} from './question';
 
 // ############################################
 // Get services
@@ -16,10 +22,20 @@ export async function InitCommand(cmd: Command) {
 		options.setCommand(cmd);
 
 		const qProject: ProjectQuery = {};
+		const qChannelDescription: ChannelDescriptionQuery = {};
+
+		// =================================
+		// Describe channel
+		await DescribeChannel(cmd, qChannelDescription);
 
 		// =================================
 		// Init channel to save
-		const channel = await Channel.create(options.dir());
+		const channel = await Channel.create(
+			options.dir(),
+			qChannelDescription.name,
+			qChannelDescription.description,
+			qChannelDescription.logo
+		);
 
 		// =================================
 		// Get project
@@ -34,9 +50,7 @@ export async function InitCommand(cmd: Command) {
 		await channel.save();
 		await channelsService.changeProject(qProject.id, channel.path);
 
-		logger.success(
-			`Initialized a dynamic boilerplate in ${cPath(options.dir())}`
-		);
+		logger.success(`Initialized a channel in ${cPath(options.dir())}`);
 		// Action Ends
 		// ---------------------------------
 

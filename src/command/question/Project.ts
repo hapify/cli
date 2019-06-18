@@ -40,7 +40,7 @@ export async function AskProject(cmd: Command, qProject: ProjectQuery) {
 				name: 'name',
 				message: 'Enter a project name',
 				when: (answer: any) => !answer.id,
-				validate: input => input.length > 0
+				validate: (input: any) => input.length > 0
 			},
 			{
 				name: 'description',
