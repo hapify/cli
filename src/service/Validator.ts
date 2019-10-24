@@ -31,7 +31,7 @@ export class ValidatorService {
 				{
 					filename: 'js-validator.js',
 					timeout: InternalConfig.validatorTimeout,
-					lineOffset: -1,
+					lineOffset: -3, // 1 from final + 2 from safer-eval
 					contextCodeGeneration: {
 						strings: false,
 						wasm: false
