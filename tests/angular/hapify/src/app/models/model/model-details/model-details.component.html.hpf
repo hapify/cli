@@ -1,11 +1,11 @@
 <div class="container">
     <div class="row">
         <div class="col-12 my-3 my-lg-5">
-            <mat-card>
+            <nz-card>
 <<@ F /hd/pr f>>
                 <!-- <<f A>> -->
                 <div class="mb-4">
-                    <h5>{{ '<<M a_a>>_title_<<f a_a>>' | translate }}</h5>
+                    <h5>{{ '<<M a-a>>_<<f a-a>>' | translate }}</h5>
     <<? f tD>>
                     <div>{{ <<M aA>>.props.<<f a_a>> | date:'medium' }}</div>
     <<?? f tE>>
@@ -25,46 +25,48 @@
     <<?? f tB>>
                     <div>
                         <span *ngIf="<<M aA>>.props.<<f a_a>> === true || <<M aA>>.props.<<f a_a>> === false">
-                            {{ (<<M aA>>.props.<<f a_a>> ? '<<M a_a>>_<<f a_a>>_true' : '<<M a_a>>_<<f a_a>>_false') | translate }}
+                            {{ (<<M aA>>.props.<<f a_a>> ? 'common_true' : 'common_false') | translate }}
                         </span>
                     </div>
     <<?? f tSt>>
                     <div [innerHTML]="<<M aA>>.props.<<f a_a>> | nl2br"></div>
     <<?? f tSr>>
-                    <mat-card [innerHTML]="<<M aA>>.props.<<f a_a>>"></mat-card>
+                    <div class="bg-light pt-3 pb-1 px-3 rounded" [innerHTML]="<<M aA>>.props.<<f a_a>>"></div>
+    <<?? f tO>>
+                    <small>
+                        <pre>{{ <<M aA>>.props.<<f a_a>> | json }}</pre>
+                    </small>
     <<??>>
                     <div>{{ <<M aA>>.props.<<f a_a>> }}</div>
     <<?>>
                 </div>
                 <!-- /<<f A>> -->
 <<@>>
-                <mat-divider class="mb-4" [inset]="true"></mat-divider>
+                <nz-divider class="mb-4"></nz-divider>
                 <div class="row">
                     <div class="col-6">
-                        <a [routerLink]="['/<<M a-a>>/edit', <<M aA>>.getId()]" mat-raised-button color="primary">
-                            {{ '<<M a_a>>_action_edit' | translate }}
+                        <a [routerLink]="['/<<M a-a>>/edit', <<M aA>>.getId()]" nz-button nzType="primary">
+                            {{ 'common_edit' | translate }}
                         </a>
-                        <a [routerLink]="['/<<M a-a>>/create']" mat-raised-button color="secondary" class="ml-2">
-                            {{ '<<M a_a>>_action_create' | translate }}
+                        <a [routerLink]="['/<<M a-a>>/create']" nz-button nzType="default" class="ml-2">
+                            {{ 'common_create' | translate }}
                         </a>
                     </div>
                     <div class="col-6" *ngIf="deletable">
                         <div class="float-right">
-                            <mat-slide-toggle color="warn"
-                                              [checked]="deletionUnlocked"
-                                              (change)="onDeletionUnlock($event)"
-                            ></mat-slide-toggle>
+                            <nz-switch [(ngModel)]="deletionUnlocked"></nz-switch>
                             <button class="ml-2"
                                     [disabled]="!deletionUnlocked"
                                     (click)="onDeleteClick()"
-                                    mat-raised-button
-                                    color="warn">
-                                {{ '<<M a_a>>_action_delete' | translate }}
+                                    nz-button
+                                    [nzLoading]="deleting"
+                                    nzType="danger">
+                                {{ 'common_delete' | translate }}
                             </button>
                         </div>
                     </div>
                 </div>
-            </mat-card>
+            </nz-card>
         </div>
     </div>
 </div>

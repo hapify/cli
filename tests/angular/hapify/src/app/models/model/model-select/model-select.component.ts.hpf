@@ -1,248 +1,40 @@
-import {Component, OnInit, Input, Output, OnDestroy, EventEmitter<<? F se*lb>>, ViewChild, ElementRef<<?>>} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {Subscription} from 'rxjs/Subscription';
-<<? F se*lb>>
-import {Subject} from 'rxjs/Subject';
-import {debounceTime} from 'rxjs/operators';
-<<?>>
-import {ErrorService} from '@app/messages';
-import {Helpers} from '@app/shared';
+import {Component} from '@angular/core';
+import {EntitySelectComponent} from '@app/abstracts';
+import {ErrorService} from '@app/services';
 import {<<M AA>>SearchParams} from '../<<M a-a>>-search-params';
 import {<<M AA>>Service} from '../<<M a-a>>.service';
 import {<<M AA>>} from '../<<M a-a>>';
- 
+
 @Component({
   selector: 'hpf-<<M a-a>>-select',
-  templateUrl: './<<M a-a>>-select.component.html'
+  templateUrl: '../../../abstracts/entity-select/entity-select.component.html'
 })
-export class <<M AA>>SelectComponent implements OnInit, OnDestroy {
- 
-  /** @type {<<M AA>>|<<M AA>>[]} Model to update (can be an array for multiple select) */
-  modelValue: <<M AA>>|<<M AA>>[];
-  @Output() modelChange = new EventEmitter< <<M AA>>|<<M AA>>[]>();
-  @Input() get model() {
-    return this.modelValue;
-  }
-  set model(val) {
-    this.modelValue = val;
-    this.idValue = this.extractIds();
-    this.modelChange.emit(this.modelValue);
-    this.idChange.emit(this.idValue);
-  }
- 
-  /** @type {string|string[]} Model id to update (can be an array for multiple select) */
-  idValue: string|string[];
-  @Output() idChange = new EventEmitter<string|string[]>();
-  @Input() get id() {
-    return this.idValue;
-  }
-  set id(val) {
-    // Get model(s) from API
-    const values = val ? (val instanceof Array ? val : [val]) : [];
-    Promise.all(values.map((id) => this.modelFromId(id)))
-      .then((results: <<M AA>>[]) => {
-        this.modelValue = this.multiple ? results : results[0];
-      })
-      .catch((error) => this.errorService.handle(error));
-    
-    this.idValue = val;
-    this.idChange.emit(val);
-  }
-  
-  /** @type {EventEmitter} Gobal change event */
-  @Output() change = new EventEmitter<void>();
-  /** @type {EventEmitter} On resfresh starts */
-  @Output() updateStart = new EventEmitter<void>();
-  /** @type {EventEmitter} On resfresh ends */
-  @Output() updateEnd = new EventEmitter<void>();
-  
-  /** @type {FormGroup} The parent form group */
-  @Input() formGroup;
-  /** @type {string} The form control name (if applicable) */
-  @Input() controlName: string;
-  /** @type {string} The placeholder */
-  @Input() placeholder: string;
-  /** @type {string} The message to display if required */
-  @Input() errorRequired: string;
+export class <<M AA>>SelectComponent extends EntitySelectComponent< <<M AA>>> {
 
-<<? F se*lb>>
-  /** @type {string} The filter placeholder */
-  @Input() filterPlaceholder: string;
-  /** @type {number} The debuonce delay before calling the API for filtering */
-  @Input() filterDebounceTime = 300;
-  /** @type {boolean} Denotes if the filter is enabled */
-  @Input() filterEnabled = true;
-  /** @type {boolean} Denotes the filter should be cleared when closing */
-  @Input() clearfilterOnClose = true;
-<<?>>
-
-  /** @type {number} Define the limit of items to display in the drop down */
-  @Input() resultsLimit = 50;
-  /** @type {boolean} Denotes if the instance model is nullable */
-  @Input() nullable = false;
-  /** @type {string} The label for null value */
-  @Input() nullLabel = '-';
-  /** @type {boolean} Denotes if the field should be multiple */
-  @Input() multiple = false;
-  /** @type {boolean} Denotes if the items should be preloaded */
-  @Input() preload = false;
- 
-<<? F se*lb>>
-  /** @type {Subject<void>} Subject for debounced keyup event */
-  private keyupSubject = new Subject<void>();
-  /** @type {ElementRef} Filter field to focus when opening selector */
-  @ViewChild('filter') filterField: ElementRef;
-<<?>>
-
-  /** @type {<<M AA>>SearchParams} The search params */
-  searchParams = new <<M AA>>SearchParams();
-  /** @type {<<M AA>>[]} The <<M a>> found */
-  items: <<M AA>>[] = [];
-  /** @type {Subscription[]} Subscription of the component */
-  private subscriptions: Subscription[] = [];
-  /** @type {boolean} Denotes if the list has been loaded once */
-  loaded = false;
- 
   /**
    * Constructor
    * @param {<<M AA>>Service} <<M aA>>Service
    * @param {ErrorService} errorService
    */
   constructor(private <<M aA>>Service: <<M AA>>Service,
-              private errorService: ErrorService) {
-    // Copy controls to params
-    this.searchParams.props._limit = this.resultsLimit;
+              protected errorService: ErrorService) {
+    super(errorService);
   }
- 
-  /** Init */
-  ngOnInit() {
-    // Subscriptions
-    this.subscriptions = [
-      this.searchParams.subscribe(() => {
-        this._refresh();
-      }),
+  /** @inheritDoc */
+  protected async getList(): Promise< <<M AA>>[]> {
+      const params = new <<M AA>>SearchParams({
+          _limit: this.resultsLimit,
+          _page: this.currentPage
+      });
 <<? F se*lb>>
-      this.keyupSubject
-        .pipe(debounceTime(this.filterDebounceTime))
-        .subscribe(() => {
-          this.searchParams.next();
-        })
-<<?>>
-    ];
-    // Populate on next tick
-    setTimeout(() => {
-      if (this.preload) {
-        this._refresh();
-      } else {
-        this.prependExisting();
-      }
-    });
-  }
-  /** Destroy */
-  ngOnDestroy() {
-    this.subscriptions.map((s) => s.unsubscribe());
-  }
-  /** Follow on change event */
-  onChange() {
-    this.change.emit();
-  }
-
-<<? F se*lb>>
-  /** Update data when filter changed */
-  onFilterChanged(): void {
-    this.keyupSubject.next();
-  }
-<<?>>
-  /**
-   * Call when the selector is opened or closed
-   * @param {boolean} opened
-   */
-  onOpened(opened: boolean) {
-    if (opened) {
-      if (!this.loaded) {
-        this._refresh();
-      }
-<<? F se*lb>>
-      if (this.filterEnabled) {
-        // Focus
-        this.filterField.nativeElement.focus();
+      if (this.filterEnabled && this.filterValue) {
+        params.props.<<@1 F se*lb f>><<f a_a>><<@>> = this.filterValue;
       }
 <<?>>
-    }
-<<? F se*lb>>
-    else if (this.filterEnabled &&
-      this.clearfilterOnClose &&
-      this.searchParams.props.<<@1 F se*lb f>><<f a_a>><<@>>) {
-      // Clear search if needed
-      this.searchParams.props.<<@1 F se*lb f>><<f a_a>><<@>> = null;
-      this.searchParams.next();
-    }
-<<?>>
+      return (await this.<<M aA>>Service.list(params.toObject())).items;
   }
-  /**
-   * Refresh data from search params
-   * @private
-   */
-  private _refresh(): void {
-    const params = this.searchParams.toObject();
-    this.updateStart.emit();
-    this.loaded = true;
-    // Get list
-    this.<<M aA>>Service.list(params)
-      .then((results) => {
-        this.prependExisting(results.items);
-      })
-      .catch((error) => this.errorService.handle(error))
-      .then(() => {
-        this.updateEnd.emit();
-      });
-  }
-  /**
-   * Compare two entities
-   * @param e1
-   * @param e2
-   * @return {boolean}
-   */
-  compareEntities(e1: any, e2: any): boolean {
-    return Helpers.compareEntities(e1, e2);
-  }
-  /**
-   * Will prepend selected models on top of items list
-   * @param {<<M AA>>[]} list
-   *  Default []
-   */
-  private prependExisting(list: <<M AA>>[] = []) {
-    // Remove existing from list and prepend existing
-    if (this.multiple) {
-      const model = this.model ? < <<M AA>>[]>this.model : [];
-      const items = list.filter((i) => {
-        return !(model).some((e) => this.compareEntities(e, i));
-      });
-      this.items = (model).concat(items);
-    } else {
-      const items = list.filter((i) => {
-        return !this.compareEntities(this.model, i);
-      });
-      this.items = this.model ? [<<<M AA>>>this.model].concat(items) : items;
-    }
-  }
-  /**
-   * Extract id(s) from model(s)
-   * @return {string|string[]}
-   */
-  private extractIds(): string|string[] {
-    if (this.modelValue instanceof Array) {
-      return (< <<M AA>>[]>this.modelValue).map((m) => m.getId());
-    } else {
-      return this.modelValue ? (<<<M AA>>>this.modelValue).getId() : null;
-    }
-  }
-  /**
-   * Find a model from its ids in the items or get it from API
-   * @return {string|string[]}
-   */
-  private async modelFromId(id: string): Promise<<<M AA>>> {
-    const loaded = this.items.find((i) => this.compareEntities(i, id));
-    return loaded ? loaded : await this.<<M aA>>Service.get(id);
+  /** @inheritDoc */
+  protected async getOne(id: string): Promise< <<M AA>>> {
+      return await this.<<M aA>>Service.get(id);
   }
 }

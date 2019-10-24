@@ -1,9 +1,9 @@
 <hpf-<<M a-a>>-details
     *ngIf="<<M aA>>"
     [<<M aA>>]="<<M aA>>"
-    (onDelete)="onDelete()"></hpf-<<M a-a>>-details>
-<div *ngIf="!<<M aA>>" class="my-5">
-    <mat-spinner class="mx-auto"></mat-spinner>
+    (delete)="onDelete()"></hpf-<<M a-a>>-details>
+<div *ngIf="!<<M aA>>" class="my-5 text-center">
+    <nz-spin nzSimple></nz-spin>
 </div>
 <<? R>>
 <div class="container">
@@ -12,7 +12,11 @@
     <div class="row">
         <div class="py-4 pb-5 col-12">
             <div class="py-3 text-center">
-                <h4>{{ '<<M a_a>>_title_<<m a_a>>_as_<<f a_a>>' | translate }}</h4>
+                <h4>
+                    <a [routerLink]="['/<<m a-a>>']" [queryParams]="{ <<f a_a>> : <<M aA>> ? <<M aA>>.getId() : '' }">
+                        {{ '<<M a_a>>_<<m a_a>>-as-<<f a_a>>' | translate }}
+                    </a>
+                </h4>
             </div>
             <hpf-<<m a-a>>-table
                 [searchParams]="<<m aA>>As<<f AA>>SearchParams"

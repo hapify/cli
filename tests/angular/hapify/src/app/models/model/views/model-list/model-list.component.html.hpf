@@ -1,23 +1,24 @@
-<mat-sidenav-container class="sidenav-cnt">
-<<? F se>>
-    <mat-sidenav #sidenav
-                 mode="side"
-                 opened="true"
-                 class="sidenav p-3"
-                 [fixedInViewport]="false"
-                 [fixedTopGap]="0"
-                 [fixedBottomGap]="0">
-        <hpf-<<M a-a>>-filters [searchParams]="searchParams"></hpf-<<M a-a>>-filters>
-    </mat-sidenav>
-<<?>>
-    <mat-sidenav-content class="sidenav-ctt p-3">
-        <hpf-<<M a-a>>-table 
-            [searchParams]="searchParams"
-            (select)="onSelect($event)"></hpf-<<M a-a>>-table>
-        <div class="text-center my-4">
-            <a [routerLink]="['/<<M a-a>>/create']" mat-raised-button color="secondary">
-                {{ '<<M a_a>>_action_create' | translate }}
-            </a>
+<div class="container-fluid">
+    <div class="row my-5">
+        <div class="col-3">
+            <div class="p-3 bg-light rounded">
+                <h6 class="border-bottom pb-2 mb-3">{{ 'common_filters-title' | translate }}</h6>
+                <hpf-<<M a-a>>-filters [searchParams]="searchParams" [resetPage]="true"></hpf-<<M a-a>>-filters>
+            </div>
         </div>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+        <div class="col-9">
+            <div class="row">
+                <div class="col-12">
+                    <hpf-<<M a-a>>-table
+                        [searchParams]="searchParams"
+                        (select)="onSelect($event)"></hpf-<<M a-a>>-table>
+                </div>
+                <div class="col-12 text-center mt-4">
+                    <a [routerLink]="['/<<M a-a>>/create']" nz-button nzType="default" class="ml-2">
+                        {{ 'common_create' | translate }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

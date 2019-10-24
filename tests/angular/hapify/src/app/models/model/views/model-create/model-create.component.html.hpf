@@ -1,1 +1,1 @@
-<hpf-<<M a-a>>-form (onCreate)="onSave($event)"></hpf-<<M a-a>>-form>
+<hpf-<<M a-a>>-form (create)="onSave($event)"></hpf-<<M a-a>>-form>

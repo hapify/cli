@@ -1,59 +1,23 @@
-import {Subject} from 'rxjs/Subject';
 import {Helpers} from '@app/shared';
+import {BaseModelSearchParams, BaseModelSearchParamsInterface} from '@app/abstracts';
  
 /** Used to export and import search params */
-export interface <<M AA>>SearchParamsInterface {
+export interface <<M AA>>SearchParamsInterface extends BaseModelSearchParamsInterface {
   <<P a_a>>?: string[];
 <<@ F se f>>
   <<=_interface(f)>>;
 <<@>>
-  _page?: string | number;
-  _limit?: string | number;
-  _sort?: string;
-  _order?: string;
 }
  
-/**
- * List allowed keys for the interface
- * @type {string[]}
- */
-const AllowedKeys: string[] = [
-  '<<P a_a>>',
-<<@ F se f>>
-  <<=_key(f)>>,
-<<@>>
-  '_page',
-  '_limit',
-  '_sort',
-  '_order'
-];
- 
 /** Manage <<M a>> search params */
-export class <<M AA>>SearchParams extends Subject<void> {
+export class <<M AA>>SearchParams extends BaseModelSearchParams< <<M AA>>SearchParamsInterface> {
  
-  /** @type {<<M AA>>SearchParamsInterface} Stores the properties of the instance */
-  props: <<M AA>>SearchParamsInterface;
-  /** @type {number} Default page number */
-  defaultPage = 0;
-  /** @type {number} Default page length */
-  defaultLimit = 10;
- 
-  /** Constructor */
-  constructor() {
-    super();
-    // Create from nothing
-    this.fromObject({});
-  }
- 
-  /**
-   * Populate the instance from an object (extracted from query string)
-   * @param {<<M AA>>SearchParamsInterface} input
-   */
+  /** @inheritDoc */
   fromObject(input: <<M AA>>SearchParamsInterface): void {
  
     // Clone object with allowed keys only
     const props: <<M AA>>SearchParamsInterface = {};
-    AllowedKeys.map((key: string) => {
+    this.allowedKeys().map((key: string) => {
       if (typeof input[key] !== 'undefined') {
         props[key] = input[key];
       }
@@ -102,16 +66,12 @@ export class <<M AA>>SearchParams extends Subject<void> {
     this.props = props;
     this.next();
   }
- 
-  /**
-   * Convert the instance to an object readable for the API and storable in the query string
-   * @return {<<M AA>>SearchParamsInterface}
-   */
+  /** @inheritDoc */
   toObject(): <<M AA>>SearchParamsInterface {
  
     // Filter not allowed, undefined and null values
     const props: <<M AA>>SearchParamsInterface = {};
-    AllowedKeys.map(Helpers.prepareObjectForApi(this.props, props));
+    this.allowedKeys().map(Helpers.prepareObjectForApi(this.props, props));
 
 <<@ F se f>>
     <<? f tD>>
@@ -131,6 +91,15 @@ export class <<M AA>>SearchParams extends Subject<void> {
 <<@>>
  
     return props;
+  }
+  /** @inheritDoc */
+  protected allowedKeys(): string[] {
+    return super.allowedKeys().concat([
+      '<<P a_a>>',
+<<@ F se f>>
+      <<=_key(f)>>,
+<<@>>
+    ]);
   }
 }
 

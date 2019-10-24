@@ -1,41 +1,24 @@
 import {Helpers} from '@app/shared';
-import {Subject} from 'rxjs/Subject';
+import {BaseModel, BaseModelInterface} from '@app/abstracts';
 <<@ D !(hd*in) d>>
 import {<<d AA>>, <<d AA>>Interface} from '../<<d a-a>>/<<d a-a>>';
 <<@>>
- 
-export interface <<M AA>>Interface {
-<<@ F !(hd*in) f>>
+
+export interface <<M AA>>Interface extends BaseModelInterface {
+<<@ F !(hd*in)/pr f>>
   <<f a_a>>?: <<=type(f)>>;
 <<@>>
 }
- 
-export class <<M AA>> extends Subject<void> {
- 
-  /** Store <<M a>> properties */
-  props: <<M AA>>Interface = {};
-  /** Constructor */
-  constructor() { super(); }
-  
-  /** @return {string} Short function to get id */
-  getId(): string {
-    return this.props.<<P a_a>>;
-  }
+
+export class <<M AA>> extends BaseModel< <<M AA>>Interface> {
+
   /** @return {string} Short function to get label of instance */
   getLabel(): string {
 <<? F lb>>
-    return `<<=labels()>>`
+    return `<<=labels()>>`;
 <<??>>
     return this.props.<<P a_a>>;
 <<?>>
-  }
-  /** @return {boolean} Denotes if the instance has been created or already exists in the API */
-  isNew(): boolean {
-    return !this.getId();
-  }
-  /** @return {boolean} Denotes if the instance has been populated */
-  exists(): boolean {
-    return !!this.props && typeof this.getId() !== 'undefined';
   }
 <<@ F tE r>>
   /** @return {boolean} Denotes if the instance of <<r a>> has been populated */
@@ -53,7 +36,7 @@ export class <<M AA>> extends Subject<void> {
     <<?>>
   }
 <<@>>
- 
+
   /**
    * Populate the current instance from an object
    * @param {<<M AA>>Interface} object
@@ -74,24 +57,17 @@ export class <<M AA>> extends Subject<void> {
     <<? r ml>>
     if (this.props.<<r a_a>> instanceof Array) {
         this.props.<<r a_a>> = (< <<r.m AA>>Interface[]>this.props.<<r a_a>>).map((item) => {
-            if (typeof item === 'object') {
-                const instance = new <<r.m AA>>();
-                instance.fromObject(item);
-                return instance;
-            }
-            return item;
+            return typeof item === 'object' ? new <<r.m AA>>(item) : item;
         });
     }
     <<??>>
     if (<<? r nu>>this.props.<<r a_a>> !== null && <<?>>typeof this.props.<<r a_a>> === 'object') {
-        const <<r aA>> = new <<r.m AA>>();
-        <<r aA>>.fromObject(< <<r.m AA>>Interface>this.props.<<r a_a>>);
-        this.props.<<r a_a>> = <<r aA>>
+        this.props.<<r a_a>> = new <<r.m AA>>(< <<r.m AA>>Interface>this.props.<<r a_a>>);
     }
     <<?>>
 <<@>>
   }
-  
+
   /**
    * Convert the current instance to an object
    * @return {<<M AA>>Interface}
@@ -135,21 +111,22 @@ export class <<M AA>> extends Subject<void> {
 <<@>>
     return props;
   }
-  
+
   /**
    * Convert an instance to an object to be sent to the API
    * @return {<<M AA>>Interface}
    */
   toPayload(): <<M AA>>Interface {
-    const payload = this.toObject();
+    const raw = this.toObject();
+    const allowed = this.allowedKeys();
 
 <<# Remove public data that cannot be sent to the API >>
-<<@ F in/hd f>>
-    delete payload.<<f a_a>>;
-<<@>>
+    const payload = Object.keys(raw)
+      .filter(key => allowed.includes(key))
+      .reduce((o, k) => { o[k] = raw[k]; return o; }, {} as <<M AA>>Interface);
 
 <<# Remove private data that have been entered >>
-<<@ F hd/nu f>>
+<<@ F hd/in/nu f>>
     if (payload.<<f a_a>> === null) { delete payload.<<f a_a>>; }
 <<@>>
 
@@ -159,20 +136,32 @@ export class <<M AA>> extends Subject<void> {
     payload.<<f a_a>> = < number>payload.<<f a_a>>;
     <<?? f tE>>
         <<? f ml>>
-    payload.<<f a_a>> = payload.<<f a_a>> ? (< <<f.m AA>>Interface[]>payload.<<f a_a>>).map((i) => i.<<f.m.f.p a_a>>) : null;
+    payload.<<f a_a>> = payload.<<f a_a>> ? (< <<f.m AA>>Interface[]>payload.<<f a_a>>).map((i) => i.<<f.m.f.pr a_a>>) : null;
         <<??>>
-    payload.<<f a_a>> = payload.<<f a_a>> ? (< <<f.m AA>>Interface>payload.<<f a_a>>).<<f.m.f.p a_a>> : null;
+    payload.<<f a_a>> = payload.<<f a_a>> ? (< <<f.m AA>>Interface>payload.<<f a_a>>).<<f.m.f.pr a_a>> : null;
         <<?>>
     <<?>>
 <<@>>
     return payload;
   }
+
+  /**
+   * List allowed keys to be sent to the API
+   * @return {string[]}
+   */
+  protected allowedKeys(): string[] {
+  	return [
+<<@ F /in f>>
+      '<<f a_a>>',
+<<@>>
+  	];
+  }
 }
 
-<<< 
+<<<
 function type(f) {
   let out = "";
- 
+
   if (f.type === "boolean") out += "boolean";
   else if (f.type === "string") out += "string";
   else if (f.type === "number") out += "number";
@@ -182,9 +171,9 @@ function type(f) {
     out += `string${m} | ${f.m.names.pascal}${m} | ${f.m.names.pascal}Interface${m}`;
   }
   else out += "any";
- 
+
   if (f.nullable && !f.multiple) out += " | null";
- 
+
   return out;
 }
 function labels() {

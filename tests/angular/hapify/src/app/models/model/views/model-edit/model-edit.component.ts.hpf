@@ -1,22 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
-import {ErrorService} from '@app/messages';
+import {Subscription as RxJsSubscription} from 'rxjs/Subscription';
+import {ErrorService} from '@app/services';
 import {<<M AA>>} from '../../<<M a-a>>';
 import {<<M AA>>Service} from '../../<<M a-a>>.service';
- 
+
 @Component({
   selector: 'hpf-<<M a-a>>-edit',
   templateUrl: './<<M a-a>>-edit.component.html'
 })
 export class <<M AA>>EditComponent implements OnInit, OnDestroy {
- 
+
   /** @type {<<M AA>>} The <<M a>> */
   <<M aA>>: <<M AA>>;
-  /** @type {Subscription} The id subscription */
-  private idSubscription: Subscription;
- 
+  /** @type {RxJsSubscription} The id subscription */
+  private idSubscription: RxJsSubscription;
+
   /**
    * Constructor
    * @param {ActivatedRoute} route
@@ -28,7 +28,7 @@ export class <<M AA>>EditComponent implements OnInit, OnDestroy {
               private router: Router,
               private errorService: ErrorService,
               private <<M aA>>Service: <<M AA>>Service) {}
- 
+
   /** Init */
   ngOnInit() {
     // Get the <<M a>> after reading the id

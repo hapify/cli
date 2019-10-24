@@ -1,1 +1,2 @@
-return { errors:[], warnings:[] }
+// Models validation script
+return { errors: [], warnings: [] };

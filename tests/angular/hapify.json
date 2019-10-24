@@ -1,10 +1,10 @@
 {
   "version": "1",
-  "name": "Angular",
-  "description": "Angular Frontend with Material",
-  "logo": "https://angular.io/assets/images/logos/angular/angular.svg",
-  "project": "5cc21e7ed873800016b31e5c",
   "validatorPath": "hapify/validator.js",
+  "name": "Angular Dashboard",
+  "description": "Dashboard for admins built with Angular 7",
+  "logo": "https://files-tractr.s3.ca-central-1.amazonaws.com/assets/angular-forms.png",
+  "project": "5cc21e7ed873800016b31e5c",
   "templates": [
     {
       "path": "src/app/models/{kebab}/{kebab}-details/{kebab}-details.component.html",
@@ -42,22 +42,12 @@
       "input": "one"
     },
     {
-      "path": "src/app/models/{kebab}/{kebab}-select/{kebab}-select.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
       "path": "src/app/models/{kebab}/{kebab}-select/{kebab}-select.component.ts",
       "engine": "hpf",
       "input": "one"
     },
     {
       "path": "src/app/models/{kebab}/{kebab}-table/{kebab}-table.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "path": "src/app/models/{kebab}/{kebab}-table/{kebab}-table.component.scss",
       "engine": "hpf",
       "input": "one"
     },
@@ -113,11 +103,6 @@
     },
     {
       "path": "src/app/models/{kebab}/views/{kebab}-list/{kebab}-list.component.html",
-      "engine": "hpf",
-      "input": "one"
-    },
-    {
-      "path": "src/app/models/{kebab}/views/{kebab}-list/{kebab}-list.component.scss",
       "engine": "hpf",
       "input": "one"
     },

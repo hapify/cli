@@ -1,119 +1,92 @@
 <<@ F se f>>
 
-    <<? f tS>>
- 
 <!-- <<f A>> -->
-<mat-form-field class="w-100">
-    <input matInput
+<nz-form-item>
+    <nz-form-label>{{ '<<M a-a>>_<<f a-a>>' | translate }}</nz-form-label>
+
+    <<? f tS>>
+
+    <input nz-input
+           class="w-100"
            (keyup)="onChangeDebounced();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
+           [placeholder]="'common_value-string' | translate"
            [(ngModel)]="searchParams.props.<<f a_a>>">
-</mat-form-field>
-<!-- /<<f A>> -->
 
     <<?? f tN>>
- 
-<!-- <<f A>> -->
-<mat-form-field class="w-100">
-    <input matInput
-           type="number"
-           (change)="onChange();"
-           (keyup)="onChangeDebounced();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
-           [(ngModel)]="searchParams.props.<<f a_a>>">
-</mat-form-field>
-<!-- /<<f A>> -->
- 
-<!-- <<f A>> min -->
-<mat-form-field class="w-100">
-    <input matInput
-           type="number"
-           (change)="onChange();"
-           (keyup)="onChangeDebounced();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__min' | translate }}"
-           [(ngModel)]="searchParams.props.<<f a_a>>__min">
-</mat-form-field>
-<!-- /<<f A>> min -->
- 
-<!-- <<f A>> max -->
-<mat-form-field class="w-100">
-    <input matInput
-           type="number"
-           (change)="onChange();"
-           (keyup)="onChangeDebounced();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__max' | translate }}"
-           [(ngModel)]="searchParams.props.<<f a_a>>__max">
-</mat-form-field>
-<!-- /<<f A>> max -->
+
+    <nz-input-number
+        class="w-100 mb-3"
+        [(ngModel)]="searchParams.props.<<f a_a>>"
+        [nzStep]="1"
+        [nzPlaceHolder]="'common_value-number' | translate"
+        (ngModelChange)="onChange();"
+        (keyup)="onChangeDebounced();"></nz-input-number>
+
+    <nz-input-group nzCompact>
+        <nz-input-number
+            class="w-50"
+            [(ngModel)]="searchParams.props.<<f a_a>>__min"
+            [nzStep]="1"
+            [nzPlaceHolder]="'common_min' | translate"
+            (ngModelChange)="onChange();"
+            (keyup)="onChangeDebounced();"></nz-input-number>
+        <nz-input-number
+            class="w-50"
+            [(ngModel)]="searchParams.props.<<f a_a>>__max"
+            [nzStep]="1"
+            [nzPlaceHolder]="'common_max' | translate"
+            (ngModelChange)="onChange();"
+            (keyup)="onChangeDebounced();"></nz-input-number>
+    </nz-input-group>
 
     <<?? f tD>>
- 
-<!-- <<f A>> -->
-<mat-form-field class="w-100">
-    <input matInput
-           [matDatepicker]="picker_<<f a_a>>"
-           (dateChange)="onChange();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
-           [(ngModel)]="searchParams.props.<<f a_a>>">
-    <mat-datepicker-toggle matSuffix [for]="picker_<<f a_a>>"></mat-datepicker-toggle>
-    <mat-datepicker #picker_<<f a_a>>></mat-datepicker>
-</mat-form-field>
-<!-- /<<f A>> -->
- 
-<!-- <<f A>> min -->
-<mat-form-field class="w-100">
-    <input matInput
-           [matDatepicker]="picker_<<f a_a>>__min"
-           (dateChange)="onChange();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__min' | translate }}"
-           [(ngModel)]="searchParams.props.<<f a_a>>__min">
-    <mat-datepicker-toggle matSuffix [for]="picker_<<f a_a>>__min"></mat-datepicker-toggle>
-    <mat-datepicker #picker_<<f a_a>>__min></mat-datepicker>
-</mat-form-field>
-<!-- /<<f A>> min -->
- 
-<!-- <<f A>> max -->
-<mat-form-field class="w-100">
-    <input matInput
-           [matDatepicker]="picker_<<f a_a>>__max"
-           (dateChange)="onChange();"
-           placeholder="{{ '<<M a_a>>_filter_<<f a_a>>__max' | translate }}"
-           [(ngModel)]="searchParams.props.<<f a_a>>__max">
-    <mat-datepicker-toggle matSuffix [for]="picker_<<f a_a>>__max"></mat-datepicker-toggle>
-    <mat-datepicker #picker_<<f a_a>>__max></mat-datepicker>
-</mat-form-field>
-<!-- /<<f A>> max -->
+
+    <nz-date-picker class="w-100 mb-3"
+                    [(ngModel)]="searchParams.props.<<f a_a>>"
+                    (ngModelChange)="onChange()"
+                    [nzPlaceHolder]="'common_value-date' | translate"></nz-date-picker>
+
+    <nz-input-group nzCompact>
+        <nz-date-picker class="w-50"
+                        [(ngModel)]="searchParams.props.<<f a_a>>__min"
+                        (ngModelChange)="onChange()"
+                        [nzPlaceHolder]="'common_min' | translate"></nz-date-picker>
+        <nz-date-picker class="w-50"
+                        [(ngModel)]="searchParams.props.<<f a_a>>__max"
+                        (ngModelChange)="onChange()"
+                        [nzPlaceHolder]="'common_max' | translate"></nz-date-picker>
+    </nz-input-group>
 
     <<?? f tB>>
- 
-<!-- <<f A>> -->
-<mat-form-field class="w-100">
-    <mat-select placeholder="{{ '<<M a_a>>_filter_<<f a_a>>' | translate }}"
-                (change)="onChange();"
-                [(ngModel)]="searchParams.props.<<f a_a>>">
-        <mat-option>{{ '<<M a_a>>_filter_<<f a_a>>_any' | translate }}</mat-option>
-        <mat-option [value]="false">{{ '<<M a_a>>_filter_<<f a_a>>_false' | translate }}</mat-option>
-        <mat-option [value]="true">{{ '<<M a_a>>_filter_<<f a_a>>_true' | translate }}</mat-option>
-    </mat-select>
-</mat-form-field>
-<!-- /<<f A>> -->
+
+    <nz-select  class="w-100"
+                [nzPlaceHolder]="'common_value-boolean' | translate"
+                [(ngModel)]="searchParams.props.<<f a_a>>"
+                (ngModelChange)="onChange();"
+                [nzAllowClear]="true">
+        <nz-option [nzValue]="true" [nzLabel]="'common_true' | translate"></nz-option>
+        <nz-option [nzValue]="false" [nzLabel]="'common_false' | translate"></nz-option>
+    </nz-select>
 
     <<?? f tE>>
- 
-<!-- <<f A>> -->
-<div class="w-100">
+
     <hpf-<<f.m a-a>>-select
-        [placeholder]="'<<M a_a>>_filter_<<f a_a>>' | translate"
         [(id)]="searchParams.props.<<f a_a>>"
         [nullable]="true"
-        [nullLabel]="'<<M a_a>>_filter_<<f a_a>>_any' | translate"
+        [emptyLabel]="'common_empty' | translate"
+        <<? f.m.f se*lb >>
+        [filterEnabled]="true"
+        [placeholder]="'<<f.m a-a>>_common_search-placeholder' | translate"
+        <<??>>
+        [placeholder]="'<<f.m a-a>>_common_select-placeholder' | translate"
+        <<?>>
         <<? f ml>>
         [multiple]="true"
         <<?>>
         (change)="onChange();">
     </hpf-<<f.m a-a>>-select>
-</div>
-<!-- /<<f A>> -->
     <<?>>
 
+</nz-form-item>
+<!-- /<<f A>> -->
 <<@>>

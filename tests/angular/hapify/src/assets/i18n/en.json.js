@@ -1,36 +1,37 @@
 // Static words
 let _output = {
-    error_dismiss_action: "Ok",
-    header_app_name: "Hapify - Admin dashboard",
-    header_app_short_name: "Hapify",
-    header_sign_in: "Sign in",
-    header_action_logout: "Logout",
-    footer_tag_line: "© {{year}} - Tractr",
-    session_sign_in: "Sign in",
-    session_logout: "Logout",
-    session_email: "Email",
-    session_password: "Password",
-    home_title: "Hapify"
+	'error_dismiss-action': 'Ok',
+	'header_app-name': 'Hapify - Dashboard',
+	'header_app-short-name': 'Hapify',
+	'header_action-logout': 'Logout',
+	'footer_tag-line': '© {{year}} - Tractr',
+	'session_sign-in': 'Sign in',
+	session_email: 'Email',
+	session_password: 'Password',
+	home_title: 'Hapify',
+	common_empty: 'No results',
+	common_true: 'Yes',
+	common_false: 'No',
+	common_save: 'Save',
+	common_edit: 'Edit',
+	common_create: 'Create',
+	common_delete: 'Delete',
+	common_more: 'More...',
+	'common_filters-title': 'Filters',
+	'common_value-string': 'Value',
+	'common_value-number': 'Value',
+	'common_value-date': 'Date',
+	'common_value-boolean': 'Yes/No',
+	'common_value-object': 'Value',
+	common_min: 'Minimum',
+	common_max: 'Maximum',
+	'common_error-required': 'This field is required',
+	'common_error-format': 'Wrong format',
+	'common_error-min': 'This field need to be greater than {{ min }}',
+	'common_error-max': 'This field need to be lower than {{ max }}.',
+	'common_error-duplicate':
+		'An instance of that model already have that values.'
 };
-
-/**
- * Generate the create/update part of a model
- *
- * @param model
- * @private
- */
-function __create(model) {
-    const modelKey = model.names.snake;
-    return model.fields.list
-        .filter((f) => !f.internal)
-        .reduce((p, f) => {
-            const key = f.names.snake;
-            p[`${modelKey}_placeholder_${key}`] = `${f.names.capital}`;
-            p[`${modelKey}_error_${key}_required`] = `The ${f.names.lower} is required`;
-            p[`${modelKey}_error_${key}_format`] = `Wrong ${f.names.lower} format`;
-            return p;
-        }, {});
-}
 
 /**
  * Generate the read part of a model
@@ -38,19 +39,15 @@ function __create(model) {
  * @param model
  * @private
  */
-function __read(model) {
-    const modelKey = model.names.snake;
-    return model.fields.list
-        .filter((f) => !(f.hidden || f.primary))
-        .reduce((p, f) => {
-            const key = f.names.snake;
-            p[`${modelKey}_title_${key}`] = `${f.names.capital}`;
-            if (f.type === 'boolean') {
-                p[`${modelKey}_${key}_true`] = 'Yes';
-                p[`${modelKey}_${key}_false`] = 'No';
-            }
-            return p;
-        }, {});
+function __fields(model) {
+	const modelKey = model.names.kebab;
+	return model.fields.list
+		.filter(f => !((f.hidden && f.internal) || f.primary))
+		.reduce((p, f) => {
+			const key = f.names.kebab;
+			p[`${modelKey}_${key}`] = `${f.names.capital}`;
+			return p;
+		}, {});
 }
 
 /**
@@ -60,16 +57,16 @@ function __read(model) {
  * @private
  */
 function __referenced_in(model) {
-    const output = {};
-    model.referencedIn.map((r) => {
-        r.fields
-            .filter(f => f.searchable)
-            .map((f) => {
-                const key = `${model.names.snake}_title_${r.names.snake}_as_${f.names.snake}`;
-                output[key] = `${r.names.capital} As ${f.names.capital}`;
-            });
-    });
-    return output;
+	const output = {};
+	model.referencedIn.map(r => {
+		r.fields
+			.filter(f => f.searchable)
+			.map(f => {
+				const key = `${model.names.snake}_${r.names.snake}-as-${f.names.snake}`;
+				output[key] = `${r.names.capital} as ${f.names.capital}`;
+			});
+	});
+	return output;
 }
 
 /**
@@ -79,44 +76,16 @@ function __referenced_in(model) {
  * @private
  */
 function __filter(model) {
-    const modelKey = model.names.snake;
-    return model.fields.searchable
-        .reduce((p, f) => {
-            const key = f.names.snake;
-            p[`${modelKey}_filter_${key}`] = `${f.names.capital}`;
-            if (f.type === 'number' || f.type === 'datetime') {
-                p[`${modelKey}_filter_${key}__min`] = `${f.names.capital} min`;
-                p[`${modelKey}_filter_${key}__max`] = `${f.names.capital} max`;
-            }
-            else if (f.type === 'entity') {
-                if (!f.multiple) {
-                    p[`${modelKey}_filter_${key}_any`] = `Any`;   
-                }
-            }
-            else if (f.type === 'boolean') {
-                p[`${modelKey}_filter_${key}_true`] = 'Yes';
-                p[`${modelKey}_filter_${key}_false`] = 'No';
-                p[`${modelKey}_filter_${key}_any`] = 'Any';
-            }
-            return p;
-        }, {});
-}
-
-/**
- * Generate the filter of a model
- *
- * @param model
- * @private
- */
-function __list(model) {
-    const modelKey = model.names.snake;
-    return model.fields.list
-        .filter((f) => !(f.hidden))
-        .reduce((p, f) => {
-            const key = f.names.snake;
-            p[`${modelKey}_list_title_${key}`] = `${f.names.capital}`;
-            return p;
-        }, {});
+	const modelKey = model.names.kebab;
+	return model.fields.searchable.reduce((p, f) => {
+		const key = f.names.kebab;
+		p[`${modelKey}_${key}`] = `${f.names.capital}`;
+		if (f.type === 'number' || f.type === 'datetime') {
+			p[`${modelKey}_${key}--min`] = `${f.names.capital} min`;
+			p[`${modelKey}_${key}--max`] = `${f.names.capital} max`;
+		}
+		return p;
+	}, {});
 }
 
 /**
@@ -126,12 +95,15 @@ function __list(model) {
  * @private
  */
 function __select(model) {
-    if (model.p.hasSearchableLabel) {
-        return {
-            [`${model.names.snake}_select_filter_placeholder`]: `Search ${model.names.lower}`
-        };
-    }
-    return {};
+	const output = {
+		[`${model.names.kebab}_common_select-placeholder`]: `Select ${model.names.lower}`
+	};
+	if (model.p.hasSearchableLabel) {
+		output[
+			`${model.names.kebab}_common_search-placeholder`
+		] = `Search ${model.names.lower}`;
+	}
+	return output;
 }
 
 /**
@@ -141,30 +113,32 @@ function __select(model) {
  * @private
  */
 function __model(model) {
-    const modelKey = model.names.snake;
-    const modelWords = model.names.lower;
-    return Object.assign(
-        {
-            [`${modelKey}_action_save`]: `Save ${modelWords}`,
-            [`${modelKey}_action_edit`]: `Edit ${modelWords}`,
-            [`${modelKey}_action_delete`]: `Delete ${modelWords}`,
-            [`${modelKey}_action_create`]: `Create ${modelWords}`,
-            [`${modelKey}_list_nothing`]: `No ${modelWords} found`,
-        },
-        __create(model),
-        __read(model),
-        __filter(model),
-        __list(model),
-        __referenced_in(model),
-        __select(model)
-    )
+	const modelKey = model.names.kebab;
+	const modelWords = model.names.lower;
+	return Object.assign(
+		{
+			[`${modelKey}_common_name`]: model.names.capital,
+			[`${modelKey}_common_not-found`]: `No ${modelWords} found`
+		},
+		__filter(model),
+		__fields(model),
+		__select(model),
+		__referenced_in(model)
+	);
 }
-
 
 //--------------------------------------------------
 //  Output
 //--------------------------------------------------
-models.map((model) => {
-    _output = Object.assign(_output, __model(model));
+models.map(model => {
+	const keysUnordered = Object.assign(_output, __model(model));
+
+	_output = Object.keys(keysUnordered)
+		.sort()
+		.reduce(function(keysOrdered, key) {
+			keysOrdered[key] = keysUnordered[key];
+
+			return keysOrdered;
+		}, {});
 });
 return JSON.stringify(_output, null, 2);

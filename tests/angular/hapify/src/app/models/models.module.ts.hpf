@@ -1,10 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '@app/shared';
-import {MessagesModule} from '@app/messages';
 import {TranslateModuleLoad} from '@app/translate-import';
- 
+
 import {ModelsRoutingModule} from './models-routing.module';
 <<@ M m>>
 import {<<m AA>>Service,
@@ -19,16 +17,13 @@ import {<<m AA>>ReadComponent} from './<<m a-a>>/views/<<m a-a>>-read/<<m a-a>>-
 import {<<m AA>>EditComponent} from './<<m a-a>>/views/<<m a-a>>-edit/<<m a-a>>-edit.component';
 import {<<m AA>>ListComponent} from './<<m a-a>>/views/<<m a-a>>-list/<<m a-a>>-list.component';
 <<@>>
- 
+
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     TranslateModuleLoad(),
-    MessagesModule,
-    FormsModule,
-    ReactiveFormsModule,
     ModelsRoutingModule
   ],
   declarations: [
