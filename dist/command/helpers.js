@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-06-17 */
+/*! hapify-cli 2019-10-25 */
 
 "use strict";var __importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0});const chalk_1=__importDefault(require("chalk")),typedi_1=require("typedi"),service_1=require("../service"),logger=typedi_1.Container.get(service_1.LoggerService);exports.logChannel=(e=>{logger.info(`Found channel ${chalk_1.default.yellow(e.name)} in ${chalk_1.default.blueBright(e.path)}`)}),exports.cChannel=chalk_1.default.yellow,exports.cModel=chalk_1.default.magentaBright,exports.cPath=chalk_1.default.blueBright,exports.cHigh=chalk_1.default.green;
