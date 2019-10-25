@@ -27,7 +27,7 @@ export class ValidatorService {
 		try {
 			const final = `(function() { \n${content}\n })()`;
 			result = new SaferEval(
-				{ model },
+				{ model, console: undefined },
 				{
 					filename: 'js-validator.js',
 					timeout: InternalConfig.validatorTimeout,
