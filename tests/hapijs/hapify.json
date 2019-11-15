@@ -3,7 +3,7 @@
   "name": "HapiJS",
   "description": "NodeJS Backend with MongoDB",
   "logo": "https://hapijs.com/public/img/hapi.svg",
-  "project": "5cc21e7ed873800016b31e5c",
+  "project": "5d0a3fa8bbfb050016e850da",
   "validatorPath": "hapify/validator.js",
   "defaultFields": [
     {
