@@ -115,5 +115,9 @@
 	"common_model_filter-field": "Field",
 	"common_model_filter-name": "Name",
 	"common_model_filter-ref": "Reference",
-	"common_model_filter-ref-none": "-"
+	"common_model_filter-ref-none": "-",
+	"error_code-6001": "",
+	"error_code-6002": "",
+	"error_code-6003": "",
+	"error_code-6004": ""
 }

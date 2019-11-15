@@ -1,3 +1,3 @@
-/*! hapify-cli 2019-10-25 */
+/*! hapify-cli 2019-11-15 */
 
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});const _1=require("./");class Preset{constructor(e){e&&this.fromObject(e)}fromObject(e){return this.id=e.id,this.icon=e.icon,this.name=e.name,this.name__fr=e.name__fr,this.description=e.description,this.description__fr=e.description__fr,this.models=e.models.map(e=>new _1.Model(e)),this}toObject(){return{id:this.id,icon:this.icon,name:this.name,name__fr:this.name__fr,description:this.description,description__fr:this.description__fr,models:this.models.map(e=>e.toObject())}}}exports.Preset=Preset;
