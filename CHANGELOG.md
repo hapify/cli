@@ -8,6 +8,16 @@
 
 ### Removed
 
+## [0.5.5] - 2019-11-15
+
+### Added
+
+### Changed
+
+-   Use `Hapify-VM` to run code safely
+
+### Removed
+
 ## [0.5.4] - 2019-10-25
 
 ### Added
