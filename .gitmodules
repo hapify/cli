@@ -1,3 +1,6 @@
 [submodule "packages/hapify-cli-console"]
 	path = packages/hapify-cli-console
 	url = git@bitbucket.org:tractrs/hapify-cli-console.git
+[submodule "packages/hapify-vm"]
+	path = packages/hapify-vm
+	url = git@bitbucket.org:tractrs/hapify-vm.git
