@@ -1,8 +1,8 @@
 node_modules
-packages
-src
-lib
-tests
+/packages
+/src
+/lib
+/tests
 
 .idea
 .vscode
