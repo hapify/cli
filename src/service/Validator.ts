@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { IValidatorResult, IModel, ValidatorResultSchema } from '../interface';
 import { InternalConfig } from '../config';
 import { RichError } from '../class';
-import { HapifyVM } from '../packages/hapify-vm';
+import { HapifyVM } from 'hapify-vm';
 import * as Joi from 'joi';
 
 @Service()
@@ -26,7 +26,7 @@ export class ValidatorService {
 		try {
 			result = new HapifyVM({
 				timeout: InternalConfig.validatorTimeout,
-				allowAnyOutput: true
+				allowAnyOutput: true,
 			}).run(content, { model });
 		} catch (error) {
 			if (error.code === 6003) {
@@ -34,7 +34,7 @@ export class ValidatorService {
 					`Template processing timed out (${InternalConfig.validatorTimeout}ms)`,
 					{
 						code: 4006,
-						type: 'CliValidatorTimeoutError'
+						type: 'CliValidatorTimeoutError',
 					}
 				);
 			}
@@ -46,14 +46,14 @@ export class ValidatorService {
 					type: 'CliValidatorEvaluationError',
 					details: `Error: ${error.message}. Line: ${lineNumber}, Column: ${columnNumber}`,
 					lineNumber,
-					columnNumber
+					columnNumber,
 				});
 			}
 			if (error.code === 6004) {
 				// Clone error
 				throw new RichError(error.message, {
 					code: error.code,
-					type: error.name
+					type: error.name,
 				});
 			}
 			throw error;
@@ -66,7 +66,7 @@ export class ValidatorService {
 				`Invalid validator output. Must return { errors: string[], warnings: string[] }`,
 				{
 					code: 4007,
-					type: 'CliValidatorOutputError'
+					type: 'CliValidatorOutputError',
 				}
 			);
 		}
