@@ -3,7 +3,7 @@ import axios, {
 	AxiosError,
 	AxiosInstance,
 	AxiosRequestConfig,
-	AxiosResponse
+	AxiosResponse,
 } from 'axios';
 import querystring from 'querystring';
 import { OptionsService } from './Options';
@@ -33,6 +33,19 @@ export class RichAxiosError implements AxiosError {
 			this.message = error.message;
 		}
 	}
+
+	isAxiosError = true;
+	toJSON: () => object = () => {
+		return {
+			// Standard
+			message: this.message,
+			name: this.name,
+			stack: this.stack,
+			// Axios
+			config: this.config,
+			code: this.code,
+		};
+	};
 }
 
 @Service()
@@ -49,8 +62,8 @@ export class ApiService {
 			this.http = axios.create({
 				baseURL: this.optionsService.remoteConfig().uri,
 				headers: {
-					'X-Api-Key': this.optionsService.apiKey()
-				}
+					'X-Api-Key': this.optionsService.apiKey(),
+				},
 			});
 		}
 		return this.http;
