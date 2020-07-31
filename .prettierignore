@@ -1,6 +1,5 @@
-dist
-lib
-tests
-packages
 node_modules
+dist
+samples
+packages
 html
