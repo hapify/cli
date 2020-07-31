@@ -1,3 +1,67 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const interface_1=require("../interface"),_1=require("./");function _p8(e){const s=(Math.random().toString(16)+"000000000").substr(2,8);return e?"-"+s.substr(0,4)+"-"+s.substr(4,4):s}class Model{constructor(e){e&&this.fromObject(e)}fromObject(e){return this.id=e.id,this.name=e.name,this.notes=e.notes||null,this.fields=e.fields.map(e=>new _1.Field(e)),this.accesses=e.accesses,this}toObject(){return{id:this.id,name:this.name,notes:this.notes||null,fields:this.fields.map(e=>e.toObject()),accesses:this.accesses}}static generateTempId(){return _p8()+_p8(!0)+_p8(!0)+_p8()}static defaultAccesses(){return{create:interface_1.Access.GUEST,read:interface_1.Access.GUEST,update:interface_1.Access.GUEST,remove:interface_1.Access.GUEST,search:interface_1.Access.GUEST,count:interface_1.Access.GUEST}}clone(e){const s=this.toObject();return e&&(s.id=Model.generateTempId()),new Model(s)}}exports.Model=Model;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Model = void 0;
+const interface_1 = require("../interface");
+const _1 = require("./");
+/** Random function */
+function _p8(s) {
+    const p = (Math.random().toString(16) + '000000000').substr(2, 8);
+    return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p;
+}
+class Model {
+    /** Constructor */
+    constructor(object) {
+        if (object) {
+            this.fromObject(object);
+        }
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.id = object.id;
+        this.name = object.name;
+        this.notes = object.notes || null;
+        this.fields = object.fields.map(f => new _1.Field(f));
+        this.accesses = object.accesses;
+        return this;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return {
+            id: this.id,
+            name: this.name,
+            notes: this.notes || null,
+            fields: this.fields.map(f => f.toObject()),
+            accesses: this.accesses
+        };
+    }
+    /**
+     * Randomly generate id
+     *
+     * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
+     * @returns {string}
+     */
+    static generateTempId() {
+        return _p8() + _p8(true) + _p8(true) + _p8();
+    }
+    /** Get default accesses */
+    static defaultAccesses() {
+        return {
+            create: interface_1.Access.GUEST,
+            read: interface_1.Access.GUEST,
+            update: interface_1.Access.GUEST,
+            remove: interface_1.Access.GUEST,
+            search: interface_1.Access.GUEST,
+            count: interface_1.Access.GUEST
+        };
+    }
+    /** Clone the model to a new reference */
+    clone(newId) {
+        const object = this.toObject();
+        if (newId) {
+            object.id = Model.generateTempId();
+        }
+        return new Model(object);
+    }
+}
+exports.Model = Model;
+//# sourceMappingURL=Model.js.map

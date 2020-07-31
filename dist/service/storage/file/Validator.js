@@ -1,3 +1,39 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,i){var a,o=arguments.length,n=o<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,r,i);else for(var c=e.length-1;c>=0;c--)(a=e[c])&&(n=(o<3?a(n):o>3?a(t,r,n):a(t,r))||n);return o>3&&n&&Object.defineProperty(t,r,n),n},__awaiter=this&&this.__awaiter||function(e,t,r,i){return new(r||(r=Promise))(function(a,o){function n(e){try{l(i.next(e))}catch(e){o(e)}}function c(e){try{l(i.throw(e))}catch(e){o(e)}}function l(e){e.done?a(e.value):new r(function(t){t(e.value)}).then(n,c)}l((i=i.apply(e,t||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),SingleSave_1=require("./SingleSave");let ValidatorFileStorageService=class extends SingleSave_1.SingleSaveFileStorage{serialize(e){return __awaiter(this,void 0,void 0,function*(){return e})}deserialize(e){return __awaiter(this,void 0,void 0,function*(){return e})}};ValidatorFileStorageService=__decorate([typedi_1.Service()],ValidatorFileStorageService),exports.ValidatorFileStorageService=ValidatorFileStorageService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ValidatorFileStorageService = void 0;
+const typedi_1 = require("typedi");
+const SingleSave_1 = require("./SingleSave");
+let ValidatorFileStorageService = class ValidatorFileStorageService extends SingleSave_1.SingleSaveFileStorage {
+    /** @inheritDoc */
+    serialize(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return content;
+        });
+    }
+    /** @inheritDoc */
+    deserialize(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return content;
+        });
+    }
+};
+ValidatorFileStorageService = __decorate([
+    typedi_1.Service()
+], ValidatorFileStorageService);
+exports.ValidatorFileStorageService = ValidatorFileStorageService;
+//# sourceMappingURL=Validator.js.map

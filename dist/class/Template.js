@@ -1,3 +1,132 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(t,e,n,i){return new(n||(n=Promise))(function(r,s){function a(t){try{h(i.next(t))}catch(t){s(t)}}function o(t){try{h(i.throw(t))}catch(t){s(t)}}function h(t){t.done?r(t.value):new n(function(e){e(t.value)}).then(a,o)}h((i=i.apply(t,e||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const enum_1=require("../enum"),typedi_1=require("typedi"),service_1=require("../service");class Template{constructor(t,e){this.parent=t,this.storageService=typedi_1.Container.get(service_1.TemplatesFileStorageService),e&&this.fromObject(e)}fromObject(t){return this.path=t.path,this.engine=t.engine,this.input=t.input,this.content=t.content,this.contentPath=Template.computeContentPath(this),this}toObject(){return{path:this.path,engine:this.engine,input:this.input,content:this.content}}isEmpty(){return"string"!=typeof this.content||0===this.content.trim().length}needsModel(){return this.input===enum_1.TemplateInput.One}extension(){return Template.computeExtension(this)}channel(){return this.parent}load(){return __awaiter(this,void 0,void 0,function*(){yield this.validate(),this.content=yield this.storageService.get([this.parent.templatesPath,this.contentPath])})}save(){return __awaiter(this,void 0,void 0,function*(){yield this.storageService.set([this.parent.templatesPath,this.contentPath],this.content)})}validate(){return __awaiter(this,void 0,void 0,function*(){if(!(yield this.storageService.exists([this.parent.templatesPath,this.contentPath])))throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`)})}static computeContentPath(t){const e=typedi_1.Container.get(service_1.StringService).variants(Template.defaultFolder),n=Object.keys(e);let i=t.path;for(const t of n)i=i.replace(new RegExp(`{${t}}`,"g"),e[t]);return`${i}.${Template.computeExtension(t)}`}static computeExtension(t){return t.engine===enum_1.TemplateEngine.Hpf?"hpf":"js"}}Template.defaultFolder="model",exports.Template=Template;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Template = void 0;
+const enum_1 = require("../enum");
+const typedi_1 = require("typedi");
+const service_1 = require("../service");
+class Template {
+    /** Constructor */
+    constructor(parent, object) {
+        this.parent = parent;
+        this.storageService = typedi_1.Container.get(service_1.TemplatesFileStorageService);
+        if (object) {
+            this.fromObject(object);
+        }
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.path = object.path;
+        this.engine = object.engine;
+        this.input = object.input;
+        this.content = object.content;
+        this.contentPath = Template.computeContentPath(this);
+        return this;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return {
+            path: this.path,
+            engine: this.engine,
+            input: this.input,
+            content: this.content
+        };
+    }
+    /**
+     * Denotes if the template should be considered as empty
+     * @returns {boolean}
+     */
+    isEmpty() {
+        return (typeof this.content !== 'string' || this.content.trim().length === 0);
+    }
+    /**
+     * Denotes if the template needs a specific model to be generated
+     * @returns {boolean}
+     */
+    needsModel() {
+        return this.input === enum_1.TemplateInput.One;
+    }
+    /**
+     * Get the extension of the input file
+     * @returns {string}
+     */
+    extension() {
+        return Template.computeExtension(this);
+    }
+    /**
+     * Get the parent channel
+     * @returns {Channel}
+     */
+    channel() {
+        return this.parent;
+    }
+    /** @inheritDoc */
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.validate();
+            this.content = yield this.storageService.get([
+                this.parent.templatesPath,
+                this.contentPath
+            ]);
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
+        });
+    }
+    /**
+     * Check resource validity
+     * @throws {Error}
+     */
+    validate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([
+                this.parent.templatesPath,
+                this.contentPath
+            ]))) {
+                throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
+            }
+        });
+    }
+    /**
+     * Compute the content path from the dynamic path
+     * @param {Template|IConfigTemplate} template
+     * @return {string}
+     */
+    static computeContentPath(template) {
+        // Get string service
+        const stringService = typedi_1.Container.get(service_1.StringService);
+        const variants = stringService.variants(Template.defaultFolder);
+        const keys = Object.keys(variants);
+        let path = template.path;
+        for (const key of keys) {
+            path = path.replace(new RegExp(`{${key}}`, 'g'), variants[key]);
+        }
+        return `${path}.${Template.computeExtension(template)}`;
+    }
+    /**
+     * Compute the extension of the template
+     * @param {Template|IConfigTemplate} template
+     * @return {string}
+     */
+    static computeExtension(template) {
+        if (template.engine === enum_1.TemplateEngine.Hpf) {
+            return 'hpf';
+        }
+        return 'js';
+    }
+}
+exports.Template = Template;
+/** @type {string} */
+Template.defaultFolder = 'model';
+//# sourceMappingURL=Template.js.map

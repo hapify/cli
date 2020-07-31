@@ -1,3 +1,114 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,i){var o,a=arguments.length,n=a<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,r,i);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(n=(a<3?o(n):a>3?o(t,r,n):o(t,r))||n);return a>3&&n&&Object.defineProperty(t,r,n),n},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),Path=__importStar(require("path")),GlobalConfig_1=require("./GlobalConfig"),config_1=require("../config");let OptionsService=class{constructor(e){this.globalConfigService=e}setProgram(e){this.program=e}setCommand(e){this.command=e}remoteConfig(){const e=Object.assign({},config_1.RemoteConfig);return e.uri=this.apiUrl(),e}dir(){return this.program.dir?Path.isAbsolute(this.program.dir)?this.program.dir:Path.resolve(process.cwd(),this.program.dir):process.cwd()}apiKey(){const e=this.program.key||this.globalConfigService.getData().apiKey;if(!e)throw new Error('Please define an API Key using command "hpf key" or the option "--key".\nTo get your api key, please visit https://www.hapify.io/my-key');return e}apiUrl(){return this.globalConfigService.getData().apiUrl||config_1.RemoteConfig.uri}debug(){return!!this.program.debug}depth(){return this.command.depth}output(){return this.command.output}port(){return this.command.port}hostname(){return this.command.hostname}open(){return!!this.command.open}};OptionsService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[GlobalConfig_1.GlobalConfigService])],OptionsService),exports.OptionsService=OptionsService;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OptionsService = void 0;
+const typedi_1 = require("typedi");
+const Path = __importStar(require("path"));
+const GlobalConfig_1 = require("./GlobalConfig");
+const config_1 = require("../config");
+let OptionsService = class OptionsService {
+    /** Constructor */
+    constructor(globalConfigService) {
+        this.globalConfigService = globalConfigService;
+    }
+    /**
+     * Set program entity
+     * @param {commander.CommanderStatic} program
+     */
+    setProgram(program) {
+        this.program = program;
+    }
+    /**
+     * Set command entity
+     * @param {commander.Command} command
+     */
+    setCommand(command) {
+        this.command = command;
+    }
+    /** Returns the remote config and override defaults with global config (if any) */
+    remoteConfig() {
+        const configs = Object.assign({}, config_1.RemoteConfig);
+        configs.uri = this.apiUrl();
+        return configs;
+    }
+    /** @return {string} Return the working directory computed with the --dir option */
+    dir() {
+        if (this.program.dir) {
+            if (Path.isAbsolute(this.program.dir)) {
+                return this.program.dir;
+            }
+            return Path.resolve(process.cwd(), this.program.dir);
+        }
+        return process.cwd();
+    }
+    /** @return {string} Return the API Key to use (explicit or global) */
+    apiKey() {
+        const key = this.program.key || this.globalConfigService.getData().apiKey;
+        if (!key) {
+            throw new Error('Please define an API Key using command "hpf key" or the option "--key".\nTo get your api key, please visit https://www.hapify.io/my-key');
+        }
+        return key;
+    }
+    /** @return {string} Return the API URL to use or default URL */
+    apiUrl() {
+        const url = this.globalConfigService.getData().apiUrl;
+        return url || config_1.RemoteConfig.uri;
+    }
+    /** @return {boolean} Denotes if the debug mode is enabled */
+    debug() {
+        return !!this.program.debug;
+    }
+    /** @return {number} Get the depth for recursive search */
+    depth() {
+        return this.command.depth;
+    }
+    /** @return {string} Get the output file path */
+    output() {
+        return this.command.output;
+    }
+    /** @return {number} Get the required http port */
+    port() {
+        return this.command.port;
+    }
+    /** @return {string} Get the required http hostname */
+    hostname() {
+        return this.command.hostname;
+    }
+    /** @return {boolean} Denotes if a new tab should be opened */
+    open() {
+        return !!this.command.open;
+    }
+};
+OptionsService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [GlobalConfig_1.GlobalConfigService])
+], OptionsService);
+exports.OptionsService = OptionsService;
+//# sourceMappingURL=Options.js.map

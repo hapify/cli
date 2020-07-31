@@ -1,3 +1,131 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(t,e,i,r){var s,o=arguments.length,n=o<3?e:null===r?r=Object.getOwnPropertyDescriptor(e,i):r;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(t,e,i,r);else for(var c=t.length-1;c>=0;c--)(s=t[c])&&(n=(o<3?s(n):o>3?s(e,i,n):s(e,i))||n);return o>3&&n&&Object.defineProperty(e,i,n),n},__metadata=this&&this.__metadata||function(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)},__awaiter=this&&this.__awaiter||function(t,e,i,r){return new(i||(i=Promise))(function(s,o){function n(t){try{a(r.next(t))}catch(t){o(t)}}function c(t){try{a(r.throw(t))}catch(t){o(t)}}function a(t){t.done?s(t.value):new i(function(e){e(t.value)}).then(n,c)}a((r=r.apply(t,e||[])).next())})},__importDefault=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),axios_1=__importDefault(require("axios")),querystring_1=__importDefault(require("querystring")),Options_1=require("./Options");class RichAxiosError{constructor(t){this.name="RichAxiosError",this.stack=t.stack,this.config=t.config,this.code=t.code,this.request=t.request,this.response=t.response,t.response&&t.response.data?(this.message=t.response.data.message,this.data=t.response.data.data):this.message=t.message}}exports.RichAxiosError=RichAxiosError;let ApiService=class{constructor(t){this.optionsService=t}client(){return this.http||(this.http=axios_1.default.create({baseURL:this.optionsService.remoteConfig().uri,headers:{"X-Api-Key":this.optionsService.apiKey()}})),this.http}get(t,e,i){return __awaiter(this,void 0,void 0,function*(){try{return yield this.client().get(this.query(t,e),i)}catch(t){throw new RichAxiosError(t)}})}post(t,e,i,r){return __awaiter(this,void 0,void 0,function*(){try{return yield this.client().post(this.query(t,i),e,r)}catch(t){throw new RichAxiosError(t)}})}patch(t,e,i,r){return __awaiter(this,void 0,void 0,function*(){try{return yield this.client().patch(this.query(t,i),e,r)}catch(t){throw new RichAxiosError(t)}})}delete(t,e,i){return __awaiter(this,void 0,void 0,function*(){try{return yield this.client().delete(this.query(t,e),i)}catch(t){throw new RichAxiosError(t)}})}query(t,e){return e?`${t}?${querystring_1.default.stringify(e)}`:t}};ApiService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[Options_1.OptionsService])],ApiService),exports.ApiService=ApiService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ApiService = exports.RichAxiosError = void 0;
+const typedi_1 = require("typedi");
+const axios_1 = __importDefault(require("axios"));
+const querystring_1 = __importDefault(require("querystring"));
+const Options_1 = require("./Options");
+class RichAxiosError {
+    constructor(error) {
+        this.isAxiosError = true;
+        this.toJSON = () => {
+            return {
+                // Standard
+                message: this.message,
+                name: this.name,
+                stack: this.stack,
+                // Axios
+                config: this.config,
+                code: this.code,
+            };
+        };
+        this.name = 'RichAxiosError';
+        this.stack = error.stack;
+        this.config = error.config;
+        this.code = error.code;
+        this.request = error.request;
+        this.response = error.response;
+        // Get message and payload if possible
+        if (error.response && error.response.data) {
+            this.message = error.response.data.message;
+            this.data = error.response.data.data;
+        }
+        else {
+            this.message = error.message;
+        }
+    }
+}
+exports.RichAxiosError = RichAxiosError;
+let ApiService = class ApiService {
+    /** Constructor */
+    constructor(optionsService) {
+        this.optionsService = optionsService;
+    }
+    /** Create and get the http client */
+    client() {
+        if (!this.http) {
+            this.http = axios_1.default.create({
+                baseURL: this.optionsService.remoteConfig().uri,
+                headers: {
+                    'X-Api-Key': this.optionsService.apiKey(),
+                },
+            });
+        }
+        return this.http;
+    }
+    /** Get */
+    get(url, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.client().get(this.query(url, query), config);
+            }
+            catch (e) {
+                throw new RichAxiosError(e);
+            }
+        });
+    }
+    /** Post */
+    post(url, payload, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.client().post(this.query(url, query), payload, config);
+            }
+            catch (e) {
+                throw new RichAxiosError(e);
+            }
+        });
+    }
+    /** Patch */
+    patch(url, payload, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.client().patch(this.query(url, query), payload, config);
+            }
+            catch (e) {
+                throw new RichAxiosError(e);
+            }
+        });
+    }
+    /** Delete */
+    delete(url, query, config) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.client().delete(this.query(url, query), config);
+            }
+            catch (e) {
+                throw new RichAxiosError(e);
+            }
+        });
+    }
+    /** Helper to return a stringified query */
+    query(url, object) {
+        return !!object ? `${url}?${querystring_1.default.stringify(object)}` : url;
+    }
+};
+ApiService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [Options_1.OptionsService])
+], ApiService);
+exports.ApiService = ApiService;
+//# sourceMappingURL=Api.js.map

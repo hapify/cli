@@ -1,3 +1,62 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(t,e,i,r){return new(i||(i=Promise))(function(a,n){function s(t){try{h(r.next(t))}catch(t){n(t)}}function o(t){try{h(r.throw(t))}catch(t){n(t)}}function h(t){t.done?a(t.value):new i(function(e){e(t.value)}).then(s,o)}h((r=r.apply(t,e||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const service_1=require("../service"),typedi_1=require("typedi");class Validator{constructor(t,e){this.parent=t,this.path=e,this.storageService=typedi_1.Container.get(service_1.ValidatorFileStorageService)}load(){return __awaiter(this,void 0,void 0,function*(){yield this.validate(),this.content=yield this.storageService.get([this.parent.path,this.path])})}save(){return __awaiter(this,void 0,void 0,function*(){yield this.storageService.set([this.parent.path,this.path],this.content)})}validate(){return __awaiter(this,void 0,void 0,function*(){if(!(yield this.storageService.exists([this.parent.path,this.path])))throw new Error(`Validator's path ${this.parent.path}/${this.path} does not exists.`)})}isEmpty(){return"string"!=typeof this.content||0===this.content.trim().length}}exports.Validator=Validator;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Validator = void 0;
+const service_1 = require("../service");
+const typedi_1 = require("typedi");
+class Validator {
+    /**
+     * Constructor
+     * @param {Channel} parent
+     * @param {string} path
+     */
+    constructor(parent, path) {
+        this.parent = parent;
+        this.path = path;
+        this.storageService = typedi_1.Container.get(service_1.ValidatorFileStorageService);
+    }
+    /** @inheritDoc */
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.validate();
+            this.content = yield this.storageService.get([
+                this.parent.path,
+                this.path
+            ]);
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.storageService.set([this.parent.path, this.path], this.content);
+        });
+    }
+    /**
+     * Check resource validity
+     * @throws {Error}
+     */
+    validate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([this.parent.path, this.path]))) {
+                throw new Error(`Validator's path ${this.parent.path}/${this.path} does not exists.`);
+            }
+        });
+    }
+    /**
+     * Denotes if the validator should be considered as empty
+     * @returns {boolean}
+     */
+    isEmpty() {
+        return (typeof this.content !== 'string' || this.content.trim().length === 0);
+    }
+}
+exports.Validator = Validator;
+//# sourceMappingURL=Validator.js.map

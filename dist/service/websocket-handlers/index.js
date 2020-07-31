@@ -1,3 +1,26 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";function __export(e){for(var r in e)exports.hasOwnProperty(r)||(exports[r]=e[r])}Object.defineProperty(exports,"__esModule",{value:!0}),__export(require("./ApplyPresetHandler")),__export(require("./GetModelsHandler")),__export(require("./SetModelsHandler")),__export(require("./GetChannelsHandler")),__export(require("./SetChannelsHandler")),__export(require("./GetInfoHandler")),__export(require("./GetPresetsHandler")),__export(require("./NewModelHandler")),__export(require("./PathPreviewHandler")),__export(require("./TemplatePreviewHandler")),__export(require("./ValidateModelHandler")),__export(require("./GenerateTemplateHandler")),__export(require("./GenerateChannelHandler"));
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(require("./ApplyPresetHandler"), exports);
+__exportStar(require("./GetModelsHandler"), exports);
+__exportStar(require("./SetModelsHandler"), exports);
+__exportStar(require("./GetChannelsHandler"), exports);
+__exportStar(require("./SetChannelsHandler"), exports);
+__exportStar(require("./GetInfoHandler"), exports);
+__exportStar(require("./GetPresetsHandler"), exports);
+__exportStar(require("./NewModelHandler"), exports);
+__exportStar(require("./PathPreviewHandler"), exports);
+__exportStar(require("./TemplatePreviewHandler"), exports);
+__exportStar(require("./ValidateModelHandler"), exports);
+__exportStar(require("./GenerateTemplateHandler"), exports);
+__exportStar(require("./GenerateChannelHandler"), exports);
+//# sourceMappingURL=index.js.map

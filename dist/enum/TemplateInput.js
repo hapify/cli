@@ -1,3 +1,9 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});class TemplateInput{}TemplateInput.One="one",TemplateInput.All="all",exports.TemplateInput=TemplateInput;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TemplateInput = void 0;
+class TemplateInput {
+}
+exports.TemplateInput = TemplateInput;
+TemplateInput.One = 'one';
+TemplateInput.All = 'all';
+//# sourceMappingURL=TemplateInput.js.map

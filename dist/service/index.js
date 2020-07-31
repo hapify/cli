@@ -1,3 +1,29 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";function __export(e){for(var r in e)exports.hasOwnProperty(r)||(exports[r]=e[r])}Object.defineProperty(exports,"__esModule",{value:!0}),__export(require("./String")),__export(require("./Boilerplates")),__export(require("./Api")),__export(require("./Channels")),__export(require("./Generator")),__export(require("./GlobalConfig")),__export(require("./Presets")),__export(require("./Projects")),__export(require("./Options")),__export(require("./Logger")),__export(require("./Writer")),__export(require("./HttpServer")),__export(require("./Validator")),__export(require("./WebSocketServer")),__export(require("./storage")),__export(require("./websocket-handlers"));
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(require("./String"), exports);
+__exportStar(require("./Boilerplates"), exports);
+__exportStar(require("./Api"), exports);
+__exportStar(require("./Channels"), exports);
+__exportStar(require("./Generator"), exports);
+__exportStar(require("./GlobalConfig"), exports);
+__exportStar(require("./Presets"), exports);
+__exportStar(require("./Projects"), exports);
+__exportStar(require("./Options"), exports);
+__exportStar(require("./Logger"), exports);
+__exportStar(require("./Writer"), exports);
+__exportStar(require("./HttpServer"), exports);
+__exportStar(require("./Validator"), exports);
+__exportStar(require("./WebSocketServer"), exports);
+__exportStar(require("./storage"), exports);
+__exportStar(require("./websocket-handlers"), exports);
+//# sourceMappingURL=index.js.map

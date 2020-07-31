@@ -1,3 +1,118 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,i){var n,a=arguments.length,o=a<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(e,t,r,i);else for(var c=e.length-1;c>=0;c--)(n=e[c])&&(o=(a<3?n(o):a>3?n(t,r,o):n(t,r))||o);return a>3&&o&&Object.defineProperty(t,r,o),o},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__awaiter=this&&this.__awaiter||function(e,t,r,i){return new(r||(r=Promise))(function(n,a){function o(e){try{s(i.next(e))}catch(e){a(e)}}function c(e){try{s(i.throw(e))}catch(e){a(e)}}function s(e){e.done?n(e.value):new r(function(t){t(e.value)}).then(o,c)}s((i=i.apply(e,t||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),Api_1=require("./Api");let GeneratorService=class{constructor(){}api(){return void 0===this.apiService&&(this.apiService=typedi_1.Container.get(Api_1.ApiService)),this.apiService}limits(){return __awaiter(this,void 0,void 0,function*(){return this._limits||(this._limits=(yield this.api().get("generator/limits")).data),this._limits})}runChannel(e){return __awaiter(this,void 0,void 0,function*(){return(yield this.api().post("generator/run",{project:e.config.project,templates:e.templates.map(e=>e.toObject())})).data.results})}runTemplate(e){return __awaiter(this,void 0,void 0,function*(){return(yield this.api().post("generator/run",{project:e.channel().config.project,templates:[e.toObject()]})).data.results})}run(e,t){return __awaiter(this,void 0,void 0,function*(){if(e.needsModel()&&!t)throw new Error("Model should be defined for this template");const r={project:e.channel().config.project,templates:[e.toObject()]};return t&&(r.ids=[t.id]),(yield this.api().post("generator/run",r)).data.results[0]})}pathPreview(e,t=null){return __awaiter(this,void 0,void 0,function*(){const r=t?{path:e,model:t.id}:{path:e};return(yield this.api().post("generator/path",r)).data.result})}};GeneratorService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[])],GeneratorService),exports.GeneratorService=GeneratorService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GeneratorService = void 0;
+const typedi_1 = require("typedi");
+const Api_1 = require("./Api");
+let GeneratorService = class GeneratorService {
+    /** Constructor */
+    constructor() { }
+    /** Load and returns API Service. Avoid circular dependency */
+    api() {
+        if (typeof this.apiService === 'undefined') {
+            this.apiService = typedi_1.Container.get(Api_1.ApiService);
+        }
+        return this.apiService;
+    }
+    /** Get the limits once and returns them */
+    limits() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this._limits) {
+                this._limits = (yield this.api().get('generator/limits')).data;
+            }
+            return this._limits;
+        });
+    }
+    /**
+     * Compile for a whole channel
+     * @param {Channel} channel
+     * @returns {Promise<IGeneratorResult[]>}
+     */
+    runChannel(channel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.api().post('generator/run', {
+                project: channel.config.project,
+                templates: channel.templates.map(t => t.toObject())
+            });
+            return response.data.results;
+        });
+    }
+    /**
+     * Compile a template to multiple files.
+     * One per model, if applicable.
+     *
+     * @param {Template} template
+     * @returns {Promise<IGeneratorResult[]>}
+     */
+    runTemplate(template) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.api().post('generator/run', {
+                project: template.channel().config.project,
+                templates: [template.toObject()]
+            });
+            return response.data.results;
+        });
+    }
+    /**
+     * Run generation process for one model
+     *
+     * @param {Template} template
+     * @param {Model|null} model
+     * @returns {Promise<IGeneratorResult>}
+     * @throws {Error}
+     *  If the template needs a model and no model is passed
+     */
+    run(template, model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (template.needsModel() && !model) {
+                throw new Error('Model should be defined for this template');
+            }
+            const payload = {
+                project: template.channel().config.project,
+                templates: [template.toObject()]
+            };
+            if (model) {
+                payload.ids = [model.id];
+            }
+            return (yield this.api().post('generator/run', payload)).data
+                .results[0];
+        });
+    }
+    /**
+     * Compute path from a string
+     *
+     * @param {string} path
+     * @param {Model|null} model
+     *  Default null
+     * @returns {string}
+     */
+    pathPreview(path, model = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payload = model ? { path, model: model.id } : { path };
+            return (yield this.api().post('generator/path', payload)).data.result;
+        });
+    }
+};
+GeneratorService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [])
+], GeneratorService);
+exports.GeneratorService = GeneratorService;
+//# sourceMappingURL=Generator.js.map

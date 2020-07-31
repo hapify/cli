@@ -1,3 +1,37 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,i){var c,o=arguments.length,a=o<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,r,i);else for(var s=e.length-1;s>=0;s--)(c=e[s])&&(a=(o<3?c(a):o>3?c(t,r,a):c(t,r))||a);return o>3&&a&&Object.defineProperty(t,r,a),a};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),Base_1=require("./Base");let ProjectsApiStorageService=class extends Base_1.BaseApiStorageService{defaultSearchParams(){const e=super.defaultSearchParams();return e._limit=this.remoteConfig.projectsLimit,e}path(){return"project"}fromApi(e){return{id:e._id,created_at:e.created_at,name:e.name,description:e.description}}};ProjectsApiStorageService=__decorate([typedi_1.Service()],ProjectsApiStorageService),exports.ProjectsApiStorageService=ProjectsApiStorageService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectsApiStorageService = void 0;
+const typedi_1 = require("typedi");
+const Base_1 = require("./Base");
+let ProjectsApiStorageService = class ProjectsApiStorageService extends Base_1.BaseApiStorageService {
+    /** @inheritDoc */
+    defaultSearchParams() {
+        const s = super.defaultSearchParams();
+        s._limit = this.remoteConfig.projectsLimit;
+        return s;
+    }
+    /** @inheritDoc */
+    path() {
+        return 'project';
+    }
+    /** @inheritDoc */
+    fromApi(object) {
+        return {
+            id: object._id,
+            created_at: object.created_at,
+            name: object.name,
+            description: object.description
+        };
+    }
+};
+ProjectsApiStorageService = __decorate([
+    typedi_1.Service()
+], ProjectsApiStorageService);
+exports.ProjectsApiStorageService = ProjectsApiStorageService;
+//# sourceMappingURL=Projects.js.map

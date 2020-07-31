@@ -1,3 +1,84 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,a){var i,n=arguments.length,c=n<3?t:null===a?a=Object.getOwnPropertyDescriptor(t,r):a;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)c=Reflect.decorate(e,t,r,a);else for(var o=e.length-1;o>=0;o--)(i=e[o])&&(c=(n<3?i(c):n>3?i(t,r,c):i(t,r))||c);return n>3&&c&&Object.defineProperty(t,r,c),c},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__awaiter=this&&this.__awaiter||function(e,t,r,a){return new(r||(r=Promise))(function(i,n){function c(e){try{s(a.next(e))}catch(e){n(e)}}function o(e){try{s(a.throw(e))}catch(e){n(e)}}function s(e){e.done?i(e.value):new r(function(t){t(e.value)}).then(c,o)}s((a=a.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),interface_1=require("../../interface"),Presets_1=require("../Presets"),Joi=__importStar(require("joi")),class_1=require("../../class");let ApplyPresetHandlerService=class{constructor(e){this.presetsService=e}canHandle(e){return e.id===interface_1.WebSocketMessages.APPLY_PRESETS}validator(){return Joi.object({models:Joi.array().items(interface_1.ModelSchema).required().min(0)})}handle(e){return __awaiter(this,void 0,void 0,function*(){const t=e.data.models.map(e=>new class_1.Model(e)),r=yield this.presetsService.apply(t);return{updated:r.updated.map(e=>e.toObject()),created:r.created.map(e=>e.toObject())}})}};ApplyPresetHandlerService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[Presets_1.PresetsService])],ApplyPresetHandlerService),exports.ApplyPresetHandlerService=ApplyPresetHandlerService;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ApplyPresetHandlerService = void 0;
+const typedi_1 = require("typedi");
+const interface_1 = require("../../interface");
+const Presets_1 = require("../Presets");
+const Joi = __importStar(require("joi"));
+const class_1 = require("../../class");
+let ApplyPresetHandlerService = class ApplyPresetHandlerService {
+    /**
+     * Constructor
+     * @param presetsService
+     */
+    constructor(presetsService) {
+        this.presetsService = presetsService;
+    }
+    /** @inheritDoc */
+    canHandle(message) {
+        return message.id === interface_1.WebSocketMessages.APPLY_PRESETS;
+    }
+    /** @inheritDoc */
+    validator() {
+        return Joi.object({
+            models: Joi.array()
+                .items(interface_1.ModelSchema)
+                .required()
+                .min(0)
+        });
+    }
+    /** @inheritDoc */
+    handle(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const models = message.data.models.map((m) => new class_1.Model(m));
+            const results = yield this.presetsService.apply(models);
+            return {
+                updated: results.updated.map(m => m.toObject()),
+                created: results.created.map(m => m.toObject())
+            };
+        });
+    }
+};
+ApplyPresetHandlerService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [Presets_1.PresetsService])
+], ApplyPresetHandlerService);
+exports.ApplyPresetHandlerService = ApplyPresetHandlerService;
+//# sourceMappingURL=ApplyPresetHandler.js.map

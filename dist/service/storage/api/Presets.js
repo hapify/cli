@@ -1,3 +1,46 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,r,t,s){var i,o=arguments.length,a=o<3?r:null===s?s=Object.getOwnPropertyDescriptor(r,t):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,r,t,s);else for(var c=e.length-1;c>=0;c--)(i=e[c])&&(a=(o<3?i(a):o>3?i(r,t,a):i(r,t))||a);return o>3&&a&&Object.defineProperty(r,t,a),a};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),Base_1=require("./Base");let PresetsApiStorageService=class extends Base_1.BaseApiStorageService{defaultSearchParams(){const e=super.defaultSearchParams();return e._limit=this.remoteConfig.presetsLimit,e}path(){return"preset"}fromApi(e){return{id:e._id,name:e.name,name__fr:e.name__fr,description:e.description,description__fr:e.description__fr,icon:e.icon,models:e.models.map(e=>({id:e._id,name:e.name,notes:e.notes||null,fields:e.fields,accesses:e.accesses}))}}};PresetsApiStorageService=__decorate([typedi_1.Service()],PresetsApiStorageService),exports.PresetsApiStorageService=PresetsApiStorageService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PresetsApiStorageService = void 0;
+const typedi_1 = require("typedi");
+const Base_1 = require("./Base");
+let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.BaseApiStorageService {
+    /** @inheritDoc */
+    defaultSearchParams() {
+        const s = super.defaultSearchParams();
+        s._limit = this.remoteConfig.presetsLimit;
+        return s;
+    }
+    /** @inheritDoc */
+    path() {
+        return 'preset';
+    }
+    /** @inheritDoc */
+    fromApi(object) {
+        return {
+            id: object._id,
+            name: object.name,
+            name__fr: object.name__fr,
+            description: object.description,
+            description__fr: object.description__fr,
+            icon: object.icon,
+            models: object.models.map((m) => ({
+                id: m._id,
+                name: m.name,
+                notes: m.notes || null,
+                fields: m.fields,
+                accesses: m.accesses
+            }))
+        };
+    }
+};
+PresetsApiStorageService = __decorate([
+    typedi_1.Service()
+], PresetsApiStorageService);
+exports.PresetsApiStorageService = PresetsApiStorageService;
+//# sourceMappingURL=Presets.js.map

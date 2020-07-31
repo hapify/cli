@@ -1,3 +1,152 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var ModelsApiStorageService_1,__decorate=this&&this.__decorate||function(e,t,s,i){var r,o=arguments.length,a=o<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,s):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,s,i);else for(var c=e.length-1;c>=0;c--)(r=e[c])&&(a=(o<3?r(a):o>3?r(t,s,a):r(t,s))||a);return o>3&&a&&Object.defineProperty(t,s,a),a},__awaiter=this&&this.__awaiter||function(e,t,s,i){return new(s||(s=Promise))(function(r,o){function a(e){try{n(i.next(e))}catch(e){o(e)}}function c(e){try{n(i.throw(e))}catch(e){o(e)}}function n(e){e.done?r(e.value):new s(function(t){t(e.value)}).then(a,c)}n((i=i.apply(e,t||[])).next())})},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),Base_1=require("./Base"),md5_1=__importDefault(require("md5")),class_1=require("../../../class");let ModelsApiStorageService=ModelsApiStorageService_1=class extends Base_1.BaseApiStorageService{constructor(){super(...arguments),this.hashes={}}forProject(e){return __awaiter(this,void 0,void 0,function*(){const t=yield this.list({project:e});return this.updateHashes(t),t})}set(e,t){return __awaiter(this,void 0,void 0,function*(){const s={},i=t.filter(e=>void 0===this.hashes[e.id]);for(const t of i){const i=yield this.create({project:e,name:t.name,notes:t.notes||null,fields:t.fields,accesses:t.accesses});s[t.id]=i.id,t.id=i.id}const r=Object.keys(this.hashes).filter(e=>!t.some(t=>t.id===e));for(const e of r)yield this.remove(e),s[e]=null;const o=t.filter(e=>"string"==typeof this.hashes[e.id]&&this.hashes[e.id]!==ModelsApiStorageService_1.hash(e));for(const e of o)yield this.update(e.id,{name:e.name,notes:e.notes||null,fields:e.fields,accesses:e.accesses});const a=e=>{let t=!1;for(const i of e.fields)i.type===class_1.FieldType.Entity&&void 0!==s[i.reference]&&(i.reference=s[i.reference],t=!0);return t};for(const e of t)a(e)&&(yield this.update(e.id,{fields:e.fields}));return this.updateHashes(t),t})}updateHashes(e){this.hashes={};for(const t of e)this.hashes[t.id]=ModelsApiStorageService_1.hash(t)}static hash(e){return md5_1.default(JSON.stringify(new class_1.Model(e).toObject()))}defaultSearchParams(){const e=super.defaultSearchParams();return e._limit=this.remoteConfig.modelsLimit,e}path(){return"model"}fromApi(e){return{id:e._id,name:e.name,notes:e.notes||null,fields:e.fields,accesses:e.accesses}}};ModelsApiStorageService=ModelsApiStorageService_1=__decorate([typedi_1.Service()],ModelsApiStorageService),exports.ModelsApiStorageService=ModelsApiStorageService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var ModelsApiStorageService_1;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModelsApiStorageService = void 0;
+const typedi_1 = require("typedi");
+const Base_1 = require("./Base");
+const md5_1 = __importDefault(require("md5"));
+const class_1 = require("../../../class");
+let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorageService extends Base_1.BaseApiStorageService {
+    constructor() {
+        super(...arguments);
+        /** The models fingerprints */
+        this.hashes = {};
+    }
+    /** Load the models from api for a specific project */
+    forProject(project) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const models = yield this.list({ project });
+            this.updateHashes(models);
+            return models;
+        });
+    }
+    /** Send models to API if necessary */
+    set(project, models) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Init map to match temp id to real id
+            const referencesMap = {};
+            // ========================================================
+            // CREATION
+            // Get models to create
+            const toCreate = models.filter(m => typeof this.hashes[m.id] === 'undefined');
+            // Create models and update id
+            for (const model of toCreate) {
+                const response = yield this.create({
+                    project: project,
+                    name: model.name,
+                    notes: model.notes || null,
+                    fields: model.fields,
+                    accesses: model.accesses
+                });
+                referencesMap[model.id] = response.id;
+                model.id = response.id;
+            }
+            // ========================================================
+            // ========================================================
+            // DELETION
+            // Get models to delete
+            const toDelete = Object.keys(this.hashes).filter(id => !models.some(m => m.id === id));
+            // Delete models
+            for (const id of toDelete) {
+                yield this.remove(id);
+                referencesMap[id] = null;
+            }
+            // ========================================================
+            // ========================================================
+            // UPDATE
+            // Get models to update
+            const toUpdate = models.filter(m => typeof this.hashes[m.id] === 'string' &&
+                this.hashes[m.id] !== ModelsApiStorageService_1.hash(m));
+            // Update models
+            for (const model of toUpdate) {
+                yield this.update(model.id, {
+                    name: model.name,
+                    notes: model.notes || null,
+                    fields: model.fields,
+                    accesses: model.accesses
+                });
+            }
+            // ========================================================
+            // ========================================================
+            // UPDATE REFERENCES
+            /** Change references from temp id to real id and denotes if a change was made */
+            const changeReferencesToNewModels = (m) => {
+                let changed = false;
+                for (const f of m.fields) {
+                    if (f.type === class_1.FieldType.Entity &&
+                        typeof referencesMap[f.reference] !== 'undefined') {
+                        f.reference = referencesMap[f.reference];
+                        changed = true;
+                    }
+                }
+                return changed;
+            };
+            // Parse all models and change references
+            for (const model of models) {
+                if (changeReferencesToNewModels(model)) {
+                    yield this.update(model.id, {
+                        fields: model.fields
+                    });
+                }
+            }
+            // ========================================================
+            this.updateHashes(models);
+            // Return updated models
+            return models;
+        });
+    }
+    /** Update hashes from models */
+    updateHashes(models) {
+        this.hashes = {};
+        for (const model of models) {
+            this.hashes[model.id] = ModelsApiStorageService_1.hash(model);
+        }
+    }
+    /** Create a hash for the model */
+    static hash(model) {
+        return md5_1.default(JSON.stringify(new class_1.Model(model).toObject()));
+    }
+    /** @inheritDoc */
+    defaultSearchParams() {
+        const s = super.defaultSearchParams();
+        s._limit = this.remoteConfig.modelsLimit;
+        return s;
+    }
+    /** @inheritDoc */
+    path() {
+        return 'model';
+    }
+    /** @inheritDoc */
+    fromApi(object) {
+        return {
+            id: object._id,
+            name: object.name,
+            notes: object.notes || null,
+            fields: object.fields,
+            accesses: object.accesses
+        };
+    }
+};
+ModelsApiStorageService = ModelsApiStorageService_1 = __decorate([
+    typedi_1.Service()
+], ModelsApiStorageService);
+exports.ModelsApiStorageService = ModelsApiStorageService;
+//# sourceMappingURL=Models.js.map

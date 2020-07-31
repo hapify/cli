@@ -1,3 +1,66 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(e,t,r,n){return new(r||(r=Promise))(function(i,o){function a(e){try{c(n.next(e))}catch(e){o(e)}}function s(e){try{c(n.throw(e))}catch(e){o(e)}}function c(e){e.done?i(e.value):new r(function(t){t(e.value)}).then(a,s)}c((n=n.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const Path=__importStar(require("path")),class_1=require("../class"),typedi_1=require("typedi"),service_1=require("../service"),helpers_1=require("./helpers"),generator=typedi_1.Container.get(service_1.GeneratorService),options=typedi_1.Container.get(service_1.OptionsService),logger=typedi_1.Container.get(service_1.LoggerService),writer=typedi_1.Container.get(service_1.WriterService);function ExportCommand(e){return __awaiter(this,void 0,void 0,function*(){try{options.setCommand(e);const t=new class_1.Channel(options.dir());yield t.load(),helpers_1.logChannel(t);const r=options.output()||Path.join(options.dir(),`${t.name}.zip`),n=yield generator.runChannel(t);yield writer.zip(r,n),logger.success(`Generated and zipped ${helpers_1.cHigh(`${n.length} files`)} for channel ${helpers_1.cChannel(t.name)} to ${helpers_1.cPath(r)}`),logger.time()}catch(e){logger.handle(e)}})}exports.ExportCommand=ExportCommand;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExportCommand = void 0;
+const Path = __importStar(require("path"));
+const class_1 = require("../class");
+const typedi_1 = require("typedi");
+const service_1 = require("../service");
+const helpers_1 = require("./helpers");
+// ############################################
+// Get services
+const generator = typedi_1.Container.get(service_1.GeneratorService);
+const options = typedi_1.Container.get(service_1.OptionsService);
+const logger = typedi_1.Container.get(service_1.LoggerService);
+const writer = typedi_1.Container.get(service_1.WriterService);
+function ExportCommand(cmd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            options.setCommand(cmd);
+            // ---------------------------------
+            // Action starts
+            const channel = new class_1.Channel(options.dir());
+            yield channel.load();
+            helpers_1.logChannel(channel);
+            const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
+            const results = yield generator.runChannel(channel);
+            yield writer.zip(outputPath, results);
+            logger.success(`Generated and zipped ${helpers_1.cHigh(`${results.length} files`)} for channel ${helpers_1.cChannel(channel.name)} to ${helpers_1.cPath(outputPath)}`);
+            // Action Ends
+            // ---------------------------------
+            logger.time();
+        }
+        catch (error) {
+            logger.handle(error);
+        }
+    });
+}
+exports.ExportCommand = ExportCommand;
+//# sourceMappingURL=Export.js.map

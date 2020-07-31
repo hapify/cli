@@ -1,3 +1,148 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,o){var _,n=arguments.length,i=n<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,r):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)i=Reflect.decorate(e,t,r,o);else for(var c=e.length-1;c>=0;c--)(_=e[c])&&(i=(n<3?_(i):n>3?_(t,r,i):_(t,r))||i);return n>3&&i&&Object.defineProperty(t,r,i),i},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),chalk_1=__importDefault(require("chalk")),Options_1=require("./Options");let LoggerService=class{constructor(e){this.optionsService=e}handle(e){let t="✖ ";if(e.data){const r=e.data;t+=`[${r.type}:${r.code}] `}return t+=e.message,this.optionsService.debug()&&(t+=`\n${e.stack.toString()}`),console.error(chalk_1.default.red(t)),this}raw(e){return console.log(e),this}success(e){return console.log(`${chalk_1.default.green("✓")} ${e}`),this}info(e){return console.log(`${chalk_1.default.blueBright("•")} ${e}`),this}debug(e){return this.optionsService.debug()&&console.log(`${chalk_1.default.cyan("*")} ${e}`),this}error(e){return console.log(`${chalk_1.default.red("✖")} ${e}`),this}newLine(e=1){return console.log("\n".repeat(e-1)),this}warning(e){return console.log(`${chalk_1.default.yellow("!")} ${e}`),this}art(){return console.log(this.getArt()),this}getArt(){return chalk_1.default.magentaBright("  _    _             _  __       \n | |  | |           (_)/ _|      \n | |__| | __ _ _ __  _| |_ _   _ \n |  __  |/ _` | '_ \\| |  _| | | |\n | |  | | (_| | |_) | | | | |_| |\n |_|  |_|\\__,_| .__/|_|_|  \\__, |\n              | |           __/ |\n              |_|          |___/ ")}time(){if(this.optionsService.debug()){const e=`Process ran in ${process.uptime()}`;console.log(e)}return this}};LoggerService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[Options_1.OptionsService])],LoggerService),exports.LoggerService=LoggerService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LoggerService = void 0;
+const typedi_1 = require("typedi");
+const chalk_1 = __importDefault(require("chalk"));
+const Options_1 = require("./Options");
+let LoggerService = class LoggerService {
+    /**
+     * Constructor
+     * @param {OptionsService} optionsService
+     */
+    constructor(optionsService) {
+        this.optionsService = optionsService;
+    }
+    /**
+     * Handle an error
+     * @param {Error} error
+     * @return {LoggerService}
+     */
+    handle(error) {
+        let message = '✖ ';
+        if (error.data) {
+            const data = error.data;
+            message += `[${data.type}:${data.code}] `;
+        }
+        message += error.message;
+        if (this.optionsService.debug()) {
+            message += `\n${error.stack.toString()}`;
+        }
+        console.error(chalk_1.default.red(message));
+        return this;
+    }
+    /**
+     * Display a message
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    raw(message) {
+        console.log(message);
+        return this;
+    }
+    /**
+     * Display a success message
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    success(message) {
+        console.log(`${chalk_1.default.green('✓')} ${message}`);
+        return this;
+    }
+    /**
+     * Display an info
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    info(message) {
+        console.log(`${chalk_1.default.blueBright('•')} ${message}`);
+        return this;
+    }
+    /**
+     * Display an info if in debug mode
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    debug(message) {
+        if (this.optionsService.debug()) {
+            console.log(`${chalk_1.default.cyan('*')} ${message}`);
+        }
+        return this;
+    }
+    /**
+     * Display an error
+     * @param {string} message
+     */
+    error(message) {
+        console.log(`${chalk_1.default.red('✖')} ${message}`);
+        return this;
+    }
+    /**
+     * Add new lines
+     * @param {number} count
+     * @return {LoggerService}
+     */
+    newLine(count = 1) {
+        console.log(`\n`.repeat(count - 1));
+        return this;
+    }
+    /**
+     * Display an error
+     * @param {string} message
+     * @return {LoggerService}
+     */
+    warning(message) {
+        console.log(`${chalk_1.default.yellow('!')} ${message}`);
+        return this;
+    }
+    /**
+     * Display ascii art
+     * @return {LoggerService}
+     */
+    art() {
+        console.log(this.getArt());
+        return this;
+    }
+    /**
+     * Get ascii art
+     * @return {string}
+     */
+    getArt() {
+        return chalk_1.default.magentaBright('  _    _             _  __       \n' +
+            ' | |  | |           (_)/ _|      \n' +
+            ' | |__| | __ _ _ __  _| |_ _   _ \n' +
+            " |  __  |/ _` | '_ \\| |  _| | | |\n" +
+            ' | |  | | (_| | |_) | | | | |_| |\n' +
+            ' |_|  |_|\\__,_| .__/|_|_|  \\__, |\n' +
+            '              | |           __/ |\n' +
+            '              |_|          |___/ ');
+    }
+    /**
+     * Display the running time
+     * @return {LoggerService}
+     */
+    time() {
+        if (this.optionsService.debug()) {
+            const message = `Process ran in ${process.uptime()}`;
+            console.log(message);
+        }
+        return this;
+    }
+};
+LoggerService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [Options_1.OptionsService])
+], LoggerService);
+exports.LoggerService = LoggerService;
+//# sourceMappingURL=Logger.js.map

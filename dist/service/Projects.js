@@ -1,3 +1,45 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,c,r){var o,n=arguments.length,i=n<3?t:null===r?r=Object.getOwnPropertyDescriptor(t,c):r;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)i=Reflect.decorate(e,t,c,r);else for(var a=e.length-1;a>=0;a--)(o=e[a])&&(i=(n<3?o(i):n>3?o(t,c,i):o(t,c))||i);return n>3&&i&&Object.defineProperty(t,c,i),i},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__awaiter=this&&this.__awaiter||function(e,t,c,r){return new(c||(c=Promise))(function(o,n){function i(e){try{s(r.next(e))}catch(e){n(e)}}function a(e){try{s(r.throw(e))}catch(e){n(e)}}function s(e){e.done?o(e.value):new c(function(t){t(e.value)}).then(i,a)}s((r=r.apply(e,t||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),class_1=require("../class");let ProjectsService=class{constructor(){}collection(){return __awaiter(this,void 0,void 0,function*(){return yield class_1.ProjectsCollection.getInstance()})}};ProjectsService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[])],ProjectsService),exports.ProjectsService=ProjectsService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectsService = void 0;
+const typedi_1 = require("typedi");
+const class_1 = require("../class");
+let ProjectsService = class ProjectsService {
+    /**
+     * Constructor
+     */
+    constructor() { }
+    /**
+     * Returns the projects collection
+     * @return {ProjectsCollection}
+     * @throws {Error}
+     */
+    collection() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield class_1.ProjectsCollection.getInstance();
+        });
+    }
+};
+ProjectsService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [])
+], ProjectsService);
+exports.ProjectsService = ProjectsService;
+//# sourceMappingURL=Projects.js.map

@@ -1,3 +1,107 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var ChannelFileStorageService_1,__decorate=this&&this.__decorate||function(e,t,r,i){var n,a=arguments.length,o=a<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(e,t,r,i);else for(var c=e.length-1;c>=0;c--)(n=e[c])&&(o=(a<3?n(o):a>3?n(t,r,o):n(t,r))||o);return a>3&&o&&Object.defineProperty(t,r,o),o},__awaiter=this&&this.__awaiter||function(e,t,r,i){return new(r||(r=Promise))(function(n,a){function o(e){try{l(i.next(e))}catch(e){a(e)}}function c(e){try{l(i.throw(e))}catch(e){a(e)}}function l(e){e.done?n(e.value):new r(function(t){t(e.value)}).then(o,c)}l((i=i.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),SingleSave_1=require("./SingleSave"),Path=__importStar(require("path")),Fs=__importStar(require("fs"));let ChannelFileStorageService=ChannelFileStorageService_1=class extends SingleSave_1.SingleSaveFileStorage{serialize(e){return __awaiter(this,void 0,void 0,function*(){return JSON.stringify(e,null,2)})}deserialize(e){return __awaiter(this,void 0,void 0,function*(){try{return JSON.parse(e)}catch(e){throw new Error(`An error occurred while parsing Channel configuration: ${e.toString()}`)}})}cleanup(e,t){return __awaiter(this,void 0,void 0,function*(){const r=SingleSave_1.JoinPath(e),i=t.map(SingleSave_1.JoinPath),n=ChannelFileStorageService_1.listAllFiles(r);for(const e of n)i.indexOf(e)<0&&Fs.unlinkSync(e);ChannelFileStorageService_1.clearEmptyDirectories(r)})}static listAllFiles(e){const t=Fs.readdirSync(e).map(t=>Path.join(e,t)),r=t.filter(e=>Fs.statSync(e).isDirectory()).map(e=>ChannelFileStorageService_1.listAllFiles(e)).reduce((e,t)=>e.concat(t),[]);return t.filter(e=>Fs.statSync(e).isFile()).concat(r)}static clearEmptyDirectories(e){Fs.readdirSync(e).map(t=>Path.join(e,t)).filter(e=>Fs.statSync(e).isDirectory()).forEach(e=>ChannelFileStorageService_1.clearEmptyDirectories(e)),0===Fs.readdirSync(e).length&&Fs.rmdirSync(e)}};ChannelFileStorageService=ChannelFileStorageService_1=__decorate([typedi_1.Service()],ChannelFileStorageService),exports.ChannelFileStorageService=ChannelFileStorageService;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var ChannelFileStorageService_1;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChannelFileStorageService = void 0;
+const typedi_1 = require("typedi");
+const SingleSave_1 = require("./SingleSave");
+const Path = __importStar(require("path"));
+const Fs = __importStar(require("fs"));
+let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileStorageService extends SingleSave_1.SingleSaveFileStorage {
+    /** @inheritDoc */
+    serialize(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return JSON.stringify(content, null, 2);
+        });
+    }
+    /** @inheritDoc */
+    deserialize(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return JSON.parse(content);
+            }
+            catch (error) {
+                throw new Error(`An error occurred while parsing Channel configuration: ${error.toString()}`);
+            }
+        });
+    }
+    /** Cleanup unused files */
+    cleanup(root, legitFiles) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const joinedRoot = SingleSave_1.JoinPath(root);
+            const joinedLegitFiles = legitFiles.map(SingleSave_1.JoinPath);
+            const allFiles = ChannelFileStorageService_1.listAllFiles(joinedRoot);
+            for (const filePath of allFiles) {
+                if (joinedLegitFiles.indexOf(filePath) < 0) {
+                    Fs.unlinkSync(filePath);
+                }
+            }
+            ChannelFileStorageService_1.clearEmptyDirectories(joinedRoot);
+        });
+    }
+    /** Get all files' absolute path from a directory */
+    static listAllFiles(rootPath) {
+        // Read the whole directory
+        const entries = Fs.readdirSync(rootPath).map(dir => Path.join(rootPath, dir));
+        // Get sub-files
+        const subFiles = entries
+            .filter(subPath => Fs.statSync(subPath).isDirectory())
+            .map(subPath => ChannelFileStorageService_1.listAllFiles(subPath))
+            .reduce((flatten, files) => flatten.concat(files), []);
+        // Return files and sub-files
+        return entries
+            .filter(subPath => Fs.statSync(subPath).isFile())
+            .concat(subFiles);
+    }
+    /** Delete all directories if empty */
+    static clearEmptyDirectories(rootPath) {
+        // Remove sub-directories
+        Fs.readdirSync(rootPath)
+            .map(dir => Path.join(rootPath, dir))
+            .filter(subPath => Fs.statSync(subPath).isDirectory())
+            .forEach(subPath => ChannelFileStorageService_1.clearEmptyDirectories(subPath));
+        // Count remaining files & dirs
+        const count = Fs.readdirSync(rootPath).length;
+        if (count === 0) {
+            Fs.rmdirSync(rootPath);
+        }
+    }
+};
+ChannelFileStorageService = ChannelFileStorageService_1 = __decorate([
+    typedi_1.Service()
+], ChannelFileStorageService);
+exports.ChannelFileStorageService = ChannelFileStorageService;
+//# sourceMappingURL=Channel.js.map

@@ -1,3 +1,138 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(e,t,i,o){return new(i||(i=Promise))(function(r,s){function n(e){try{d(o.next(e))}catch(e){s(e)}}function c(e){try{d(o.throw(e))}catch(e){s(e)}}function d(e){e.done?r(e.value):new i(function(t){t(e.value)}).then(n,c)}d((o=o.apply(e,t||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const _1=require("./"),typedi_1=require("typedi"),service_1=require("../service");class ModelsCollection{constructor(e){this.project=e,this.storageService=typedi_1.Container.get(service_1.ModelsApiStorageService),this.path=ModelsCollection.path(e)}static getInstance(e){return __awaiter(this,void 0,void 0,function*(){const t=ModelsCollection.path(e),i=ModelsCollection.instances.find(e=>e.path===t);if(i)return i;const o=new ModelsCollection(e);return yield o.load(),ModelsCollection.instances.push(o),o})}load(){return __awaiter(this,void 0,void 0,function*(){this.fromObject(yield this.storageService.forProject(this.project))})}save(){return __awaiter(this,void 0,void 0,function*(){const e=yield this.storageService.set(this.project,this.toObject());this.fromObject(e)})}add(e){return __awaiter(this,void 0,void 0,function*(){if(e instanceof Array)for(const t of e)yield this.add(t);else this.models.push(new _1.Model(e))})}update(e){return __awaiter(this,void 0,void 0,function*(){if(e instanceof Array)for(const t of e)yield this.update(t);else yield this.remove(e),yield this.add(e)})}remove(e){return __awaiter(this,void 0,void 0,function*(){if(e instanceof Array)for(const t of e)yield this.remove(t);else this.models=this.models.filter(t=>t.id===e.id)})}find(e){return __awaiter(this,void 0,void 0,function*(){return this.models.find(t=>t.id===e)})}list(){return __awaiter(this,void 0,void 0,function*(){return this.models})}fromObject(e){return this.models=e.map(e=>new _1.Model(e)),this.models}toObject(){return this.models.map(e=>e.toObject())}static path(e){return`project:${e}`}}ModelsCollection.instances=[],exports.ModelsCollection=ModelsCollection;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModelsCollection = void 0;
+const _1 = require("./");
+const typedi_1 = require("typedi");
+const service_1 = require("../service");
+class ModelsCollection {
+    /**
+     * Constructor
+     * @param {string} project
+     */
+    constructor(project) {
+        this.project = project;
+        this.storageService = typedi_1.Container.get(service_1.ModelsApiStorageService);
+        this.path = ModelsCollection.path(project);
+    }
+    /**
+     * Returns a singleton for this config
+     * @param {string} project
+     */
+    static getInstance(project) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const path = ModelsCollection.path(project);
+            // Try to find an existing collection
+            const modelsCollection = ModelsCollection.instances.find(m => m.path === path);
+            if (modelsCollection) {
+                return modelsCollection;
+            }
+            // Create and load a new collection
+            const collection = new ModelsCollection(project);
+            yield collection.load();
+            // Keep the collection
+            ModelsCollection.instances.push(collection);
+            return collection;
+        });
+    }
+    /** @inheritDoc */
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.fromObject(yield this.storageService.forProject(this.project));
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const models = yield this.storageService.set(this.project, this.toObject());
+            this.fromObject(models);
+        });
+    }
+    /** Add one or more object to the stack */
+    add(object) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (object instanceof Array) {
+                for (const o of object) {
+                    yield this.add(o);
+                }
+            }
+            else {
+                this.models.push(new _1.Model(object));
+            }
+        });
+    }
+    /** Upsert one or more object to the stack */
+    update(object) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (object instanceof Array) {
+                for (const o of object) {
+                    yield this.update(o);
+                }
+            }
+            else {
+                yield this.remove(object);
+                yield this.add(object);
+            }
+        });
+    }
+    /** Remove an existing object */
+    remove(object) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (object instanceof Array) {
+                for (const o of object) {
+                    yield this.remove(o);
+                }
+            }
+            else {
+                this.models = this.models.filter(i => i.id === object.id);
+            }
+        });
+    }
+    /**
+     * Find a instance with its id
+     * @param {string} id
+     * @returns {Promise<Model|null>}
+     */
+    find(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.models.find(instance => instance.id === id);
+        });
+    }
+    /**
+     * Returns the list of models
+     * @returns {Promise<Model[]>}
+     */
+    list() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.models;
+        });
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.models = object.map(m => new _1.Model(m));
+        return this.models;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return this.models.map(m => m.toObject());
+    }
+    /**
+     * Returns a pseudo path
+     * @returns {string}
+     */
+    static path(project) {
+        return `project:${project}`;
+    }
+}
+exports.ModelsCollection = ModelsCollection;
+/** The loaded instances */
+ModelsCollection.instances = [];
+//# sourceMappingURL=ModelsCollection.js.map

@@ -1,3 +1,95 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(e,t,i,r){return new(i||(i=Promise))(function(n,o){function c(e){try{s(r.next(e))}catch(e){o(e)}}function a(e){try{s(r.throw(e))}catch(e){o(e)}}function s(e){e.done?n(e.value):new i(function(t){t(e.value)}).then(c,a)}s((r=r.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)Object.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const Inquirer=__importStar(require("inquirer")),typedi_1=require("typedi"),service_1=require("../../service");function AskProject(e,t){return __awaiter(this,void 0,void 0,function*(){const i=yield typedi_1.Container.get(service_1.ProjectsService).collection();if(e.project)t.id=e.project;else if(e.projectName)t.name=e.projectName,t.description=e.projectDescription;else{const e=(yield i.list()).map(e=>({name:e.name,value:e.id})),r=yield Inquirer.prompt([{name:"id",message:"Choose a project",type:"list",choices:[{name:"Create a new project",value:null},new Inquirer.Separator,...e],when:()=>e.length>0},{name:"name",message:"Enter a project name",when:e=>!e.id,validate:e=>e.length>0},{name:"description",message:"Enter a project description",when:e=>!e.id}]);t.id=r.id,t.name=r.name,t.description=r.description}if(!t.id&&!t.name)throw new Error("No project is defined")})}function SetupProject(e){return __awaiter(this,void 0,void 0,function*(){const t=yield typedi_1.Container.get(service_1.ProjectsService).collection();if(!e.id){const i=yield t.add(e.name,e.description);e.id=i.id}})}exports.AskProject=AskProject,exports.SetupProject=SetupProject;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SetupProject = exports.AskProject = void 0;
+const Inquirer = __importStar(require("inquirer"));
+const typedi_1 = require("typedi");
+const service_1 = require("../../service");
+function AskProject(cmd, qProject) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const projectsCollection = yield typedi_1.Container.get(service_1.ProjectsService).collection();
+        if (cmd.project) {
+            qProject.id = cmd.project;
+        }
+        else if (cmd.projectName) {
+            qProject.name = cmd.projectName;
+            qProject.description = cmd.projectDescription;
+        }
+        else {
+            // Get projects from remote
+            const list = (yield projectsCollection.list()).map(b => ({
+                name: b.name,
+                value: b.id
+            }));
+            const answer = yield Inquirer.prompt([
+                {
+                    name: 'id',
+                    message: 'Choose a project',
+                    type: 'list',
+                    choices: [
+                        { name: 'Create a new project', value: null },
+                        new Inquirer.Separator(),
+                        ...list
+                    ],
+                    when: () => list.length > 0
+                },
+                {
+                    name: 'name',
+                    message: 'Enter a project name',
+                    when: (answer) => !answer.id,
+                    validate: (input) => input.length > 0
+                },
+                {
+                    name: 'description',
+                    message: 'Enter a project description',
+                    when: (answer) => !answer.id
+                }
+            ]);
+            qProject.id = answer.id;
+            qProject.name = answer.name;
+            qProject.description = answer.description;
+        }
+        if (!qProject.id && !qProject.name) {
+            throw new Error('No project is defined');
+        }
+    });
+}
+exports.AskProject = AskProject;
+function SetupProject(qProject) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const projectsCollection = yield typedi_1.Container.get(service_1.ProjectsService).collection();
+        if (!qProject.id) {
+            const project = yield projectsCollection.add(qProject.name, qProject.description);
+            qProject.id = project.id;
+        }
+    });
+}
+exports.SetupProject = SetupProject;
+//# sourceMappingURL=Project.js.map

@@ -1,3 +1,263 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(e,t,i,n){return new(i||(i=Promise))(function(a,r){function o(e){try{l(n.next(e))}catch(e){r(e)}}function s(e){try{l(n.throw(e))}catch(e){r(e)}}function l(e){e.done?a(e.value):new i(function(t){t(e.value)}).then(o,s)}l((n=n.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var i in e)Object.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t.default=e,t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0});const Path=__importStar(require("path")),interface_1=require("../interface"),_1=require("./"),enum_1=require("../enum"),md5_1=__importDefault(require("md5")),Joi=__importStar(require("joi")),FieldType_1=require("./FieldType"),typedi_1=require("typedi"),service_1=require("../service");class Channel{constructor(e,t=null){this.path=e,this.templates=[],this.storageService=typedi_1.Container.get(service_1.ChannelFileStorageService),this.name=t||Path.basename(e),this.id=md5_1.default(this.path),this.templatesPath=Path.join(this.path,Channel.defaultFolder)}load(){return __awaiter(this,void 0,void 0,function*(){yield this.validate();const e=yield this.storageService.get([this.path,Channel.configFile]),t=Joi.validate(e,interface_1.ConfigSchema);if(t.error)throw interface_1.TransformValidationMessage(t.error),t.error;this.config=e,this.config.name&&(this.name=this.config.name),this.project=yield _1.Project.getInstance(this.config.project);for(let e=0;e<this.config.templates.length;e++){const t=new _1.Template(this,Object.assign(this.config.templates[e],{content:""}));yield t.load(),this.templates.push(t)}this.modelsCollection=yield _1.ModelsCollection.getInstance(this.config.project),this.validator=new _1.Validator(this,this.config.validatorPath),yield this.validator.load()})}save(){return __awaiter(this,void 0,void 0,function*(){for(const e of this.templates)yield e.save();yield this.validator.save(),this.config.templates=this.templates.map(e=>{const t=e.toObject();return delete t.content,t}),this.config.validatorPath=this.validator.path,yield this.storageService.set([this.path,Channel.configFile],this.config);const e=this.templates.map(e=>[this.templatesPath,e.contentPath]);e.push([this.path,this.config.validatorPath]),yield this.storageService.cleanup([this.path,Channel.defaultFolder],e)})}isEmpty(){const e=this.validator.isEmpty(),t=this.templates.every(e=>e.isEmpty());return e&&t}filter(){this.templates=this.templates.filter(e=>!e.isEmpty())}validate(){return __awaiter(this,void 0,void 0,function*(){if(!(yield this.storageService.exists([this.path,Channel.configFile])))throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`)})}static changeProject(e,t){return __awaiter(this,void 0,void 0,function*(){if(!Channel.configExists(e))throw new Error(`Cannot find config file in ${e}`);const i=typedi_1.Container.get(service_1.ChannelFileStorageService),n=yield i.get([e,Channel.configFile]);n.project=t,yield i.set([e,Channel.configFile],n)})}static configExists(e){return __awaiter(this,void 0,void 0,function*(){return yield typedi_1.Container.get(service_1.ChannelFileStorageService).exists([e,Channel.configFile])})}static create(e,t,i,n){return __awaiter(this,void 0,void 0,function*(){if(yield Channel.configExists(e))throw new Error("A channel already exists in this directory.");const a=new Channel(e);a.config={version:"1",validatorPath:`${Channel.defaultFolder}/validator.js`,name:t||a.name,description:i||"A new Hapify channel",logo:n||void 0,project:"projectId",defaultFields:[{name:"Id",type:FieldType_1.FieldType.String,subtype:null,reference:null,primary:!0,unique:!1,label:!1,nullable:!1,multiple:!1,embedded:!1,searchable:!1,sortable:!1,hidden:!1,internal:!0,restricted:!1,ownership:!1}],templates:[{path:"models/{kebab}/hello.js",engine:enum_1.TemplateEngine.Hpf,input:enum_1.TemplateInput.One}]};const r=new _1.Template(a,Object.assign(a.config.templates[0],{content:"// Hello <<M A>>"}));return a.templates.push(r),a.validator=new _1.Validator(a,a.config.validatorPath),a.validator.content="// Models validation script\nreturn { errors: [], warnings: [] };",a})}fromObject(e){return this.templates=e.templates.map(e=>{const t=this.templates.find(t=>t.path===e.path);return t?t.fromObject(e):new _1.Template(this,e)}),this.validator.content=e.validator,this}toObject(){return{id:this.id,name:this.name,description:this.config.description||null,logo:this.config.logo||null,templates:this.templates.map(e=>e.toObject()),validator:this.validator.content}}}Channel.defaultFolder="hapify",Channel.configFile="hapify.json",exports.Channel=Channel;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Channel = void 0;
+const Path = __importStar(require("path"));
+const interface_1 = require("../interface");
+const _1 = require("./");
+const enum_1 = require("../enum");
+const md5_1 = __importDefault(require("md5"));
+const Joi = __importStar(require("joi"));
+const FieldType_1 = require("./FieldType");
+const typedi_1 = require("typedi");
+const service_1 = require("../service");
+class Channel {
+    /**
+     * Constructor
+     * @param {string} path
+     * @param {string|null} name
+     */
+    constructor(path, name = null) {
+        this.path = path;
+        /** @type {Template[]} Templates instances */
+        this.templates = [];
+        this.storageService = typedi_1.Container.get(service_1.ChannelFileStorageService);
+        this.name = name ? name : Path.basename(path);
+        this.id = md5_1.default(this.path);
+        this.templatesPath = Path.join(this.path, Channel.defaultFolder);
+    }
+    /** @inheritDoc */
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Validate storage
+            yield this.validate();
+            // Get config from storage
+            const config = yield this.storageService.get([
+                this.path,
+                Channel.configFile
+            ]);
+            // Validate the incoming config
+            const validation = Joi.validate(config, interface_1.ConfigSchema);
+            if (validation.error) {
+                // Transform Joi message
+                interface_1.TransformValidationMessage(validation.error);
+                throw validation.error;
+            }
+            // Apply configuration
+            this.config = config;
+            // Override default name if given
+            if (this.config.name) {
+                this.name = this.config.name;
+            }
+            // Load project
+            this.project = yield _1.Project.getInstance(this.config.project);
+            // Load each content file
+            for (let i = 0; i < this.config.templates.length; i++) {
+                const template = new _1.Template(this, Object.assign(this.config.templates[i], { content: '' }));
+                yield template.load();
+                this.templates.push(template);
+            }
+            // Load models
+            this.modelsCollection = yield _1.ModelsCollection.getInstance(this.config.project);
+            // Load validator
+            this.validator = new _1.Validator(this, this.config.validatorPath);
+            yield this.validator.load();
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Saves subs instances
+            for (const template of this.templates) {
+                yield template.save();
+            }
+            yield this.validator.save();
+            // Update configurations
+            this.config.templates = this.templates.map(m => {
+                const t = m.toObject();
+                delete t.content;
+                return t;
+            });
+            this.config.validatorPath = this.validator.path;
+            // Write file if necessary
+            yield this.storageService.set([this.path, Channel.configFile], this.config);
+            // Cleanup files in template path
+            const legitFiles = this.templates.map(t => [
+                this.templatesPath,
+                t.contentPath
+            ]);
+            legitFiles.push([this.path, this.config.validatorPath]);
+            yield this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
+        });
+    }
+    /**
+     * Denotes if the template should be considered as empty
+     * @returns {boolean}
+     */
+    isEmpty() {
+        const validatorIsEmpty = this.validator.isEmpty();
+        const templatesAreEmpty = this.templates.every(t => t.isEmpty());
+        return validatorIsEmpty && templatesAreEmpty;
+    }
+    /**
+     * Remove empty templates
+     * @returns {void}
+     */
+    filter() {
+        this.templates = this.templates.filter(t => !t.isEmpty());
+    }
+    /**
+     * Check resource validity
+     * @throws {Error}
+     */
+    validate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([this.path, Channel.configFile]))) {
+                throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
+            }
+        });
+    }
+    /** Change project in config file */
+    static changeProject(path, project) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!Channel.configExists(path)) {
+                throw new Error(`Cannot find config file in ${path}`);
+            }
+            const storage = typedi_1.Container.get(service_1.ChannelFileStorageService);
+            // Get config from storage
+            const config = yield storage.get([path, Channel.configFile]);
+            // Set value and save config
+            config.project = project;
+            yield storage.set([path, Channel.configFile], config);
+        });
+    }
+    /** Denotes if the config file exists */
+    static configExists(path) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typedi_1.Container.get(service_1.ChannelFileStorageService).exists([
+                path,
+                Channel.configFile
+            ]);
+        });
+    }
+    /** Init a Hapify structure within a directory */
+    static create(path, name, description, logo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (yield Channel.configExists(path)) {
+                throw new Error(`A channel already exists in this directory.`);
+            }
+            // Create a channel from scratch
+            const channel = new Channel(path);
+            channel.config = {
+                version: '1',
+                validatorPath: `${Channel.defaultFolder}/validator.js`,
+                name: name || channel.name,
+                description: description || 'A new Hapify channel',
+                logo: logo || undefined,
+                project: 'projectId',
+                defaultFields: [
+                    {
+                        name: 'Id',
+                        type: FieldType_1.FieldType.String,
+                        subtype: null,
+                        reference: null,
+                        primary: true,
+                        unique: false,
+                        label: false,
+                        nullable: false,
+                        multiple: false,
+                        embedded: false,
+                        searchable: false,
+                        sortable: false,
+                        hidden: false,
+                        internal: true,
+                        restricted: false,
+                        ownership: false
+                    }
+                ],
+                templates: [
+                    {
+                        path: 'models/{kebab}/hello.js',
+                        engine: enum_1.TemplateEngine.Hpf,
+                        input: enum_1.TemplateInput.One
+                    }
+                ]
+            };
+            // Create template
+            const template = new _1.Template(channel, Object.assign(channel.config.templates[0], {
+                content: '// Hello <<M A>>'
+            }));
+            channel.templates.push(template);
+            // Create validator
+            channel.validator = new _1.Validator(channel, channel.config.validatorPath);
+            channel.validator.content = `// Models validation script\nreturn { errors: [], warnings: [] };`;
+            // Save channel
+            return channel;
+        });
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        // Do not update name nor id
+        // Create or update templates if necessary
+        // By keeping the same instances, we will avoid a file saving if the content did not change
+        this.templates = object.templates.map(t => {
+            // Try to find an existing template
+            const existing = this.templates.find(e => e.path === t.path);
+            if (existing) {
+                return existing.fromObject(t);
+            }
+            // Otherwise create a new template
+            return new _1.Template(this, t);
+        });
+        // Update validator
+        this.validator.content = object.validator;
+        return this;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return {
+            id: this.id,
+            name: this.name,
+            description: this.config.description || null,
+            logo: this.config.logo || null,
+            templates: this.templates.map((template) => template.toObject()),
+            validator: this.validator.content
+        };
+    }
+}
+exports.Channel = Channel;
+/** @type {string} */
+Channel.defaultFolder = 'hapify';
+/** @type {string} */
+Channel.configFile = 'hapify.json';
+//# sourceMappingURL=Channel.js.map

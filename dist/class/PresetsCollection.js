@@ -1,3 +1,78 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(e,t,i,r){return new(i||(i=Promise))(function(s,n){function o(e){try{a(r.next(e))}catch(e){n(e)}}function c(e){try{a(r.throw(e))}catch(e){n(e)}}function a(e){e.done?s(e.value):new i(function(t){t(e.value)}).then(o,c)}a((r=r.apply(e,t||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const _1=require("./"),service_1=require("../service"),typedi_1=require("typedi");class PresetsCollection{constructor(){this.presets=[],this.storageService=typedi_1.Container.get(service_1.PresetsApiStorageService)}static getInstance(){return __awaiter(this,void 0,void 0,function*(){return PresetsCollection.instance||(PresetsCollection.instance=new PresetsCollection,yield PresetsCollection.instance.load()),PresetsCollection.instance})}load(){return __awaiter(this,void 0,void 0,function*(){this.fromObject(yield this.storageService.list())})}save(){return __awaiter(this,void 0,void 0,function*(){})}list(){return __awaiter(this,void 0,void 0,function*(){return this.presets})}get(e){return __awaiter(this,void 0,void 0,function*(){return this.presets.find(t=>t.id===e)})}fromObject(e){return this.presets=e.map(e=>new _1.Preset(e)),this.presets}toObject(){return this.presets.map(e=>e.toObject())}}exports.PresetsCollection=PresetsCollection;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PresetsCollection = void 0;
+const _1 = require("./");
+const service_1 = require("../service");
+const typedi_1 = require("typedi");
+class PresetsCollection {
+    /** Constructor */
+    constructor() {
+        /** @type {Preset[]} The list of preset instances */
+        this.presets = [];
+        this.storageService = typedi_1.Container.get(service_1.PresetsApiStorageService);
+    }
+    /** Returns a singleton for this config */
+    static getInstance() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!PresetsCollection.instance) {
+                // Create and load a new collection
+                PresetsCollection.instance = new PresetsCollection();
+                yield PresetsCollection.instance.load();
+            }
+            return PresetsCollection.instance;
+        });
+    }
+    /**
+     * Load the presets
+     * @return {Promise<void>}
+     */
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.fromObject(yield this.storageService.list());
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Nothing to save
+        });
+    }
+    /**
+     * Returns the list of presets
+     * @returns {Promise<Preset[]>}
+     */
+    list() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.presets;
+        });
+    }
+    /**
+     * Returns one preset
+     * @returns {Promise<Preset>}
+     */
+    get(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.presets.find(p => p.id === id);
+        });
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.presets = object.map(p => new _1.Preset(p));
+        return this.presets;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return this.presets.map(p => p.toObject());
+    }
+}
+exports.PresetsCollection = PresetsCollection;
+//# sourceMappingURL=PresetsCollection.js.map

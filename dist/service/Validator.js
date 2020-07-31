@@ -1,3 +1,113 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,i){var o,a=arguments.length,n=a<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,r,i);else for(var c=e.length-1;c>=0;c--)(o=e[c])&&(n=(a<3?o(n):a>3?o(t,r,n):o(t,r))||n);return a>3&&n&&Object.defineProperty(t,r,n),n},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__awaiter=this&&this.__awaiter||function(e,t,r,i){return new(r||(r=Promise))(function(o,a){function n(e){try{l(i.next(e))}catch(e){a(e)}}function c(e){try{l(i.throw(e))}catch(e){a(e)}}function l(e){e.done?o(e.value):new r(function(t){t(e.value)}).then(n,c)}l((i=i.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),interface_1=require("../interface"),config_1=require("../config"),class_1=require("../class"),hapify_vm_1=require("../packages/hapify-vm"),Joi=__importStar(require("joi"));let ValidatorService=class{constructor(){}run(e,t){return __awaiter(this,void 0,void 0,function*(){let r;try{r=new hapify_vm_1.HapifyVM({timeout:config_1.InternalConfig.validatorTimeout,allowAnyOutput:!0}).run(e,{model:t})}catch(e){if(6003===e.code)throw new class_1.RichError(`Template processing timed out (${config_1.InternalConfig.validatorTimeout}ms)`,{code:4006,type:"CliValidatorTimeoutError"});if(6002===e.code){const{lineNumber:t,columnNumber:r}=e;throw new class_1.RichError(e.message,{code:4005,type:"CliValidatorEvaluationError",details:`Error: ${e.message}. Line: ${t}, Column: ${r}`,lineNumber:t,columnNumber:r})}if(6004===e.code)throw new class_1.RichError(e.message,{code:e.code,type:e.name});throw e}if(Joi.validate(r,interface_1.ValidatorResultSchema).error)throw new class_1.RichError("Invalid validator output. Must return { errors: string[], warnings: string[] }",{code:4007,type:"CliValidatorOutputError"});return r})}};ValidatorService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[])],ValidatorService),exports.ValidatorService=ValidatorService;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ValidatorService = void 0;
+const typedi_1 = require("typedi");
+const interface_1 = require("../interface");
+const config_1 = require("../config");
+const class_1 = require("../class");
+const hapify_vm_1 = require("hapify-vm");
+const Joi = __importStar(require("joi"));
+let ValidatorService = class ValidatorService {
+    /**
+     * Constructor
+     */
+    constructor() { }
+    /**
+     * Run validation on a single model for a single channel
+     *
+     * @param {string} content
+     * @param {IModel} model
+     * @return {Promise<IValidatorResult>}
+     */
+    run(content, model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result;
+            // Try or die
+            try {
+                result = new hapify_vm_1.HapifyVM({
+                    timeout: config_1.InternalConfig.validatorTimeout,
+                    allowAnyOutput: true,
+                }).run(content, { model });
+            }
+            catch (error) {
+                if (error.code === 6003) {
+                    throw new class_1.RichError(`Template processing timed out (${config_1.InternalConfig.validatorTimeout}ms)`, {
+                        code: 4006,
+                        type: 'CliValidatorTimeoutError',
+                    });
+                }
+                if (error.code === 6002) {
+                    // Clone error
+                    const { lineNumber, columnNumber } = error;
+                    throw new class_1.RichError(error.message, {
+                        code: 4005,
+                        type: 'CliValidatorEvaluationError',
+                        details: `Error: ${error.message}. Line: ${lineNumber}, Column: ${columnNumber}`,
+                        lineNumber,
+                        columnNumber,
+                    });
+                }
+                if (error.code === 6004) {
+                    // Clone error
+                    throw new class_1.RichError(error.message, {
+                        code: error.code,
+                        type: error.name,
+                    });
+                }
+                throw error;
+            }
+            // Check result and return
+            const validation = Joi.validate(result, interface_1.ValidatorResultSchema);
+            if (validation.error) {
+                throw new class_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
+                    code: 4007,
+                    type: 'CliValidatorOutputError',
+                });
+            }
+            return result;
+        });
+    }
+};
+ValidatorService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [])
+], ValidatorService);
+exports.ValidatorService = ValidatorService;
+//# sourceMappingURL=Validator.js.map

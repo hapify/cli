@@ -1,3 +1,41 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var r={};if(null!=e)for(var i in e)Object.hasOwnProperty.call(e,i)&&(r[i]=e[i]);return r.default=e,r};Object.defineProperty(exports,"__esModule",{value:!0});const Joi=__importStar(require("joi")),Template_1=require("./Template");exports.ChannelSchema=Joi.object({id:Joi.string().required(),name:Joi.string().required(),description:Joi.string().required().allow(null),logo:Joi.string().required().allow(null),validator:Joi.string().required().allow(""),templates:Joi.array().items(Template_1.TemplateSchema).required()});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChannelSchema = void 0;
+const Joi = __importStar(require("joi"));
+const Template_1 = require("./Template");
+exports.ChannelSchema = Joi.object({
+    id: Joi.string().required(),
+    name: Joi.string().required(),
+    description: Joi.string()
+        .required()
+        .allow(null),
+    logo: Joi.string()
+        .required()
+        .allow(null),
+    validator: Joi.string()
+        .required()
+        .allow(''),
+    templates: Joi.array()
+        .items(Template_1.TemplateSchema)
+        .required()
+});
+//# sourceMappingURL=Channel.js.map

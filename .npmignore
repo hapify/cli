@@ -1,8 +1,7 @@
 node_modules
 /packages
 /src
-/lib
-/tests
+/samples
 
 .idea
 .vscode
@@ -17,7 +16,6 @@ tslint.json
 .prettierrc
 
 build.sh
-Gruntfile.js
 
 ERRORS.md
 CHANGELOG.md

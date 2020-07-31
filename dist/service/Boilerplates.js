@@ -1,3 +1,45 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,i){var c,a=arguments.length,o=a<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(e,t,r,i);else for(var n=e.length-1;n>=0;n--)(c=e[n])&&(o=(a<3?c(o):a>3?c(t,r,o):c(t,r))||o);return a>3&&o&&Object.defineProperty(t,r,o),o},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__awaiter=this&&this.__awaiter||function(e,t,r,i){return new(r||(r=Promise))(function(c,a){function o(e){try{l(i.next(e))}catch(e){a(e)}}function n(e){try{l(i.throw(e))}catch(e){a(e)}}function l(e){e.done?c(e.value):new r(function(t){t(e.value)}).then(o,n)}l((i=i.apply(e,t||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),class_1=require("../class");let BoilerplatesService=class{constructor(){}collection(){return __awaiter(this,void 0,void 0,function*(){return yield class_1.BoilerplatesCollection.getInstance()})}};BoilerplatesService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[])],BoilerplatesService),exports.BoilerplatesService=BoilerplatesService;
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoilerplatesService = void 0;
+const typedi_1 = require("typedi");
+const class_1 = require("../class");
+let BoilerplatesService = class BoilerplatesService {
+    /**
+     * Constructor
+     */
+    constructor() { }
+    /**
+     * Returns the boilerplates collection
+     * @return {BoilerplatesCollection}
+     * @throws {Error}
+     */
+    collection() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield class_1.BoilerplatesCollection.getInstance();
+        });
+    }
+};
+BoilerplatesService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [])
+], BoilerplatesService);
+exports.BoilerplatesService = BoilerplatesService;
+//# sourceMappingURL=Boilerplates.js.map

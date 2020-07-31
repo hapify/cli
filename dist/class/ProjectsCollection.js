@@ -1,3 +1,91 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __awaiter=this&&this.__awaiter||function(t,e,i,r){return new(i||(i=Promise))(function(o,n){function c(t){try{a(r.next(t))}catch(t){n(t)}}function s(t){try{a(r.throw(t))}catch(t){n(t)}}function a(t){t.done?o(t.value):new i(function(e){e(t.value)}).then(c,s)}a((r=r.apply(t,e||[])).next())})};Object.defineProperty(exports,"__esModule",{value:!0});const _1=require("./"),service_1=require("../service"),typedi_1=require("typedi");class ProjectsCollection{constructor(){this.projects=[],this.storageService=typedi_1.Container.get(service_1.ProjectsApiStorageService)}static getInstance(){return __awaiter(this,void 0,void 0,function*(){return ProjectsCollection.instance||(ProjectsCollection.instance=new ProjectsCollection,yield ProjectsCollection.instance.load()),ProjectsCollection.instance})}load(){return __awaiter(this,void 0,void 0,function*(){this.fromObject(yield this.storageService.list())})}save(){return __awaiter(this,void 0,void 0,function*(){})}list(){return __awaiter(this,void 0,void 0,function*(){return this.projects})}get(t){return __awaiter(this,void 0,void 0,function*(){return this.projects.find(e=>e.id===t)})}add(t,e){return __awaiter(this,void 0,void 0,function*(){const i=yield this.storageService.create({name:t,description:e.length?e:null});return new _1.Project(i)})}fromObject(t){return this.projects=t.map(t=>new _1.Project(t)),this.projects}toObject(){return this.projects.map(t=>t.toObject())}}exports.ProjectsCollection=ProjectsCollection;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectsCollection = void 0;
+const _1 = require("./");
+const service_1 = require("../service");
+const typedi_1 = require("typedi");
+class ProjectsCollection {
+    /** Constructor */
+    constructor() {
+        /** @type {Project[]} The list of project instances */
+        this.projects = [];
+        this.storageService = typedi_1.Container.get(service_1.ProjectsApiStorageService);
+    }
+    /** Returns a singleton for this config */
+    static getInstance() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!ProjectsCollection.instance) {
+                // Create and load a new collection
+                ProjectsCollection.instance = new ProjectsCollection();
+                yield ProjectsCollection.instance.load();
+            }
+            return ProjectsCollection.instance;
+        });
+    }
+    /**
+     * Load the projects
+     * @return {Promise<void>}
+     */
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.fromObject(yield this.storageService.list());
+        });
+    }
+    /** @inheritDoc */
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Nothing to save
+        });
+    }
+    /**
+     * Returns the list of projects
+     * @returns {Promise<Project[]>}
+     */
+    list() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.projects;
+        });
+    }
+    /**
+     * Returns one project
+     * @returns {Promise<Project>}
+     */
+    get(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.projects.find(p => p.id === id);
+        });
+    }
+    /**
+     * Returns one project
+     * @returns {Promise<Project>}
+     */
+    add(name, description) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const object = yield this.storageService.create({
+                name,
+                description: description.length ? description : null
+            });
+            return new _1.Project(object);
+        });
+    }
+    /** @inheritDoc */
+    fromObject(object) {
+        this.projects = object.map(p => new _1.Project(p));
+        return this.projects;
+    }
+    /** @inheritDoc */
+    toObject() {
+        return this.projects.map(p => p.toObject());
+    }
+}
+exports.ProjectsCollection = ProjectsCollection;
+//# sourceMappingURL=ProjectsCollection.js.map

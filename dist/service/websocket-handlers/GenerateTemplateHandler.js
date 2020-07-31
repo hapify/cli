@@ -1,3 +1,95 @@
-/*! hapify-cli 2019-11-15 */
-
-"use strict";var __decorate=this&&this.__decorate||function(e,t,r,n){var a,i=arguments.length,c=i<3?t:null===n?n=Object.getOwnPropertyDescriptor(t,r):n;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)c=Reflect.decorate(e,t,r,n);else for(var o=e.length-1;o>=0;o--)(a=e[o])&&(c=(i<3?a(c):i>3?a(t,r,c):a(t,r))||c);return i>3&&c&&Object.defineProperty(t,r,c),c},__metadata=this&&this.__metadata||function(e,t){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(e,t)},__awaiter=this&&this.__awaiter||function(e,t,r,n){return new(r||(r=Promise))(function(a,i){function c(e){try{l(n.next(e))}catch(e){i(e)}}function o(e){try{l(n.throw(e))}catch(e){i(e)}}function l(e){e.done?a(e.value):new r(function(t){t(e.value)}).then(c,o)}l((n=n.apply(e,t||[])).next())})},__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t.default=e,t};Object.defineProperty(exports,"__esModule",{value:!0});const typedi_1=require("typedi"),interface_1=require("../../interface"),Channels_1=require("../Channels"),Generator_1=require("../Generator"),Writer_1=require("../Writer"),Joi=__importStar(require("joi"));let GenerateTemplateHandlerService=class{constructor(e,t,r){this.channelsService=e,this.generatorService=t,this.writerService=r}canHandle(e){return e.id===interface_1.WebSocketMessages.GENERATE_TEMPLATE}validator(){return Joi.object({channel:Joi.string().required(),template:Joi.string().required()})}handle(e){return __awaiter(this,void 0,void 0,function*(){const t=(yield this.channelsService.channels()).find(t=>t.id===e.data.channel);if(!t)throw new Error(`Unable to find channel ${e.data.channel}`);const r=t.templates.find(t=>t.path===e.data.template);if(!r)throw new Error(`Unable to find template ${e.data.template}`);const n=yield this.generatorService.runTemplate(r);yield this.writerService.writeMany(t.path,n)})}};GenerateTemplateHandlerService=__decorate([typedi_1.Service(),__metadata("design:paramtypes",[Channels_1.ChannelsService,Generator_1.GeneratorService,Writer_1.WriterService])],GenerateTemplateHandlerService),exports.GenerateTemplateHandlerService=GenerateTemplateHandlerService;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GenerateTemplateHandlerService = void 0;
+const typedi_1 = require("typedi");
+const interface_1 = require("../../interface");
+const Channels_1 = require("../Channels");
+const Generator_1 = require("../Generator");
+const Writer_1 = require("../Writer");
+const Joi = __importStar(require("joi"));
+let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
+    /**
+     * Constructor
+     * @param {ChannelsService} channelsService
+     * @param {GeneratorService} generatorService
+     * @param {WriterService} writerService
+     */
+    constructor(channelsService, generatorService, writerService) {
+        this.channelsService = channelsService;
+        this.generatorService = generatorService;
+        this.writerService = writerService;
+    }
+    /** @inheritDoc */
+    canHandle(message) {
+        return message.id === interface_1.WebSocketMessages.GENERATE_TEMPLATE;
+    }
+    /** @inheritDoc */
+    validator() {
+        return Joi.object({
+            channel: Joi.string().required(),
+            template: Joi.string().required()
+        });
+    }
+    /** @inheritDoc */
+    handle(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Get channel
+            const channel = (yield this.channelsService.channels()).find(c => c.id === message.data.channel);
+            if (!channel) {
+                throw new Error(`Unable to find channel ${message.data.channel}`);
+            }
+            // Get template
+            const template = channel.templates.find(t => t.path === message.data.template);
+            if (!template) {
+                throw new Error(`Unable to find template ${message.data.template}`);
+            }
+            const results = yield this.generatorService.runTemplate(template);
+            yield this.writerService.writeMany(channel.path, results);
+        });
+    }
+};
+GenerateTemplateHandlerService = __decorate([
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [Channels_1.ChannelsService,
+        Generator_1.GeneratorService,
+        Writer_1.WriterService])
+], GenerateTemplateHandlerService);
+exports.GenerateTemplateHandlerService = GenerateTemplateHandlerService;
+//# sourceMappingURL=GenerateTemplateHandler.js.map
