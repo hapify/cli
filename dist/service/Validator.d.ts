@@ -1,4 +1,5 @@
-import { IValidatorResult, IModel } from '../interface';
+import { IValidatorResult } from '../interface/IValidatorResult';
+import { IModel } from '../interface/IObjects';
 export declare class ValidatorService {
     /**
      * Constructor

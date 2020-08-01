@@ -1,9 +1,10 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import { WriterService } from '../Writer';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
 
 @Service()
 export class GenerateTemplateHandlerService implements IWebSocketHandler {
@@ -36,7 +37,7 @@ export class GenerateTemplateHandlerService implements IWebSocketHandler {
 			throw new Error(`Unable to find channel ${message.data.channel}`);
 		}
 		// Get template
-		const template = channel.templates.find((t) => t.path === message.data.template);
+		const template = channel.templates.find((t: any) => t.path === message.data.template);
 		if (!template) {
 			throw new Error(`Unable to find template ${message.data.template}`);
 		}

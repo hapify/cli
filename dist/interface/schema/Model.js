@@ -27,10 +27,7 @@ exports.ModelSchema = Joi.object({
     id: Joi.string().required(),
     name: Joi.string().required(),
     notes: Joi.string().allow(null),
-    fields: Joi.array()
-        .items(Field_1.FieldSchema)
-        .required()
-        .min(0),
-    accesses: Access_1.AccessSchema
+    fields: Joi.array().items(Field_1.FieldSchema).required().min(0),
+    accesses: Access_1.AccessSchema,
 });
 //# sourceMappingURL=Model.js.map

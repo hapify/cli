@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
-import { IPreset, IModel } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
 import { IApiModel } from './Models';
+import { IModel, IPreset } from '../../../interface/IObjects';
 
 interface PresetsSearchParams extends BaseSearchParams {
 	version?: string;

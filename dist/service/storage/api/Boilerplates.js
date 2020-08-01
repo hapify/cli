@@ -26,7 +26,7 @@ let BoilerplatesApiStorageService = class BoilerplatesApiStorageService extends 
             id: object._id,
             slug: object.slug,
             name: object.name,
-            git_url: object.git_url
+            git_url: object.git_url,
         };
     }
 };

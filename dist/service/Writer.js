@@ -68,8 +68,8 @@ let WriterService = class WriterService {
                 type: 'nodebuffer',
                 compression: 'DEFLATE',
                 compressionOptions: {
-                    level: 9
-                }
+                    level: 9,
+                },
             });
             mkdirp_1.default.sync(Path.dirname(path));
             Fs.writeFileSync(path, content);

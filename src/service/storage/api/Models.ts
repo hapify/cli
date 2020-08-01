@@ -1,8 +1,9 @@
 import { Service } from 'typedi';
-import { IModel } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
 import md5 from 'md5';
-import { FieldType, Model } from '../../../class';
+import { IModel } from '../../../interface/IObjects';
+import { FieldType } from '../../../class/FieldType';
+import { Model } from '../../../class/Model';
 
 interface ModelsSearchParams extends BaseSearchParams {
 	version?: string;

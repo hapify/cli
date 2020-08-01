@@ -1,7 +1,8 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService } from '../service';
-import { AskDiff, ApplyDiff, DiffQuery } from './question';
+import { OptionsService } from '../service/Options';
+import { LoggerService } from '../service/Logger';
+import { ApplyDiff, AskDiff, DiffQuery } from './question/Diff';
 
 const SimpleGit = require('simple-git/promise');
 

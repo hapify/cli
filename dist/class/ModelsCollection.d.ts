@@ -1,5 +1,7 @@
-import { IModel, IStorable, ISerializable } from '../interface';
-import { Model } from './';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IModel } from '../interface/IObjects';
+import { Model } from './Model';
 export declare class ModelsCollection implements IStorable, ISerializable<IModel[], Model[]> {
     project: string;
     /** @type {Model[]} The list of model instances */

@@ -29,7 +29,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringService = void 0;
-require("reflect-metadata");
 const typedi_1 = require("typedi");
 const Case = __importStar(require("case"));
 let StringService = class StringService {
@@ -56,7 +55,7 @@ let StringService = class StringService {
             upper: Case.upper(value),
             compact: Case.snake(value).replace(/_/g, ''),
             pascal: Case.pascal(value),
-            camel: Case.camel(value)
+            camel: Case.camel(value),
         };
     }
 };

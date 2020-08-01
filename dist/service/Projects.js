@@ -20,7 +20,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProjectsService = void 0;
 const typedi_1 = require("typedi");
-const class_1 = require("../class");
+const ProjectsCollection_1 = require("../class/ProjectsCollection");
 let ProjectsService = class ProjectsService {
     /**
      * Constructor
@@ -33,7 +33,7 @@ let ProjectsService = class ProjectsService {
      */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield class_1.ProjectsCollection.getInstance();
+            return yield ProjectsCollection_1.ProjectsCollection.getInstance();
         });
     }
 };

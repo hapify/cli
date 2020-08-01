@@ -1,5 +1,6 @@
 import * as Joi from 'joi';
-import { TemplateEngine, TemplateInput } from '../../enum';
+import { TemplateEngine } from '../../enum/TemplateEngine';
+import { TemplateInput } from '../../enum/TemplateInput';
 
 const engines = [TemplateEngine.Hpf, TemplateEngine.JavaScript];
 const inputs = [TemplateInput.One, TemplateInput.All];

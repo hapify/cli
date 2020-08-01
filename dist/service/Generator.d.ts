@@ -1,6 +1,9 @@
-import { IGeneratorResult, ILimits } from '../interface';
-import { Template, Model, Channel } from '../class';
 import { ApiService } from './Api';
+import { ILimits } from '../interface/IObjects';
+import { Channel } from '../class/Channel';
+import { IGeneratorResult } from '../interface/IGeneratorResult';
+import { Template } from '../class/Template';
+import { Model } from '../class/Model';
 export declare class GeneratorService {
     /** Service to call remote API */
     private apiService;

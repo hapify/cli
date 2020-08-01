@@ -1,6 +1,8 @@
-import { IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
+import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
+interface IWebSocketHandler {
+}
 export declare class ApplyPresetHandlerService implements IWebSocketHandler {
     private presetsService;
     /**
@@ -15,3 +17,4 @@ export declare class ApplyPresetHandlerService implements IWebSocketHandler {
     /** @inheritDoc */
     handle(message: IWebSocketMessage): Promise<any>;
 }
+export {};

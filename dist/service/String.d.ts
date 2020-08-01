@@ -1,5 +1,4 @@
-import 'reflect-metadata';
-import { IStringVariants } from '../interface';
+import { IStringVariants } from '../interface/IStringVariants';
 export declare class StringService {
     /**
      * Constructor

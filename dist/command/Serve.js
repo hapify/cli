@@ -11,14 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServeCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
 const helpers_1 = require("./helpers");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
+const HttpServer_1 = require("../service/HttpServer");
+const Channels_1 = require("../service/Channels");
 // ############################################
 // Get services
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
-const http = typedi_1.Container.get(service_1.HttpServerService);
-const channelsService = typedi_1.Container.get(service_1.ChannelsService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
+const http = typedi_1.Container.get(HttpServer_1.HttpServerService);
+const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function ServeCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

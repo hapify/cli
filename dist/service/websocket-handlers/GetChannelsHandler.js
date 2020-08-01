@@ -39,9 +39,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetChannelsHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GetChannelsHandlerService = class GetChannelsHandlerService {
     /**
      * Constructor
@@ -52,7 +52,7 @@ let GetChannelsHandlerService = class GetChannelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.GET_CHANNELS;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.GET_CHANNELS;
     }
     /** @inheritDoc */
     validator() {
@@ -62,7 +62,7 @@ let GetChannelsHandlerService = class GetChannelsHandlerService {
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const channels = yield this.channelsService.channels();
-            return yield channels.map(channel => channel.toObject());
+            return yield channels.map((channel) => channel.toObject());
         });
     }
 };

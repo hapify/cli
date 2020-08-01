@@ -1,19 +1,28 @@
-import { IPreset, ISerializable, IStorable } from '../interface';
-import { Preset } from './';
-import { PresetsApiStorageService } from '../service';
 import { Container } from 'typedi';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IPreset } from '../interface/IObjects';
+import { Preset } from './Preset';
+import { PresetsApiStorageService } from '../service/storage/api/Presets';
 
 export class PresetsCollection implements IStorable, ISerializable<IPreset[], Preset[]> {
+	get storageService(): PresetsApiStorageService {
+		return this._storageService;
+	}
+
+	set storageService(value: PresetsApiStorageService) {
+		this._storageService = value;
+	}
 	/** @type {Preset[]} The list of preset instances */
 	private presets: Preset[] = [];
 	/** Presets storage */
-	private storageService: PresetsApiStorageService;
+	private _storageService: PresetsApiStorageService;
 	/** @type {string} The loaded instance */
 	private static instance: PresetsCollection;
 
 	/** Constructor */
 	private constructor() {
-		this.storageService = Container.get(PresetsApiStorageService);
+		this._storageService = Container.get(PresetsApiStorageService);
 	}
 
 	/** Returns a singleton for this config */
@@ -31,7 +40,7 @@ export class PresetsCollection implements IStorable, ISerializable<IPreset[], Pr
 	 * @return {Promise<void>}
 	 */
 	async load(): Promise<void> {
-		this.fromObject(await this.storageService.list());
+		this.fromObject(await this._storageService.list());
 	}
 
 	/** @inheritDoc */

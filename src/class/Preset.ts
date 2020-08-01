@@ -1,5 +1,6 @@
-import { IPreset, ISerializable } from '../interface';
-import { Model } from './';
+import { ISerializable } from '../interface/ISerializable';
+import { IPreset } from '../interface/IObjects';
+import { Model } from './Model';
 
 export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 	/** @type {string} The preset's unique id */

@@ -1,4 +1,4 @@
-import { BoilerplatesCollection } from '../class';
+import { BoilerplatesCollection } from '../class/BoilerplatesCollection';
 export declare class BoilerplatesService {
     /**
      * Constructor

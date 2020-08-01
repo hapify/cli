@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { ProjectsCollection } from '../class';
+import { ProjectsCollection } from '../class/ProjectsCollection';
 
 @Service()
 export class ProjectsService {

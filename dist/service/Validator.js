@@ -39,11 +39,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidatorService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../interface");
-const config_1 = require("../config");
-const class_1 = require("../class");
 const hapify_vm_1 = require("hapify-vm");
 const Joi = __importStar(require("joi"));
+const Internal_1 = require("../config/Internal");
+const RichError_1 = require("../class/RichError");
+const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 let ValidatorService = class ValidatorService {
     /**
      * Constructor
@@ -62,13 +62,13 @@ let ValidatorService = class ValidatorService {
             // Try or die
             try {
                 result = new hapify_vm_1.HapifyVM({
-                    timeout: config_1.InternalConfig.validatorTimeout,
+                    timeout: Internal_1.InternalConfig.validatorTimeout,
                     allowAnyOutput: true,
                 }).run(content, { model });
             }
             catch (error) {
                 if (error.code === 6003) {
-                    throw new class_1.RichError(`Template processing timed out (${config_1.InternalConfig.validatorTimeout}ms)`, {
+                    throw new RichError_1.RichError(`Template processing timed out (${Internal_1.InternalConfig.validatorTimeout}ms)`, {
                         code: 4006,
                         type: 'CliValidatorTimeoutError',
                     });
@@ -76,7 +76,7 @@ let ValidatorService = class ValidatorService {
                 if (error.code === 6002) {
                     // Clone error
                     const { lineNumber, columnNumber } = error;
-                    throw new class_1.RichError(error.message, {
+                    throw new RichError_1.RichError(error.message, {
                         code: 4005,
                         type: 'CliValidatorEvaluationError',
                         details: `Error: ${error.message}. Line: ${lineNumber}, Column: ${columnNumber}`,
@@ -86,7 +86,7 @@ let ValidatorService = class ValidatorService {
                 }
                 if (error.code === 6004) {
                     // Clone error
-                    throw new class_1.RichError(error.message, {
+                    throw new RichError_1.RichError(error.message, {
                         code: error.code,
                         type: error.name,
                     });
@@ -94,9 +94,9 @@ let ValidatorService = class ValidatorService {
                 throw error;
             }
             // Check result and return
-            const validation = Joi.validate(result, interface_1.ValidatorResultSchema);
+            const validation = Joi.validate(result, ValidatorResult_1.ValidatorResultSchema);
             if (validation.error) {
-                throw new class_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
+                throw new RichError_1.RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
                     code: 4007,
                     type: 'CliValidatorOutputError',
                 });

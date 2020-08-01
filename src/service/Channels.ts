@@ -3,7 +3,8 @@ import * as Path from 'path';
 import { OptionsService } from './Options';
 import * as Fs from 'fs';
 import * as Hoek from '@hapi/hoek';
-import { ModelsCollection, Channel } from '../class';
+import { Channel } from '../class/Channel';
+import { ModelsCollection } from '../class/ModelsCollection';
 
 @Service()
 export class ChannelsService {

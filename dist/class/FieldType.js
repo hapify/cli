@@ -19,18 +19,18 @@ FieldSubType.Number = {
     Integer: 'integer',
     Float: 'float',
     Latitude: 'latitude',
-    Longitude: 'longitude'
+    Longitude: 'longitude',
 };
 FieldSubType.String = {
     Email: 'email',
     Password: 'password',
     Url: 'url',
     Text: 'text',
-    RichText: 'rich'
+    RichText: 'rich',
 };
 FieldSubType.DateTime = {
     Date: 'date',
-    Time: 'time'
+    Time: 'time',
 };
 FieldSubType.Entity = {};
 FieldSubType.Object = {};
@@ -38,6 +38,6 @@ FieldSubType.File = {
     Image: 'image',
     Video: 'video',
     Audio: 'audio',
-    Document: 'document'
+    Document: 'document',
 };
 //# sourceMappingURL=FieldType.js.map

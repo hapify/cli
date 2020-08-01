@@ -2,8 +2,8 @@ import { Service } from 'typedi';
 import { Command, CommanderStatic } from 'commander';
 import * as Path from 'path';
 import { GlobalConfigService } from './GlobalConfig';
-import { IRemoteConfig } from '../interface';
-import { RemoteConfig } from '../config';
+import { RemoteConfig } from '../config/Remote';
+import { IRemoteConfig } from '../interface/IObjects';
 
 @Service()
 export class OptionsService {

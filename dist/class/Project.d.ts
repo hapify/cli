@@ -1,4 +1,6 @@
-import { IProject, ISerializable, IStorable } from '../interface';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IProject } from '../interface/IObjects';
 export declare class Project implements IStorable, ISerializable<IProject, Project>, IProject {
     /** The project's unique id */
     id: string;

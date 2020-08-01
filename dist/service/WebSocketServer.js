@@ -46,11 +46,24 @@ const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));
 const url_1 = require("url");
 const Joi = __importStar(require("joi"));
-const websocket_handlers_1 = require("./websocket-handlers");
 const Logger_1 = require("./Logger");
-const interface_1 = require("../interface");
 const typedi_2 = require("typedi");
 const Options_1 = require("./Options");
+const ApplyPresetHandler_1 = require("./websocket-handlers/ApplyPresetHandler");
+const GetModelsHandler_1 = require("./websocket-handlers/GetModelsHandler");
+const SetModelsHandler_1 = require("./websocket-handlers/SetModelsHandler");
+const GetChannelsHandler_1 = require("./websocket-handlers/GetChannelsHandler");
+const SetChannelsHandler_1 = require("./websocket-handlers/SetChannelsHandler");
+const TemplatePreviewHandler_1 = require("./websocket-handlers/TemplatePreviewHandler");
+const PathPreviewHandler_1 = require("./websocket-handlers/PathPreviewHandler");
+const ValidateModelHandler_1 = require("./websocket-handlers/ValidateModelHandler");
+const NewModelHandler_1 = require("./websocket-handlers/NewModelHandler");
+const GetInfoHandler_1 = require("./websocket-handlers/GetInfoHandler");
+const GetPresetsHandler_1 = require("./websocket-handlers/GetPresetsHandler");
+const GenerateChannelHandler_1 = require("./websocket-handlers/GenerateChannelHandler");
+const GenerateTemplateHandler_1 = require("./websocket-handlers/GenerateTemplateHandler");
+const IWebSocketMessage_1 = require("../interface/IWebSocketMessage");
+const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 let WebSocketServerService = class WebSocketServerService {
     /**
      * Constructor
@@ -72,19 +85,19 @@ let WebSocketServerService = class WebSocketServerService {
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
         /** @type {IWebSocketHandler[]} Messages handlers */
         this.handlers = [];
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.ApplyPresetHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetModelsHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.SetModelsHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetChannelsHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.SetChannelsHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetPresetsHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GetInfoHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.NewModelHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.PathPreviewHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.TemplatePreviewHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.ValidateModelHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GenerateTemplateHandlerService));
-        this.addHandler(typedi_2.Container.get(websocket_handlers_1.GenerateChannelHandlerService));
+        this.addHandler(typedi_2.Container.get(ApplyPresetHandler_1.ApplyPresetHandlerService));
+        this.addHandler(typedi_2.Container.get(GetModelsHandler_1.GetModelsHandlerService));
+        this.addHandler(typedi_2.Container.get(SetModelsHandler_1.SetModelsHandlerService));
+        this.addHandler(typedi_2.Container.get(GetChannelsHandler_1.GetChannelsHandlerService));
+        this.addHandler(typedi_2.Container.get(SetChannelsHandler_1.SetChannelsHandlerService));
+        this.addHandler(typedi_2.Container.get(GetPresetsHandler_1.GetPresetsHandlerService));
+        this.addHandler(typedi_2.Container.get(GetInfoHandler_1.GetInfoHandlerService));
+        this.addHandler(typedi_2.Container.get(NewModelHandler_1.NewModelHandlerService));
+        this.addHandler(typedi_2.Container.get(PathPreviewHandler_1.PathPreviewHandlerService));
+        this.addHandler(typedi_2.Container.get(TemplatePreviewHandler_1.TemplatePreviewHandlerService));
+        this.addHandler(typedi_2.Container.get(ValidateModelHandler_1.ValidateModelHandlerService));
+        this.addHandler(typedi_2.Container.get(GenerateTemplateHandler_1.GenerateTemplateHandlerService));
+        this.addHandler(typedi_2.Container.get(GenerateChannelHandler_1.GenerateChannelHandlerService));
     }
     /**
      * Starts the http server
@@ -124,7 +137,7 @@ let WebSocketServerService = class WebSocketServerService {
                         this.loggerService.handle(error);
                         cb(false, 500, 'InternalError');
                     }
-                }
+                },
             };
             this.server = new ws.Server(options);
             this.server.on('connection', (ws) => {
@@ -146,11 +159,11 @@ let WebSocketServerService = class WebSocketServerService {
                     let decoded;
                     try {
                         // Decode and verify message
-                        const parsed = Joi.validate(JSON.parse(message), interface_1.WebSocketMessageSchema);
+                        const parsed = Joi.validate(JSON.parse(message), IWebSocketMessage_1.WebSocketMessageSchema);
                         if (parsed.error) {
                             parsed.error.data = {
                                 code: 4002,
-                                type: 'CliMessageValidationError'
+                                type: 'CliMessageValidationError',
                             };
                             throw parsed.error;
                         }
@@ -165,11 +178,11 @@ let WebSocketServerService = class WebSocketServerService {
                                 if (validation.error) {
                                     const { error } = validation;
                                     // Transform Joi message
-                                    interface_1.TransformValidationMessage(error);
+                                    ValidatorResult_1.TransformValidationMessage(error);
                                     // Add metadata
                                     error.data = {
                                         code: 4003,
-                                        type: 'CliDataValidationError'
+                                        type: 'CliDataValidationError',
                                     };
                                     throw error;
                                 }
@@ -183,7 +196,7 @@ let WebSocketServerService = class WebSocketServerService {
                         const error = new Error(`Unknown message key ${decoded.id}`);
                         error.data = {
                             code: 4003,
-                            type: 'CliUnknownMessageError'
+                            type: 'CliUnknownMessageError',
                         };
                         throw error;
                     }
@@ -197,7 +210,7 @@ let WebSocketServerService = class WebSocketServerService {
                         else {
                             payload.data = {
                                 code: 4001,
-                                type: 'CliInternalError'
+                                type: 'CliInternalError',
                             };
                         }
                         reply(dId, payload, 'error', tag);
@@ -270,10 +283,10 @@ let WebSocketServerService = class WebSocketServerService {
         return __awaiter(this, void 0, void 0, function* () {
             const wsAddress = this.server.address();
             const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
-                expiresIn: this.tokenExpires
+                expiresIn: this.tokenExpires,
             });
             const data = JSON.stringify({
-                url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`
+                url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`,
             }, null, 2);
             Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
         });
@@ -304,8 +317,7 @@ let WebSocketServerService = class WebSocketServerService {
 };
 WebSocketServerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Options_1.OptionsService,
-        Logger_1.LoggerService])
+    __metadata("design:paramtypes", [Options_1.OptionsService, Logger_1.LoggerService])
 ], WebSocketServerService);
 exports.WebSocketServerService = WebSocketServerService;
 //# sourceMappingURL=WebSocketServer.js.map

@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModelsCollection = void 0;
-const _1 = require("./");
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
+const Model_1 = require("./Model");
+const Models_1 = require("../service/storage/api/Models");
 class ModelsCollection {
     /**
      * Constructor
@@ -20,7 +20,7 @@ class ModelsCollection {
      */
     constructor(project) {
         this.project = project;
-        this.storageService = typedi_1.Container.get(service_1.ModelsApiStorageService);
+        this.storageService = typedi_1.Container.get(Models_1.ModelsApiStorageService);
         this.path = ModelsCollection.path(project);
     }
     /**
@@ -31,7 +31,7 @@ class ModelsCollection {
         return __awaiter(this, void 0, void 0, function* () {
             const path = ModelsCollection.path(project);
             // Try to find an existing collection
-            const modelsCollection = ModelsCollection.instances.find(m => m.path === path);
+            const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
             if (modelsCollection) {
                 return modelsCollection;
             }
@@ -65,7 +65,7 @@ class ModelsCollection {
                 }
             }
             else {
-                this.models.push(new _1.Model(object));
+                this.models.push(new Model_1.Model(object));
             }
         });
     }
@@ -92,7 +92,7 @@ class ModelsCollection {
                 }
             }
             else {
-                this.models = this.models.filter(i => i.id === object.id);
+                this.models = this.models.filter((i) => i.id === object.id);
             }
         });
     }
@@ -103,7 +103,7 @@ class ModelsCollection {
      */
     find(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.models.find(instance => instance.id === id);
+            return this.models.find((instance) => instance.id === id);
         });
     }
     /**
@@ -117,12 +117,12 @@ class ModelsCollection {
     }
     /** @inheritDoc */
     fromObject(object) {
-        this.models = object.map(m => new _1.Model(m));
+        this.models = object.map((m) => new Model_1.Model(m));
         return this.models;
     }
     /** @inheritDoc */
     toObject() {
-        return this.models.map(m => m.toObject());
+        return this.models.map((m) => m.toObject());
     }
     /**
      * Returns a pseudo path

@@ -11,12 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
+const GlobalConfig_1 = require("../service/GlobalConfig");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
 // ############################################
 // Get services
-const globalConfig = typedi_1.Container.get(service_1.GlobalConfigService);
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
+const globalConfig = typedi_1.Container.get(GlobalConfig_1.GlobalConfigService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
 function KeyCommand(key, cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

@@ -1,22 +1,22 @@
 #!/usr/bin/env node
-
+import 'reflect-metadata';
 import * as Commander from 'commander';
 import { CommanderStatic } from 'commander';
 import { Container } from 'typedi';
-import { OptionsService, LoggerService, HttpServerService } from './service';
-import {
-	ConfigCommand,
-	ExportCommand,
-	GenerateCommand,
-	InitCommand,
-	KeyCommand,
-	ListCommand,
-	NewCommand,
-	ImportCommand,
-	ServeCommand,
-	PatchCommand,
-	UseCommand,
-} from './command';
+import { OptionsService } from './service/Options';
+import { LoggerService } from './service/Logger';
+import { HttpServerService } from './service/HttpServer';
+import { KeyCommand } from './command/Key';
+import { ConfigCommand } from './command/Config';
+import { ListCommand } from './command/List';
+import { GenerateCommand } from './command/Generate';
+import { ExportCommand } from './command/Export';
+import { ImportCommand } from './command/Import';
+import { NewCommand } from './command/New';
+import { InitCommand } from './command/Init';
+import { UseCommand } from './command/Use';
+import { ServeCommand } from './command/Serve';
+import { PatchCommand } from './command/Patch';
 
 // ############################################
 // Get services

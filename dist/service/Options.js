@@ -32,7 +32,7 @@ exports.OptionsService = void 0;
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const GlobalConfig_1 = require("./GlobalConfig");
-const config_1 = require("../config");
+const Remote_1 = require("../config/Remote");
 let OptionsService = class OptionsService {
     /** Constructor */
     constructor(globalConfigService) {
@@ -54,7 +54,7 @@ let OptionsService = class OptionsService {
     }
     /** Returns the remote config and override defaults with global config (if any) */
     remoteConfig() {
-        const configs = Object.assign({}, config_1.RemoteConfig);
+        const configs = Object.assign({}, Remote_1.RemoteConfig);
         configs.uri = this.apiUrl();
         return configs;
     }
@@ -79,7 +79,7 @@ let OptionsService = class OptionsService {
     /** @return {string} Return the API URL to use or default URL */
     apiUrl() {
         const url = this.globalConfigService.getData().apiUrl;
-        return url || config_1.RemoteConfig.uri;
+        return url || Remote_1.RemoteConfig.uri;
     }
     /** @return {boolean} Denotes if the debug mode is enabled */
     debug() {

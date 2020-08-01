@@ -26,7 +26,7 @@ let ProjectsApiStorageService = class ProjectsApiStorageService extends Base_1.B
             id: object._id,
             created_at: object.created_at,
             name: object.name,
-            description: object.description
+            description: object.description,
         };
     }
 };

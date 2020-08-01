@@ -23,7 +23,8 @@ exports.ModelsApiStorageService = void 0;
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
 const md5_1 = __importDefault(require("md5"));
-const class_1 = require("../../../class");
+const FieldType_1 = require("../../../class/FieldType");
+const Model_1 = require("../../../class/Model");
 let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorageService extends Base_1.BaseApiStorageService {
     constructor() {
         super(...arguments);
@@ -46,7 +47,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             // ========================================================
             // CREATION
             // Get models to create
-            const toCreate = models.filter(m => typeof this.hashes[m.id] === 'undefined');
+            const toCreate = models.filter((m) => typeof this.hashes[m.id] === 'undefined');
             // Create models and update id
             for (const model of toCreate) {
                 const response = yield this.create({
@@ -54,7 +55,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
                     name: model.name,
                     notes: model.notes || null,
                     fields: model.fields,
-                    accesses: model.accesses
+                    accesses: model.accesses,
                 });
                 referencesMap[model.id] = response.id;
                 model.id = response.id;
@@ -63,7 +64,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             // ========================================================
             // DELETION
             // Get models to delete
-            const toDelete = Object.keys(this.hashes).filter(id => !models.some(m => m.id === id));
+            const toDelete = Object.keys(this.hashes).filter((id) => !models.some((m) => m.id === id));
             // Delete models
             for (const id of toDelete) {
                 yield this.remove(id);
@@ -73,15 +74,14 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             // ========================================================
             // UPDATE
             // Get models to update
-            const toUpdate = models.filter(m => typeof this.hashes[m.id] === 'string' &&
-                this.hashes[m.id] !== ModelsApiStorageService_1.hash(m));
+            const toUpdate = models.filter((m) => typeof this.hashes[m.id] === 'string' && this.hashes[m.id] !== ModelsApiStorageService_1.hash(m));
             // Update models
             for (const model of toUpdate) {
                 yield this.update(model.id, {
                     name: model.name,
                     notes: model.notes || null,
                     fields: model.fields,
-                    accesses: model.accesses
+                    accesses: model.accesses,
                 });
             }
             // ========================================================
@@ -91,8 +91,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             const changeReferencesToNewModels = (m) => {
                 let changed = false;
                 for (const f of m.fields) {
-                    if (f.type === class_1.FieldType.Entity &&
-                        typeof referencesMap[f.reference] !== 'undefined') {
+                    if (f.type === FieldType_1.FieldType.Entity && typeof referencesMap[f.reference] !== 'undefined') {
                         f.reference = referencesMap[f.reference];
                         changed = true;
                     }
@@ -103,7 +102,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             for (const model of models) {
                 if (changeReferencesToNewModels(model)) {
                     yield this.update(model.id, {
-                        fields: model.fields
+                        fields: model.fields,
                     });
                 }
             }
@@ -122,7 +121,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
     }
     /** Create a hash for the model */
     static hash(model) {
-        return md5_1.default(JSON.stringify(new class_1.Model(model).toObject()));
+        return md5_1.default(JSON.stringify(new Model_1.Model(model).toObject()));
     }
     /** @inheritDoc */
     defaultSearchParams() {
@@ -141,7 +140,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             name: object.name,
             notes: object.notes || null,
             fields: object.fields,
-            accesses: object.accesses
+            accesses: object.accesses,
         };
     }
 };

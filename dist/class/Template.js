@@ -10,14 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Template = void 0;
-const enum_1 = require("../enum");
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
+const Template_1 = require("../service/storage/file/Template");
+const TemplateInput_1 = require("../enum/TemplateInput");
+const String_1 = require("../service/String");
+const TemplateEngine_1 = require("../enum/TemplateEngine");
 class Template {
     /** Constructor */
     constructor(parent, object) {
         this.parent = parent;
-        this.storageService = typedi_1.Container.get(service_1.TemplatesFileStorageService);
+        this.storageService = typedi_1.Container.get(Template_1.TemplatesFileStorageService);
         if (object) {
             this.fromObject(object);
         }
@@ -37,7 +39,7 @@ class Template {
             path: this.path,
             engine: this.engine,
             input: this.input,
-            content: this.content
+            content: this.content,
         };
     }
     /**
@@ -45,14 +47,14 @@ class Template {
      * @returns {boolean}
      */
     isEmpty() {
-        return (typeof this.content !== 'string' || this.content.trim().length === 0);
+        return typeof this.content !== 'string' || this.content.trim().length === 0;
     }
     /**
      * Denotes if the template needs a specific model to be generated
      * @returns {boolean}
      */
     needsModel() {
-        return this.input === enum_1.TemplateInput.One;
+        return this.input === TemplateInput_1.TemplateInput.One;
     }
     /**
      * Get the extension of the input file
@@ -72,10 +74,7 @@ class Template {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate();
-            this.content = yield this.storageService.get([
-                this.parent.templatesPath,
-                this.contentPath
-            ]);
+            this.content = yield this.storageService.get([this.parent.templatesPath, this.contentPath]);
         });
     }
     /** @inheritDoc */
@@ -90,10 +89,7 @@ class Template {
      */
     validate() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!(yield this.storageService.exists([
-                this.parent.templatesPath,
-                this.contentPath
-            ]))) {
+            if (!(yield this.storageService.exists([this.parent.templatesPath, this.contentPath]))) {
                 throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
             }
         });
@@ -105,7 +101,7 @@ class Template {
      */
     static computeContentPath(template) {
         // Get string service
-        const stringService = typedi_1.Container.get(service_1.StringService);
+        const stringService = typedi_1.Container.get(String_1.StringService);
         const variants = stringService.variants(Template.defaultFolder);
         const keys = Object.keys(variants);
         let path = template.path;
@@ -120,7 +116,7 @@ class Template {
      * @return {string}
      */
     static computeExtension(template) {
-        if (template.engine === enum_1.TemplateEngine.Hpf) {
+        if (template.engine === TemplateEngine_1.TemplateEngine.Hpf) {
             return 'hpf';
         }
         return 'js';

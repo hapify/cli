@@ -39,10 +39,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewModelHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
-const class_1 = require("../../class");
 const Joi = __importStar(require("joi"));
 const Info_1 = require("../Info");
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
+const Model_1 = require("../../class/Model");
 let NewModelHandlerService = class NewModelHandlerService {
     /** Constructor */
     constructor(infoService) {
@@ -50,22 +50,22 @@ let NewModelHandlerService = class NewModelHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.NEW_MODEL;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.NEW_MODEL;
     }
     /** @inheritDoc */
     validator() {
         return Joi.object({
-            name: Joi.string().required()
+            name: Joi.string().required(),
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new class_1.Model({
-                id: class_1.Model.generateTempId(),
+            return new Model_1.Model({
+                id: Model_1.Model.generateTempId(),
                 name: message.data.name,
                 fields: yield this.infoService.fields(),
-                accesses: class_1.Model.defaultAccesses()
+                accesses: Model_1.Model.defaultAccesses(),
             }).toObject();
         });
     }

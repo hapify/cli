@@ -39,9 +39,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetChannelsHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
+const Channel_1 = require("../../interface/schema/Channel");
 let SetChannelsHandlerService = class SetChannelsHandlerService {
     /**
      * Constructor
@@ -52,13 +53,11 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.SET_CHANNELS;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.SET_CHANNELS;
     }
     /** @inheritDoc */
     validator() {
-        return Joi.array()
-            .items(interface_1.ChannelSchema)
-            .min(0);
+        return Joi.array().items(Channel_1.ChannelSchema).min(0);
     }
     /** @inheritDoc */
     handle(message) {
@@ -69,7 +68,7 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
             const toSaves = message.data;
             // For each new content, get the corresponding channel and save it
             for (const toSave of toSaves) {
-                const channel = channels.find(c => c.id === toSave.id);
+                const channel = channels.find((c) => c.id === toSave.id);
                 // Scream if not found
                 if (!channel) {
                     throw new Error(`Channel not found: ${toSave.name}`);

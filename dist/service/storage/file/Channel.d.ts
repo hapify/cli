@@ -1,5 +1,5 @@
 import { SingleSaveFileStorage, FilePath } from './SingleSave';
-import { IConfig } from '../../../interface';
+import { IConfig } from '../../../interface/IObjects';
 export declare class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
     /** @inheritDoc */
     protected serialize(content: IConfig): Promise<string>;

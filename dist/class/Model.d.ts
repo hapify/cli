@@ -1,5 +1,7 @@
-import { IModel, ISerializable, IAccesses } from '../interface';
-import { Field } from './';
+/** Random function */
+import { ISerializable } from '../interface/ISerializable';
+import { IAccesses, IModel } from '../interface/IObjects';
+import { Field } from './Field';
 export declare class Model implements ISerializable<IModel, Model>, IModel {
     /** @type {string} The model's unique id */
     id: string;

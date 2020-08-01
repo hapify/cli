@@ -1,7 +1,9 @@
 import { Command } from 'commander';
 import * as Inquirer from 'inquirer';
 import { Container } from 'typedi';
-import { ChannelsService, LoggerService, PresetsService } from '../../service';
+import { PresetsService } from '../../service/Presets';
+import { LoggerService } from '../../service/Logger';
+import { ChannelsService } from '../../service/Channels';
 
 export async function AskPreset(cmd: Command): Promise<string[]> {
 	const presetsCollection = await Container.get(PresetsService).collection();
@@ -11,7 +13,7 @@ export async function AskPreset(cmd: Command): Promise<string[]> {
 		qPresets = cmd.preset;
 	} else {
 		// Get presets from remote
-		const list = (await presetsCollection.list()).map((p) => ({
+		const list = (await presetsCollection.list()).map((p: any) => ({
 			name: p.name,
 			value: p.id,
 		}));

@@ -4,7 +4,7 @@ import { SimpleGit } from 'simple-git/promise';
 import { exec } from 'child_process';
 import * as util from 'util';
 import { Container } from 'typedi';
-import { OptionsService } from '../../service';
+import { OptionsService } from '../../service/Options';
 
 const options = Container.get(OptionsService);
 

@@ -1,6 +1,8 @@
-import { IWebSocketHandler, IWebSocketMessage, IModel } from '../../interface';
 import * as Joi from 'joi';
 import { InfoService } from '../Info';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
+import { IModel } from '../../interface/IObjects';
 export declare class NewModelHandlerService implements IWebSocketHandler {
     private infoService;
     /** Constructor */

@@ -1,10 +1,15 @@
-import { IPreset, ISerializable, IStorable } from '../interface';
-import { Preset } from './';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IPreset } from '../interface/IObjects';
+import { Preset } from './Preset';
+import { PresetsApiStorageService } from '../service/storage/api/Presets';
 export declare class PresetsCollection implements IStorable, ISerializable<IPreset[], Preset[]> {
+    get storageService(): PresetsApiStorageService;
+    set storageService(value: PresetsApiStorageService);
     /** @type {Preset[]} The list of preset instances */
     private presets;
     /** Presets storage */
-    private storageService;
+    private _storageService;
     /** @type {string} The loaded instance */
     private static instance;
     /** Constructor */

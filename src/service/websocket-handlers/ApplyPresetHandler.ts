@@ -1,8 +1,12 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ModelSchema, IModel } from '../../interface';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
-import { Model } from '../../class';
+import { Model } from '../../class/Model';
+import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { ModelSchema } from '../../interface/schema/Model';
+import { IModel } from '../../interface/IObjects';
+
+interface IWebSocketHandler {}
 
 @Service()
 export class ApplyPresetHandlerService implements IWebSocketHandler {

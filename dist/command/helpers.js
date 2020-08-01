@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.cHigh = exports.cPath = exports.cModel = exports.cChannel = exports.logChannel = void 0;
 const chalk_1 = __importDefault(require("chalk"));
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
-const logger = typedi_1.Container.get(service_1.LoggerService);
+const Logger_1 = require("../service/Logger");
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
 // ############################################
 // Common methods
 exports.logChannel = (channel) => {

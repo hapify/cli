@@ -3,7 +3,7 @@ import * as Fs from 'fs';
 import * as Path from 'path';
 import mkdirp from 'mkdirp';
 import JSZip from 'jszip';
-import { IGeneratorResult } from '../interface';
+import { IGeneratorResult } from '../interface/IGeneratorResult';
 
 @Service()
 export class WriterService {

@@ -31,10 +31,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetupProject = exports.AskProject = void 0;
 const Inquirer = __importStar(require("inquirer"));
 const typedi_1 = require("typedi");
-const service_1 = require("../../service");
+const Projects_1 = require("../../service/Projects");
 function AskProject(cmd, qProject) {
     return __awaiter(this, void 0, void 0, function* () {
-        const projectsCollection = yield typedi_1.Container.get(service_1.ProjectsService).collection();
+        const projectsCollection = yield typedi_1.Container.get(Projects_1.ProjectsService).collection();
         if (cmd.project) {
             qProject.id = cmd.project;
         }
@@ -44,33 +44,29 @@ function AskProject(cmd, qProject) {
         }
         else {
             // Get projects from remote
-            const list = (yield projectsCollection.list()).map(b => ({
+            const list = (yield projectsCollection.list()).map((b) => ({
                 name: b.name,
-                value: b.id
+                value: b.id,
             }));
             const answer = yield Inquirer.prompt([
                 {
                     name: 'id',
                     message: 'Choose a project',
                     type: 'list',
-                    choices: [
-                        { name: 'Create a new project', value: null },
-                        new Inquirer.Separator(),
-                        ...list
-                    ],
-                    when: () => list.length > 0
+                    choices: [{ name: 'Create a new project', value: null }, new Inquirer.Separator(), ...list],
+                    when: () => list.length > 0,
                 },
                 {
                     name: 'name',
                     message: 'Enter a project name',
                     when: (answer) => !answer.id,
-                    validate: (input) => input.length > 0
+                    validate: (input) => input.length > 0,
                 },
                 {
                     name: 'description',
                     message: 'Enter a project description',
-                    when: (answer) => !answer.id
-                }
+                    when: (answer) => !answer.id,
+                },
             ]);
             qProject.id = answer.id;
             qProject.name = answer.name;
@@ -84,7 +80,7 @@ function AskProject(cmd, qProject) {
 exports.AskProject = AskProject;
 function SetupProject(qProject) {
     return __awaiter(this, void 0, void 0, function* () {
-        const projectsCollection = yield typedi_1.Container.get(service_1.ProjectsService).collection();
+        const projectsCollection = yield typedi_1.Container.get(Projects_1.ProjectsService).collection();
         if (!qProject.id) {
             const project = yield projectsCollection.add(qProject.name, qProject.description);
             qProject.id = project.id;

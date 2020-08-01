@@ -1,6 +1,8 @@
-import { IProject, ISerializable, IStorable } from '../interface';
-import { ProjectsApiStorageService } from '../service';
 import { Container } from 'typedi';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IProject } from '../interface/IObjects';
+import { ProjectsApiStorageService } from '../service/storage/api/Projects';
 
 export class Project implements IStorable, ISerializable<IProject, Project>, IProject {
 	/** The project's unique id */

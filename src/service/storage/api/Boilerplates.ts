@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
-import { IBoilerplate } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
+import { IBoilerplate } from '../../../interface/IObjects';
 
 interface BoilerplatesSearchParams extends BaseSearchParams {
 	premium?: string | boolean;

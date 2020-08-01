@@ -30,21 +30,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
 const helpers_1 = require("./helpers");
 const Rimraf = __importStar(require("rimraf"));
 const Fs = __importStar(require("fs"));
 const Path = __importStar(require("path"));
-const question_1 = require("./question");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
+const Channels_1 = require("../service/Channels");
+const Project_1 = require("./question/Project");
+const Boilerplate_1 = require("./question/Boilerplate");
+const Preset_1 = require("./question/Preset");
 const SimpleGit = require('simple-git/promise');
 const GetDirectories = (s) => Fs.readdirSync(s)
     .map((n) => Path.join(s, n))
     .filter((d) => Fs.lstatSync(s).isDirectory());
 // ############################################
 // Get services
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
-const channelsService = typedi_1.Container.get(service_1.ChannelsService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
+const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function NewCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -62,19 +66,19 @@ function NewCommand(cmd) {
             }
             // =================================
             // Get project
-            yield question_1.AskProject(cmd, qProject);
+            yield Project_1.AskProject(cmd, qProject);
             // =================================
             // Get boilerplate
-            yield question_1.AskBoilerplate(cmd, qBoilerplate);
+            yield Boilerplate_1.AskBoilerplate(cmd, qBoilerplate);
             // =================================
             // Get presets
-            const qPresets = yield question_1.AskPreset(cmd);
+            const qPresets = yield Preset_1.AskPreset(cmd);
             // =================================
             // Create project if necessary
-            yield question_1.SetupProject(qProject);
+            yield Project_1.SetupProject(qProject);
             // =================================
             // Get boilerplate URL
-            yield question_1.FindBoilerplate(qBoilerplate);
+            yield Boilerplate_1.FindBoilerplate(qBoilerplate);
             // =================================
             // Clone git repo
             // Init & validate channel for this new folder
@@ -98,7 +102,7 @@ function NewCommand(cmd) {
             yield channelsService.changeProject(qProject.id);
             // =================================
             // Get models and apply presets if necessary
-            yield question_1.ApplyPreset(qPresets);
+            yield Preset_1.ApplyPreset(qPresets);
             logger.success(`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${helpers_1.cPath(currentDir)}. Run 'hpf serve' to edit.`);
             // Action Ends
             // ---------------------------------

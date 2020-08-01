@@ -1,4 +1,4 @@
-import { IRemoteConfig } from '../interface';
+import { IRemoteConfig } from '../interface/IObjects';
 
 export const RemoteConfig: IRemoteConfig = {
 	uri: 'https://api.hapify.io/v1',

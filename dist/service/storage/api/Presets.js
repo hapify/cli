@@ -34,8 +34,8 @@ let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.Bas
                 name: m.name,
                 notes: m.notes || null,
                 fields: m.fields,
-                accesses: m.accesses
-            }))
+                accesses: m.accesses,
+            })),
         };
     }
 };

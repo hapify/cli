@@ -1,9 +1,12 @@
-import { Channel } from '../class';
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
-import { ProjectQuery, AskProject, SetupProject, DescribeChannel, ChannelDescriptionQuery } from './question';
+import { LoggerService } from '../service/Logger';
+import { OptionsService } from '../service/Options';
+import { ChannelDescriptionQuery, DescribeChannel } from './question/Channel';
+import { AskProject, ProjectQuery, SetupProject } from './question/Project';
+import { Channel } from '../class/Channel';
+import { ChannelsService } from '../service/Channels';
 
 // ############################################
 // Get services

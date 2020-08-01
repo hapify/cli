@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import * as Inquirer from 'inquirer';
 import { Container } from 'typedi';
-import { ProjectsService } from '../../service';
+import { ProjectsService } from '../../service/Projects';
 
 export interface ProjectQuery {
 	id?: string;
@@ -18,7 +18,7 @@ export async function AskProject(cmd: Command, qProject: ProjectQuery) {
 		qProject.description = cmd.projectDescription;
 	} else {
 		// Get projects from remote
-		const list = (await projectsCollection.list()).map((b) => ({
+		const list = (await projectsCollection.list()).map((b: any) => ({
 			name: b.name,
 			value: b.id,
 		}));

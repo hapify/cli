@@ -10,15 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Project = void 0;
-const service_1 = require("../service");
 const typedi_1 = require("typedi");
+const Projects_1 = require("../service/storage/api/Projects");
 class Project {
     /** Constructor */
     constructor(object) {
         if (object) {
             this.fromObject(object);
         }
-        this.storageService = typedi_1.Container.get(service_1.ProjectsApiStorageService);
+        this.storageService = typedi_1.Container.get(Projects_1.ProjectsApiStorageService);
     }
     /**
      * Returns a singleton for this config
@@ -48,7 +48,7 @@ class Project {
             id: this.id,
             created_at: this.created_at,
             name: this.name,
-            description: this.description
+            description: this.description,
         };
     }
     /** @inheritDoc */

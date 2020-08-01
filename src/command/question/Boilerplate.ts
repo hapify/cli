@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import * as Inquirer from 'inquirer';
 import { Container } from 'typedi';
-import { BoilerplatesService } from '../../service';
+import { BoilerplatesService } from '../../service/Boilerplates';
 
 export interface BoilerplateQuery {
 	id?: string;
@@ -19,7 +19,7 @@ export async function AskBoilerplate(cmd: Command, qBoilerplate: BoilerplateQuer
 		qBoilerplate.urls = [cmd.boilerplateUrl];
 	} else {
 		// Get boilerplates from remote
-		const list = (await boilerplatesCollection.list()).map((b) => ({
+		const list = (await boilerplatesCollection.list()).map((b: any) => ({
 			name: b.name,
 			value: b.git_url,
 		}));

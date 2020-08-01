@@ -11,13 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ListCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
 const helpers_1 = require("./helpers");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
+const Channels_1 = require("../service/Channels");
 // ############################################
 // Get services
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
-const channelsService = typedi_1.Container.get(service_1.ChannelsService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
+const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function ListCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -31,8 +33,7 @@ function ListCommand(cmd) {
             // Group channels by models collections
             const modelsCollections = {};
             for (const channel of channels) {
-                if (typeof modelsCollections[channel.modelsCollection.path] ===
-                    'undefined') {
+                if (typeof modelsCollections[channel.modelsCollection.path] === 'undefined') {
                     modelsCollections[channel.modelsCollection.path] = [];
                 }
                 modelsCollections[channel.modelsCollection.path].push(channel);
@@ -43,16 +44,12 @@ function ListCommand(cmd) {
                 const mc = c.length > 1;
                 const m = yield c[0].modelsCollection.list();
                 const mm = m.length > 1;
-                let message = `Channel${mc ? 's' : ''} ${c
-                    .map(c => helpers_1.cChannel(c.name))
-                    .join(', ')} use${mc ? '' : 's'} models of ${helpers_1.cPath(modelsPath)}`;
+                let message = `Channel${mc ? 's' : ''} ${c.map((c) => helpers_1.cChannel(c.name)).join(', ')} use${mc ? '' : 's'} models of ${helpers_1.cPath(modelsPath)}`;
                 if (m.length === 0) {
                     message += `\nThere is no model yet.`;
                 }
                 else {
-                    message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m
-                        .map(m => helpers_1.cModel(m.name))
-                        .join('\n- ')}`;
+                    message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map((m) => helpers_1.cModel(m.name)).join('\n- ')}`;
                 }
                 logger.newLine().info(message);
             }

@@ -23,6 +23,6 @@ exports.GlobalConfigSchema = void 0;
 const Joi = __importStar(require("joi"));
 exports.GlobalConfigSchema = Joi.object({
     apiKey: Joi.string().length(48),
-    apiUrl: Joi.string().min(1)
+    apiUrl: Joi.string().min(1),
 });
 //# sourceMappingURL=GlobalConfig.js.map

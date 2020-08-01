@@ -1,7 +1,11 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { GeneratorService, OptionsService, LoggerService, WriterService, ChannelsService } from '../service';
 import { logChannel, cChannel, cHigh } from './helpers';
+import { GeneratorService } from '../service/Generator';
+import { LoggerService } from '../service/Logger';
+import { OptionsService } from '../service/Options';
+import { WriterService } from '../service/Writer';
+import { ChannelsService } from '../service/Channels';
 
 // ############################################
 // Get services

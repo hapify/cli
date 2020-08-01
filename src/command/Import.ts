@@ -1,7 +1,9 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService, ChannelsService } from '../service';
-import { AskPreset, ApplyPreset } from './question';
+import { OptionsService } from '../service/Options';
+import { ChannelsService } from '../service/Channels';
+import { LoggerService } from '../service/Logger';
+import { ApplyPreset, AskPreset } from './question/Preset';
 
 // ############################################
 // Get services

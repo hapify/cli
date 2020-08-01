@@ -11,14 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UseCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
 const helpers_1 = require("./helpers");
-const question_1 = require("./question");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
+const Channels_1 = require("../service/Channels");
+const Project_1 = require("./question/Project");
 // ############################################
 // Get services
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
-const channelsService = typedi_1.Container.get(service_1.ChannelsService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
+const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function UseCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -28,10 +30,10 @@ function UseCommand(cmd) {
             const qProject = {};
             // =================================
             // Get project
-            yield question_1.AskProject(cmd, qProject);
+            yield Project_1.AskProject(cmd, qProject);
             // =================================
             // Create project if necessary
-            yield question_1.SetupProject(qProject);
+            yield Project_1.SetupProject(qProject);
             // =================================
             // Set project in channel and save
             yield channelsService.changeProject(qProject.id);

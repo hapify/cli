@@ -1,8 +1,10 @@
-import { Channel } from '../class';
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { logChannel, cChannel, cModel, cPath } from './helpers';
+import { OptionsService } from '../service/Options';
+import { LoggerService } from '../service/Logger';
+import { ChannelsService } from '../service/Channels';
+import { Channel } from '../class/Channel';
 
 // ############################################
 // Get services

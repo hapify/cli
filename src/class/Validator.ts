@@ -1,7 +1,7 @@
-import { IStorable } from '../interface';
-import { Channel } from './';
-import { ValidatorFileStorageService } from '../service';
 import { Container } from 'typedi';
+import { IStorable } from '../interface/IStorable';
+import { ValidatorFileStorageService } from '../service/storage/file/Validator';
+import { Channel } from './Channel';
 
 export class Validator implements IStorable {
 	/** @type {string} The validator's script content */

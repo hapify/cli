@@ -1,9 +1,12 @@
 import * as Path from 'path';
 import { Command } from 'commander';
-import { Channel } from '../class';
 import { Container } from 'typedi';
-import { GeneratorService, OptionsService, LoggerService, WriterService } from '../service';
 import { logChannel, cChannel, cPath, cHigh } from './helpers';
+import { GeneratorService } from '../service/Generator';
+import { OptionsService } from '../service/Options';
+import { LoggerService } from '../service/Logger';
+import { WriterService } from '../service/Writer';
+import { Channel } from '../class/Channel';
 
 // ############################################
 // Get services

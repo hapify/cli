@@ -11,15 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenerateCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
 const helpers_1 = require("./helpers");
+const Generator_1 = require("../service/Generator");
+const Logger_1 = require("../service/Logger");
+const Options_1 = require("../service/Options");
+const Writer_1 = require("../service/Writer");
+const Channels_1 = require("../service/Channels");
 // ############################################
 // Get services
-const generator = typedi_1.Container.get(service_1.GeneratorService);
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
-const writer = typedi_1.Container.get(service_1.WriterService);
-const channelsService = typedi_1.Container.get(service_1.ChannelsService);
+const generator = typedi_1.Container.get(Generator_1.GeneratorService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
+const writer = typedi_1.Container.get(Writer_1.WriterService);
+const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function GenerateCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

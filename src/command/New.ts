@@ -1,11 +1,15 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
 import * as Rimraf from 'rimraf';
 import * as Fs from 'fs';
 import * as Path from 'path';
-import { ProjectQuery, AskProject, SetupProject, BoilerplateQuery, AskBoilerplate, FindBoilerplate, AskPreset, ApplyPreset } from './question';
+import { OptionsService } from '../service/Options';
+import { LoggerService } from '../service/Logger';
+import { ChannelsService } from '../service/Channels';
+import { AskProject, ProjectQuery, SetupProject } from './question/Project';
+import { AskBoilerplate, BoilerplateQuery, FindBoilerplate } from './question/Boilerplate';
+import { ApplyPreset, AskPreset } from './question/Preset';
 
 const SimpleGit = require('simple-git/promise');
 

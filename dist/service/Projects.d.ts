@@ -1,4 +1,4 @@
-import { ProjectsCollection } from '../class';
+import { ProjectsCollection } from '../class/ProjectsCollection';
 export declare class ProjectsService {
     /**
      * Constructor

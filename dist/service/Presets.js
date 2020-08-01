@@ -20,9 +20,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PresetsService = void 0;
 const typedi_1 = require("typedi");
-const class_1 = require("../class");
 const Channels_1 = require("./Channels");
 const Info_1 = require("./Info");
+const PresetsCollection_1 = require("../class/PresetsCollection");
+const Field_1 = require("../class/Field");
+const FieldType_1 = require("../class/FieldType");
 let PresetsService = class PresetsService {
     /**
      * Constructor
@@ -38,7 +40,7 @@ let PresetsService = class PresetsService {
      */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield class_1.PresetsCollection.getInstance();
+            return yield PresetsCollection_1.PresetsCollection.getInstance();
         });
     }
     /**
@@ -54,13 +56,13 @@ let PresetsService = class PresetsService {
             const models = yield modelsCollection.list();
             const referencesMap = {};
             for (const model of presetModels) {
-                const existing = models.find(m => m.name === model.name);
+                const existing = models.find((m) => m.name === model.name);
                 if (existing) {
                     // Save incoming reference to existing reference
                     referencesMap[model.id] = existing.id;
                     // Add or skip each fields
                     const clone = existing.clone(false);
-                    const existingHasPrimary = existing.fields.some(f => f.primary);
+                    const existingHasPrimary = existing.fields.some((f) => f.primary);
                     let edited = false;
                     for (const field of model.fields) {
                         // Prevent adding primary key if already exists
@@ -68,7 +70,7 @@ let PresetsService = class PresetsService {
                             continue;
                         }
                         // Add this field if nothing with the same name was found
-                        if (!clone.fields.some(f => f.name === field.name)) {
+                        if (!clone.fields.some((f) => f.name === field.name)) {
                             clone.fields.push(field);
                             edited = true;
                         }
@@ -82,15 +84,15 @@ let PresetsService = class PresetsService {
                     const clone = model.clone(true);
                     // Save incoming reference to existing reference
                     referencesMap[model.id] = clone.id;
-                    const defaultFields = (yield this.infoService.fields()).map(f => new class_1.Field(f));
+                    const defaultFields = (yield this.infoService.fields()).map((f) => new Field_1.Field(f));
                     // Apply special properties to primary field
-                    const defaultPrimary = defaultFields.find(f => f.primary);
-                    const clonePrimary = clone.fields.find(f => f.primary);
+                    const defaultPrimary = defaultFields.find((f) => f.primary);
+                    const clonePrimary = clone.fields.find((f) => f.primary);
                     if (defaultPrimary && clonePrimary) {
                         // Apply clone primary properties to default primary
                         defaultPrimary.ownership = clonePrimary.ownership;
                         // Remove primary from clone
-                        clone.fields = clone.fields.filter(f => !f.primary);
+                        clone.fields = clone.fields.filter((f) => !f.primary);
                     }
                     clone.fields = defaultFields.concat(clone.fields);
                     created.push(clone);
@@ -99,8 +101,7 @@ let PresetsService = class PresetsService {
             // Change references to existing models
             const changeReferencesToNewModels = (m) => {
                 for (const f of m.fields) {
-                    if (f.type === class_1.FieldType.Entity &&
-                        typeof referencesMap[f.reference] === 'string') {
+                    if (f.type === FieldType_1.FieldType.Entity && typeof referencesMap[f.reference] === 'string') {
                         f.reference = referencesMap[f.reference];
                     }
                 }
@@ -110,15 +111,14 @@ let PresetsService = class PresetsService {
             // Return results
             return {
                 updated,
-                created
+                created,
             };
         });
     }
 };
 PresetsService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Channels_1.ChannelsService,
-        Info_1.InfoService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService, Info_1.InfoService])
 ], PresetsService);
 exports.PresetsService = PresetsService;
 //# sourceMappingURL=Presets.js.map

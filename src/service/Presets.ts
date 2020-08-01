@@ -1,7 +1,10 @@
 import { Service } from 'typedi';
-import { PresetsCollection, Model, Field, FieldType } from '../class';
 import { ChannelsService } from './Channels';
 import { InfoService } from './Info';
+import { PresetsCollection } from '../class/PresetsCollection';
+import { Model } from '../class/Model';
+import { Field } from '../class/Field';
+import { FieldType } from '../class/FieldType';
 
 export interface PresetMergeResults {
 	created: Model[];

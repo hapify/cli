@@ -1,6 +1,7 @@
-import { PresetsCollection, Model } from '../class';
 import { ChannelsService } from './Channels';
 import { InfoService } from './Info';
+import { PresetsCollection } from '../class/PresetsCollection';
+import { Model } from '../class/Model';
 export interface PresetMergeResults {
     created: Model[];
     updated: Model[];

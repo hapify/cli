@@ -1,6 +1,8 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { OptionsService, LoggerService, GlobalConfigService } from '../service';
+import { GlobalConfigService } from '../service/GlobalConfig';
+import { OptionsService } from '../service/Options';
+import { LoggerService } from '../service/Logger';
 
 // ############################################
 // Get services

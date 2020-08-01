@@ -1,8 +1,10 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, IModel } from '../../interface';
-import { Model } from '../../class';
 import * as Joi from 'joi';
 import { InfoService } from '../Info';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { Model } from '../../class/Model';
+import { IModel } from '../../interface/IObjects';
 
 @Service()
 export class NewModelHandlerService implements IWebSocketHandler {

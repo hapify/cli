@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Validator = void 0;
-const service_1 = require("../service");
 const typedi_1 = require("typedi");
+const Validator_1 = require("../service/storage/file/Validator");
 class Validator {
     /**
      * Constructor
@@ -21,16 +21,13 @@ class Validator {
     constructor(parent, path) {
         this.parent = parent;
         this.path = path;
-        this.storageService = typedi_1.Container.get(service_1.ValidatorFileStorageService);
+        this.storageService = typedi_1.Container.get(Validator_1.ValidatorFileStorageService);
     }
     /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate();
-            this.content = yield this.storageService.get([
-                this.parent.path,
-                this.path
-            ]);
+            this.content = yield this.storageService.get([this.parent.path, this.path]);
         });
     }
     /** @inheritDoc */
@@ -55,7 +52,7 @@ class Validator {
      * @returns {boolean}
      */
     isEmpty() {
-        return (typeof this.content !== 'string' || this.content.trim().length === 0);
+        return typeof this.content !== 'string' || this.content.trim().length === 0;
     }
 }
 exports.Validator = Validator;

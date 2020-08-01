@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { BoilerplatesCollection } from '../class';
+import { BoilerplatesCollection } from '../class/BoilerplatesCollection';
 
 @Service()
 export class BoilerplatesService {

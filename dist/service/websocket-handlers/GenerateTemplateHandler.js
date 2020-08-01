@@ -39,11 +39,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenerateTemplateHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
 const Writer_1 = require("../Writer");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
     /**
      * Constructor
@@ -58,25 +58,25 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.GENERATE_TEMPLATE;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.GENERATE_TEMPLATE;
     }
     /** @inheritDoc */
     validator() {
         return Joi.object({
             channel: Joi.string().required(),
-            template: Joi.string().required()
+            template: Joi.string().required(),
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get channel
-            const channel = (yield this.channelsService.channels()).find(c => c.id === message.data.channel);
+            const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
             if (!channel) {
                 throw new Error(`Unable to find channel ${message.data.channel}`);
             }
             // Get template
-            const template = channel.templates.find(t => t.path === message.data.template);
+            const template = channel.templates.find((t) => t.path === message.data.template);
             if (!template) {
                 throw new Error(`Unable to find template ${message.data.template}`);
             }
@@ -87,9 +87,7 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
 };
 GenerateTemplateHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Channels_1.ChannelsService,
-        Generator_1.GeneratorService,
-        Writer_1.WriterService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService, Generator_1.GeneratorService, Writer_1.WriterService])
 ], GenerateTemplateHandlerService);
 exports.GenerateTemplateHandlerService = GenerateTemplateHandlerService;
 //# sourceMappingURL=GenerateTemplateHandler.js.map

@@ -11,13 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PatchCommand = void 0;
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
-const question_1 = require("./question");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
+const Diff_1 = require("./question/Diff");
 const SimpleGit = require('simple-git/promise');
 // ############################################
 // Get services
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
 function PatchCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -31,10 +32,10 @@ function PatchCommand(cmd) {
             const git = SimpleGit(currentDir);
             // =================================
             // Get source and destination
-            yield question_1.AskDiff(cmd, qDiif, git);
+            yield Diff_1.AskDiff(cmd, qDiif, git);
             // =================================
             // Run patch
-            const result = yield question_1.ApplyDiff(qDiif, git);
+            const result = yield Diff_1.ApplyDiff(qDiif, git);
             if (result === null) {
                 logger.info('Aborted');
             }

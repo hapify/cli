@@ -31,19 +31,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApplyPreset = exports.AskPreset = void 0;
 const Inquirer = __importStar(require("inquirer"));
 const typedi_1 = require("typedi");
-const service_1 = require("../../service");
+const Presets_1 = require("../../service/Presets");
+const Logger_1 = require("../../service/Logger");
+const Channels_1 = require("../../service/Channels");
 function AskPreset(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
-        const presetsCollection = yield typedi_1.Container.get(service_1.PresetsService).collection();
+        const presetsCollection = yield typedi_1.Container.get(Presets_1.PresetsService).collection();
         let qPresets = [];
         if (cmd.preset && cmd.preset.length) {
             qPresets = cmd.preset;
         }
         else {
             // Get presets from remote
-            const list = (yield presetsCollection.list()).map(p => ({
+            const list = (yield presetsCollection.list()).map((p) => ({
                 name: p.name,
-                value: p.id
+                value: p.id,
             }));
             qPresets = (yield Inquirer.prompt([
                 {
@@ -51,8 +53,8 @@ function AskPreset(cmd) {
                     message: 'Choose some presets to preload in your project',
                     type: 'checkbox',
                     choices: list,
-                    when: () => list.length > 0
-                }
+                    when: () => list.length > 0,
+                },
             ])).presets;
         }
         return qPresets;
@@ -61,10 +63,10 @@ function AskPreset(cmd) {
 exports.AskPreset = AskPreset;
 function ApplyPreset(qPresets) {
     return __awaiter(this, void 0, void 0, function* () {
-        const logger = typedi_1.Container.get(service_1.LoggerService);
-        const presets = typedi_1.Container.get(service_1.PresetsService);
+        const logger = typedi_1.Container.get(Logger_1.LoggerService);
+        const presets = typedi_1.Container.get(Presets_1.PresetsService);
         const presetsCollection = yield presets.collection();
-        const modelsCollection = yield typedi_1.Container.get(service_1.ChannelsService).modelsCollection();
+        const modelsCollection = yield typedi_1.Container.get(Channels_1.ChannelsService).modelsCollection();
         if (qPresets && qPresets.length) {
             const models = yield modelsCollection.list();
             // If the project already has models, ignore add presets

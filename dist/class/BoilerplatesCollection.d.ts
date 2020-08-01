@@ -1,5 +1,7 @@
-import { IBoilerplate, ISerializable, IStorable } from '../interface';
-import { Boilerplate } from './';
+import { IStorable } from "../interface/IStorable";
+import { ISerializable } from "../interface/ISerializable";
+import { IBoilerplate } from "../interface/IObjects";
+import { Boilerplate } from "./Boilerplate";
 export declare class BoilerplatesCollection implements IStorable, ISerializable<IBoilerplate[], Boilerplate[]> {
     /** @type {Boilerplate[]} The list of boilerplate instances */
     private boilerplates;

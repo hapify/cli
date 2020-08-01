@@ -1,8 +1,7 @@
-import 'reflect-metadata';
 import { Service } from 'typedi';
-import { IStringVariants } from '../interface';
 
 import * as Case from 'case';
+import { IStringVariants } from '../interface/IStringVariants';
 
 @Service()
 export class StringService {

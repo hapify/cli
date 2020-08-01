@@ -1,8 +1,12 @@
-import { ITemplate, IStorable, ISerializable, IConfigTemplate } from '../interface';
-import { TemplateInput, TemplateEngine } from '../enum';
-import { Channel } from './';
 import { Container } from 'typedi';
-import { TemplatesFileStorageService, StringService } from '../service';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IConfigTemplate, ITemplate } from '../interface/IObjects';
+import { TemplatesFileStorageService } from '../service/storage/file/Template';
+import { Channel } from './Channel';
+import { TemplateInput } from '../enum/TemplateInput';
+import { StringService } from '../service/String';
+import { TemplateEngine } from '../enum/TemplateEngine';
 
 export class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */

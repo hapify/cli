@@ -1,7 +1,8 @@
-import { IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
 export declare class TemplatePreviewHandlerService implements IWebSocketHandler {
     private channelsService;
     private generatorService;

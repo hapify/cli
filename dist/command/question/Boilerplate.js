@@ -31,10 +31,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FindBoilerplate = exports.AskBoilerplate = void 0;
 const Inquirer = __importStar(require("inquirer"));
 const typedi_1 = require("typedi");
-const service_1 = require("../../service");
+const Boilerplates_1 = require("../../service/Boilerplates");
 function AskBoilerplate(cmd, qBoilerplate) {
     return __awaiter(this, void 0, void 0, function* () {
-        const boilerplatesCollection = yield typedi_1.Container.get(service_1.BoilerplatesService).collection();
+        const boilerplatesCollection = yield typedi_1.Container.get(Boilerplates_1.BoilerplatesService).collection();
         if (cmd.boilerplate) {
             qBoilerplate.slug = cmd.boilerplate;
         }
@@ -46,9 +46,9 @@ function AskBoilerplate(cmd, qBoilerplate) {
         }
         else {
             // Get boilerplates from remote
-            const list = (yield boilerplatesCollection.list()).map(b => ({
+            const list = (yield boilerplatesCollection.list()).map((b) => ({
                 name: b.name,
-                value: b.git_url
+                value: b.git_url,
             }));
             yield addBoilerplate(list, qBoilerplate);
         }
@@ -60,7 +60,7 @@ function AskBoilerplate(cmd, qBoilerplate) {
 exports.AskBoilerplate = AskBoilerplate;
 function FindBoilerplate(qBoilerplate) {
     return __awaiter(this, void 0, void 0, function* () {
-        const boilerplatesCollection = yield typedi_1.Container.get(service_1.BoilerplatesService).collection();
+        const boilerplatesCollection = yield typedi_1.Container.get(Boilerplates_1.BoilerplatesService).collection();
         if (!qBoilerplate.urls) {
             let boilerplate;
             if (qBoilerplate.slug) {
@@ -84,25 +84,21 @@ function addBoilerplate(list, qBoilerplate) {
                 name: 'url',
                 message: 'Choose a boilerplate',
                 type: 'list',
-                choices: [
-                    { name: 'Enter a Git URL', value: null },
-                    new Inquirer.Separator(),
-                    ...list
-                ],
-                when: () => list.length > 0
+                choices: [{ name: 'Enter a Git URL', value: null }, new Inquirer.Separator(), ...list],
+                when: () => list.length > 0,
             },
             {
                 name: 'url',
                 message: 'Enter boilerplate URL',
                 when: (answer) => !answer.url,
-                validate: (input) => input.length > 0
+                validate: (input) => input.length > 0,
             },
             {
                 name: 'more',
                 message: 'Add another boilerplate?',
                 type: 'confirm',
-                default: false
-            }
+                default: false,
+            },
         ]));
         // Create if first one
         if (!qBoilerplate.urls) {

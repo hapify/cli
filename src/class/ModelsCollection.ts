@@ -1,7 +1,9 @@
-import { IModel, IStorable, ISerializable } from '../interface';
-import { Model } from './';
 import { Container } from 'typedi';
-import { ModelsApiStorageService } from '../service';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IModel } from '../interface/IObjects';
+import { Model } from './Model';
+import { ModelsApiStorageService } from '../service/storage/api/Models';
 
 export class ModelsCollection implements IStorable, ISerializable<IModel[], Model[]> {
 	/** @type {Model[]} The list of model instances */

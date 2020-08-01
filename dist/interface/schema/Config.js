@@ -25,22 +25,13 @@ const Joi = __importStar(require("joi"));
 const Field_1 = require("./Field");
 const Versions = ['1'];
 exports.ConfigSchema = Joi.object({
-    version: Joi.string()
-        .valid(Versions)
-        .required(),
+    version: Joi.string().valid(Versions).required(),
     validatorPath: Joi.string().required(),
-    project: Joi.string()
-        .hex()
-        .required(),
+    project: Joi.string().hex().required(),
     name: Joi.string(),
     description: Joi.string(),
     logo: Joi.string(),
-    defaultFields: Joi.array()
-        .items(Field_1.FieldSchema)
-        .min(0),
-    templates: Joi.array()
-        .items(Template_1.ConfigTemplateSchema)
-        .required()
-        .min(0)
+    defaultFields: Joi.array().items(Field_1.FieldSchema).min(0),
+    templates: Joi.array().items(Template_1.ConfigTemplateSchema).required().min(0),
 });
 //# sourceMappingURL=Config.js.map

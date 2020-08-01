@@ -1,6 +1,7 @@
-import { IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
 export declare class GetPresetsHandlerService implements IWebSocketHandler {
     private presetsService;
     /**

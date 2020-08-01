@@ -1,9 +1,10 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import { WriterService } from '../Writer';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
 
 @Service()
 export class GenerateChannelHandlerService implements IWebSocketHandler {

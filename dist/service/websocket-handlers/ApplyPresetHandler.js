@@ -39,10 +39,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApplyPresetHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Presets_1 = require("../Presets");
 const Joi = __importStar(require("joi"));
-const class_1 = require("../../class");
+const Model_1 = require("../../class/Model");
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
+const Model_2 = require("../../interface/schema/Model");
 let ApplyPresetHandlerService = class ApplyPresetHandlerService {
     /**
      * Constructor
@@ -53,25 +54,22 @@ let ApplyPresetHandlerService = class ApplyPresetHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.APPLY_PRESETS;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.APPLY_PRESETS;
     }
     /** @inheritDoc */
     validator() {
         return Joi.object({
-            models: Joi.array()
-                .items(interface_1.ModelSchema)
-                .required()
-                .min(0)
+            models: Joi.array().items(Model_2.ModelSchema).required().min(0),
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = message.data.models.map((m) => new class_1.Model(m));
+            const models = message.data.models.map((m) => new Model_1.Model(m));
             const results = yield this.presetsService.apply(models);
             return {
-                updated: results.updated.map(m => m.toObject()),
-                created: results.created.map(m => m.toObject())
+                updated: results.updated.map((m) => m.toObject()),
+                created: results.created.map((m) => m.toObject()),
             };
         });
     }

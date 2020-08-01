@@ -64,8 +64,7 @@ class BaseApiStorageService {
      */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const output = (yield this.apiService.get(`${this.path()}/${id}`))
-                .data;
+            const output = (yield this.apiService.get(`${this.path()}/${id}`)).data;
             return this.fromApi(output);
         });
     }
@@ -87,7 +86,7 @@ class BaseApiStorageService {
     list(searchParams) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.get(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
-            return output.map(o => this.fromApi(o));
+            return output.map((o) => this.fromApi(o));
         });
     }
     /**
@@ -110,7 +109,7 @@ class BaseApiStorageService {
     defaultSearchParams() {
         return {
             _page: 0,
-            _limit: 20
+            _limit: 20,
         };
     }
 };
@@ -122,8 +121,7 @@ BaseApiStorageService = __decorate([
      * S: Search params
      */
     ,
-    __metadata("design:paramtypes", [Api_1.ApiService,
-        Options_1.OptionsService])
+    __metadata("design:paramtypes", [Api_1.ApiService, Options_1.OptionsService])
 ], BaseApiStorageService);
 exports.BaseApiStorageService = BaseApiStorageService;
 //# sourceMappingURL=Base.js.map

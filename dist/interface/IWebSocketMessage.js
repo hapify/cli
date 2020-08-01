@@ -25,7 +25,7 @@ exports.WebSocketMessageSchema = Joi.object({
     id: Joi.string().required(),
     type: Joi.string().valid(['error', 'success']),
     tag: Joi.string(),
-    data: Joi.any()
+    data: Joi.any(),
 });
 class WebSocketMessages {
 }

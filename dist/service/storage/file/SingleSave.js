@@ -95,8 +95,7 @@ let SingleSaveFileStorage = class SingleSaveFileStorage {
      */
     shouldSave(bucket, data) {
         const contentMd5 = md5_1.default(data);
-        if (typeof this.contentMd5[bucket] === 'undefined' ||
-            contentMd5 !== this.contentMd5[bucket]) {
+        if (typeof this.contentMd5[bucket] === 'undefined' || contentMd5 !== this.contentMd5[bucket]) {
             this.contentMd5[bucket] = contentMd5;
             return true;
         }

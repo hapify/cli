@@ -39,9 +39,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SetModelsHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
+const Model_1 = require("../../interface/schema/Model");
 let SetModelsHandlerService = class SetModelsHandlerService {
     /**
      * Constructor
@@ -52,13 +53,11 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.SET_MODELS;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.SET_MODELS;
     }
     /** @inheritDoc */
     validator() {
-        return Joi.array()
-            .items(interface_1.ModelSchema)
-            .min(0);
+        return Joi.array().items(Model_1.ModelSchema).min(0);
     }
     /** @inheritDoc */
     handle(message) {

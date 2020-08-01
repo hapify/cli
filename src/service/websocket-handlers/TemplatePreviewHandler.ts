@@ -1,9 +1,11 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, TemplateSchema } from '../../interface';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
-import { Template } from '../../class';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { TemplateSchema } from '../../interface/schema/Template';
+import { Template } from '../../class/Template';
 
 @Service()
 export class TemplatePreviewHandlerService implements IWebSocketHandler {

@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import * as http from 'http';
 import { LoggerService } from './Logger';
-import { IWebSocketHandler } from '../interface';
 import { OptionsService } from './Options';
+import { IWebSocketHandler } from '../interface/IWebSocketHandler';
 export declare class WebSocketServerService {
     private optionsService;
     private loggerService;

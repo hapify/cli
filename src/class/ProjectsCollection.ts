@@ -1,7 +1,9 @@
-import { IProject, ISerializable, IStorable } from '../interface';
-import { Project } from './';
-import { ProjectsApiStorageService } from '../service';
 import { Container } from 'typedi';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IProject } from '../interface/IObjects';
+import { Project } from './Project';
+import { ProjectsApiStorageService } from '../service/storage/api/Projects';
 
 export class ProjectsCollection implements IStorable, ISerializable<IProject[], Project[]> {
 	/** @type {Project[]} The list of project instances */

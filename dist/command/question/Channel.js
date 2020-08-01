@@ -39,20 +39,20 @@ function DescribeChannel(cmd, qChannelDescription) {
                 name: 'name',
                 message: 'Enter the channel name',
                 when: () => !cmd.channelName,
-                default: null
+                default: null,
             },
             {
                 name: 'description',
                 message: 'Enter a description',
                 when: () => !cmd.channelDesc && !cmd.channelName,
-                default: null
+                default: null,
             },
             {
                 name: 'logo',
                 message: 'Enter a logo URL',
                 when: () => !cmd.channelLogo && !cmd.channelName,
-                default: null
-            }
+                default: null,
+            },
         ]));
         qChannelDescription.name = cmd.channelName || answer.name;
         qChannelDescription.description = cmd.channelDesc || answer.description;

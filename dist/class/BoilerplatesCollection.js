@@ -10,15 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoilerplatesCollection = void 0;
-const _1 = require("./");
-const service_1 = require("../service");
 const typedi_1 = require("typedi");
+const Boilerplate_1 = require("./Boilerplate");
+const Boilerplates_1 = require("../service/storage/api/Boilerplates");
 class BoilerplatesCollection {
     /** Constructor */
     constructor() {
         /** @type {Boilerplate[]} The list of boilerplate instances */
         this.boilerplates = [];
-        this.storageService = typedi_1.Container.get(service_1.BoilerplatesApiStorageService);
+        this.storageService = typedi_1.Container.get(Boilerplates_1.BoilerplatesApiStorageService);
     }
     /** Returns a singleton for this config */
     static getInstance() {
@@ -61,7 +61,7 @@ class BoilerplatesCollection {
      */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.boilerplates.find(p => p.id === id);
+            return this.boilerplates.find((p) => p.id === id);
         });
     }
     /**
@@ -72,19 +72,19 @@ class BoilerplatesCollection {
         return __awaiter(this, void 0, void 0, function* () {
             const data = yield this.storageService.list({
                 _limit: 1,
-                slug
+                slug,
             });
-            return data.length ? new _1.Boilerplate(data[0]) : null;
+            return data.length ? new Boilerplate_1.Boilerplate(data[0]) : null;
         });
     }
     /** @inheritDoc */
     fromObject(object) {
-        this.boilerplates = object.map(p => new _1.Boilerplate(p));
+        this.boilerplates = object.map((p) => new Boilerplate_1.Boilerplate(p));
         return this.boilerplates;
     }
     /** @inheritDoc */
     toObject() {
-        return this.boilerplates.map(p => p.toObject());
+        return this.boilerplates.map((p) => p.toObject());
     }
 }
 exports.BoilerplatesCollection = BoilerplatesCollection;

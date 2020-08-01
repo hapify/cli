@@ -1,6 +1,7 @@
 import { OptionsService } from '../../Options';
 import { ApiService } from '../../Api';
-import { IRemoteConfig, IStorageService } from '../../../interface';
+import { IStorageService } from '../../../interface/IStorageService';
+import { IRemoteConfig } from '../../../interface/IObjects';
 /** Used to export and import search params */
 export interface BaseSearchParams {
     _page?: string | number;

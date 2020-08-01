@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Preset = void 0;
-const _1 = require("./");
+const Model_1 = require("./Model");
 class Preset {
     /** Constructor */
     constructor(object) {
@@ -17,7 +17,7 @@ class Preset {
         this.name__fr = object.name__fr;
         this.description = object.description;
         this.description__fr = object.description__fr;
-        this.models = object.models.map(m => new _1.Model(m));
+        this.models = object.models.map((m) => new Model_1.Model(m));
         return this;
     }
     /** @inheritDoc */
@@ -29,7 +29,7 @@ class Preset {
             name__fr: this.name__fr,
             description: this.description,
             description__fr: this.description__fr,
-            models: this.models.map(m => m.toObject())
+            models: this.models.map((m) => m.toObject()),
         };
     }
 }

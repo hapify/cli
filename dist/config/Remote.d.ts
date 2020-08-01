@@ -1,2 +1,2 @@
-import { IRemoteConfig } from '../interface';
+import { IRemoteConfig } from '../interface/IObjects';
 export declare const RemoteConfig: IRemoteConfig;

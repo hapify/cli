@@ -1,7 +1,9 @@
 import { Service } from 'typedi';
-import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ModelSchema } from '../../interface';
 import { ValidatorService } from '../Validator';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { ModelSchema } from '../../interface/schema/Model';
 
 @Service()
 export class ValidateModelHandlerService implements IWebSocketHandler {

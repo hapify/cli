@@ -39,7 +39,7 @@ let InfoService = class InfoService {
             if (!this._fields) {
                 // Get defined fields
                 const channels = yield this.channelsService.channels();
-                const channel = channels.find(c => !!c.config.defaultFields);
+                const channel = channels.find((c) => !!c.config.defaultFields);
                 this._fields = channel ? channel.config.defaultFields : [];
             }
             return this._fields;

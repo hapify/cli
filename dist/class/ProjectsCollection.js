@@ -10,15 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProjectsCollection = void 0;
-const _1 = require("./");
-const service_1 = require("../service");
 const typedi_1 = require("typedi");
+const Project_1 = require("./Project");
+const Projects_1 = require("../service/storage/api/Projects");
 class ProjectsCollection {
     /** Constructor */
     constructor() {
         /** @type {Project[]} The list of project instances */
         this.projects = [];
-        this.storageService = typedi_1.Container.get(service_1.ProjectsApiStorageService);
+        this.storageService = typedi_1.Container.get(Projects_1.ProjectsApiStorageService);
     }
     /** Returns a singleton for this config */
     static getInstance() {
@@ -61,7 +61,7 @@ class ProjectsCollection {
      */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.projects.find(p => p.id === id);
+            return this.projects.find((p) => p.id === id);
         });
     }
     /**
@@ -72,19 +72,19 @@ class ProjectsCollection {
         return __awaiter(this, void 0, void 0, function* () {
             const object = yield this.storageService.create({
                 name,
-                description: description.length ? description : null
+                description: description.length ? description : null,
             });
-            return new _1.Project(object);
+            return new Project_1.Project(object);
         });
     }
     /** @inheritDoc */
     fromObject(object) {
-        this.projects = object.map(p => new _1.Project(p));
+        this.projects = object.map((p) => new Project_1.Project(p));
         return this.projects;
     }
     /** @inheritDoc */
     toObject() {
-        return this.projects.map(p => p.toObject());
+        return this.projects.map((p) => p.toObject());
     }
 }
 exports.ProjectsCollection = ProjectsCollection;

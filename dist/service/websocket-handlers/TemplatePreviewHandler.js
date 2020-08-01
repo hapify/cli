@@ -39,11 +39,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TemplatePreviewHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
-const class_1 = require("../../class");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
+const Template_1 = require("../../interface/schema/Template");
+const Template_2 = require("../../class/Template");
 let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
     /**
      * Constructor
@@ -56,30 +57,28 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.PREVIEW_TEMPLATE;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.PREVIEW_TEMPLATE;
     }
     /** @inheritDoc */
     validator() {
         return Joi.object({
             model: Joi.string(),
             channel: Joi.string().required(),
-            template: interface_1.TemplateSchema.required()
+            template: Template_1.TemplateSchema.required(),
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get channel
-            const channel = (yield this.channelsService.channels()).find(c => c.id === message.data.channel);
+            const channel = (yield this.channelsService.channels()).find((c) => c.id === message.data.channel);
             if (!channel) {
                 throw new Error(`Unable to find channel ${message.data.channel}`);
             }
             // Get model, if any
-            const model = message.data.model
-                ? yield channel.modelsCollection.find(message.data.model)
-                : null;
+            const model = message.data.model ? yield channel.modelsCollection.find(message.data.model) : null;
             // Get template
-            const template = new class_1.Template(channel, message.data.template);
+            const template = new Template_2.Template(channel, message.data.template);
             // Compute the path
             return this.generatorService.run(template, model);
         });
@@ -87,8 +86,7 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
 };
 TemplatePreviewHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Channels_1.ChannelsService,
-        Generator_1.GeneratorService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService, Generator_1.GeneratorService])
 ], TemplatePreviewHandlerService);
 exports.TemplatePreviewHandlerService = TemplatePreviewHandlerService;
 //# sourceMappingURL=TemplatePreviewHandler.js.map

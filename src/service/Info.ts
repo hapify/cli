@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { ChannelsService } from './Channels';
-import { IProject, IField } from '../interface';
+import { IField, IProject } from '../interface/IObjects';
 
 @Service()
 export class InfoService {

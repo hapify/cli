@@ -1,9 +1,11 @@
 import { Service } from 'typedi';
-import { IValidatorResult, IModel, ValidatorResultSchema } from '../interface';
-import { InternalConfig } from '../config';
-import { RichError } from '../class';
 import { HapifyVM } from 'hapify-vm';
 import * as Joi from 'joi';
+import { IValidatorResult } from '../interface/IValidatorResult';
+import { IModel } from '../interface/IObjects';
+import { InternalConfig } from '../config/Internal';
+import { RichError } from '../class/RichError';
+import { ValidatorResultSchema } from '../interface/schema/ValidatorResult';
 
 @Service()
 export class ValidatorService {

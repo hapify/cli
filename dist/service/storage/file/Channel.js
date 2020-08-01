@@ -75,24 +75,22 @@ let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileS
     /** Get all files' absolute path from a directory */
     static listAllFiles(rootPath) {
         // Read the whole directory
-        const entries = Fs.readdirSync(rootPath).map(dir => Path.join(rootPath, dir));
+        const entries = Fs.readdirSync(rootPath).map((dir) => Path.join(rootPath, dir));
         // Get sub-files
         const subFiles = entries
-            .filter(subPath => Fs.statSync(subPath).isDirectory())
-            .map(subPath => ChannelFileStorageService_1.listAllFiles(subPath))
+            .filter((subPath) => Fs.statSync(subPath).isDirectory())
+            .map((subPath) => ChannelFileStorageService_1.listAllFiles(subPath))
             .reduce((flatten, files) => flatten.concat(files), []);
         // Return files and sub-files
-        return entries
-            .filter(subPath => Fs.statSync(subPath).isFile())
-            .concat(subFiles);
+        return entries.filter((subPath) => Fs.statSync(subPath).isFile()).concat(subFiles);
     }
     /** Delete all directories if empty */
     static clearEmptyDirectories(rootPath) {
         // Remove sub-directories
         Fs.readdirSync(rootPath)
-            .map(dir => Path.join(rootPath, dir))
-            .filter(subPath => Fs.statSync(subPath).isDirectory())
-            .forEach(subPath => ChannelFileStorageService_1.clearEmptyDirectories(subPath));
+            .map((dir) => Path.join(rootPath, dir))
+            .filter((subPath) => Fs.statSync(subPath).isDirectory())
+            .forEach((subPath) => ChannelFileStorageService_1.clearEmptyDirectories(subPath));
         // Count remaining files & dirs
         const count = Fs.readdirSync(rootPath).length;
         if (count === 0) {

@@ -33,8 +33,8 @@ const Inquirer = __importStar(require("inquirer"));
 const child_process_1 = require("child_process");
 const util = __importStar(require("util"));
 const typedi_1 = require("typedi");
-const service_1 = require("../../service");
-const options = typedi_1.Container.get(service_1.OptionsService);
+const Options_1 = require("../../service/Options");
+const options = typedi_1.Container.get(Options_1.OptionsService);
 function AskDiff(cmd, qDiff, git) {
     return __awaiter(this, void 0, void 0, function* () {
         const branches = yield git.branchLocal();
@@ -44,49 +44,41 @@ function AskDiff(cmd, qDiff, git) {
                 message: 'Choose a source branch',
                 type: 'list',
                 choices: branches.all,
-                default: 'hapify'
-            }
+                default: 'hapify',
+            },
         ])).source;
-        const commits = (yield git.log([qDiff.source, '-n', '20', '--'])).all.map(c => ({ name: `[${c.date}] ${c.message}`, value: c.hash }));
+        const commits = (yield git.log([qDiff.source, '-n', '20', '--'])).all.map((c) => ({ name: `[${c.date}] ${c.message}`, value: c.hash }));
         qDiff.from = (yield Inquirer.prompt([
             {
                 name: 'from',
                 message: 'Choose the first commit',
                 type: 'list',
-                choices: [
-                    { name: 'Enter a commit hash', value: null },
-                    new Inquirer.Separator(),
-                    ...commits
-                ],
+                choices: [{ name: 'Enter a commit hash', value: null }, new Inquirer.Separator(), ...commits],
                 default: commits.length > 1 ? commits[1].value : null,
-                when: () => commits.length > 0
+                when: () => commits.length > 0,
             },
             {
                 name: 'from',
                 message: 'Enter the first commit hash',
                 when: (answer) => !answer.from,
-                validate: input => input.length > 0
-            }
+                validate: (input) => input.length > 0,
+            },
         ])).from;
         qDiff.to = (yield Inquirer.prompt([
             {
                 name: 'to',
                 message: 'Choose the second commit',
                 type: 'list',
-                choices: [
-                    { name: 'Enter a commit hash', value: null },
-                    new Inquirer.Separator(),
-                    ...commits
-                ],
+                choices: [{ name: 'Enter a commit hash', value: null }, new Inquirer.Separator(), ...commits],
                 default: commits.length > 0 ? commits[0].value : null,
-                when: () => commits.length > 0
+                when: () => commits.length > 0,
             },
             {
                 name: 'to',
                 message: 'Enter the second commit hash',
                 when: (answer) => !answer.to,
-                validate: input => input.length > 0
-            }
+                validate: (input) => input.length > 0,
+            },
         ])).to;
         qDiff.destination = (yield Inquirer.prompt([
             {
@@ -94,8 +86,8 @@ function AskDiff(cmd, qDiff, git) {
                 message: 'Choose a destination branch',
                 type: 'list',
                 choices: branches.all,
-                default: 'develop'
-            }
+                default: 'develop',
+            },
         ])).destination;
     });
 }
@@ -108,13 +100,13 @@ function ApplyDiff(qDiff, git) {
                 name: 'confirm',
                 message: `Confirm run command: "${command}" on branch ${qDiff.destination}`,
                 type: 'confirm',
-                default: false
-            }
+                default: false,
+            },
         ])).confirm;
         if (confirm) {
             yield git.checkout(qDiff.destination);
             const { stdout, stderr } = yield util.promisify(child_process_1.exec)(command, {
-                cwd: options.dir()
+                cwd: options.dir(),
             });
             if (stderr && stderr.length) {
                 throw new Error(`${stderr}\n${stdout}`);

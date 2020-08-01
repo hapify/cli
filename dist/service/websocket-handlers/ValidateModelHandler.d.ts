@@ -1,6 +1,7 @@
-import { IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ValidatorService } from '../Validator';
 import * as Joi from 'joi';
+import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
+import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
 export declare class ValidateModelHandlerService implements IWebSocketHandler {
     private validatorService;
     /**

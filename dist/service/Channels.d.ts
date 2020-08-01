@@ -1,5 +1,6 @@
 import { OptionsService } from './Options';
-import { ModelsCollection, Channel } from '../class';
+import { Channel } from '../class/Channel';
+import { ModelsCollection } from '../class/ModelsCollection';
 export declare class ChannelsService {
     private optionsService;
     /** @type {Channel[]} Channels instances */

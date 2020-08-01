@@ -22,7 +22,7 @@ class Boilerplate {
             id: this.id,
             slug: this.slug,
             name: this.name,
-            git_url: this.git_url
+            git_url: this.git_url,
         };
     }
 }

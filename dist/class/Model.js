@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Model = void 0;
-const interface_1 = require("../interface");
-const _1 = require("./");
-/** Random function */
+const IObjects_1 = require("../interface/IObjects");
+const Field_1 = require("./Field");
 function _p8(s) {
     const p = (Math.random().toString(16) + '000000000').substr(2, 8);
     return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p;
@@ -20,7 +19,7 @@ class Model {
         this.id = object.id;
         this.name = object.name;
         this.notes = object.notes || null;
-        this.fields = object.fields.map(f => new _1.Field(f));
+        this.fields = object.fields.map((f) => new Field_1.Field(f));
         this.accesses = object.accesses;
         return this;
     }
@@ -30,8 +29,8 @@ class Model {
             id: this.id,
             name: this.name,
             notes: this.notes || null,
-            fields: this.fields.map(f => f.toObject()),
-            accesses: this.accesses
+            fields: this.fields.map((f) => f.toObject()),
+            accesses: this.accesses,
         };
     }
     /**
@@ -46,12 +45,12 @@ class Model {
     /** Get default accesses */
     static defaultAccesses() {
         return {
-            create: interface_1.Access.GUEST,
-            read: interface_1.Access.GUEST,
-            update: interface_1.Access.GUEST,
-            remove: interface_1.Access.GUEST,
-            search: interface_1.Access.GUEST,
-            count: interface_1.Access.GUEST
+            create: IObjects_1.Access.GUEST,
+            read: IObjects_1.Access.GUEST,
+            update: IObjects_1.Access.GUEST,
+            remove: IObjects_1.Access.GUEST,
+            search: IObjects_1.Access.GUEST,
+            count: IObjects_1.Access.GUEST,
         };
     }
     /** Clone the model to a new reference */

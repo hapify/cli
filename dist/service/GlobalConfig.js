@@ -38,7 +38,7 @@ const Fs = __importStar(require("fs"));
 const Os = __importStar(require("os"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Joi = __importStar(require("joi"));
-const interface_1 = require("../interface");
+const GlobalConfig_1 = require("../interface/schema/GlobalConfig");
 let GlobalConfigService = class GlobalConfigService {
     /** Constructor */
     constructor() {
@@ -55,13 +55,11 @@ let GlobalConfigService = class GlobalConfigService {
     /** Create file if not exists */
     init() {
         // Create path
-        if (!Fs.existsSync(this.rootPath) ||
-            !Fs.statSync(this.rootPath).isDirectory()) {
+        if (!Fs.existsSync(this.rootPath) || !Fs.statSync(this.rootPath).isDirectory()) {
             mkdirp_1.default.sync(this.rootPath);
         }
         // Create file
-        if (!Fs.existsSync(this.filePath) ||
-            !Fs.statSync(this.filePath).isFile()) {
+        if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {
             this.save();
         }
         // Load & validate config
@@ -78,10 +76,10 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Validate the current config or scream */
     validate(data = this.data) {
-        const validation = Joi.validate(data, interface_1.GlobalConfigSchema);
+        const validation = Joi.validate(data, GlobalConfig_1.GlobalConfigSchema);
         if (validation.error) {
             const errorMessage = validation.error.details
-                .map(v => {
+                .map((v) => {
                 if (v.context.key === 'apiKey') {
                     return `${v.message}. Please visit https://www.hapify.io/my-key`;
                 }

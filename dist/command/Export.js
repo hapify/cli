@@ -30,23 +30,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExportCommand = void 0;
 const Path = __importStar(require("path"));
-const class_1 = require("../class");
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
 const helpers_1 = require("./helpers");
+const Generator_1 = require("../service/Generator");
+const Options_1 = require("../service/Options");
+const Logger_1 = require("../service/Logger");
+const Writer_1 = require("../service/Writer");
+const Channel_1 = require("../class/Channel");
 // ############################################
 // Get services
-const generator = typedi_1.Container.get(service_1.GeneratorService);
-const options = typedi_1.Container.get(service_1.OptionsService);
-const logger = typedi_1.Container.get(service_1.LoggerService);
-const writer = typedi_1.Container.get(service_1.WriterService);
+const generator = typedi_1.Container.get(Generator_1.GeneratorService);
+const options = typedi_1.Container.get(Options_1.OptionsService);
+const logger = typedi_1.Container.get(Logger_1.LoggerService);
+const writer = typedi_1.Container.get(Writer_1.WriterService);
 function ExportCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             options.setCommand(cmd);
             // ---------------------------------
             // Action starts
-            const channel = new class_1.Channel(options.dir());
+            const channel = new Channel_1.Channel(options.dir());
             yield channel.load();
             helpers_1.logChannel(channel);
             const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);

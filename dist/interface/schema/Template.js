@@ -21,28 +21,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfigTemplateSchema = exports.TemplateSchema = void 0;
 const Joi = __importStar(require("joi"));
-const enum_1 = require("../../enum");
-const engines = [enum_1.TemplateEngine.Hpf, enum_1.TemplateEngine.JavaScript];
-const inputs = [enum_1.TemplateInput.One, enum_1.TemplateInput.All];
+const TemplateEngine_1 = require("../../enum/TemplateEngine");
+const TemplateInput_1 = require("../../enum/TemplateInput");
+const engines = [TemplateEngine_1.TemplateEngine.Hpf, TemplateEngine_1.TemplateEngine.JavaScript];
+const inputs = [TemplateInput_1.TemplateInput.One, TemplateInput_1.TemplateInput.All];
 exports.TemplateSchema = Joi.object({
     path: Joi.string().required(),
-    engine: Joi.string()
-        .valid(engines)
-        .required(),
-    input: Joi.string()
-        .valid(inputs)
-        .required(),
-    content: Joi.string()
-        .required()
-        .allow('')
+    engine: Joi.string().valid(engines).required(),
+    input: Joi.string().valid(inputs).required(),
+    content: Joi.string().required().allow(''),
 });
 exports.ConfigTemplateSchema = Joi.object({
     path: Joi.string().required(),
-    engine: Joi.string()
-        .valid(engines)
-        .required(),
-    input: Joi.string()
-        .valid(inputs)
-        .required()
+    engine: Joi.string().valid(engines).required(),
+    input: Joi.string().valid(inputs).required(),
 });
 //# sourceMappingURL=Template.js.map

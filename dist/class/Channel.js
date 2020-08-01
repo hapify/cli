@@ -33,14 +33,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Channel = void 0;
 const Path = __importStar(require("path"));
-const interface_1 = require("../interface");
-const _1 = require("./");
-const enum_1 = require("../enum");
 const md5_1 = __importDefault(require("md5"));
 const Joi = __importStar(require("joi"));
 const FieldType_1 = require("./FieldType");
 const typedi_1 = require("typedi");
-const service_1 = require("../service");
+const Template_1 = require("./Template");
+const Validator_1 = require("./Validator");
+const Project_1 = require("./Project");
+const ModelsCollection_1 = require("./ModelsCollection");
+const Channel_1 = require("../service/storage/file/Channel");
+const Config_1 = require("../interface/schema/Config");
+const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
+const TemplateEngine_1 = require("../enum/TemplateEngine");
+const TemplateInput_1 = require("../enum/TemplateInput");
 class Channel {
     /**
      * Constructor
@@ -51,7 +56,7 @@ class Channel {
         this.path = path;
         /** @type {Template[]} Templates instances */
         this.templates = [];
-        this.storageService = typedi_1.Container.get(service_1.ChannelFileStorageService);
+        this.storageService = typedi_1.Container.get(Channel_1.ChannelFileStorageService);
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
@@ -62,15 +67,12 @@ class Channel {
             // Validate storage
             yield this.validate();
             // Get config from storage
-            const config = yield this.storageService.get([
-                this.path,
-                Channel.configFile
-            ]);
+            const config = yield this.storageService.get([this.path, Channel.configFile]);
             // Validate the incoming config
-            const validation = Joi.validate(config, interface_1.ConfigSchema);
+            const validation = Joi.validate(config, Config_1.ConfigSchema);
             if (validation.error) {
                 // Transform Joi message
-                interface_1.TransformValidationMessage(validation.error);
+                ValidatorResult_1.TransformValidationMessage(validation.error);
                 throw validation.error;
             }
             // Apply configuration
@@ -80,17 +82,17 @@ class Channel {
                 this.name = this.config.name;
             }
             // Load project
-            this.project = yield _1.Project.getInstance(this.config.project);
+            this.project = yield Project_1.Project.getInstance(this.config.project);
             // Load each content file
             for (let i = 0; i < this.config.templates.length; i++) {
-                const template = new _1.Template(this, Object.assign(this.config.templates[i], { content: '' }));
+                const template = new Template_1.Template(this, Object.assign(this.config.templates[i], { content: '' }));
                 yield template.load();
                 this.templates.push(template);
             }
             // Load models
-            this.modelsCollection = yield _1.ModelsCollection.getInstance(this.config.project);
+            this.modelsCollection = yield ModelsCollection_1.ModelsCollection.getInstance(this.config.project);
             // Load validator
-            this.validator = new _1.Validator(this, this.config.validatorPath);
+            this.validator = new Validator_1.Validator(this, this.config.validatorPath);
             yield this.validator.load();
         });
     }
@@ -103,7 +105,7 @@ class Channel {
             }
             yield this.validator.save();
             // Update configurations
-            this.config.templates = this.templates.map(m => {
+            this.config.templates = this.templates.map((m) => {
                 const t = m.toObject();
                 delete t.content;
                 return t;
@@ -112,10 +114,7 @@ class Channel {
             // Write file if necessary
             yield this.storageService.set([this.path, Channel.configFile], this.config);
             // Cleanup files in template path
-            const legitFiles = this.templates.map(t => [
-                this.templatesPath,
-                t.contentPath
-            ]);
+            const legitFiles = this.templates.map((t) => [this.templatesPath, t.contentPath]);
             legitFiles.push([this.path, this.config.validatorPath]);
             yield this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
         });
@@ -126,7 +125,7 @@ class Channel {
      */
     isEmpty() {
         const validatorIsEmpty = this.validator.isEmpty();
-        const templatesAreEmpty = this.templates.every(t => t.isEmpty());
+        const templatesAreEmpty = this.templates.every((t) => t.isEmpty());
         return validatorIsEmpty && templatesAreEmpty;
     }
     /**
@@ -134,7 +133,7 @@ class Channel {
      * @returns {void}
      */
     filter() {
-        this.templates = this.templates.filter(t => !t.isEmpty());
+        this.templates = this.templates.filter((t) => !t.isEmpty());
     }
     /**
      * Check resource validity
@@ -153,7 +152,7 @@ class Channel {
             if (!Channel.configExists(path)) {
                 throw new Error(`Cannot find config file in ${path}`);
             }
-            const storage = typedi_1.Container.get(service_1.ChannelFileStorageService);
+            const storage = typedi_1.Container.get(Channel_1.ChannelFileStorageService);
             // Get config from storage
             const config = yield storage.get([path, Channel.configFile]);
             // Set value and save config
@@ -164,10 +163,7 @@ class Channel {
     /** Denotes if the config file exists */
     static configExists(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield typedi_1.Container.get(service_1.ChannelFileStorageService).exists([
-                path,
-                Channel.configFile
-            ]);
+            return yield typedi_1.Container.get(Channel_1.ChannelFileStorageService).exists([path, Channel.configFile]);
         });
     }
     /** Init a Hapify structure within a directory */
@@ -202,24 +198,24 @@ class Channel {
                         hidden: false,
                         internal: true,
                         restricted: false,
-                        ownership: false
-                    }
+                        ownership: false,
+                    },
                 ],
                 templates: [
                     {
                         path: 'models/{kebab}/hello.js',
-                        engine: enum_1.TemplateEngine.Hpf,
-                        input: enum_1.TemplateInput.One
-                    }
-                ]
+                        engine: TemplateEngine_1.TemplateEngine.Hpf,
+                        input: TemplateInput_1.TemplateInput.One,
+                    },
+                ],
             };
             // Create template
-            const template = new _1.Template(channel, Object.assign(channel.config.templates[0], {
-                content: '// Hello <<M A>>'
+            const template = new Template_1.Template(channel, Object.assign(channel.config.templates[0], {
+                content: '// Hello <<M A>>',
             }));
             channel.templates.push(template);
             // Create validator
-            channel.validator = new _1.Validator(channel, channel.config.validatorPath);
+            channel.validator = new Validator_1.Validator(channel, channel.config.validatorPath);
             channel.validator.content = `// Models validation script\nreturn { errors: [], warnings: [] };`;
             // Save channel
             return channel;
@@ -230,14 +226,14 @@ class Channel {
         // Do not update name nor id
         // Create or update templates if necessary
         // By keeping the same instances, we will avoid a file saving if the content did not change
-        this.templates = object.templates.map(t => {
+        this.templates = object.templates.map((t) => {
             // Try to find an existing template
-            const existing = this.templates.find(e => e.path === t.path);
+            const existing = this.templates.find((e) => e.path === t.path);
             if (existing) {
                 return existing.fromObject(t);
             }
             // Otherwise create a new template
-            return new _1.Template(this, t);
+            return new Template_1.Template(this, t);
         });
         // Update validator
         this.validator.content = object.validator;
@@ -251,7 +247,7 @@ class Channel {
             description: this.config.description || null,
             logo: this.config.logo || null,
             templates: this.templates.map((template) => template.toObject()),
-            validator: this.validator.content
+            validator: this.validator.content,
         };
     }
 }

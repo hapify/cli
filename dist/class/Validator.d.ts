@@ -1,5 +1,5 @@
-import { IStorable } from '../interface';
-import { Channel } from './';
+import { IStorable } from '../interface/IStorable';
+import { Channel } from './Channel';
 export declare class Validator implements IStorable {
     private parent;
     path: string;

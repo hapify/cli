@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { Channel } from '../class';
 import { Container } from 'typedi';
-import { LoggerService } from '../service';
+import { LoggerService } from '../service/Logger';
+import { Channel } from '../class/Channel';
 
 const logger = Container.get(LoggerService);
 

@@ -39,9 +39,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetModelsHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GetModelsHandlerService = class GetModelsHandlerService {
     /**
      * Constructor
@@ -52,7 +52,7 @@ let GetModelsHandlerService = class GetModelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.GET_MODELS;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.GET_MODELS;
     }
     /** @inheritDoc */
     validator() {

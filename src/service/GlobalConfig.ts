@@ -4,7 +4,8 @@ import * as Fs from 'fs';
 import * as Os from 'os';
 import mkdirp from 'mkdirp';
 import * as Joi from 'joi';
-import { IGlobalConfig, GlobalConfigSchema } from '../interface';
+import { IGlobalConfig } from '../interface/IGlobalConfig';
+import { GlobalConfigSchema } from '../interface/schema/GlobalConfig';
 
 @Service()
 export class GlobalConfigService {

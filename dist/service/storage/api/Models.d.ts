@@ -1,5 +1,5 @@
-import { IModel } from '../../../interface';
 import { BaseSearchParams, BaseApiStorageService } from './Base';
+import { IModel } from '../../../interface/IObjects';
 interface ModelsSearchParams extends BaseSearchParams {
     version?: string;
     project?: string;

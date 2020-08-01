@@ -20,7 +20,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoilerplatesService = void 0;
 const typedi_1 = require("typedi");
-const class_1 = require("../class");
+const BoilerplatesCollection_1 = require("../class/BoilerplatesCollection");
 let BoilerplatesService = class BoilerplatesService {
     /**
      * Constructor
@@ -33,7 +33,7 @@ let BoilerplatesService = class BoilerplatesService {
      */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield class_1.BoilerplatesCollection.getInstance();
+            return yield BoilerplatesCollection_1.BoilerplatesCollection.getInstance();
         });
     }
 };

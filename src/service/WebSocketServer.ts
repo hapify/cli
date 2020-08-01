@@ -8,25 +8,25 @@ import * as RandomString from 'randomstring';
 import { AddressInfo } from 'ws';
 import { URL } from 'url';
 import * as Joi from 'joi';
-import {
-	ApplyPresetHandlerService,
-	GetModelsHandlerService,
-	SetModelsHandlerService,
-	GetChannelsHandlerService,
-	SetChannelsHandlerService,
-	GetPresetsHandlerService,
-	GetInfoHandlerService,
-	NewModelHandlerService,
-	PathPreviewHandlerService,
-	TemplatePreviewHandlerService,
-	ValidateModelHandlerService,
-	GenerateTemplateHandlerService,
-	GenerateChannelHandlerService,
-} from './websocket-handlers';
 import { LoggerService } from './Logger';
-import { IWebSocketHandler, IWebSocketMessage, WebSocketMessageSchema, TransformValidationMessage } from '../interface';
 import { Container } from 'typedi';
 import { OptionsService } from './Options';
+import { ApplyPresetHandlerService } from './websocket-handlers/ApplyPresetHandler';
+import { GetModelsHandlerService } from './websocket-handlers/GetModelsHandler';
+import { SetModelsHandlerService } from './websocket-handlers/SetModelsHandler';
+import { GetChannelsHandlerService } from './websocket-handlers/GetChannelsHandler';
+import { SetChannelsHandlerService } from './websocket-handlers/SetChannelsHandler';
+import { TemplatePreviewHandlerService } from './websocket-handlers/TemplatePreviewHandler';
+import { PathPreviewHandlerService } from './websocket-handlers/PathPreviewHandler';
+import { ValidateModelHandlerService } from './websocket-handlers/ValidateModelHandler';
+import { NewModelHandlerService } from './websocket-handlers/NewModelHandler';
+import { GetInfoHandlerService } from './websocket-handlers/GetInfoHandler';
+import { GetPresetsHandlerService } from './websocket-handlers/GetPresetsHandler';
+import { GenerateChannelHandlerService } from './websocket-handlers/GenerateChannelHandler';
+import { GenerateTemplateHandlerService } from './websocket-handlers/GenerateTemplateHandler';
+import { IWebSocketMessage, WebSocketMessageSchema } from '../interface/IWebSocketMessage';
+import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
+import { IWebSocketHandler } from '../interface/IWebSocketHandler';
 
 interface TokenData {
 	name: string;

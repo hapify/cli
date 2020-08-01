@@ -1,4 +1,4 @@
-import { IGeneratorResult } from '../interface';
+import { IGeneratorResult } from '../interface/IGeneratorResult';
 export declare class WriterService {
     /** Constructor */
     constructor();

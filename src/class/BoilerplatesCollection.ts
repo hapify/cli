@@ -1,7 +1,9 @@
-import { IBoilerplate, ISerializable, IStorable } from '../interface';
-import { Boilerplate } from './';
-import { BoilerplatesApiStorageService } from '../service';
+import { IStorable } from '../interface/IStorable';
 import { Container } from 'typedi';
+import { ISerializable } from '../interface/ISerializable';
+import { IBoilerplate } from '../interface/IObjects';
+import { Boilerplate } from './Boilerplate';
+import { BoilerplatesApiStorageService } from '../service/storage/api/Boilerplates';
 
 export class BoilerplatesCollection implements IStorable, ISerializable<IBoilerplate[], Boilerplate[]> {
 	/** @type {Boilerplate[]} The list of boilerplate instances */

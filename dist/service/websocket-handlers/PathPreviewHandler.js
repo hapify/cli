@@ -39,10 +39,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PathPreviewHandlerService = void 0;
 const typedi_1 = require("typedi");
-const interface_1 = require("../../interface");
 const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
 const Joi = __importStar(require("joi"));
+const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let PathPreviewHandlerService = class PathPreviewHandlerService {
     /**
      * Constructor
@@ -55,22 +55,20 @@ let PathPreviewHandlerService = class PathPreviewHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === interface_1.WebSocketMessages.PREVIEW_PATH;
+        return message.id === IWebSocketMessage_1.WebSocketMessages.PREVIEW_PATH;
     }
     /** @inheritDoc */
     validator() {
         return Joi.object({
             model: Joi.string(),
-            path: Joi.string().required()
+            path: Joi.string().required(),
         });
     }
     /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get model, if any
-            const model = message.data.model
-                ? yield (yield this.channelsService.modelsCollection()).find(message.data.model)
-                : null;
+            const model = message.data.model ? yield (yield this.channelsService.modelsCollection()).find(message.data.model) : null;
             // Compute the path
             return yield this.generatorService.pathPreview(message.data.path, model);
         });
@@ -78,8 +76,7 @@ let PathPreviewHandlerService = class PathPreviewHandlerService {
 };
 PathPreviewHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Channels_1.ChannelsService,
-        Generator_1.GeneratorService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService, Generator_1.GeneratorService])
 ], PathPreviewHandlerService);
 exports.PathPreviewHandlerService = PathPreviewHandlerService;
 //# sourceMappingURL=PathPreviewHandler.js.map

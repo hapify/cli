@@ -1,5 +1,7 @@
-import { ITemplate, IStorable, ISerializable, IConfigTemplate } from '../interface';
-import { Channel } from './';
+import { IStorable } from '../interface/IStorable';
+import { ISerializable } from '../interface/ISerializable';
+import { IConfigTemplate, ITemplate } from '../interface/IObjects';
+import { Channel } from './Channel';
 export declare class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
     private parent;
     /** @type {string} */

@@ -1,4 +1,4 @@
-import { Channel } from '../class';
+import { Channel } from '../class/Channel';
 export declare const logChannel: (channel: Channel) => void;
 export declare const cChannel: import("chalk").Chalk & {
     supportsColor: import("chalk").ColorSupport;

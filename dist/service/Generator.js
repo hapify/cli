@@ -49,7 +49,7 @@ let GeneratorService = class GeneratorService {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.api().post('generator/run', {
                 project: channel.config.project,
-                templates: channel.templates.map(t => t.toObject())
+                templates: channel.templates.map((t) => t.toObject()),
             });
             return response.data.results;
         });
@@ -65,7 +65,7 @@ let GeneratorService = class GeneratorService {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.api().post('generator/run', {
                 project: template.channel().config.project,
-                templates: [template.toObject()]
+                templates: [template.toObject()],
             });
             return response.data.results;
         });
@@ -86,13 +86,12 @@ let GeneratorService = class GeneratorService {
             }
             const payload = {
                 project: template.channel().config.project,
-                templates: [template.toObject()]
+                templates: [template.toObject()],
             };
             if (model) {
                 payload.ids = [model.id];
             }
-            return (yield this.api().post('generator/run', payload)).data
-                .results[0];
+            return (yield this.api().post('generator/run', payload)).data.results[0];
         });
     }
     /**

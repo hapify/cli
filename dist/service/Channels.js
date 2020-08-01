@@ -44,7 +44,7 @@ const Path = __importStar(require("path"));
 const Options_1 = require("./Options");
 const Fs = __importStar(require("fs"));
 const Hoek = __importStar(require("@hapi/hoek"));
-const class_1 = require("../class");
+const Channel_1 = require("../class/Channel");
 let ChannelsService = ChannelsService_1 = class ChannelsService {
     /**
      * Constructor
@@ -95,9 +95,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
         return __awaiter(this, void 0, void 0, function* () {
             // Get defined fields
             const channels = yield this.channels();
-            const fieldsGroup = channels
-                .filter(c => !!c.config.defaultFields)
-                .map(c => c.config.defaultFields);
+            const fieldsGroup = channels.filter((c) => !!c.config.defaultFields).map((c) => c.config.defaultFields);
             if (fieldsGroup.length < 2) {
                 return;
             }
@@ -118,7 +116,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
     changeProject(project, path) {
         return __awaiter(this, void 0, void 0, function* () {
             if (path) {
-                yield class_1.Channel.changeProject(path, project);
+                yield Channel_1.Channel.changeProject(path, project);
             }
             // Try to find channels
             else {
@@ -127,7 +125,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
                     throw new Error('No channel found');
                 }
                 for (const channel of channels) {
-                    yield class_1.Channel.changeProject(channel.path, project);
+                    yield Channel_1.Channel.changeProject(channel.path, project);
                 }
             }
         });
@@ -157,13 +155,13 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             const channels = depth <= 0
                 ? []
                 : (yield Promise.all(Fs.readdirSync(path)
-                    .map(dir => Path.join(path, dir))
-                    .filter(subPath => Fs.statSync(subPath).isDirectory())
-                    .map(subPath => ChannelsService_1.sniff(subPath, depth - 1, from)))).reduce((flatten, channels) => flatten.concat(channels), []);
+                    .map((dir) => Path.join(path, dir))
+                    .filter((subPath) => Fs.statSync(subPath).isDirectory())
+                    .map((subPath) => ChannelsService_1.sniff(subPath, depth - 1, from)))).reduce((flatten, channels) => flatten.concat(channels), []);
             // Get channel of current directory if exists
-            if (yield class_1.Channel.configExists(path)) {
+            if (yield Channel_1.Channel.configExists(path)) {
                 const name = Path.relative(Path.dirname(from), path);
-                const channel = new class_1.Channel(path, name);
+                const channel = new Channel_1.Channel(path, name);
                 channels.push(channel);
             }
             return channels;
