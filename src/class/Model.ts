@@ -31,7 +31,7 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 		this.id = object.id;
 		this.name = object.name;
 		this.notes = object.notes || null;
-		this.fields = object.fields.map(f => new Field(f));
+		this.fields = object.fields.map((f) => new Field(f));
 		this.accesses = object.accesses;
 		return this;
 	}
@@ -42,8 +42,8 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 			id: this.id,
 			name: this.name,
 			notes: this.notes || null,
-			fields: this.fields.map(f => f.toObject()),
-			accesses: this.accesses
+			fields: this.fields.map((f) => f.toObject()),
+			accesses: this.accesses,
 		};
 	}
 
@@ -65,7 +65,7 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 			update: Access.GUEST,
 			remove: Access.GUEST,
 			search: Access.GUEST,
-			count: Access.GUEST
+			count: Access.GUEST,
 		};
 	}
 

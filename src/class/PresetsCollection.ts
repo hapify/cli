@@ -3,8 +3,7 @@ import { Preset } from './';
 import { PresetsApiStorageService } from '../service';
 import { Container } from 'typedi';
 
-export class PresetsCollection
-	implements IStorable, ISerializable<IPreset[], Preset[]> {
+export class PresetsCollection implements IStorable, ISerializable<IPreset[], Preset[]> {
 	/** @type {Preset[]} The list of preset instances */
 	private presets: Preset[] = [];
 	/** Presets storage */
@@ -53,17 +52,17 @@ export class PresetsCollection
 	 * @returns {Promise<Preset>}
 	 */
 	async get(id: string): Promise<Preset> {
-		return this.presets.find(p => p.id === id);
+		return this.presets.find((p) => p.id === id);
 	}
 
 	/** @inheritDoc */
 	public fromObject(object: IPreset[]): Preset[] {
-		this.presets = object.map(p => new Preset(p));
+		this.presets = object.map((p) => new Preset(p));
 		return this.presets;
 	}
 
 	/** @inheritDoc */
 	public toObject(): IPreset[] {
-		return this.presets.map(p => p.toObject());
+		return this.presets.map((p) => p.toObject());
 	}
 }

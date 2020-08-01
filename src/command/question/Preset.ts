@@ -11,9 +11,9 @@ export async function AskPreset(cmd: Command): Promise<string[]> {
 		qPresets = cmd.preset;
 	} else {
 		// Get presets from remote
-		const list = (await presetsCollection.list()).map(p => ({
+		const list = (await presetsCollection.list()).map((p) => ({
 			name: p.name,
-			value: p.id
+			value: p.id,
 		}));
 
 		qPresets = ((await Inquirer.prompt([
@@ -22,8 +22,8 @@ export async function AskPreset(cmd: Command): Promise<string[]> {
 				message: 'Choose some presets to preload in your project',
 				type: 'checkbox',
 				choices: list,
-				when: () => list.length > 0
-			}
+				when: () => list.length > 0,
+			},
 		])) as any).presets;
 	}
 
@@ -33,17 +33,13 @@ export async function ApplyPreset(qPresets: string[]) {
 	const logger = Container.get(LoggerService);
 	const presets = Container.get(PresetsService);
 	const presetsCollection = await presets.collection();
-	const modelsCollection = await Container.get(
-		ChannelsService
-	).modelsCollection();
+	const modelsCollection = await Container.get(ChannelsService).modelsCollection();
 
 	if (qPresets && qPresets.length) {
 		const models = await modelsCollection.list();
 		// If the project already has models, ignore add presets
 		if (models.length) {
-			logger.warning(
-				'Project already contains models. Ignore presets import.'
-			);
+			logger.warning('Project already contains models. Ignore presets import.');
 		} else {
 			// Get and apply presets
 			for (const id of qPresets) {

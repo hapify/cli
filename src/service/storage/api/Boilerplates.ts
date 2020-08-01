@@ -33,11 +33,7 @@ export interface IApiBoilerplate {
 }
 
 @Service()
-export class BoilerplatesApiStorageService extends BaseApiStorageService<
-	IBoilerplate,
-	IApiBoilerplate,
-	BoilerplatesSearchParams
-> {
+export class BoilerplatesApiStorageService extends BaseApiStorageService<IBoilerplate, IApiBoilerplate, BoilerplatesSearchParams> {
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
@@ -56,7 +52,7 @@ export class BoilerplatesApiStorageService extends BaseApiStorageService<
 			id: object._id,
 			slug: object.slug,
 			name: object.name,
-			git_url: object.git_url
+			git_url: object.git_url,
 		};
 	}
 }

@@ -1,10 +1,5 @@
 import { Service } from 'typedi';
-import {
-	WebSocketMessages,
-	IWebSocketHandler,
-	IWebSocketMessage,
-	ModelSchema
-} from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ModelSchema } from '../../interface';
 import { ChannelsService } from '../Channels';
 import * as Joi from 'joi';
 
@@ -23,9 +18,7 @@ export class SetModelsHandlerService implements IWebSocketHandler {
 
 	/** @inheritDoc */
 	validator(): Joi.Schema {
-		return Joi.array()
-			.items(ModelSchema)
-			.min(0);
+		return Joi.array().items(ModelSchema).min(0);
 	}
 
 	/** @inheritDoc */

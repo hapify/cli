@@ -2,12 +2,7 @@ import * as Path from 'path';
 import { Command } from 'commander';
 import { Channel } from '../class';
 import { Container } from 'typedi';
-import {
-	GeneratorService,
-	OptionsService,
-	LoggerService,
-	WriterService
-} from '../service';
+import { GeneratorService, OptionsService, LoggerService, WriterService } from '../service';
 import { logChannel, cChannel, cPath, cHigh } from './helpers';
 
 // ############################################
@@ -27,16 +22,11 @@ export async function ExportCommand(cmd: Command) {
 		await channel.load();
 		logChannel(channel);
 
-		const outputPath =
-			options.output() || Path.join(options.dir(), `${channel.name}.zip`);
+		const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
 
 		const results = await generator.runChannel(channel);
 		await writer.zip(outputPath, results);
-		logger.success(
-			`Generated and zipped ${cHigh(
-				`${results.length} files`
-			)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`
-		);
+		logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
 		// Action Ends
 		// ---------------------------------
 

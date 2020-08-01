@@ -25,17 +25,11 @@ export class GlobalConfigService {
 	/** Create file if not exists */
 	private init(): void {
 		// Create path
-		if (
-			!Fs.existsSync(this.rootPath) ||
-			!Fs.statSync(this.rootPath).isDirectory()
-		) {
+		if (!Fs.existsSync(this.rootPath) || !Fs.statSync(this.rootPath).isDirectory()) {
 			mkdirp.sync(this.rootPath);
 		}
 		// Create file
-		if (
-			!Fs.existsSync(this.filePath) ||
-			!Fs.statSync(this.filePath).isFile()
-		) {
+		if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {
 			this.save();
 		}
 		// Load & validate config
@@ -45,11 +39,7 @@ export class GlobalConfigService {
 
 	/** Save data to config file */
 	private save(): void {
-		Fs.writeFileSync(
-			this.filePath,
-			JSON.stringify(this.data, null, 4),
-			'utf8'
-		);
+		Fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 4), 'utf8');
 	}
 
 	/** Load data from config file */
@@ -62,7 +52,7 @@ export class GlobalConfigService {
 		const validation = Joi.validate(data, GlobalConfigSchema);
 		if (validation.error) {
 			const errorMessage = validation.error.details
-				.map(v => {
+				.map((v) => {
 					if (v.context.key === 'apiKey') {
 						return `${v.message}. Please visit https://www.hapify.io/my-key`;
 					}

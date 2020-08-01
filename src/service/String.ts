@@ -30,7 +30,7 @@ export class StringService {
 			upper: Case.upper(value),
 			compact: Case.snake(value).replace(/_/g, ''),
 			pascal: Case.pascal(value),
-			camel: Case.camel(value)
+			camel: Case.camel(value),
 		};
 	}
 }

@@ -23,11 +23,7 @@ export interface IApiModel {
 }
 
 @Service()
-export class ModelsApiStorageService extends BaseApiStorageService<
-	IModel,
-	IApiModel,
-	ModelsSearchParams
-> {
+export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiModel, ModelsSearchParams> {
 	/** The models fingerprints */
 	private hashes: { [id: string]: string } = {};
 
@@ -46,9 +42,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		// ========================================================
 		// CREATION
 		// Get models to create
-		const toCreate = models.filter(
-			m => typeof this.hashes[m.id] === 'undefined'
-		);
+		const toCreate = models.filter((m) => typeof this.hashes[m.id] === 'undefined');
 
 		// Create models and update id
 		for (const model of toCreate) {
@@ -57,7 +51,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 				name: model.name,
 				notes: model.notes || null,
 				fields: model.fields,
-				accesses: model.accesses
+				accesses: model.accesses,
 			});
 			referencesMap[model.id] = response.id;
 			model.id = response.id;
@@ -67,9 +61,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		// ========================================================
 		// DELETION
 		// Get models to delete
-		const toDelete = Object.keys(this.hashes).filter(
-			id => !models.some(m => m.id === id)
-		);
+		const toDelete = Object.keys(this.hashes).filter((id) => !models.some((m) => m.id === id));
 		// Delete models
 		for (const id of toDelete) {
 			await this.remove(id);
@@ -80,18 +72,14 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		// ========================================================
 		// UPDATE
 		// Get models to update
-		const toUpdate = models.filter(
-			m =>
-				typeof this.hashes[m.id] === 'string' &&
-				this.hashes[m.id] !== ModelsApiStorageService.hash(m)
-		);
+		const toUpdate = models.filter((m) => typeof this.hashes[m.id] === 'string' && this.hashes[m.id] !== ModelsApiStorageService.hash(m));
 		// Update models
 		for (const model of toUpdate) {
 			await this.update(model.id, {
 				name: model.name,
 				notes: model.notes || null,
 				fields: model.fields,
-				accesses: model.accesses
+				accesses: model.accesses,
 			});
 		}
 		// ========================================================
@@ -102,10 +90,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		const changeReferencesToNewModels = (m: IModel): boolean => {
 			let changed = false;
 			for (const f of m.fields) {
-				if (
-					f.type === FieldType.Entity &&
-					typeof referencesMap[f.reference] !== 'undefined'
-				) {
+				if (f.type === FieldType.Entity && typeof referencesMap[f.reference] !== 'undefined') {
 					f.reference = referencesMap[f.reference];
 					changed = true;
 				}
@@ -116,7 +101,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 		for (const model of models) {
 			if (changeReferencesToNewModels(model)) {
 				await this.update(model.id, {
-					fields: model.fields
+					fields: model.fields,
 				});
 			}
 		}
@@ -160,7 +145,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<
 			name: object.name,
 			notes: object.notes || null,
 			fields: object.fields,
-			accesses: object.accesses
+			accesses: object.accesses,
 		};
 	}
 }

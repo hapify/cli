@@ -85,7 +85,7 @@ export class Field implements ISerializable<IField, Field> {
 			hidden: this.hidden,
 			internal: this.internal,
 			restricted: this.restricted,
-			ownership: this.ownership
+			ownership: this.ownership,
 		};
 	}
 }

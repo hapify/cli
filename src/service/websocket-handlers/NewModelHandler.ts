@@ -1,10 +1,5 @@
 import { Service } from 'typedi';
-import {
-	WebSocketMessages,
-	IWebSocketHandler,
-	IWebSocketMessage,
-	IModel
-} from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, IModel } from '../../interface';
 import { Model } from '../../class';
 import * as Joi from 'joi';
 import { InfoService } from '../Info';
@@ -22,7 +17,7 @@ export class NewModelHandlerService implements IWebSocketHandler {
 	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
-			name: Joi.string().required()
+			name: Joi.string().required(),
 		});
 	}
 
@@ -32,7 +27,7 @@ export class NewModelHandlerService implements IWebSocketHandler {
 			id: Model.generateTempId(),
 			name: message.data.name as string,
 			fields: await this.infoService.fields(),
-			accesses: Model.defaultAccesses()
+			accesses: Model.defaultAccesses(),
 		}).toObject();
 	}
 }

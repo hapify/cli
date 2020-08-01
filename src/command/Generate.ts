@@ -1,12 +1,6 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import {
-	GeneratorService,
-	OptionsService,
-	LoggerService,
-	WriterService,
-	ChannelsService
-} from '../service';
+import { GeneratorService, OptionsService, LoggerService, WriterService, ChannelsService } from '../service';
 import { logChannel, cChannel, cHigh } from './helpers';
 
 // ############################################
@@ -32,11 +26,7 @@ export async function GenerateCommand(cmd: Command) {
 		for (const channel of channels) {
 			const results = await generator.runChannel(channel);
 			await writer.writeMany(channel.path, results);
-			logger.success(
-				`Generated ${cHigh(
-					`${results.length} files`
-				)} for channel ${cChannel(channel.name)}`
-			);
+			logger.success(`Generated ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)}`);
 		}
 		// Action Ends
 		// ---------------------------------

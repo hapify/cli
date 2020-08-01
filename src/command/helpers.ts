@@ -8,11 +8,7 @@ const logger = Container.get(LoggerService);
 // ############################################
 // Common methods
 export const logChannel = (channel: Channel) => {
-	logger.info(
-		`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(
-			channel.path
-		)}`
-	);
+	logger.info(`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(channel.path)}`);
 };
 export const cChannel = chalk.yellow;
 export const cModel = chalk.magentaBright;

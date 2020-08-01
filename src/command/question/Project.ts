@@ -9,9 +9,7 @@ export interface ProjectQuery {
 	description?: string;
 }
 export async function AskProject(cmd: Command, qProject: ProjectQuery) {
-	const projectsCollection = await Container.get(
-		ProjectsService
-	).collection();
+	const projectsCollection = await Container.get(ProjectsService).collection();
 
 	if (cmd.project) {
 		qProject.id = cmd.project;
@@ -20,33 +18,29 @@ export async function AskProject(cmd: Command, qProject: ProjectQuery) {
 		qProject.description = cmd.projectDescription;
 	} else {
 		// Get projects from remote
-		const list = (await projectsCollection.list()).map(b => ({
+		const list = (await projectsCollection.list()).map((b) => ({
 			name: b.name,
-			value: b.id
+			value: b.id,
 		}));
 		const answer: any = await Inquirer.prompt([
 			{
 				name: 'id',
 				message: 'Choose a project',
 				type: 'list',
-				choices: [
-					{ name: 'Create a new project', value: null },
-					new Inquirer.Separator(),
-					...list
-				],
-				when: () => list.length > 0
+				choices: [{ name: 'Create a new project', value: null }, new Inquirer.Separator(), ...list],
+				when: () => list.length > 0,
 			},
 			{
 				name: 'name',
 				message: 'Enter a project name',
 				when: (answer: any) => !answer.id,
-				validate: (input: any) => input.length > 0
+				validate: (input: any) => input.length > 0,
 			},
 			{
 				name: 'description',
 				message: 'Enter a project description',
-				when: (answer: any) => !answer.id
-			}
+				when: (answer: any) => !answer.id,
+			},
 		]);
 		qProject.id = answer.id;
 		qProject.name = answer.name;
@@ -58,15 +52,10 @@ export async function AskProject(cmd: Command, qProject: ProjectQuery) {
 	}
 }
 export async function SetupProject(qProject: ProjectQuery) {
-	const projectsCollection = await Container.get(
-		ProjectsService
-	).collection();
+	const projectsCollection = await Container.get(ProjectsService).collection();
 
 	if (!qProject.id) {
-		const project = await projectsCollection.add(
-			qProject.name,
-			qProject.description
-		);
+		const project = await projectsCollection.add(qProject.name, qProject.description);
 		qProject.id = project.id;
 	}
 }

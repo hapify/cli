@@ -9,13 +9,9 @@ export * from './ValidatorResult';
 export * from './Config';
 export * from './GlobalConfig';
 
-export function TransformValidationMessage(
-	error: ValidationError
-): ValidationError {
+export function TransformValidationMessage(error: ValidationError): ValidationError {
 	if (error.details && error.details.length) {
-		error.message = error.details
-			.map(d => `${d.message} (${d.path.join('.')})`)
-			.join('. ');
+		error.message = error.details.map((d) => `${d.message} (${d.path.join('.')})`).join('. ');
 	}
 	return error;
 }

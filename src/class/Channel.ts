@@ -1,12 +1,5 @@
 import * as Path from 'path';
-import {
-	IChannel,
-	IConfig,
-	ISerializable,
-	IStorable,
-	ConfigSchema,
-	TransformValidationMessage
-} from '../interface';
+import { IChannel, IConfig, ISerializable, IStorable, ConfigSchema, TransformValidationMessage } from '../interface';
 import { ModelsCollection, Project, Template, Validator } from './';
 import { TemplateEngine, TemplateInput } from '../enum';
 import md5 from 'md5';
@@ -57,10 +50,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		await this.validate();
 
 		// Get config from storage
-		const config = await this.storageService.get([
-			this.path,
-			Channel.configFile
-		]);
+		const config = await this.storageService.get([this.path, Channel.configFile]);
 
 		// Validate the incoming config
 		const validation = Joi.validate(config, ConfigSchema);
@@ -83,18 +73,13 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 
 		// Load each content file
 		for (let i = 0; i < this.config.templates.length; i++) {
-			const template = new Template(
-				this,
-				Object.assign(this.config.templates[i], { content: '' })
-			);
+			const template = new Template(this, Object.assign(this.config.templates[i], { content: '' }));
 			await template.load();
 			this.templates.push(template);
 		}
 
 		// Load models
-		this.modelsCollection = await ModelsCollection.getInstance(
-			this.config.project
-		);
+		this.modelsCollection = await ModelsCollection.getInstance(this.config.project);
 
 		// Load validator
 		this.validator = new Validator(this, this.config.validatorPath);
@@ -110,7 +95,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		await this.validator.save();
 
 		// Update configurations
-		this.config.templates = this.templates.map(m => {
+		this.config.templates = this.templates.map((m) => {
 			const t = m.toObject();
 			delete t.content;
 			return t;
@@ -118,21 +103,12 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		this.config.validatorPath = this.validator.path;
 
 		// Write file if necessary
-		await this.storageService.set(
-			[this.path, Channel.configFile],
-			this.config
-		);
+		await this.storageService.set([this.path, Channel.configFile], this.config);
 
 		// Cleanup files in template path
-		const legitFiles = this.templates.map(t => [
-			this.templatesPath,
-			t.contentPath
-		]);
+		const legitFiles = this.templates.map((t) => [this.templatesPath, t.contentPath]);
 		legitFiles.push([this.path, this.config.validatorPath]);
-		await this.storageService.cleanup(
-			[this.path, Channel.defaultFolder],
-			legitFiles
-		);
+		await this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
 	}
 
 	/**
@@ -141,7 +117,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	 */
 	isEmpty(): boolean {
 		const validatorIsEmpty = this.validator.isEmpty();
-		const templatesAreEmpty = this.templates.every(t => t.isEmpty());
+		const templatesAreEmpty = this.templates.every((t) => t.isEmpty());
 		return validatorIsEmpty && templatesAreEmpty;
 	}
 
@@ -150,7 +126,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	 * @returns {void}
 	 */
 	filter(): void {
-		this.templates = this.templates.filter(t => !t.isEmpty());
+		this.templates = this.templates.filter((t) => !t.isEmpty());
 	}
 
 	/**
@@ -158,20 +134,13 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	 * @throws {Error}
 	 */
 	private async validate(): Promise<void> {
-		if (
-			!(await this.storageService.exists([this.path, Channel.configFile]))
-		) {
-			throw new Error(
-				`Channel config's path ${this.path}/${Channel.configFile} does not exists.`
-			);
+		if (!(await this.storageService.exists([this.path, Channel.configFile]))) {
+			throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
 		}
 	}
 
 	/** Change project in config file */
-	public static async changeProject(
-		path: string,
-		project: string
-	): Promise<void> {
+	public static async changeProject(path: string, project: string): Promise<void> {
 		if (!Channel.configExists(path)) {
 			throw new Error(`Cannot find config file in ${path}`);
 		}
@@ -184,18 +153,10 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	}
 	/** Denotes if the config file exists */
 	public static async configExists(path: string): Promise<boolean> {
-		return await Container.get(ChannelFileStorageService).exists([
-			path,
-			Channel.configFile
-		]);
+		return await Container.get(ChannelFileStorageService).exists([path, Channel.configFile]);
 	}
 	/** Init a Hapify structure within a directory */
-	public static async create(
-		path: string,
-		name?: string,
-		description?: string,
-		logo?: string
-	): Promise<Channel> {
+	public static async create(path: string, name?: string, description?: string, logo?: string): Promise<Channel> {
 		if (await Channel.configExists(path)) {
 			throw new Error(`A channel already exists in this directory.`);
 		}
@@ -226,32 +187,29 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 					hidden: false,
 					internal: true,
 					restricted: false,
-					ownership: false
-				}
+					ownership: false,
+				},
 			],
 			templates: [
 				{
 					path: 'models/{kebab}/hello.js',
 					engine: TemplateEngine.Hpf,
-					input: TemplateInput.One
-				}
-			]
+					input: TemplateInput.One,
+				},
+			],
 		};
 
 		// Create template
 		const template = new Template(
 			channel,
 			Object.assign(channel.config.templates[0], {
-				content: '// Hello <<M A>>'
+				content: '// Hello <<M A>>',
 			})
 		);
 		channel.templates.push(template);
 
 		// Create validator
-		channel.validator = new Validator(
-			channel,
-			channel.config.validatorPath
-		);
+		channel.validator = new Validator(channel, channel.config.validatorPath);
 		channel.validator.content = `// Models validation script\nreturn { errors: [], warnings: [] };`;
 
 		// Save channel
@@ -263,9 +221,9 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		// Do not update name nor id
 		// Create or update templates if necessary
 		// By keeping the same instances, we will avoid a file saving if the content did not change
-		this.templates = object.templates.map(t => {
+		this.templates = object.templates.map((t) => {
 			// Try to find an existing template
-			const existing = this.templates.find(e => e.path === t.path);
+			const existing = this.templates.find((e) => e.path === t.path);
 			if (existing) {
 				return existing.fromObject(t);
 			}
@@ -286,10 +244,8 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			name: this.name,
 			description: this.config.description || null,
 			logo: this.config.logo || null,
-			templates: this.templates.map((template: Template) =>
-				template.toObject()
-			),
-			validator: this.validator.content
+			templates: this.templates.map((template: Template) => template.toObject()),
+			validator: this.validator.content,
 		};
 	}
 }

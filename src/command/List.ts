@@ -25,10 +25,7 @@ export async function ListCommand(cmd: Command) {
 		// Group channels by models collections
 		const modelsCollections: { [s: string]: Channel[] } = {};
 		for (const channel of channels) {
-			if (
-				typeof modelsCollections[channel.modelsCollection.path] ===
-				'undefined'
-			) {
+			if (typeof modelsCollections[channel.modelsCollection.path] === 'undefined') {
 				modelsCollections[channel.modelsCollection.path] = [];
 			}
 			modelsCollections[channel.modelsCollection.path].push(channel);
@@ -40,17 +37,11 @@ export async function ListCommand(cmd: Command) {
 			const mc = c.length > 1;
 			const m = await c[0].modelsCollection.list();
 			const mm = m.length > 1;
-			let message = `Channel${mc ? 's' : ''} ${c
-				.map(c => cChannel(c.name))
-				.join(', ')} use${mc ? '' : 's'} models of ${cPath(
-				modelsPath
-			)}`;
+			let message = `Channel${mc ? 's' : ''} ${c.map((c) => cChannel(c.name)).join(', ')} use${mc ? '' : 's'} models of ${cPath(modelsPath)}`;
 			if (m.length === 0) {
 				message += `\nThere is no model yet.`;
 			} else {
-				message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m
-					.map(m => cModel(m.name))
-					.join('\n- ')}`;
+				message += `\nThe model${mm ? 's are' : ' is'}:\n- ${m.map((m) => cModel(m.name)).join('\n- ')}`;
 			}
 			logger.newLine().info(message);
 		}

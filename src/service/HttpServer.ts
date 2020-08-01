@@ -12,11 +12,7 @@ import { Server } from '@hapi/hapi';
 @Service()
 export class HttpServerService {
 	/** @type {string} WebApp root */
-	private rootPath: string = Path.join(
-		Path.dirname(require.main.filename),
-		'..',
-		'html'
-	);
+	private rootPath: string = Path.join(Path.dirname(require.main.filename), '..', 'html');
 
 	/** @type {number} Start port number */
 	private _minPort: number = 4800;
@@ -49,10 +45,7 @@ export class HttpServerService {
 	 * @param {OptionsService} optionsService
 	 * @param {WebSocketServerService} webSocketServerService
 	 */
-	constructor(
-		private optionsService: OptionsService,
-		private webSocketServerService: WebSocketServerService
-	) {}
+	constructor(private optionsService: OptionsService, private webSocketServerService: WebSocketServerService) {}
 
 	/**
 	 * Starts the http server
@@ -63,9 +56,7 @@ export class HttpServerService {
 		if (this.started()) return;
 
 		// Choose port
-		this._port = this.optionsService.port()
-			? this.optionsService.port()
-			: await this.findAvailablePort();
+		this._port = this.optionsService.port() ? this.optionsService.port() : await this.findAvailablePort();
 
 		// Create server
 		this.server = new Server({
@@ -73,9 +64,9 @@ export class HttpServerService {
 			routes: {
 				cors: { credentials: true },
 				files: {
-					relativeTo: this.rootPath
-				}
-			}
+					relativeTo: this.rootPath,
+				},
+			},
 		});
 
 		// Create static files handler
@@ -87,9 +78,9 @@ export class HttpServerService {
 				directory: {
 					path: '.',
 					redirectToSlash: true,
-					index: true
-				}
-			}
+					index: true,
+				},
+			},
 		});
 
 		// Create catch-all fallback
@@ -152,9 +143,7 @@ export class HttpServerService {
 	 * @return {string|null}
 	 */
 	public url(): string | null {
-		return this.started()
-			? `http://${this.optionsService.hostname()}:${this._port}`
-			: null;
+		return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
 	}
 
 	/**
@@ -164,14 +153,10 @@ export class HttpServerService {
 	 */
 	private async findAvailablePort(increment: number = 0): Promise<number> {
 		if (this._port > this._maxPort) {
-			throw new Error(
-				`Reached maximum port number ${this._maxPort} to start HTTP server`
-			);
+			throw new Error(`Reached maximum port number ${this._maxPort} to start HTTP server`);
 		}
 		const requiredPort = this._port + increment;
 		const possiblePort = await DetectPort(requiredPort);
-		return requiredPort !== possiblePort
-			? this.findAvailablePort(increment + 1)
-			: requiredPort;
+		return requiredPort !== possiblePort ? this.findAvailablePort(increment + 1) : requiredPort;
 	}
 }

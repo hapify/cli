@@ -14,18 +14,18 @@ export class FieldSubType {
 		Integer: 'integer',
 		Float: 'float',
 		Latitude: 'latitude',
-		Longitude: 'longitude'
+		Longitude: 'longitude',
 	};
 	static String = {
 		Email: 'email',
 		Password: 'password',
 		Url: 'url',
 		Text: 'text',
-		RichText: 'rich'
+		RichText: 'rich',
 	};
 	static DateTime = {
 		Date: 'date',
-		Time: 'time'
+		Time: 'time',
 	};
 	static Entity = {};
 	static Object = {};
@@ -33,6 +33,6 @@ export class FieldSubType {
 		Image: 'image',
 		Video: 'video',
 		Audio: 'audio',
-		Document: 'document'
+		Document: 'document',
 	};
 }

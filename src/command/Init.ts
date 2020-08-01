@@ -3,13 +3,7 @@ import { Container } from 'typedi';
 import { Command } from 'commander';
 import { OptionsService, LoggerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
-import {
-	ProjectQuery,
-	AskProject,
-	SetupProject,
-	DescribeChannel,
-	ChannelDescriptionQuery
-} from './question';
+import { ProjectQuery, AskProject, SetupProject, DescribeChannel, ChannelDescriptionQuery } from './question';
 
 // ############################################
 // Get services
@@ -30,12 +24,7 @@ export async function InitCommand(cmd: Command) {
 
 		// =================================
 		// Init channel to save
-		const channel = await Channel.create(
-			options.dir(),
-			qChannelDescription.name,
-			qChannelDescription.description,
-			qChannelDescription.logo
-		);
+		const channel = await Channel.create(options.dir(), qChannelDescription.name, qChannelDescription.description, qChannelDescription.logo);
 
 		// =================================
 		// Get project

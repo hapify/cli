@@ -54,10 +54,7 @@ export abstract class SingleSaveFileStorage<T> {
 	 */
 	protected shouldSave(bucket: string, data: string): boolean {
 		const contentMd5 = md5(data);
-		if (
-			typeof this.contentMd5[bucket] === 'undefined' ||
-			contentMd5 !== this.contentMd5[bucket]
-		) {
+		if (typeof this.contentMd5[bucket] === 'undefined' || contentMd5 !== this.contentMd5[bucket]) {
 			this.contentMd5[bucket] = contentMd5;
 			return true;
 		}

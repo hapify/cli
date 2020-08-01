@@ -3,8 +3,7 @@ import { Model } from './';
 import { Container } from 'typedi';
 import { ModelsApiStorageService } from '../service';
 
-export class ModelsCollection
-	implements IStorable, ISerializable<IModel[], Model[]> {
+export class ModelsCollection implements IStorable, ISerializable<IModel[], Model[]> {
 	/** @type {Model[]} The list of model instances */
 	private models: Model[];
 	/** @type {string} The pseudo path */
@@ -30,9 +29,7 @@ export class ModelsCollection
 	public static async getInstance(project: string) {
 		const path = ModelsCollection.path(project);
 		// Try to find an existing collection
-		const modelsCollection = ModelsCollection.instances.find(
-			m => m.path === path
-		);
+		const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
 		if (modelsCollection) {
 			return modelsCollection;
 		}
@@ -52,10 +49,7 @@ export class ModelsCollection
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		const models = await this.storageService.set(
-			this.project,
-			this.toObject()
-		);
+		const models = await this.storageService.set(this.project, this.toObject());
 		this.fromObject(models);
 	}
 
@@ -87,7 +81,7 @@ export class ModelsCollection
 				await this.remove(o);
 			}
 		} else {
-			this.models = this.models.filter(i => i.id === object.id);
+			this.models = this.models.filter((i) => i.id === object.id);
 		}
 	}
 
@@ -97,7 +91,7 @@ export class ModelsCollection
 	 * @returns {Promise<Model|null>}
 	 */
 	async find(id: string): Promise<Model | null> {
-		return this.models.find(instance => instance.id === id);
+		return this.models.find((instance) => instance.id === id);
 	}
 
 	/**
@@ -110,13 +104,13 @@ export class ModelsCollection
 
 	/** @inheritDoc */
 	public fromObject(object: IModel[]): Model[] {
-		this.models = object.map(m => new Model(m));
+		this.models = object.map((m) => new Model(m));
 		return this.models;
 	}
 
 	/** @inheritDoc */
 	public toObject(): IModel[] {
-		return this.models.map(m => m.toObject());
+		return this.models.map((m) => m.toObject());
 	}
 
 	/**

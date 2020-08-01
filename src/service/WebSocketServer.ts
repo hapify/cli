@@ -21,15 +21,10 @@ import {
 	TemplatePreviewHandlerService,
 	ValidateModelHandlerService,
 	GenerateTemplateHandlerService,
-	GenerateChannelHandlerService
+	GenerateChannelHandlerService,
 } from './websocket-handlers';
 import { LoggerService } from './Logger';
-import {
-	IWebSocketHandler,
-	IWebSocketMessage,
-	WebSocketMessageSchema,
-	TransformValidationMessage
-} from '../interface';
+import { IWebSocketHandler, IWebSocketMessage, WebSocketMessageSchema, TransformValidationMessage } from '../interface';
 import { Container } from 'typedi';
 import { OptionsService } from './Options';
 
@@ -47,12 +42,7 @@ export class WebSocketServerService {
 	private serverStarted: boolean;
 
 	/** @type {string} The path to save the token */
-	private wsInfoPath: string = Path.join(
-		Path.dirname(require.main.filename),
-		'..',
-		'html',
-		'ws.json'
-	);
+	private wsInfoPath: string = Path.join(Path.dirname(require.main.filename), '..', 'html', 'ws.json');
 	/** @type {string} Random name to generate token */
 	private randomName: string = RandomString.generate({ length: 24 });
 	/** @type {string} Random secret to generate token */
@@ -67,10 +57,7 @@ export class WebSocketServerService {
 	 * @param {OptionsService} optionsService
 	 * @param {LoggerService} loggerService
 	 */
-	constructor(
-		private optionsService: OptionsService,
-		private loggerService: LoggerService
-	) {
+	constructor(private optionsService: OptionsService, private loggerService: LoggerService) {
 		this.addHandler(Container.get(ApplyPresetHandlerService));
 		this.addHandler(Container.get(GetModelsHandlerService));
 		this.addHandler(Container.get(SetModelsHandlerService));
@@ -107,23 +94,19 @@ export class WebSocketServerService {
 					if (!token) {
 						cb(false, 401, 'Unauthorized');
 					} else {
-						Jwt.verify(
-							token,
-							this.randomSecret,
-							(error: Error, decoded: TokenData) => {
-								if (error || decoded.name !== this.randomName) {
-									cb(false, 401, 'Unauthorized');
-								} else {
-									cb(true);
-								}
+						Jwt.verify(token, this.randomSecret, (error: Error, decoded: TokenData) => {
+							if (error || decoded.name !== this.randomName) {
+								cb(false, 401, 'Unauthorized');
+							} else {
+								cb(true);
 							}
-						);
+						});
 					}
 				} catch (error) {
 					this.loggerService.handle(error);
 					cb(false, 500, 'InternalError');
 				}
-			}
+			},
 		};
 		this.server = new ws.Server(options);
 
@@ -132,12 +115,7 @@ export class WebSocketServerService {
 			const id = this.makeId();
 
 			// Create a reply method for this connection
-			const reply = (
-				id: string,
-				data: any,
-				type?: string,
-				tag?: string
-			) => {
+			const reply = (id: string, data: any, type?: string, tag?: string) => {
 				const payload: IWebSocketMessage = { id, data };
 				if (type) {
 					payload.type = type;
@@ -148,41 +126,31 @@ export class WebSocketServerService {
 				ws.send(JSON.stringify(payload));
 			};
 
-			this.loggerService.debug(
-				`[WS:${id}] Did open new websocket connection`
-			);
+			this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
 
 			ws.on('message', async (message: string) => {
 				let decoded: IWebSocketMessage;
 
 				try {
 					// Decode and verify message
-					const parsed = Joi.validate(
-						JSON.parse(message),
-						WebSocketMessageSchema
-					) as Joi.ValidationResult<IWebSocketMessage>;
+					const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<IWebSocketMessage>;
 					if (parsed.error) {
 						(parsed.error as any).data = {
 							code: 4002,
-							type: 'CliMessageValidationError'
+							type: 'CliMessageValidationError',
 						};
 						throw parsed.error;
 					}
 					decoded = parsed.value;
 
 					// Log for debug
-					this.loggerService.debug(
-						`[WS:${id}] Did receive websocket message: ${decoded.id}`
-					);
+					this.loggerService.debug(`[WS:${id}] Did receive websocket message: ${decoded.id}`);
 
 					// Dispatch message to the right handler
 					for (const handler of this.handlers) {
 						if (handler.canHandle(decoded)) {
 							// Validate the incoming payload
-							const validation = Joi.validate(
-								decoded.data,
-								handler.validator()
-							);
+							const validation = Joi.validate(decoded.data, handler.validator());
 							if (validation.error) {
 								const { error } = validation;
 								// Transform Joi message
@@ -190,7 +158,7 @@ export class WebSocketServerService {
 								// Add metadata
 								(error as any).data = {
 									code: 4003,
-									type: 'CliDataValidationError'
+									type: 'CliDataValidationError',
 								};
 								throw error;
 							}
@@ -203,12 +171,10 @@ export class WebSocketServerService {
 					}
 
 					// If message is not handled, send an error to the client
-					const error = new Error(
-						`Unknown message key ${decoded.id}`
-					);
+					const error = new Error(`Unknown message key ${decoded.id}`);
 					(error as any).data = {
 						code: 4003,
-						type: 'CliUnknownMessageError'
+						type: 'CliUnknownMessageError',
 					};
 					throw error;
 				} catch (error) {
@@ -221,22 +187,18 @@ export class WebSocketServerService {
 					} else {
 						payload.data = {
 							code: 4001,
-							type: 'CliInternalError'
+							type: 'CliInternalError',
 						};
 					}
 
 					reply(dId, payload, 'error', tag);
 
-					this.loggerService.debug(
-						`[WS:${id}] Error while processing message: ${error.message}`
-					);
+					this.loggerService.debug(`[WS:${id}] Error while processing message: ${error.message}`);
 				}
 			});
 
 			ws.on('close', () => {
-				this.loggerService.debug(
-					`[WS:${id}] Did close websocket connection`
-				);
+				this.loggerService.debug(`[WS:${id}] Did close websocket connection`);
 			});
 		});
 
@@ -269,9 +231,7 @@ export class WebSocketServerService {
 	/** Send a message to all websocket clients */
 	public broadcast(data: any, type?: string): void {
 		if (!this.started()) {
-			this.loggerService.debug(
-				'Cannot broadcast message, server is not started'
-			);
+			this.loggerService.debug('Cannot broadcast message, server is not started');
 		}
 		for (const client of this.server.clients) {
 			if (client.readyState === WebSocket.OPEN) {
@@ -303,13 +263,11 @@ export class WebSocketServerService {
 	private async createToken(): Promise<void> {
 		const wsAddress = <AddressInfo>this.server.address();
 		const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
-			expiresIn: this.tokenExpires
+			expiresIn: this.tokenExpires,
 		});
 		const data = JSON.stringify(
 			{
-				url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${
-					this.baseUri
-				}?token=${encodeURIComponent(token)}`
+				url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`,
 			},
 			null,
 			2
@@ -333,12 +291,9 @@ export class WebSocketServerService {
 	 */
 	private makeId(): string {
 		let text = '';
-		const possible =
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		for (let i = 0; i < 8; i++) {
-			text += possible.charAt(
-				Math.floor(Math.random() * possible.length)
-			);
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
 		return text;
 	}

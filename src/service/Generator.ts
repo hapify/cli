@@ -37,7 +37,7 @@ export class GeneratorService {
 	async runChannel(channel: Channel): Promise<IGeneratorResult[]> {
 		const response = await this.api().post('generator/run', {
 			project: channel.config.project,
-			templates: channel.templates.map(t => t.toObject())
+			templates: channel.templates.map((t) => t.toObject()),
 		});
 		return response.data.results;
 	}
@@ -52,7 +52,7 @@ export class GeneratorService {
 	async runTemplate(template: Template): Promise<IGeneratorResult[]> {
 		const response = await this.api().post('generator/run', {
 			project: template.channel().config.project,
-			templates: [template.toObject()]
+			templates: [template.toObject()],
 		});
 		return response.data.results;
 	}
@@ -66,25 +66,21 @@ export class GeneratorService {
 	 * @throws {Error}
 	 *  If the template needs a model and no model is passed
 	 */
-	async run(
-		template: Template,
-		model: Model | null
-	): Promise<IGeneratorResult> {
+	async run(template: Template, model: Model | null): Promise<IGeneratorResult> {
 		if (template.needsModel() && !model) {
 			throw new Error('Model should be defined for this template');
 		}
 
 		const payload: any = {
 			project: template.channel().config.project,
-			templates: [template.toObject()]
+			templates: [template.toObject()],
 		};
 
 		if (model) {
 			payload.ids = [model.id];
 		}
 
-		return (await this.api().post('generator/run', payload)).data
-			.results[0];
+		return (await this.api().post('generator/run', payload)).data.results[0];
 	}
 
 	/**
@@ -95,10 +91,7 @@ export class GeneratorService {
 	 *  Default null
 	 * @returns {string}
 	 */
-	async pathPreview(
-		path: string,
-		model: Model | null = null
-	): Promise<string> {
+	async pathPreview(path: string, model: Model | null = null): Promise<string> {
 		const payload = model ? { path, model: model.id } : { path };
 		return (await this.api().post('generator/path', payload)).data.result;
 	}

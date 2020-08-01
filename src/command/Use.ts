@@ -34,11 +34,7 @@ export async function UseCommand(cmd: Command) {
 		// Log changes
 		const channels = await channelsService.channels();
 		for (const channel of channels) {
-			logger.success(
-				`Did set project ${cHigh(qProject.id)} for channel ${cChannel(
-					channel.name
-				)}`
-			);
+			logger.success(`Did set project ${cHigh(qProject.id)} for channel ${cChannel(channel.name)}`);
 		}
 		// Action Ends
 		// ---------------------------------

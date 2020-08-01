@@ -1,16 +1,10 @@
-import {
-	ITemplate,
-	IStorable,
-	ISerializable,
-	IConfigTemplate
-} from '../interface';
+import { ITemplate, IStorable, ISerializable, IConfigTemplate } from '../interface';
 import { TemplateInput, TemplateEngine } from '../enum';
 import { Channel } from './';
 import { Container } from 'typedi';
 import { TemplatesFileStorageService, StringService } from '../service';
 
-export class Template
-	implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
+export class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */
 	private static defaultFolder = 'model';
 	/** Template storage */
@@ -50,7 +44,7 @@ export class Template
 			path: this.path,
 			engine: this.engine,
 			input: this.input,
-			content: this.content
+			content: this.content,
 		};
 	}
 
@@ -59,9 +53,7 @@ export class Template
 	 * @returns {boolean}
 	 */
 	public isEmpty(): boolean {
-		return (
-			typeof this.content !== 'string' || this.content.trim().length === 0
-		);
+		return typeof this.content !== 'string' || this.content.trim().length === 0;
 	}
 
 	/**
@@ -91,18 +83,12 @@ export class Template
 	/** @inheritDoc */
 	public async load(): Promise<void> {
 		await this.validate();
-		this.content = await this.storageService.get([
-			this.parent.templatesPath,
-			this.contentPath
-		]);
+		this.content = await this.storageService.get([this.parent.templatesPath, this.contentPath]);
 	}
 
 	/** @inheritDoc */
 	async save(): Promise<void> {
-		await this.storageService.set(
-			[this.parent.templatesPath, this.contentPath],
-			this.content
-		);
+		await this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
 	}
 
 	/**
@@ -110,15 +96,8 @@ export class Template
 	 * @throws {Error}
 	 */
 	private async validate(): Promise<void> {
-		if (
-			!(await this.storageService.exists([
-				this.parent.templatesPath,
-				this.contentPath
-			]))
-		) {
-			throw new Error(
-				`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`
-			);
+		if (!(await this.storageService.exists([this.parent.templatesPath, this.contentPath]))) {
+			throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
 		}
 	}
 
@@ -146,9 +125,7 @@ export class Template
 	 * @param {Template|IConfigTemplate} template
 	 * @return {string}
 	 */
-	private static computeExtension(
-		template: Template | IConfigTemplate
-	): string {
+	private static computeExtension(template: Template | IConfigTemplate): string {
 		if (template.engine === TemplateEngine.Hpf) {
 			return 'hpf';
 		}

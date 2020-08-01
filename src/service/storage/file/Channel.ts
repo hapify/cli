@@ -15,9 +15,7 @@ export class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
 		try {
 			return JSON.parse(content);
 		} catch (error) {
-			throw new Error(
-				`An error occurred while parsing Channel configuration: ${error.toString()}`
-			);
+			throw new Error(`An error occurred while parsing Channel configuration: ${error.toString()}`);
 		}
 	}
 	/** Cleanup unused files */
@@ -37,33 +35,24 @@ export class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
 	/** Get all files' absolute path from a directory */
 	private static listAllFiles(rootPath: string): string[] {
 		// Read the whole directory
-		const entries = Fs.readdirSync(rootPath).map(dir =>
-			Path.join(rootPath, dir)
-		);
+		const entries = Fs.readdirSync(rootPath).map((dir) => Path.join(rootPath, dir));
 
 		// Get sub-files
 		const subFiles = entries
-			.filter(subPath => Fs.statSync(subPath).isDirectory())
-			.map(subPath => ChannelFileStorageService.listAllFiles(subPath))
-			.reduce(
-				(flatten: string[], files: string[]) => flatten.concat(files),
-				[]
-			);
+			.filter((subPath) => Fs.statSync(subPath).isDirectory())
+			.map((subPath) => ChannelFileStorageService.listAllFiles(subPath))
+			.reduce((flatten: string[], files: string[]) => flatten.concat(files), []);
 
 		// Return files and sub-files
-		return entries
-			.filter(subPath => Fs.statSync(subPath).isFile())
-			.concat(subFiles);
+		return entries.filter((subPath) => Fs.statSync(subPath).isFile()).concat(subFiles);
 	}
 	/** Delete all directories if empty */
 	private static clearEmptyDirectories(rootPath: string): void {
 		// Remove sub-directories
 		Fs.readdirSync(rootPath)
-			.map(dir => Path.join(rootPath, dir))
-			.filter(subPath => Fs.statSync(subPath).isDirectory())
-			.forEach(subPath =>
-				ChannelFileStorageService.clearEmptyDirectories(subPath)
-			);
+			.map((dir) => Path.join(rootPath, dir))
+			.filter((subPath) => Fs.statSync(subPath).isDirectory())
+			.forEach((subPath) => ChannelFileStorageService.clearEmptyDirectories(subPath));
 
 		// Count remaining files & dirs
 		const count = Fs.readdirSync(rootPath).length;

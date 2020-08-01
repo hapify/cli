@@ -1,9 +1,5 @@
 import { Service } from 'typedi';
-import {
-	WebSocketMessages,
-	IWebSocketHandler,
-	IWebSocketMessage
-} from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
 

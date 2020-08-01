@@ -18,16 +18,12 @@ export interface BaseSearchParams {
  * I: Api Interface
  * S: Search params
  */
-export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
-	implements IStorageService<T> {
+export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> implements IStorageService<T> {
 	/** Stores the remote config to use */
 	protected remoteConfig: IRemoteConfig;
 
 	/** Constructor */
-	constructor(
-		private apiService: ApiService,
-		private optionsService: OptionsService
-	) {
+	constructor(private apiService: ApiService, private optionsService: OptionsService) {
 		this.remoteConfig = optionsService.remoteConfig();
 	}
 
@@ -37,10 +33,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
 	 * @return {Promise<T>}
 	 */
 	async create(payload: I): Promise<T> {
-		const output: I = (await this.apiService.post(
-			`${this.path()}`,
-			payload
-		)).data;
+		const output: I = (await this.apiService.post(`${this.path()}`, payload)).data;
 		return this.fromApi(output);
 	}
 
@@ -60,8 +53,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
 	 * @return {Promise<T>}
 	 */
 	async get(id: string): Promise<T> {
-		const output: I = (await this.apiService.get(`${this.path()}/${id}`))
-			.data;
+		const output: I = (await this.apiService.get(`${this.path()}/${id}`)).data;
 		return this.fromApi(output);
 	}
 
@@ -80,11 +72,8 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
 	 * @return {Promise<T[]> >}
 	 */
 	async list(searchParams?: S): Promise<T[]> {
-		const output: I[] = (await this.apiService.get(
-			`${this.path()}`,
-			Object.assign(this.defaultSearchParams(), searchParams)
-		)).data.items;
-		return output.map(o => this.fromApi(o));
+		const output: I[] = (await this.apiService.get(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
+		return output.map((o) => this.fromApi(o));
 	}
 
 	/**
@@ -94,26 +83,19 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams>
 	 */
 	async count(searchParams: S): Promise<number> {
 		// Remove unwanted properties
-		const params = Object.assign(
-			{},
-			this.defaultSearchParams(),
-			searchParams
-		);
+		const params = Object.assign({}, this.defaultSearchParams(), searchParams);
 		delete params._page;
 		delete params._limit;
 		delete params._order;
 		delete params._sort;
-		return (await this.apiService.get(
-			`${this.path()}/count`,
-			Object.assign(this.defaultSearchParams(), searchParams)
-		)).data.total;
+		return (await this.apiService.get(`${this.path()}/count`, Object.assign(this.defaultSearchParams(), searchParams))).data.total;
 	}
 
 	/** Get the default search params (limit, page, etc...) */
 	protected defaultSearchParams(): any {
 		return {
 			_page: 0,
-			_limit: 20
+			_limit: 20,
 		};
 	}
 

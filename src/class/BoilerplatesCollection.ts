@@ -3,8 +3,7 @@ import { Boilerplate } from './';
 import { BoilerplatesApiStorageService } from '../service';
 import { Container } from 'typedi';
 
-export class BoilerplatesCollection
-	implements IStorable, ISerializable<IBoilerplate[], Boilerplate[]> {
+export class BoilerplatesCollection implements IStorable, ISerializable<IBoilerplate[], Boilerplate[]> {
 	/** @type {Boilerplate[]} The list of boilerplate instances */
 	private boilerplates: Boilerplate[] = [];
 	/** Boilerplates storage */
@@ -53,7 +52,7 @@ export class BoilerplatesCollection
 	 * @returns {Promise<Boilerplate>}
 	 */
 	async get(id: string): Promise<Boilerplate> {
-		return this.boilerplates.find(p => p.id === id);
+		return this.boilerplates.find((p) => p.id === id);
 	}
 
 	/**
@@ -63,19 +62,19 @@ export class BoilerplatesCollection
 	async getBySlug(slug: string): Promise<Boilerplate> {
 		const data = await this.storageService.list({
 			_limit: 1,
-			slug
+			slug,
 		});
 		return data.length ? new Boilerplate(data[0]) : null;
 	}
 
 	/** @inheritDoc */
 	public fromObject(object: IBoilerplate[]): Boilerplate[] {
-		this.boilerplates = object.map(p => new Boilerplate(p));
+		this.boilerplates = object.map((p) => new Boilerplate(p));
 		return this.boilerplates;
 	}
 
 	/** @inheritDoc */
 	public toObject(): IBoilerplate[] {
-		return this.boilerplates.map(p => p.toObject());
+		return this.boilerplates.map((p) => p.toObject());
 	}
 }

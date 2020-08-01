@@ -1,10 +1,5 @@
 import { Service } from 'typedi';
-import {
-	WebSocketMessages,
-	IWebSocketHandler,
-	IWebSocketMessage,
-	ModelSchema
-} from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ModelSchema } from '../../interface';
 import { ValidatorService } from '../Validator';
 import * as Joi from 'joi';
 
@@ -25,16 +20,13 @@ export class ValidateModelHandlerService implements IWebSocketHandler {
 	validator(): Joi.Schema {
 		return Joi.object({
 			model: ModelSchema,
-			content: Joi.string().required()
+			content: Joi.string().required(),
 		});
 	}
 
 	/** @inheritDoc */
 	async handle(message: IWebSocketMessage): Promise<any> {
 		// From content
-		return await this.validatorService.run(
-			message.data.content,
-			message.data.model
-		);
+		return await this.validatorService.run(message.data.content, message.data.model);
 	}
 }

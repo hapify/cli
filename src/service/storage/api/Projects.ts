@@ -14,11 +14,7 @@ export interface IApiProject {
 }
 
 @Service()
-export class ProjectsApiStorageService extends BaseApiStorageService<
-	IProject,
-	IApiProject,
-	ProjectsSearchParams
-> {
+export class ProjectsApiStorageService extends BaseApiStorageService<IProject, IApiProject, ProjectsSearchParams> {
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
@@ -37,7 +33,7 @@ export class ProjectsApiStorageService extends BaseApiStorageService<
 			id: object._id,
 			created_at: object.created_at,
 			name: object.name,
-			description: object.description
+			description: object.description,
 		};
 	}
 }

@@ -13,10 +13,7 @@ export class PresetsService {
 	/**
 	 * Constructor
 	 */
-	constructor(
-		private channelsService: ChannelsService,
-		private infoService: InfoService
-	) {}
+	constructor(private channelsService: ChannelsService, private infoService: InfoService) {}
 
 	/**
 	 * Returns the presets collection
@@ -41,13 +38,13 @@ export class PresetsService {
 		const referencesMap: { [id: string]: string } = {};
 
 		for (const model of presetModels) {
-			const existing = models.find(m => m.name === model.name);
+			const existing = models.find((m) => m.name === model.name);
 			if (existing) {
 				// Save incoming reference to existing reference
 				referencesMap[model.id] = existing.id;
 				// Add or skip each fields
 				const clone = existing.clone(false);
-				const existingHasPrimary = existing.fields.some(f => f.primary);
+				const existingHasPrimary = existing.fields.some((f) => f.primary);
 				let edited = false;
 				for (const field of model.fields) {
 					// Prevent adding primary key if already exists
@@ -55,7 +52,7 @@ export class PresetsService {
 						continue;
 					}
 					// Add this field if nothing with the same name was found
-					if (!clone.fields.some(f => f.name === field.name)) {
+					if (!clone.fields.some((f) => f.name === field.name)) {
 						clone.fields.push(field);
 						edited = true;
 					}
@@ -69,18 +66,16 @@ export class PresetsService {
 				// Save incoming reference to existing reference
 				referencesMap[model.id] = clone.id;
 
-				const defaultFields = (await this.infoService.fields()).map(
-					f => new Field(f)
-				);
+				const defaultFields = (await this.infoService.fields()).map((f) => new Field(f));
 
 				// Apply special properties to primary field
-				const defaultPrimary = defaultFields.find(f => f.primary);
-				const clonePrimary = clone.fields.find(f => f.primary);
+				const defaultPrimary = defaultFields.find((f) => f.primary);
+				const clonePrimary = clone.fields.find((f) => f.primary);
 				if (defaultPrimary && clonePrimary) {
 					// Apply clone primary properties to default primary
 					defaultPrimary.ownership = clonePrimary.ownership;
 					// Remove primary from clone
-					clone.fields = clone.fields.filter(f => !f.primary);
+					clone.fields = clone.fields.filter((f) => !f.primary);
 				}
 
 				clone.fields = defaultFields.concat(clone.fields);
@@ -91,10 +86,7 @@ export class PresetsService {
 		// Change references to existing models
 		const changeReferencesToNewModels = (m: Model) => {
 			for (const f of m.fields) {
-				if (
-					f.type === FieldType.Entity &&
-					typeof referencesMap[f.reference] === 'string'
-				) {
+				if (f.type === FieldType.Entity && typeof referencesMap[f.reference] === 'string') {
 					f.reference = referencesMap[f.reference];
 				}
 			}
@@ -105,7 +97,7 @@ export class PresetsService {
 		// Return results
 		return {
 			updated,
-			created
+			created,
 		};
 	}
 }

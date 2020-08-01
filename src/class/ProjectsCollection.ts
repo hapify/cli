@@ -3,8 +3,7 @@ import { Project } from './';
 import { ProjectsApiStorageService } from '../service';
 import { Container } from 'typedi';
 
-export class ProjectsCollection
-	implements IStorable, ISerializable<IProject[], Project[]> {
+export class ProjectsCollection implements IStorable, ISerializable<IProject[], Project[]> {
 	/** @type {Project[]} The list of project instances */
 	private projects: Project[] = [];
 	/** Projects storage */
@@ -53,7 +52,7 @@ export class ProjectsCollection
 	 * @returns {Promise<Project>}
 	 */
 	async get(id: string): Promise<Project> {
-		return this.projects.find(p => p.id === id);
+		return this.projects.find((p) => p.id === id);
 	}
 
 	/**
@@ -63,19 +62,19 @@ export class ProjectsCollection
 	async add(name: string, description: string): Promise<Project> {
 		const object = await this.storageService.create({
 			name,
-			description: description.length ? description : null
+			description: description.length ? description : null,
 		});
 		return new Project(object);
 	}
 
 	/** @inheritDoc */
 	public fromObject(object: IProject[]): Project[] {
-		this.projects = object.map(p => new Project(p));
+		this.projects = object.map((p) => new Project(p));
 		return this.projects;
 	}
 
 	/** @inheritDoc */
 	public toObject(): IProject[] {
-		return this.projects.map(p => p.toObject());
+		return this.projects.map((p) => p.toObject());
 	}
 }

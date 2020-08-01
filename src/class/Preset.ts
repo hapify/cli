@@ -32,7 +32,7 @@ export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 		this.name__fr = object.name__fr;
 		this.description = object.description;
 		this.description__fr = object.description__fr;
-		this.models = object.models.map(m => new Model(m));
+		this.models = object.models.map((m) => new Model(m));
 		return this;
 	}
 
@@ -45,7 +45,7 @@ export class Preset implements ISerializable<IPreset, Preset>, IPreset {
 			name__fr: this.name__fr,
 			description: this.description,
 			description__fr: this.description__fr,
-			models: this.models.map(m => m.toObject())
+			models: this.models.map((m) => m.toObject()),
 		};
 	}
 }

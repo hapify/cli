@@ -28,8 +28,8 @@ export class WriterService {
 			type: 'nodebuffer',
 			compression: 'DEFLATE',
 			compressionOptions: {
-				level: 9
-			}
+				level: 9,
+			},
 		});
 		mkdirp.sync(Path.dirname(path));
 		Fs.writeFileSync(path, content);

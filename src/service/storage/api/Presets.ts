@@ -23,11 +23,7 @@ export interface IApiPreset {
 }
 
 @Service()
-export class PresetsApiStorageService extends BaseApiStorageService<
-	IPreset,
-	IApiPreset,
-	PresetsSearchParams
-> {
+export class PresetsApiStorageService extends BaseApiStorageService<IPreset, IApiPreset, PresetsSearchParams> {
 	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
@@ -55,9 +51,9 @@ export class PresetsApiStorageService extends BaseApiStorageService<
 					name: m.name,
 					notes: m.notes || null,
 					fields: m.fields,
-					accesses: m.accesses
+					accesses: m.accesses,
 				})
-			)
+			),
 		};
 	}
 }

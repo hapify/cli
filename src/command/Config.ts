@@ -33,9 +33,7 @@ export async function ConfigCommand(cmd: Command) {
 		globalConfig.setData(data);
 
 		if (updates.length) {
-			logger.success(
-				`Did update global configuration: ${updates.join(', ')}`
-			);
+			logger.success(`Did update global configuration: ${updates.join(', ')}`);
 		} else {
 			logger.warning(`Nothing updated`);
 		}

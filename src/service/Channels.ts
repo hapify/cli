@@ -23,10 +23,7 @@ export class ChannelsService {
 	 */
 	public async channels(): Promise<Channel[]> {
 		if (!(this._channels instanceof Array)) {
-			this._channels = await ChannelsService.sniff(
-				this.optionsService.dir(),
-				this.optionsService.depth()
-			);
+			this._channels = await ChannelsService.sniff(this.optionsService.dir(), this.optionsService.depth());
 			if (this._channels.length === 0) {
 				throw new Error('No channel found');
 			}
@@ -58,9 +55,7 @@ export class ChannelsService {
 	public async ensureSameDefaultFields(): Promise<void> {
 		// Get defined fields
 		const channels = await this.channels();
-		const fieldsGroup = channels
-			.filter(c => !!c.config.defaultFields)
-			.map(c => c.config.defaultFields);
+		const fieldsGroup = channels.filter((c) => !!c.config.defaultFields).map((c) => c.config.defaultFields);
 		if (fieldsGroup.length < 2) {
 			return;
 		}
@@ -68,9 +63,7 @@ export class ChannelsService {
 		const ref = fieldsGroup[0];
 		for (let i = 1; i < fieldsGroup.length; i++) {
 			if (!Hoek.deepEqual(ref, fieldsGroup[i])) {
-				throw new Error(
-					'Default fields must match for all channels if defined'
-				);
+				throw new Error('Default fields must match for all channels if defined');
 			}
 		}
 	}
@@ -86,10 +79,7 @@ export class ChannelsService {
 		}
 		// Try to find channels
 		else {
-			const channels = await ChannelsService.sniff(
-				this.optionsService.dir(),
-				this.optionsService.depth()
-			);
+			const channels = await ChannelsService.sniff(this.optionsService.dir(), this.optionsService.depth());
 			if (channels.length === 0) {
 				throw new Error('No channel found');
 			}
@@ -117,29 +107,19 @@ export class ChannelsService {
 	 * @param {number} from  Default: path
 	 * @return {Channel[]}
 	 */
-	private static async sniff(
-		path: string,
-		depth: number = 2,
-		from: string = path
-	): Promise<Channel[]> {
+	private static async sniff(path: string, depth: number = 2, from: string = path): Promise<Channel[]> {
 		// Get channels in sub-directories first
 		const channels: Channel[] =
 			depth <= 0
 				? []
-				: (await Promise.all(
-						Fs.readdirSync(path)
-							.map(dir => Path.join(path, dir))
-							.filter(subPath =>
-								Fs.statSync(subPath).isDirectory()
-							)
-							.map(subPath =>
-								ChannelsService.sniff(subPath, depth - 1, from)
-							)
-				  )).reduce(
-						(flatten: Channel[], channels: Channel[]) =>
-							flatten.concat(channels),
-						[]
-				  );
+				: (
+						await Promise.all(
+							Fs.readdirSync(path)
+								.map((dir) => Path.join(path, dir))
+								.filter((subPath) => Fs.statSync(subPath).isDirectory())
+								.map((subPath) => ChannelsService.sniff(subPath, depth - 1, from))
+						)
+				  ).reduce((flatten: Channel[], channels: Channel[]) => flatten.concat(channels), []);
 
 		// Get channel of current directory if exists
 		if (await Channel.configExists(path)) {

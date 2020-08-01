@@ -1,10 +1,5 @@
 import { Service } from 'typedi';
-import axios, {
-	AxiosError,
-	AxiosInstance,
-	AxiosRequestConfig,
-	AxiosResponse,
-} from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import querystring from 'querystring';
 import { OptionsService } from './Options';
 
@@ -70,11 +65,7 @@ export class ApiService {
 	}
 
 	/** Get */
-	async get(
-		url: string,
-		query?: any,
-		config?: AxiosRequestConfig
-	): Promise<AxiosResponse> {
+	async get(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
 		try {
 			return await this.client().get(this.query(url, query), config);
 		} catch (e) {
@@ -83,47 +74,25 @@ export class ApiService {
 	}
 
 	/** Post */
-	async post(
-		url: string,
-		payload?: any,
-		query?: any,
-		config?: AxiosRequestConfig
-	): Promise<AxiosResponse> {
+	async post(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
 		try {
-			return await this.client().post(
-				this.query(url, query),
-				payload,
-				config
-			);
+			return await this.client().post(this.query(url, query), payload, config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
 	}
 
 	/** Patch */
-	async patch(
-		url: string,
-		payload?: any,
-		query?: any,
-		config?: AxiosRequestConfig
-	): Promise<AxiosResponse> {
+	async patch(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
 		try {
-			return await this.client().patch(
-				this.query(url, query),
-				payload,
-				config
-			);
+			return await this.client().patch(this.query(url, query), payload, config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
 	}
 
 	/** Delete */
-	async delete(
-		url: string,
-		query?: any,
-		config?: AxiosRequestConfig
-	): Promise<AxiosResponse> {
+	async delete(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
 		try {
 			return await this.client().delete(this.query(url, query), config);
 		} catch (e) {

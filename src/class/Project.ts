@@ -2,8 +2,7 @@ import { IProject, ISerializable, IStorable } from '../interface';
 import { ProjectsApiStorageService } from '../service';
 import { Container } from 'typedi';
 
-export class Project
-	implements IStorable, ISerializable<IProject, Project>, IProject {
+export class Project implements IStorable, ISerializable<IProject, Project>, IProject {
 	/** The project's unique id */
 	id: string;
 	/** The project's unique id */
@@ -55,7 +54,7 @@ export class Project
 			id: this.id,
 			created_at: this.created_at,
 			name: this.name,
-			description: this.description
+			description: this.description,
 		};
 	}
 

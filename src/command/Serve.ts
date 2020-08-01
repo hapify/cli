@@ -1,11 +1,6 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import {
-	OptionsService,
-	LoggerService,
-	HttpServerService,
-	ChannelsService
-} from '../service';
+import { OptionsService, LoggerService, HttpServerService, ChannelsService } from '../service';
 import { cPath } from './helpers';
 
 // ############################################

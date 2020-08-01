@@ -6,10 +6,7 @@ export interface ChannelDescriptionQuery {
 	description?: string;
 	logo?: string;
 }
-export async function DescribeChannel(
-	cmd: Command,
-	qChannelDescription: ChannelDescriptionQuery
-) {
+export async function DescribeChannel(cmd: Command, qChannelDescription: ChannelDescriptionQuery) {
 	// Get description from user
 	// If the name is passed, bypass all questions
 	const answer = (await Inquirer.prompt([
@@ -17,20 +14,20 @@ export async function DescribeChannel(
 			name: 'name',
 			message: 'Enter the channel name',
 			when: () => !cmd.channelName,
-			default: null
+			default: null,
 		},
 		{
 			name: 'description',
 			message: 'Enter a description',
 			when: () => !cmd.channelDesc && !cmd.channelName,
-			default: null
+			default: null,
 		},
 		{
 			name: 'logo',
 			message: 'Enter a logo URL',
 			when: () => !cmd.channelLogo && !cmd.channelName,
-			default: null
-		}
+			default: null,
+		},
 	])) as any;
 
 	qChannelDescription.name = cmd.channelName || answer.name;

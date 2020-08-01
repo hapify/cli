@@ -30,13 +30,10 @@ export class ValidatorService {
 			}).run(content, { model });
 		} catch (error) {
 			if (error.code === 6003) {
-				throw new RichError(
-					`Template processing timed out (${InternalConfig.validatorTimeout}ms)`,
-					{
-						code: 4006,
-						type: 'CliValidatorTimeoutError',
-					}
-				);
+				throw new RichError(`Template processing timed out (${InternalConfig.validatorTimeout}ms)`, {
+					code: 4006,
+					type: 'CliValidatorTimeoutError',
+				});
 			}
 			if (error.code === 6002) {
 				// Clone error
@@ -62,13 +59,10 @@ export class ValidatorService {
 		// Check result and return
 		const validation = Joi.validate(result, ValidatorResultSchema);
 		if (validation.error) {
-			throw new RichError(
-				`Invalid validator output. Must return { errors: string[], warnings: string[] }`,
-				{
-					code: 4007,
-					type: 'CliValidatorOutputError',
-				}
-			);
+			throw new RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
+				code: 4007,
+				type: 'CliValidatorOutputError',
+			});
 		}
 		return result;
 	}

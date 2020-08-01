@@ -1,9 +1,5 @@
 import { Service } from 'typedi';
-import {
-	WebSocketMessages,
-	IWebSocketHandler,
-	IWebSocketMessage
-} from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage } from '../../interface';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import { WriterService } from '../Writer';
@@ -17,11 +13,7 @@ export class GenerateChannelHandlerService implements IWebSocketHandler {
 	 * @param {GeneratorService} generatorService
 	 * @param {WriterService} writerService
 	 */
-	constructor(
-		private channelsService: ChannelsService,
-		private generatorService: GeneratorService,
-		private writerService: WriterService
-	) {}
+	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService, private writerService: WriterService) {}
 
 	/** @inheritDoc */
 	canHandle(message: IWebSocketMessage): boolean {
@@ -31,16 +23,14 @@ export class GenerateChannelHandlerService implements IWebSocketHandler {
 	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
-			channel: Joi.string().required()
+			channel: Joi.string().required(),
 		});
 	}
 
 	/** @inheritDoc */
 	async handle(message: IWebSocketMessage): Promise<any> {
 		// Get channel
-		const channel = (await this.channelsService.channels()).find(
-			c => c.id === message.data.channel
-		);
+		const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);
 		if (!channel) {
 			throw new Error(`Unable to find channel ${message.data.channel}`);
 		}

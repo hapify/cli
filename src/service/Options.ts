@@ -51,8 +51,7 @@ export class OptionsService {
 
 	/** @return {string} Return the API Key to use (explicit or global) */
 	apiKey(): string {
-		const key =
-			this.program.key || this.globalConfigService.getData().apiKey;
+		const key = this.program.key || this.globalConfigService.getData().apiKey;
 		if (!key) {
 			throw new Error(
 				'Please define an API Key using command "hpf key" or the option "--key".\nTo get your api key, please visit https://www.hapify.io/my-key'

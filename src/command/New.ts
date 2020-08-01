@@ -5,16 +5,7 @@ import { cPath } from './helpers';
 import * as Rimraf from 'rimraf';
 import * as Fs from 'fs';
 import * as Path from 'path';
-import {
-	ProjectQuery,
-	AskProject,
-	SetupProject,
-	BoilerplateQuery,
-	AskBoilerplate,
-	FindBoilerplate,
-	AskPreset,
-	ApplyPreset
-} from './question';
+import { ProjectQuery, AskProject, SetupProject, BoilerplateQuery, AskBoilerplate, FindBoilerplate, AskPreset, ApplyPreset } from './question';
 
 const SimpleGit = require('simple-git/promise');
 
@@ -43,9 +34,7 @@ export async function NewCommand(cmd: Command) {
 		const currentDir = options.dir();
 		const files = Fs.readdirSync(currentDir);
 		if (files.length) {
-			throw new Error(
-				'Current folder is not empty, cannot create a new project.'
-			);
+			throw new Error('Current folder is not empty, cannot create a new project.');
 		}
 
 		// =================================
@@ -94,11 +83,7 @@ export async function NewCommand(cmd: Command) {
 		// Get models and apply presets if necessary
 		await ApplyPreset(qPresets);
 
-		logger.success(
-			`Created ${count} new dynamic boilerplate${
-				count > 1 ? 's' : ''
-			} in ${cPath(currentDir)}. Run 'hpf serve' to edit.`
-		);
+		logger.success(`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}. Run 'hpf serve' to edit.`);
 		// Action Ends
 		// ---------------------------------
 

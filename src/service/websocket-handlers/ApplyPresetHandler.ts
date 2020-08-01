@@ -1,11 +1,5 @@
 import { Service } from 'typedi';
-import {
-	WebSocketMessages,
-	IWebSocketHandler,
-	IWebSocketMessage,
-	ModelSchema,
-	IModel
-} from '../../interface';
+import { WebSocketMessages, IWebSocketHandler, IWebSocketMessage, ModelSchema, IModel } from '../../interface';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
 import { Model } from '../../class';
@@ -26,10 +20,7 @@ export class ApplyPresetHandlerService implements IWebSocketHandler {
 	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
-			models: Joi.array()
-				.items(ModelSchema)
-				.required()
-				.min(0)
+			models: Joi.array().items(ModelSchema).required().min(0),
 		});
 	}
 
@@ -40,8 +31,8 @@ export class ApplyPresetHandlerService implements IWebSocketHandler {
 		const results = await this.presetsService.apply(models);
 
 		return {
-			updated: results.updated.map(m => m.toObject()),
-			created: results.created.map(m => m.toObject())
+			updated: results.updated.map((m) => m.toObject()),
+			created: results.created.map((m) => m.toObject()),
 		};
 	}
 }
