@@ -14,11 +14,14 @@
     "lint": "prettier --write '**/*.ts'",
     "build": "rimraf dist && tsc -p ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:hapify/cli.git"
+  },
   "keywords": [
     "hapify",
     "cli"
   ],
-  "private": false,
   "author": "Edouard Demotes-Mainard <edouard@tractr.net>",
   "license": "MIT",
   "homepage": "https://www.hapify.io",
