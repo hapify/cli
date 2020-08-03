@@ -1,10 +1,12 @@
+export type Engine = 'hpf' | 'js';
+export type Input = 'one' | 'all';
 export interface IConfigTemplate {
 	/** @type {string} The template's path */
 	path: string;
 	/** @type {string} The template's type */
-	engine: string;
+	engine: Engine;
 	/** @type {string} Denotes if the template has to to be ran for one or all models */
-	input: string;
+	input: Input;
 }
 
 export interface IConfig {
@@ -26,15 +28,32 @@ export interface IConfig {
 	templates: IConfigTemplate[];
 }
 
+export type FieldTypeValue = 'boolean' | 'number' | 'string' | 'datetime' | 'entity' | 'object' | 'file';
+export type FieldSubTypeValue =
+	| 'integer'
+	| 'float'
+	| 'latitude'
+	| 'longitude'
+	| 'email'
+	| 'password'
+	| 'url'
+	| 'text'
+	| 'rich'
+	| 'date'
+	| 'time'
+	| 'image'
+	| 'video'
+	| 'audio'
+	| 'document';
 export interface IField {
 	/** @type {string} The field's name */
 	name: string;
 	/** @type {string} The field's notes */
 	notes?: string;
 	/** @type {string} The field's type */
-	type: string;
+	type: FieldTypeValue;
 	/** @type {string} The field's subtype */
-	subtype: string | null;
+	subtype: FieldSubTypeValue | null;
 	/** @type {string} The field's reference if the type is entity. The GUID string of the targeted model */
 	reference: string | null;
 	/** @type {boolean} Should be used as a primary key or not */
@@ -71,30 +90,29 @@ export interface IField {
  *  - guest (Denotes if the access is not restricted)
  */
 export class Access {
-	static GUEST = 'guest';
-	static AUTHENTICATED = 'auth';
-	static OWNER = 'owner';
-	static ADMIN = 'admin';
+	static GUEST: AccessValue = 'guest';
+	static AUTHENTICATED: AccessValue = 'auth';
+	static OWNER: AccessValue = 'owner';
+	static ADMIN: AccessValue = 'admin';
 
 	/**
 	 * Returns the list of permissions ordered by restriction
-	 * @return {string[]}
+	 * @return {AccessValue[]}
 	 */
-	static list(): string[] {
+	static list(): AccessValue[] {
 		return [Access.ADMIN, Access.OWNER, Access.AUTHENTICATED, Access.GUEST];
 	}
 }
 
+export type AccessValue = 'admin' | 'owner' | 'auth' | 'guest';
 /** Define the access for each available action */
 export interface IAccesses {
-	create: string;
-	read: string;
-	update: string;
-	remove: string;
-	search: string;
-	count: string;
-
-	[s: string]: string;
+	create: AccessValue;
+	read: AccessValue;
+	update: AccessValue;
+	remove: AccessValue;
+	search: AccessValue;
+	count: AccessValue;
 }
 
 export interface IModel {

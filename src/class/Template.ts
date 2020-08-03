@@ -1,12 +1,13 @@
 import { Container } from 'typedi';
 import { IStorable } from '../interface/IStorable';
 import { ISerializable } from '../interface/ISerializable';
-import { IConfigTemplate, ITemplate } from '../interface/IObjects';
+import { Engine, IConfigTemplate, Input, ITemplate } from '../interface/IObjects';
 import { TemplatesFileStorageService } from '../service/storage/file/Template';
 import { Channel } from './Channel';
 import { TemplateInput } from '../enum/TemplateInput';
 import { StringService } from '../service/String';
 import { TemplateEngine } from '../enum/TemplateEngine';
+import { IStringVariants } from '../interface/IStringVariants';
 
 export class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */
@@ -16,9 +17,9 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 	/** @type {string} The template's path */
 	path: string;
 	/** @type {string} The template's type */
-	engine: string;
+	engine: Engine;
 	/** @type {string} Denotes if the template has to to be ran for one or all models */
-	input: string;
+	input: Input;
 	/** @type {string} The template's path */
 	contentPath: string;
 	/** @type {string} The template's content */
@@ -115,7 +116,7 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		const stringService: StringService = Container.get(StringService);
 
 		const variants = stringService.variants(Template.defaultFolder);
-		const keys = Object.keys(variants);
+		const keys = Object.keys(variants) as (keyof IStringVariants)[];
 		let path = template.path;
 		for (const key of keys) {
 			path = path.replace(new RegExp(`{${key}}`, 'g'), variants[key]);

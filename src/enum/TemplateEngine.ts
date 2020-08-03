@@ -1,4 +1,6 @@
+import { Engine } from '../interface/IObjects';
+
 export class TemplateEngine {
-	static Hpf = 'hpf';
-	static JavaScript = 'js';
+	static Hpf: Engine = 'hpf';
+	static JavaScript: Engine = 'js';
 }

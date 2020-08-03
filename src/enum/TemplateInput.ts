@@ -1,4 +1,6 @@
+import { Input } from '../interface/IObjects';
+
 export class TemplateInput {
-	static One = 'one';
-	static All = 'all';
+	static One: Input = 'one';
+	static All: Input = 'all';
 }

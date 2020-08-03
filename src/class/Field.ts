@@ -1,5 +1,5 @@
 import { ISerializable } from '../interface/ISerializable';
-import { IField } from '../interface/IObjects';
+import { FieldSubTypeValue, IField, FieldTypeValue } from '../interface/IObjects';
 import { FieldType } from './FieldType';
 
 export class Field implements ISerializable<IField, Field> {
@@ -8,9 +8,9 @@ export class Field implements ISerializable<IField, Field> {
 	/** @type {string} The field's notes */
 	notes?: string;
 	/** @type {string} The field's type */
-	type: string;
+	type: FieldTypeValue;
 	/** @type {string} The field's subtype */
-	subtype: string | null;
+	subtype: FieldSubTypeValue | null;
 	/** @type {string} The field's reference if the type is entity. The GUID string of the targeted model */
 	reference: string;
 	/** @type {boolean} Should be used as a primary key or not */

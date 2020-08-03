@@ -1,33 +1,24 @@
-import { Container, Service } from 'typedi';
+import { Service } from 'typedi';
 import { ApiService } from './Api';
 import { ILimits } from '../interface/IObjects';
 import { Channel } from '../class/Channel';
 import { IGeneratorResult } from '../interface/IGeneratorResult';
 import { Template } from '../class/Template';
 import { Model } from '../class/Model';
+import { Generator } from 'hapify-generator';
 
 @Service()
 export class GeneratorService {
-	/** Service to call remote API */
-	private apiService: ApiService;
 	/** Stores the limits */
 	private _limits: ILimits;
 
 	/** Constructor */
-	constructor() {}
-
-	/** Load and returns API Service. Avoid circular dependency */
-	api() {
-		if (typeof this.apiService === 'undefined') {
-			this.apiService = Container.get(ApiService);
-		}
-		return this.apiService;
-	}
+	constructor(private apiService: ApiService) {}
 
 	/** Get the limits once and returns them */
 	async limits(): Promise<ILimits> {
 		if (!this._limits) {
-			this._limits = (await this.api().get('generator/limits')).data;
+			this._limits = (await this.apiService.get('generator/limits')).data;
 		}
 		return this._limits;
 	}
@@ -38,11 +29,8 @@ export class GeneratorService {
 	 * @returns {Promise<IGeneratorResult[]>}
 	 */
 	async runChannel(channel: Channel): Promise<IGeneratorResult[]> {
-		const response = await this.api().post('generator/run', {
-			project: channel.config.project,
-			templates: channel.templates.map((t) => t.toObject()),
-		});
-		return response.data.results;
+		const models = await channel.modelsCollection.list();
+		return await Generator.run(channel.templates, models);
 	}
 
 	/**
@@ -53,15 +41,12 @@ export class GeneratorService {
 	 * @returns {Promise<IGeneratorResult[]>}
 	 */
 	async runTemplate(template: Template): Promise<IGeneratorResult[]> {
-		const response = await this.api().post('generator/run', {
-			project: template.channel().config.project,
-			templates: [template.toObject()],
-		});
-		return response.data.results;
+		const models = await template.channel().modelsCollection.list();
+		return await Generator.run([template], models);
 	}
 
 	/**
-	 * Run generation process for one model
+	 * Run generation process for one template/model
 	 *
 	 * @param {Template} template
 	 * @param {Model|null} model
@@ -74,16 +59,9 @@ export class GeneratorService {
 			throw new Error('Model should be defined for this template');
 		}
 
-		const payload: any = {
-			project: template.channel().config.project,
-			templates: [template.toObject()],
-		};
-
-		if (model) {
-			payload.ids = [model.id];
-		}
-
-		return (await this.api().post('generator/run', payload)).data.results[0];
+		const models = await template.channel().modelsCollection.list();
+		const result = await Generator.run([template], models, model ? [model.id] : null);
+		return result[0];
 	}
 
 	/**
@@ -95,7 +73,6 @@ export class GeneratorService {
 	 * @returns {string}
 	 */
 	async pathPreview(path: string, model: Model | null = null): Promise<string> {
-		const payload = model ? { path, model: model.id } : { path };
-		return (await this.api().post('generator/path', payload)).data.result;
+		return Generator.path(path, model ? model.name : null);
 	}
 }

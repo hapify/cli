@@ -49,7 +49,8 @@
     "typedi": "^0.8.0",
     "vm2": "^3.9.2",
     "ws": "^6.2.1",
-    "hapify-vm": "github:hapify/vm#v0.3.2"
+    "hapify-vm": "github:hapify/vm#v0.3.2",
+    "hapify-generator": "github:hapify/generator#v0.5.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
