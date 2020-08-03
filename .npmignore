@@ -6,15 +6,12 @@ node_modules
 .vscode
 
 .gitignore
-.gitmodules
 
 tsconfig.json
 tslint.json
 
 .prettierignore
 .prettierrc
-
-build.sh
 
 ERRORS.md
 CHANGELOG.md
