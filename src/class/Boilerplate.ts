@@ -4,7 +4,7 @@ import { IBoilerplate } from '../interface/IObjects';
 export class Boilerplate implements ISerializable<IBoilerplate, Boilerplate>, IBoilerplate {
 	/** The boilerplate's unique id */
 	id: string;
-	/** The boilerplate sluh */
+	/** The boilerplate slug */
 	slug: string;
 	/** The boilerplate's name */
 	name: string;
