@@ -42,7 +42,7 @@ export class WebSocketServerService {
 	private serverStarted: boolean;
 
 	/** @type {string} The path to save the token */
-	private wsInfoPath: string = Path.join(Path.dirname(require.main.filename), '..', 'html', 'ws.json');
+	private wsInfoPath: string = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
 	/** @type {string} Random name to generate token */
 	private randomName: string = RandomString.generate({ length: 24 });
 	/** @type {string} Random secret to generate token */

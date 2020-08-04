@@ -12,7 +12,7 @@ import { Server } from '@hapi/hapi';
 @Service()
 export class HttpServerService {
 	/** @type {string} WebApp root */
-	private rootPath: string = Path.join(Path.dirname(require.main.filename), '..', 'html');
+	private rootPath: string = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
 
 	/** @type {number} Start port number */
 	private _minPort: number = 4800;
