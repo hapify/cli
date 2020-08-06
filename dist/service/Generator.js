@@ -21,21 +21,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeneratorService = void 0;
 const typedi_1 = require("typedi");
 const Api_1 = require("./Api");
+const hapify_generator_1 = require("hapify-generator");
 let GeneratorService = class GeneratorService {
     /** Constructor */
-    constructor() { }
-    /** Load and returns API Service. Avoid circular dependency */
-    api() {
-        if (typeof this.apiService === 'undefined') {
-            this.apiService = typedi_1.Container.get(Api_1.ApiService);
-        }
-        return this.apiService;
+    constructor(apiService) {
+        this.apiService = apiService;
     }
     /** Get the limits once and returns them */
     limits() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this._limits) {
-                this._limits = (yield this.api().get('generator/limits')).data;
+                this._limits = (yield this.apiService.get('generator/limits')).data;
             }
             return this._limits;
         });
@@ -47,11 +43,8 @@ let GeneratorService = class GeneratorService {
      */
     runChannel(channel) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.api().post('generator/run', {
-                project: channel.config.project,
-                templates: channel.templates.map((t) => t.toObject()),
-            });
-            return response.data.results;
+            const models = yield channel.modelsCollection.list();
+            return yield hapify_generator_1.Generator.run(channel.templates, models);
         });
     }
     /**
@@ -63,15 +56,12 @@ let GeneratorService = class GeneratorService {
      */
     runTemplate(template) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.api().post('generator/run', {
-                project: template.channel().config.project,
-                templates: [template.toObject()],
-            });
-            return response.data.results;
+            const models = yield template.channel().modelsCollection.list();
+            return yield hapify_generator_1.Generator.run([template], models);
         });
     }
     /**
-     * Run generation process for one model
+     * Run generation process for one template/model
      *
      * @param {Template} template
      * @param {Model|null} model
@@ -84,14 +74,9 @@ let GeneratorService = class GeneratorService {
             if (template.needsModel() && !model) {
                 throw new Error('Model should be defined for this template');
             }
-            const payload = {
-                project: template.channel().config.project,
-                templates: [template.toObject()],
-            };
-            if (model) {
-                payload.ids = [model.id];
-            }
-            return (yield this.api().post('generator/run', payload)).data.results[0];
+            const models = yield template.channel().modelsCollection.list();
+            const result = yield hapify_generator_1.Generator.run([template], models, model ? [model.id] : null);
+            return result[0];
         });
     }
     /**
@@ -104,14 +89,13 @@ let GeneratorService = class GeneratorService {
      */
     pathPreview(path, model = null) {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = model ? { path, model: model.id } : { path };
-            return (yield this.api().post('generator/path', payload)).data.result;
+            return hapify_generator_1.Generator.path(path, model ? model.name : null);
         });
     }
 };
 GeneratorService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [Api_1.ApiService])
 ], GeneratorService);
 exports.GeneratorService = GeneratorService;
 //# sourceMappingURL=Generator.js.map

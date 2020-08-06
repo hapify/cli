@@ -24,7 +24,6 @@ const Channels_1 = require("./Channels");
 const Info_1 = require("./Info");
 const PresetsCollection_1 = require("../class/PresetsCollection");
 const Field_1 = require("../class/Field");
-const FieldType_1 = require("../class/FieldType");
 let PresetsService = class PresetsService {
     /**
      * Constructor
@@ -101,7 +100,7 @@ let PresetsService = class PresetsService {
             // Change references to existing models
             const changeReferencesToNewModels = (m) => {
                 for (const f of m.fields) {
-                    if (f.type === FieldType_1.FieldType.Entity && typeof referencesMap[f.reference] === 'string') {
+                    if (f.type === 'entity' && typeof referencesMap[f.reference] === 'string') {
                         f.reference = referencesMap[f.reference];
                     }
                 }

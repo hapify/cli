@@ -1,8 +1,7 @@
 import { Service } from 'typedi';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class GetPresetsHandlerService implements IWebSocketHandler {
@@ -13,8 +12,8 @@ export class GetPresetsHandlerService implements IWebSocketHandler {
 	constructor(private presetsService: PresetsService) {}
 
 	/** @inheritDoc */
-	canHandle(message: IWebSocketMessage): boolean {
-		return message.id === WebSocketMessages.GET_PRESETS;
+	canHandle(message: WebSocket): boolean {
+		return message.id === 'get:presets';
 	}
 
 	/** @inheritDoc */
@@ -23,7 +22,7 @@ export class GetPresetsHandlerService implements IWebSocketHandler {
 	}
 
 	/** @inheritDoc */
-	async handle(message: IWebSocketMessage): Promise<any> {
+	async handle(message: WebSocket): Promise<any> {
 		return (await this.presetsService.collection()).toObject();
 	}
 }

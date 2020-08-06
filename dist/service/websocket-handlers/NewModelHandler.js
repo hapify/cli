@@ -41,7 +41,6 @@ exports.NewModelHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Joi = __importStar(require("joi"));
 const Info_1 = require("../Info");
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 const Model_1 = require("../../class/Model");
 let NewModelHandlerService = class NewModelHandlerService {
     /** Constructor */
@@ -50,7 +49,7 @@ let NewModelHandlerService = class NewModelHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.NEW_MODEL;
+        return message.id === 'new:model';
     }
     /** @inheritDoc */
     validator() {

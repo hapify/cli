@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 
 import * as Case from 'case';
-import { IStringVariants } from '../interface/IStringVariants';
+import { IStringVariants } from '../interface/Generator';
 
 @Service()
 export class StringService {

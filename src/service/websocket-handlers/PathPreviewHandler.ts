@@ -2,8 +2,7 @@ import { Service } from 'typedi';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class PathPreviewHandlerService implements IWebSocketHandler {
@@ -15,8 +14,8 @@ export class PathPreviewHandlerService implements IWebSocketHandler {
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService) {}
 
 	/** @inheritDoc */
-	canHandle(message: IWebSocketMessage): boolean {
-		return message.id === WebSocketMessages.PREVIEW_PATH;
+	canHandle(message: WebSocket): boolean {
+		return message.id === 'prv:path';
 	}
 
 	/** @inheritDoc */
@@ -28,7 +27,7 @@ export class PathPreviewHandlerService implements IWebSocketHandler {
 	}
 
 	/** @inheritDoc */
-	async handle(message: IWebSocketMessage): Promise<any> {
+	async handle(message: WebSocket): Promise<any> {
 		// Get model, if any
 		const model = message.data.model ? await (await this.channelsService.modelsCollection()).find(message.data.model) : null;
 		// Compute the path

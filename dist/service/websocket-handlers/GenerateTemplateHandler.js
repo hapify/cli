@@ -43,7 +43,6 @@ const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
 const Writer_1 = require("../Writer");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
     /**
      * Constructor
@@ -58,7 +57,7 @@ let GenerateTemplateHandlerService = class GenerateTemplateHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.GENERATE_TEMPLATE;
+        return message.id === 'gen:template';
     }
     /** @inheritDoc */
     validator() {

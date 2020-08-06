@@ -3,8 +3,7 @@ import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import { WriterService } from '../Writer';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class GenerateTemplateHandlerService implements IWebSocketHandler {
@@ -17,8 +16,8 @@ export class GenerateTemplateHandlerService implements IWebSocketHandler {
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService, private writerService: WriterService) {}
 
 	/** @inheritDoc */
-	canHandle(message: IWebSocketMessage): boolean {
-		return message.id === WebSocketMessages.GENERATE_TEMPLATE;
+	canHandle(message: WebSocket): boolean {
+		return message.id === 'gen:template';
 	}
 
 	/** @inheritDoc */
@@ -30,7 +29,7 @@ export class GenerateTemplateHandlerService implements IWebSocketHandler {
 	}
 
 	/** @inheritDoc */
-	async handle(message: IWebSocketMessage): Promise<any> {
+	async handle(message: WebSocket): Promise<any> {
 		// Get channel
 		const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);
 		if (!channel) {

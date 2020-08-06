@@ -1,6 +1,6 @@
 import { Command, CommanderStatic } from 'commander';
 import { GlobalConfigService } from './GlobalConfig';
-import { IRemoteConfig } from '../interface/IObjects';
+import { IRemoteConfig } from '../interface/Config';
 export declare class OptionsService {
     private globalConfigService;
     /** @type {commander.CommanderStatic} program */

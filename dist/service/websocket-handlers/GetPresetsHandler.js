@@ -41,7 +41,6 @@ exports.GetPresetsHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Presets_1 = require("../Presets");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GetPresetsHandlerService = class GetPresetsHandlerService {
     /**
      * Constructor
@@ -52,7 +51,7 @@ let GetPresetsHandlerService = class GetPresetsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.GET_PRESETS;
+        return message.id === 'get:presets';
     }
     /** @inheritDoc */
     validator() {

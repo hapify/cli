@@ -42,7 +42,6 @@ const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 const Template_1 = require("../../interface/schema/Template");
 const Template_2 = require("../../class/Template");
 let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
@@ -57,7 +56,7 @@ let TemplatePreviewHandlerService = class TemplatePreviewHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.PREVIEW_TEMPLATE;
+        return message.id === 'prv:template';
     }
     /** @inheritDoc */
     validator() {

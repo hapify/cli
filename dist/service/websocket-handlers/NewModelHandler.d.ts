@@ -1,16 +1,15 @@
 import * as Joi from 'joi';
 import { InfoService } from '../Info';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
-import { IModel } from '../../interface/IObjects';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
+import { IModel } from '../../interface/Generator';
 export declare class NewModelHandlerService implements IWebSocketHandler {
     private infoService;
     /** Constructor */
     constructor(infoService: InfoService);
     /** @inheritDoc */
-    canHandle(message: IWebSocketMessage): boolean;
+    canHandle(message: WebSocket): boolean;
     /** @inheritDoc */
     validator(): Joi.Schema;
     /** @inheritDoc */
-    handle(message: IWebSocketMessage): Promise<IModel>;
+    handle(message: WebSocket): Promise<IModel>;
 }

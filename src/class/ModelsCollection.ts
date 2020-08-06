@@ -1,7 +1,6 @@
 import { Container } from 'typedi';
-import { IStorable } from '../interface/IStorable';
-import { ISerializable } from '../interface/ISerializable';
-import { IModel } from '../interface/IObjects';
+import { ISerializable, IStorable } from '../interface/Storage';
+import { IModel } from '../interface/Generator';
 import { Model } from './Model';
 import { ModelsApiStorageService } from '../service/storage/api/Models';
 

@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
-import { SingleSaveFileStorage, JoinPath, FilePath } from './SingleSave';
+import { FilePath, JoinPath, SingleSaveFileStorage } from './SingleSave';
 import * as Path from 'path';
 import * as Fs from 'fs';
-import { IConfig } from '../../../interface/IObjects';
+import { IConfig } from '../../../interface/Config';
 
 @Service()
 export class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {

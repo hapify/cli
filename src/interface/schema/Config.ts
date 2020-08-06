@@ -14,3 +14,8 @@ export const ConfigSchema = Joi.object({
 	defaultFields: Joi.array().items(FieldSchema).min(0),
 	templates: Joi.array().items(ConfigTemplateSchema).required().min(0),
 });
+
+export const GlobalConfigSchema = Joi.object({
+	apiKey: Joi.string().length(48),
+	apiUrl: Joi.string().min(1),
+});

@@ -42,7 +42,6 @@ const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let PathPreviewHandlerService = class PathPreviewHandlerService {
     /**
      * Constructor
@@ -55,7 +54,7 @@ let PathPreviewHandlerService = class PathPreviewHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.PREVIEW_PATH;
+        return message.id === 'prv:path';
     }
     /** @inheritDoc */
     validator() {

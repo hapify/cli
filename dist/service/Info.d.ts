@@ -1,5 +1,6 @@
 import { ChannelsService } from './Channels';
-import { IField, IProject } from '../interface/IObjects';
+import { IField } from '../interface/Generator';
+import { IProject } from '../interface/Objects';
 export declare class InfoService {
     private channelsService;
     /** Stores the default fields */

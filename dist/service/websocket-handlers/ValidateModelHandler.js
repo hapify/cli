@@ -41,7 +41,6 @@ exports.ValidateModelHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Validator_1 = require("../Validator");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 const Model_1 = require("../../interface/schema/Model");
 let ValidateModelHandlerService = class ValidateModelHandlerService {
     /**
@@ -53,7 +52,7 @@ let ValidateModelHandlerService = class ValidateModelHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.VALIDATE_MODEL;
+        return message.id === 'val:model';
     }
     /** @inheritDoc */
     validator() {

@@ -3,7 +3,7 @@ import { Command, CommanderStatic } from 'commander';
 import * as Path from 'path';
 import { GlobalConfigService } from './GlobalConfig';
 import { RemoteConfig } from '../config/Remote';
-import { IRemoteConfig } from '../interface/IObjects';
+import { IRemoteConfig } from '../interface/Config';
 
 @Service()
 export class OptionsService {

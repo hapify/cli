@@ -54,7 +54,7 @@ let ValidatorService = class ValidatorService {
      *
      * @param {string} content
      * @param {IModel} model
-     * @return {Promise<IValidatorResult>}
+     * @return {Promise<Validator>}
      */
     run(content, model) {
         return __awaiter(this, void 0, void 0, function* () {

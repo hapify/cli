@@ -41,7 +41,6 @@ exports.SetModelsHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 const Model_1 = require("../../interface/schema/Model");
 let SetModelsHandlerService = class SetModelsHandlerService {
     /**
@@ -53,7 +52,7 @@ let SetModelsHandlerService = class SetModelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.SET_MODELS;
+        return message.id === 'set:models';
     }
     /** @inheritDoc */
     validator() {

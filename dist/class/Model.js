@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Model = void 0;
-const IObjects_1 = require("../interface/IObjects");
 const Field_1 = require("./Field");
-function _p8(s) {
+function p8(s) {
     const p = (Math.random().toString(16) + '000000000').substr(2, 8);
     return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p;
 }
@@ -40,17 +39,17 @@ class Model {
      * @returns {string}
      */
     static generateTempId() {
-        return _p8() + _p8(true) + _p8(true) + _p8();
+        return p8() + p8(true) + p8(true) + p8();
     }
     /** Get default accesses */
     static defaultAccesses() {
         return {
-            create: IObjects_1.Access.GUEST,
-            read: IObjects_1.Access.GUEST,
-            update: IObjects_1.Access.GUEST,
-            remove: IObjects_1.Access.GUEST,
-            search: IObjects_1.Access.GUEST,
-            count: IObjects_1.Access.GUEST,
+            create: 'guest',
+            read: 'guest',
+            update: 'guest',
+            remove: 'guest',
+            search: 'guest',
+            count: 'guest',
         };
     }
     /** Clone the model to a new reference */

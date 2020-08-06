@@ -12,9 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Template = void 0;
 const typedi_1 = require("typedi");
 const Template_1 = require("../service/storage/file/Template");
-const TemplateInput_1 = require("../enum/TemplateInput");
 const String_1 = require("../service/String");
-const TemplateEngine_1 = require("../enum/TemplateEngine");
 class Template {
     /** Constructor */
     constructor(parent, object) {
@@ -54,7 +52,7 @@ class Template {
      * @returns {boolean}
      */
     needsModel() {
-        return this.input === TemplateInput_1.TemplateInput.One;
+        return this.input === 'one';
     }
     /**
      * Get the extension of the input file
@@ -116,7 +114,7 @@ class Template {
      * @return {string}
      */
     static computeExtension(template) {
-        if (template.engine === TemplateEngine_1.TemplateEngine.Hpf) {
+        if (template.engine === 'hpf') {
             return 'hpf';
         }
         return 'js';

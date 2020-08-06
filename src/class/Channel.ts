@@ -1,11 +1,10 @@
 import * as Path from 'path';
 import md5 from 'md5';
 import * as Joi from 'joi';
-import { FieldType } from './FieldType';
 import { Container } from 'typedi';
-import { IStorable } from '../interface/IStorable';
-import { ISerializable } from '../interface/ISerializable';
-import { IChannel, IConfig } from '../interface/IObjects';
+import { ISerializable, IStorable } from '../interface/Storage';
+import { IChannel } from '../interface/Objects';
+import { IConfig } from '../interface/Config';
 import { Template } from './Template';
 import { Validator } from './Validator';
 import { Project } from './Project';
@@ -13,8 +12,6 @@ import { ModelsCollection } from './ModelsCollection';
 import { ChannelFileStorageService } from '../service/storage/file/Channel';
 import { ConfigSchema } from '../interface/schema/Config';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
-import { TemplateEngine } from '../enum/TemplateEngine';
-import { TemplateInput } from '../enum/TemplateInput';
 
 export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	/** @type {string} */
@@ -181,7 +178,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			defaultFields: [
 				{
 					name: 'Id',
-					type: FieldType.String,
+					type: 'string',
 					subtype: null,
 					reference: null,
 					primary: true,
@@ -201,8 +198,8 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			templates: [
 				{
 					path: 'models/{kebab}/hello.js',
-					engine: TemplateEngine.Hpf,
-					input: TemplateInput.One,
+					engine: 'hpf',
+					input: 'one',
 				},
 			],
 		};

@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
-import { BaseSearchParams, BaseApiStorageService } from './Base';
-import { IProject } from '../../../interface/IObjects';
+import { BaseApiStorageService, BaseSearchParams } from './Base';
+import { IProject } from '../../../interface/Objects';
 
 interface ProjectsSearchParams extends BaseSearchParams {
 	name?: string;

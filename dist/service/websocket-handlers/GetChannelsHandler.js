@@ -41,7 +41,6 @@ exports.GetChannelsHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GetChannelsHandlerService = class GetChannelsHandlerService {
     /**
      * Constructor
@@ -52,7 +51,7 @@ let GetChannelsHandlerService = class GetChannelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.GET_CHANNELS;
+        return message.id === 'get:channels';
     }
     /** @inheritDoc */
     validator() {

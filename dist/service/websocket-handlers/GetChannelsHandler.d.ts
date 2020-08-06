@@ -1,7 +1,6 @@
 import { ChannelsService } from '../Channels';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 export declare class GetChannelsHandlerService implements IWebSocketHandler {
     private channelsService;
     /**
@@ -10,9 +9,9 @@ export declare class GetChannelsHandlerService implements IWebSocketHandler {
      */
     constructor(channelsService: ChannelsService);
     /** @inheritDoc */
-    canHandle(message: IWebSocketMessage): boolean;
+    canHandle(message: WebSocket): boolean;
     /** @inheritDoc */
     validator(): Joi.Schema;
     /** @inheritDoc */
-    handle(message: IWebSocketMessage): Promise<any>;
+    handle(message: WebSocket): Promise<any>;
 }

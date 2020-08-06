@@ -1,7 +1,6 @@
 import { ValidatorService } from '../Validator';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 export declare class ValidateModelHandlerService implements IWebSocketHandler {
     private validatorService;
     /**
@@ -10,9 +9,9 @@ export declare class ValidateModelHandlerService implements IWebSocketHandler {
      */
     constructor(validatorService: ValidatorService);
     /** @inheritDoc */
-    canHandle(message: IWebSocketMessage): boolean;
+    canHandle(message: WebSocket): boolean;
     /** @inheritDoc */
     validator(): Joi.Schema;
     /** @inheritDoc */
-    handle(message: IWebSocketMessage): Promise<any>;
+    handle(message: WebSocket): Promise<any>;
 }

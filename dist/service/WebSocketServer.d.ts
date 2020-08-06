@@ -2,7 +2,7 @@
 import * as http from 'http';
 import { LoggerService } from './Logger';
 import { OptionsService } from './Options';
-import { IWebSocketHandler } from '../interface/IWebSocketHandler';
+import { IWebSocketHandler } from '../interface/WebSocket';
 export declare class WebSocketServerService {
     private optionsService;
     private loggerService;

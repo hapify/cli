@@ -1,8 +1,7 @@
 import { Service } from 'typedi';
-import { BaseSearchParams, BaseApiStorageService } from './Base';
+import { BaseApiStorageService, BaseSearchParams } from './Base';
 import md5 from 'md5';
-import { IModel } from '../../../interface/IObjects';
-import { FieldType } from '../../../class/FieldType';
+import { IModel } from '../../../interface/Generator';
 import { Model } from '../../../class/Model';
 
 interface ModelsSearchParams extends BaseSearchParams {
@@ -91,7 +90,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 		const changeReferencesToNewModels = (m: IModel): boolean => {
 			let changed = false;
 			for (const f of m.fields) {
-				if (f.type === FieldType.Entity && typeof referencesMap[f.reference] !== 'undefined') {
+				if (f.type === 'entity' && typeof referencesMap[f.reference] !== 'undefined') {
 					f.reference = referencesMap[f.reference];
 					changed = true;
 				}

@@ -1,7 +1,6 @@
-import { IStorable } from '../interface/IStorable';
+import { ISerializable, IStorable } from '../interface/Storage';
 import { Container } from 'typedi';
-import { ISerializable } from '../interface/ISerializable';
-import { IBoilerplate } from '../interface/IObjects';
+import { IBoilerplate } from '../interface/Objects';
 import { Boilerplate } from './Boilerplate';
 import { BoilerplatesApiStorageService } from '../service/storage/api/Boilerplates';
 

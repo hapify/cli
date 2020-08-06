@@ -1,7 +1,7 @@
 import * as Path from 'path';
 import { Command } from 'commander';
 import { Container } from 'typedi';
-import { logChannel, cChannel, cPath, cHigh } from './helpers';
+import { cChannel, cHigh, cPath, logChannel } from './helpers';
 import { GeneratorService } from '../service/Generator';
 import { OptionsService } from '../service/Options';
 import { LoggerService } from '../service/Logger';

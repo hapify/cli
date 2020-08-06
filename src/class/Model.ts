@@ -1,9 +1,9 @@
 /** Random function */
-import { ISerializable } from '../interface/ISerializable';
-import { Access, IAccesses, IModel } from '../interface/IObjects';
+import { ISerializable } from '../interface/Storage';
+import { IAccesses, IModel } from '../interface/Generator';
 import { Field } from './Field';
 
-function _p8(s?: boolean) {
+function p8(s?: boolean) {
 	const p = (Math.random().toString(16) + '000000000').substr(2, 8);
 	return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p;
 }
@@ -55,18 +55,18 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 	 * @returns {string}
 	 */
 	static generateTempId(): string {
-		return _p8() + _p8(true) + _p8(true) + _p8();
+		return p8() + p8(true) + p8(true) + p8();
 	}
 
 	/** Get default accesses */
 	static defaultAccesses(): IAccesses {
 		return {
-			create: Access.GUEST,
-			read: Access.GUEST,
-			update: Access.GUEST,
-			remove: Access.GUEST,
-			search: Access.GUEST,
-			count: Access.GUEST,
+			create: 'guest',
+			read: 'guest',
+			update: 'guest',
+			remove: 'guest',
+			search: 'guest',
+			count: 'guest',
 		};
 	}
 

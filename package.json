@@ -51,7 +51,7 @@
     "ws": "^6.2.1",
     "hapify-vm": "github:hapify/vm#v0.3.2",
     "hapify-generator": "github:hapify/generator#v0.5.3",
-    "hapify-gui": "github:hapify/gui#v0.4.2"
+    "hapify-gui": "github:hapify/gui#v0.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",

@@ -1,5 +1,5 @@
-import { IValidatorResult } from '../interface/IValidatorResult';
-import { IModel } from '../interface/IObjects';
+import { Validator } from '../interface/Validator';
+import { IModel } from '../interface/Generator';
 export declare class ValidatorService {
     /**
      * Constructor
@@ -10,7 +10,7 @@ export declare class ValidatorService {
      *
      * @param {string} content
      * @param {IModel} model
-     * @return {Promise<IValidatorResult>}
+     * @return {Promise<Validator>}
      */
-    run(content: string, model: IModel): Promise<IValidatorResult>;
+    run(content: string, model: IModel): Promise<Validator>;
 }

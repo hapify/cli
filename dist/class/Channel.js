@@ -35,7 +35,6 @@ exports.Channel = void 0;
 const Path = __importStar(require("path"));
 const md5_1 = __importDefault(require("md5"));
 const Joi = __importStar(require("joi"));
-const FieldType_1 = require("./FieldType");
 const typedi_1 = require("typedi");
 const Template_1 = require("./Template");
 const Validator_1 = require("./Validator");
@@ -44,8 +43,6 @@ const ModelsCollection_1 = require("./ModelsCollection");
 const Channel_1 = require("../service/storage/file/Channel");
 const Config_1 = require("../interface/schema/Config");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
-const TemplateEngine_1 = require("../enum/TemplateEngine");
-const TemplateInput_1 = require("../enum/TemplateInput");
 class Channel {
     /**
      * Constructor
@@ -184,7 +181,7 @@ class Channel {
                 defaultFields: [
                     {
                         name: 'Id',
-                        type: FieldType_1.FieldType.String,
+                        type: 'string',
                         subtype: null,
                         reference: null,
                         primary: true,
@@ -204,8 +201,8 @@ class Channel {
                 templates: [
                     {
                         path: 'models/{kebab}/hello.js',
-                        engine: TemplateEngine_1.TemplateEngine.Hpf,
-                        input: TemplateInput_1.TemplateInput.One,
+                        engine: 'hpf',
+                        input: 'one',
                     },
                 ],
             };

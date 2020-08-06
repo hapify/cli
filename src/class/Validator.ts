@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import { IStorable } from '../interface/IStorable';
+import { IStorable } from '../interface/Storage';
 import { ValidatorFileStorageService } from '../service/storage/file/Validator';
 import { Channel } from './Channel';
 

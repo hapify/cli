@@ -1,6 +1,6 @@
-import { IStorable } from '../interface/IStorable';
-import { ISerializable } from '../interface/ISerializable';
-import { IConfigTemplate, ITemplate } from '../interface/IObjects';
+import { ISerializable, IStorable } from '../interface/Storage';
+import { Engine, Input, ITemplate } from '../interface/Generator';
+import { IConfigTemplate } from '../interface/Config';
 import { Channel } from './Channel';
 export declare class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
     private parent;
@@ -11,9 +11,9 @@ export declare class Template implements IStorable, ISerializable<ITemplate, Tem
     /** @type {string} The template's path */
     path: string;
     /** @type {string} The template's type */
-    engine: string;
+    engine: Engine;
     /** @type {string} Denotes if the template has to to be ran for one or all models */
-    input: string;
+    input: Input;
     /** @type {string} The template's path */
     contentPath: string;
     /** @type {string} The template's content */

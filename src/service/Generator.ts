@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
 import { ApiService } from './Api';
-import { ILimits } from '../interface/IObjects';
+import { ILimits } from '../interface/Config';
 import { Channel } from '../class/Channel';
-import { IGeneratorResult } from '../interface/IGeneratorResult';
+import { IGeneratorResult } from '../interface/Generator';
 import { Template } from '../class/Template';
 import { Model } from '../class/Model';
 import { Generator } from 'hapify-generator';

@@ -1,15 +1,14 @@
-import { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import * as Path from 'path';
 import * as Fs from 'fs';
 import * as ws from 'ws';
+import { AddressInfo } from 'ws';
 import * as http from 'http';
 import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
-import { AddressInfo } from 'ws';
 import { URL } from 'url';
 import * as Joi from 'joi';
 import { LoggerService } from './Logger';
-import { Container } from 'typedi';
 import { OptionsService } from './Options';
 import { ApplyPresetHandlerService } from './websocket-handlers/ApplyPresetHandler';
 import { GetModelsHandlerService } from './websocket-handlers/GetModelsHandler';
@@ -24,9 +23,8 @@ import { GetInfoHandlerService } from './websocket-handlers/GetInfoHandler';
 import { GetPresetsHandlerService } from './websocket-handlers/GetPresetsHandler';
 import { GenerateChannelHandlerService } from './websocket-handlers/GenerateChannelHandler';
 import { GenerateTemplateHandlerService } from './websocket-handlers/GenerateTemplateHandler';
-import { IWebSocketMessage, WebSocketMessageSchema } from '../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket, WebSocketMessage, WebSocketMessageSchema } from '../interface/WebSocket';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
-import { IWebSocketHandler } from '../interface/IWebSocketHandler';
 
 interface TokenData {
 	name: string;
@@ -115,8 +113,8 @@ export class WebSocketServerService {
 			const id = this.makeId();
 
 			// Create a reply method for this connection
-			const reply = (id: string, data: any, type?: string, tag?: string) => {
-				const payload: IWebSocketMessage = { id, data };
+			const reply = (id: WebSocketMessage, data: any, type?: string, tag?: string) => {
+				const payload: WebSocket = { id, data };
 				if (type) {
 					payload.type = type;
 				}
@@ -129,11 +127,11 @@ export class WebSocketServerService {
 			this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
 
 			ws.on('message', async (message: string) => {
-				let decoded: IWebSocketMessage;
+				let decoded: WebSocket;
 
 				try {
 					// Decode and verify message
-					const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<IWebSocketMessage>;
+					const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<WebSocket>;
 					if (parsed.error) {
 						(parsed.error as any).data = {
 							code: 4002,

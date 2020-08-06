@@ -2,9 +2,9 @@ import { Service } from 'typedi';
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
 import { Model } from '../../class/Model';
-import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { WebSocket } from '../../interface/WebSocket';
 import { ModelSchema } from '../../interface/schema/Model';
-import { IModel } from '../../interface/IObjects';
+import { IModel } from '../../interface/Generator';
 
 interface IWebSocketHandler {}
 
@@ -17,8 +17,8 @@ export class ApplyPresetHandlerService implements IWebSocketHandler {
 	constructor(private presetsService: PresetsService) {}
 
 	/** @inheritDoc */
-	canHandle(message: IWebSocketMessage): boolean {
-		return message.id === WebSocketMessages.APPLY_PRESETS;
+	canHandle(message: WebSocket): boolean {
+		return message.id === 'apply:presets';
 	}
 
 	/** @inheritDoc */
@@ -29,7 +29,7 @@ export class ApplyPresetHandlerService implements IWebSocketHandler {
 	}
 
 	/** @inheritDoc */
-	async handle(message: IWebSocketMessage): Promise<any> {
+	async handle(message: WebSocket): Promise<any> {
 		const models = message.data.models.map((m: IModel) => new Model(m));
 
 		const results = await this.presetsService.apply(models);

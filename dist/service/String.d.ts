@@ -1,4 +1,4 @@
-import { IStringVariants } from '../interface/IStringVariants';
+import { IStringVariants } from '../interface/Generator';
 export declare class StringService {
     /**
      * Constructor

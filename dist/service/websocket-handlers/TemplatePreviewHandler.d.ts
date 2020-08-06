@@ -1,8 +1,7 @@
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 export declare class TemplatePreviewHandlerService implements IWebSocketHandler {
     private channelsService;
     private generatorService;
@@ -13,9 +12,9 @@ export declare class TemplatePreviewHandlerService implements IWebSocketHandler 
      */
     constructor(channelsService: ChannelsService, generatorService: GeneratorService);
     /** @inheritDoc */
-    canHandle(message: IWebSocketMessage): boolean;
+    canHandle(message: WebSocket): boolean;
     /** @inheritDoc */
     validator(): Joi.Schema;
     /** @inheritDoc */
-    handle(message: IWebSocketMessage): Promise<any>;
+    handle(message: WebSocket): Promise<any>;
 }

@@ -42,9 +42,9 @@ const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const Options_1 = require("./Options");
 const WebSocketServer_1 = require("./WebSocketServer");
+const hapi_1 = require("@hapi/hapi");
 const opn = require('opn');
 const DetectPort = require('detect-port');
-const hapi_1 = require("@hapi/hapi");
 let HttpServerService = class HttpServerService {
     /**
      * Constructor
@@ -55,7 +55,7 @@ let HttpServerService = class HttpServerService {
         this.optionsService = optionsService;
         this.webSocketServerService = webSocketServerService;
         /** @type {string} WebApp root */
-        this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'html');
+        this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
         /** @type {number} Start port number */
         this._minPort = 4800;
         /** @type {number} Maximum port number */

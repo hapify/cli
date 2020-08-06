@@ -42,7 +42,6 @@ const typedi_1 = require("typedi");
 const Presets_1 = require("../Presets");
 const Joi = __importStar(require("joi"));
 const Model_1 = require("../../class/Model");
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 const Model_2 = require("../../interface/schema/Model");
 let ApplyPresetHandlerService = class ApplyPresetHandlerService {
     /**
@@ -54,7 +53,7 @@ let ApplyPresetHandlerService = class ApplyPresetHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.APPLY_PRESETS;
+        return message.id === 'apply:presets';
     }
     /** @inheritDoc */
     validator() {

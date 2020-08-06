@@ -1,10 +1,10 @@
-import { IStorable } from "../interface/IStorable";
-import { ISerializable } from "../interface/ISerializable";
-import { IChannel, IConfig } from "../interface/IObjects";
-import { Template } from "./Template";
-import { Validator } from "./Validator";
-import { Project } from "./Project";
-import { ModelsCollection } from "./ModelsCollection";
+import { ISerializable, IStorable } from '../interface/Storage';
+import { IChannel } from '../interface/Objects';
+import { IConfig } from '../interface/Config';
+import { Template } from './Template';
+import { Validator } from './Validator';
+import { Project } from './Project';
+import { ModelsCollection } from './ModelsCollection';
 export declare class Channel implements IStorable, ISerializable<IChannel, Channel> {
     path: string;
     /** @type {string} */

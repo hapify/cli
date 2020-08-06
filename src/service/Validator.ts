@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
 import { HapifyVM } from 'hapify-vm';
 import * as Joi from 'joi';
-import { IValidatorResult } from '../interface/IValidatorResult';
-import { IModel } from '../interface/IObjects';
+import { Validator } from '../interface/Validator';
+import { IModel } from '../interface/Generator';
 import { InternalConfig } from '../config/Internal';
 import { RichError } from '../class/RichError';
 import { ValidatorResultSchema } from '../interface/schema/ValidatorResult';
@@ -19,10 +19,10 @@ export class ValidatorService {
 	 *
 	 * @param {string} content
 	 * @param {IModel} model
-	 * @return {Promise<IValidatorResult>}
+	 * @return {Promise<Validator>}
 	 */
-	async run(content: string, model: IModel): Promise<IValidatorResult> {
-		let result: IValidatorResult;
+	async run(content: string, model: IModel): Promise<Validator> {
+		let result: Validator;
 
 		// Try or die
 		try {

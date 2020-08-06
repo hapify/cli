@@ -38,7 +38,7 @@ const Fs = __importStar(require("fs"));
 const Os = __importStar(require("os"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const Joi = __importStar(require("joi"));
-const GlobalConfig_1 = require("../interface/schema/GlobalConfig");
+const Config_1 = require("../interface/schema/Config");
 let GlobalConfigService = class GlobalConfigService {
     /** Constructor */
     constructor() {
@@ -76,7 +76,7 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Validate the current config or scream */
     validate(data = this.data) {
-        const validation = Joi.validate(data, GlobalConfig_1.GlobalConfigSchema);
+        const validation = Joi.validate(data, Config_1.GlobalConfigSchema);
         if (validation.error) {
             const errorMessage = validation.error.details
                 .map((v) => {

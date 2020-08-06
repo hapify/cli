@@ -1,13 +1,10 @@
 import { Container } from 'typedi';
-import { IStorable } from '../interface/IStorable';
-import { ISerializable } from '../interface/ISerializable';
-import { Engine, IConfigTemplate, Input, ITemplate } from '../interface/IObjects';
+import { ISerializable, IStorable } from '../interface/Storage';
+import { Engine, Input, IStringVariants, ITemplate } from '../interface/Generator';
+import { IConfigTemplate } from '../interface/Config';
 import { TemplatesFileStorageService } from '../service/storage/file/Template';
 import { Channel } from './Channel';
-import { TemplateInput } from '../enum/TemplateInput';
 import { StringService } from '../service/String';
-import { TemplateEngine } from '../enum/TemplateEngine';
-import { IStringVariants } from '../interface/IStringVariants';
 
 export class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
 	/** @type {string} */
@@ -66,7 +63,7 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 	 * @returns {boolean}
 	 */
 	public needsModel(): boolean {
-		return this.input === TemplateInput.One;
+		return this.input === 'one';
 	}
 
 	/**
@@ -131,7 +128,7 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 	 * @return {string}
 	 */
 	private static computeExtension(template: Template | IConfigTemplate): string {
-		if (template.engine === TemplateEngine.Hpf) {
+		if (template.engine === 'hpf') {
 			return 'hpf';
 		}
 		return 'js';

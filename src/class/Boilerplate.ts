@@ -1,5 +1,5 @@
-import { ISerializable } from '../interface/ISerializable';
-import { IBoilerplate } from '../interface/IObjects';
+import { ISerializable } from '../interface/Storage';
+import { IBoilerplate } from '../interface/Objects';
 
 export class Boilerplate implements ISerializable<IBoilerplate, Boilerplate>, IBoilerplate {
 	/** The boilerplate's unique id */

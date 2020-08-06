@@ -1,4 +1,4 @@
-import { IStorable } from '../interface/IStorable';
+import { IStorable } from '../interface/Storage';
 import { Channel } from './Channel';
 export declare class Validator implements IStorable {
     private parent;

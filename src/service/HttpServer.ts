@@ -3,11 +3,10 @@ import * as Path from 'path';
 import * as http from 'http';
 import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
+import { Server } from '@hapi/hapi';
 
 const opn = require('opn');
 const DetectPort = require('detect-port');
-
-import { Server } from '@hapi/hapi';
 
 @Service()
 export class HttpServerService {

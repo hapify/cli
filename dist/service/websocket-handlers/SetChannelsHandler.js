@@ -41,7 +41,6 @@ exports.SetChannelsHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 const Channel_1 = require("../../interface/schema/Channel");
 let SetChannelsHandlerService = class SetChannelsHandlerService {
     /**
@@ -53,7 +52,7 @@ let SetChannelsHandlerService = class SetChannelsHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.SET_CHANNELS;
+        return message.id === 'set:channels';
     }
     /** @inheritDoc */
     validator() {

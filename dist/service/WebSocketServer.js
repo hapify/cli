@@ -47,7 +47,6 @@ const RandomString = __importStar(require("randomstring"));
 const url_1 = require("url");
 const Joi = __importStar(require("joi"));
 const Logger_1 = require("./Logger");
-const typedi_2 = require("typedi");
 const Options_1 = require("./Options");
 const ApplyPresetHandler_1 = require("./websocket-handlers/ApplyPresetHandler");
 const GetModelsHandler_1 = require("./websocket-handlers/GetModelsHandler");
@@ -62,7 +61,7 @@ const GetInfoHandler_1 = require("./websocket-handlers/GetInfoHandler");
 const GetPresetsHandler_1 = require("./websocket-handlers/GetPresetsHandler");
 const GenerateChannelHandler_1 = require("./websocket-handlers/GenerateChannelHandler");
 const GenerateTemplateHandler_1 = require("./websocket-handlers/GenerateTemplateHandler");
-const IWebSocketMessage_1 = require("../interface/IWebSocketMessage");
+const WebSocket_1 = require("../interface/WebSocket");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 let WebSocketServerService = class WebSocketServerService {
     /**
@@ -76,7 +75,7 @@ let WebSocketServerService = class WebSocketServerService {
         /** @type {string} Websocket endpoint */
         this.baseUri = '/websocket';
         /** @type {string} The path to save the token */
-        this.wsInfoPath = Path.join(Path.dirname(require.main.filename), '..', 'html', 'ws.json');
+        this.wsInfoPath = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
         /** @type {string} Random name to generate token */
         this.randomName = RandomString.generate({ length: 24 });
         /** @type {string} Random secret to generate token */
@@ -85,19 +84,19 @@ let WebSocketServerService = class WebSocketServerService {
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
         /** @type {IWebSocketHandler[]} Messages handlers */
         this.handlers = [];
-        this.addHandler(typedi_2.Container.get(ApplyPresetHandler_1.ApplyPresetHandlerService));
-        this.addHandler(typedi_2.Container.get(GetModelsHandler_1.GetModelsHandlerService));
-        this.addHandler(typedi_2.Container.get(SetModelsHandler_1.SetModelsHandlerService));
-        this.addHandler(typedi_2.Container.get(GetChannelsHandler_1.GetChannelsHandlerService));
-        this.addHandler(typedi_2.Container.get(SetChannelsHandler_1.SetChannelsHandlerService));
-        this.addHandler(typedi_2.Container.get(GetPresetsHandler_1.GetPresetsHandlerService));
-        this.addHandler(typedi_2.Container.get(GetInfoHandler_1.GetInfoHandlerService));
-        this.addHandler(typedi_2.Container.get(NewModelHandler_1.NewModelHandlerService));
-        this.addHandler(typedi_2.Container.get(PathPreviewHandler_1.PathPreviewHandlerService));
-        this.addHandler(typedi_2.Container.get(TemplatePreviewHandler_1.TemplatePreviewHandlerService));
-        this.addHandler(typedi_2.Container.get(ValidateModelHandler_1.ValidateModelHandlerService));
-        this.addHandler(typedi_2.Container.get(GenerateTemplateHandler_1.GenerateTemplateHandlerService));
-        this.addHandler(typedi_2.Container.get(GenerateChannelHandler_1.GenerateChannelHandlerService));
+        this.addHandler(typedi_1.Container.get(ApplyPresetHandler_1.ApplyPresetHandlerService));
+        this.addHandler(typedi_1.Container.get(GetModelsHandler_1.GetModelsHandlerService));
+        this.addHandler(typedi_1.Container.get(SetModelsHandler_1.SetModelsHandlerService));
+        this.addHandler(typedi_1.Container.get(GetChannelsHandler_1.GetChannelsHandlerService));
+        this.addHandler(typedi_1.Container.get(SetChannelsHandler_1.SetChannelsHandlerService));
+        this.addHandler(typedi_1.Container.get(GetPresetsHandler_1.GetPresetsHandlerService));
+        this.addHandler(typedi_1.Container.get(GetInfoHandler_1.GetInfoHandlerService));
+        this.addHandler(typedi_1.Container.get(NewModelHandler_1.NewModelHandlerService));
+        this.addHandler(typedi_1.Container.get(PathPreviewHandler_1.PathPreviewHandlerService));
+        this.addHandler(typedi_1.Container.get(TemplatePreviewHandler_1.TemplatePreviewHandlerService));
+        this.addHandler(typedi_1.Container.get(ValidateModelHandler_1.ValidateModelHandlerService));
+        this.addHandler(typedi_1.Container.get(GenerateTemplateHandler_1.GenerateTemplateHandlerService));
+        this.addHandler(typedi_1.Container.get(GenerateChannelHandler_1.GenerateChannelHandlerService));
     }
     /**
      * Starts the http server
@@ -159,7 +158,7 @@ let WebSocketServerService = class WebSocketServerService {
                     let decoded;
                     try {
                         // Decode and verify message
-                        const parsed = Joi.validate(JSON.parse(message), IWebSocketMessage_1.WebSocketMessageSchema);
+                        const parsed = Joi.validate(JSON.parse(message), WebSocket_1.WebSocketMessageSchema);
                         if (parsed.error) {
                             parsed.error.data = {
                                 code: 4002,

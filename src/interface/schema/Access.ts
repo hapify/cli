@@ -1,12 +1,13 @@
-import { Access } from '../IObjects';
+import { Access } from '../Generator';
 import * as Joi from 'joi';
 
-const accesses = [Access.ADMIN, Access.OWNER, Access.AUTHENTICATED, Access.GUEST];
+const AccessValues: Access[] = ['admin', 'owner', 'auth', 'guest'];
+
 export const AccessSchema = Joi.object({
-	create: Joi.string().valid(accesses).required(),
-	read: Joi.string().valid(accesses).required(),
-	update: Joi.string().valid(accesses).required(),
-	remove: Joi.string().valid(accesses).required(),
-	search: Joi.string().valid(accesses).required(),
-	count: Joi.string().valid(accesses).required(),
+	create: Joi.string().valid(AccessValues).required(),
+	read: Joi.string().valid(AccessValues).required(),
+	update: Joi.string().valid(AccessValues).required(),
+	remove: Joi.string().valid(AccessValues).required(),
+	search: Joi.string().valid(AccessValues).required(),
+	count: Joi.string().valid(AccessValues).required(),
 });

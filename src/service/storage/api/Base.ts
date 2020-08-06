@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
 import { OptionsService } from '../../Options';
 import { ApiService } from '../../Api';
-import { IStorageService } from '../../../interface/IStorageService';
-import { IRemoteConfig } from '../../../interface/IObjects';
+import { IStorageService } from '../../../interface/Storage';
+import { IRemoteConfig } from '../../../interface/Config';
 
 /** Used to export and import search params */
 export interface BaseSearchParams {

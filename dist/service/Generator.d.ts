@@ -1,18 +1,15 @@
 import { ApiService } from './Api';
-import { ILimits } from '../interface/IObjects';
+import { ILimits } from '../interface/Config';
 import { Channel } from '../class/Channel';
-import { IGeneratorResult } from '../interface/IGeneratorResult';
+import { IGeneratorResult } from '../interface/Generator';
 import { Template } from '../class/Template';
 import { Model } from '../class/Model';
 export declare class GeneratorService {
-    /** Service to call remote API */
     private apiService;
     /** Stores the limits */
     private _limits;
     /** Constructor */
-    constructor();
-    /** Load and returns API Service. Avoid circular dependency */
-    api(): ApiService;
+    constructor(apiService: ApiService);
     /** Get the limits once and returns them */
     limits(): Promise<ILimits>;
     /**
@@ -30,7 +27,7 @@ export declare class GeneratorService {
      */
     runTemplate(template: Template): Promise<IGeneratorResult[]>;
     /**
-     * Run generation process for one model
+     * Run generation process for one template/model
      *
      * @param {Template} template
      * @param {Model|null} model

@@ -1,6 +1,6 @@
 import { PresetsService } from '../Presets';
 import * as Joi from 'joi';
-import { IWebSocketMessage } from '../../interface/IWebSocketMessage';
+import { WebSocket } from '../../interface/WebSocket';
 interface IWebSocketHandler {
 }
 export declare class ApplyPresetHandlerService implements IWebSocketHandler {
@@ -11,10 +11,10 @@ export declare class ApplyPresetHandlerService implements IWebSocketHandler {
      */
     constructor(presetsService: PresetsService);
     /** @inheritDoc */
-    canHandle(message: IWebSocketMessage): boolean;
+    canHandle(message: WebSocket): boolean;
     /** @inheritDoc */
     validator(): Joi.Schema;
     /** @inheritDoc */
-    handle(message: IWebSocketMessage): Promise<any>;
+    handle(message: WebSocket): Promise<any>;
 }
 export {};

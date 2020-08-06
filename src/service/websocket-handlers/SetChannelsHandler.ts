@@ -1,10 +1,9 @@
 import { Service } from 'typedi';
 import { ChannelsService } from '../Channels';
 import * as Joi from 'joi';
-import { IWebSocketHandler } from '../../interface/IWebSocketHandler';
-import { IWebSocketMessage, WebSocketMessages } from '../../interface/IWebSocketMessage';
+import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 import { ChannelSchema } from '../../interface/schema/Channel';
-import { IChannel } from '../../interface/IObjects';
+import { IChannel } from '../../interface/Objects';
 
 @Service()
 export class SetChannelsHandlerService implements IWebSocketHandler {
@@ -15,8 +14,8 @@ export class SetChannelsHandlerService implements IWebSocketHandler {
 	constructor(private channelsService: ChannelsService) {}
 
 	/** @inheritDoc */
-	canHandle(message: IWebSocketMessage): boolean {
-		return message.id === WebSocketMessages.SET_CHANNELS;
+	canHandle(message: WebSocket): boolean {
+		return message.id === 'set:channels';
 	}
 
 	/** @inheritDoc */
@@ -25,7 +24,7 @@ export class SetChannelsHandlerService implements IWebSocketHandler {
 	}
 
 	/** @inheritDoc */
-	async handle(message: IWebSocketMessage): Promise<any> {
+	async handle(message: WebSocket): Promise<any> {
 		// Existing channels
 		const channels = await this.channelsService.channels();
 		// New contents

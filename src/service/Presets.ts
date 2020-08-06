@@ -4,7 +4,6 @@ import { InfoService } from './Info';
 import { PresetsCollection } from '../class/PresetsCollection';
 import { Model } from '../class/Model';
 import { Field } from '../class/Field';
-import { FieldType } from '../class/FieldType';
 
 export interface PresetMergeResults {
 	created: Model[];
@@ -89,7 +88,7 @@ export class PresetsService {
 		// Change references to existing models
 		const changeReferencesToNewModels = (m: Model) => {
 			for (const f of m.fields) {
-				if (f.type === FieldType.Entity && typeof referencesMap[f.reference] === 'string') {
+				if (f.type === 'entity' && typeof referencesMap[f.reference] === 'string') {
 					f.reference = referencesMap[f.reference];
 				}
 			}

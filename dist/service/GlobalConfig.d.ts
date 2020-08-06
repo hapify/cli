@@ -1,4 +1,4 @@
-import { IGlobalConfig } from '../interface/IGlobalConfig';
+import { IGlobalConfig } from '../interface/Config';
 export declare class GlobalConfigService {
     /** Define the config root path */
     private rootPath;

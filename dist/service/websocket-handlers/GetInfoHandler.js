@@ -42,7 +42,6 @@ const typedi_1 = require("typedi");
 const Joi = __importStar(require("joi"));
 const Info_1 = require("../Info");
 const Generator_1 = require("../Generator");
-const IWebSocketMessage_1 = require("../../interface/IWebSocketMessage");
 let GetInfoHandlerService = class GetInfoHandlerService {
     /** Constructor */
     constructor(infoService, generatorService) {
@@ -51,7 +50,7 @@ let GetInfoHandlerService = class GetInfoHandlerService {
     }
     /** @inheritDoc */
     canHandle(message) {
-        return message.id === IWebSocketMessage_1.WebSocketMessages.GET_INFO;
+        return message.id === 'get:info';
     }
     /** @inheritDoc */
     validator() {

@@ -1,6 +1,5 @@
-import { IStorable } from '../interface/IStorable';
-import { ISerializable } from '../interface/ISerializable';
-import { IProject } from '../interface/IObjects';
+import { ISerializable, IStorable } from '../interface/Storage';
+import { IProject } from '../interface/Objects';
 import { Project } from './Project';
 export declare class ProjectsCollection implements IStorable, ISerializable<IProject[], Project[]> {
     /** @type {Project[]} The list of project instances */
