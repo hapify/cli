@@ -1,6 +1,6 @@
-import { BaseSearchParams, BaseApiStorageService } from './Base';
+import { BaseApiStorageService, BaseSearchParams } from './Base';
 import { IApiModel } from './Models';
-import { IPreset } from '../../../interface/IObjects';
+import { IPreset } from '../../../interface/Objects';
 interface PresetsSearchParams extends BaseSearchParams {
     version?: string;
     name?: string;

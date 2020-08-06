@@ -23,7 +23,6 @@ exports.ModelsApiStorageService = void 0;
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
 const md5_1 = __importDefault(require("md5"));
-const FieldType_1 = require("../../../class/FieldType");
 const Model_1 = require("../../../class/Model");
 let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorageService extends Base_1.BaseApiStorageService {
     constructor() {
@@ -91,7 +90,7 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             const changeReferencesToNewModels = (m) => {
                 let changed = false;
                 for (const f of m.fields) {
-                    if (f.type === FieldType_1.FieldType.Entity && typeof referencesMap[f.reference] !== 'undefined') {
+                    if (f.type === 'entity' && typeof referencesMap[f.reference] !== 'undefined') {
                         f.reference = referencesMap[f.reference];
                         changed = true;
                     }

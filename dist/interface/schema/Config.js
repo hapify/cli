@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConfigSchema = void 0;
+exports.GlobalConfigSchema = exports.ConfigSchema = void 0;
 const Template_1 = require("./Template");
 const Joi = __importStar(require("joi"));
 const Field_1 = require("./Field");
@@ -33,5 +33,9 @@ exports.ConfigSchema = Joi.object({
     logo: Joi.string(),
     defaultFields: Joi.array().items(Field_1.FieldSchema).min(0),
     templates: Joi.array().items(Template_1.ConfigTemplateSchema).required().min(0),
+});
+exports.GlobalConfigSchema = Joi.object({
+    apiKey: Joi.string().length(48),
+    apiUrl: Joi.string().min(1),
 });
 //# sourceMappingURL=Config.js.map

@@ -1,5 +1,5 @@
-import { BaseSearchParams, BaseApiStorageService } from './Base';
-import { IModel } from '../../../interface/IObjects';
+import { BaseApiStorageService, BaseSearchParams } from './Base';
+import { IModel } from '../../../interface/Generator';
 interface ModelsSearchParams extends BaseSearchParams {
     version?: string;
     project?: string;

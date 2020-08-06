@@ -20,15 +20,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccessSchema = void 0;
-const IObjects_1 = require("../IObjects");
 const Joi = __importStar(require("joi"));
-const accesses = [IObjects_1.Access.ADMIN, IObjects_1.Access.OWNER, IObjects_1.Access.AUTHENTICATED, IObjects_1.Access.GUEST];
+const AccessValues = ['admin', 'owner', 'auth', 'guest'];
 exports.AccessSchema = Joi.object({
-    create: Joi.string().valid(accesses).required(),
-    read: Joi.string().valid(accesses).required(),
-    update: Joi.string().valid(accesses).required(),
-    remove: Joi.string().valid(accesses).required(),
-    search: Joi.string().valid(accesses).required(),
-    count: Joi.string().valid(accesses).required(),
+    create: Joi.string().valid(AccessValues).required(),
+    read: Joi.string().valid(AccessValues).required(),
+    update: Joi.string().valid(AccessValues).required(),
+    remove: Joi.string().valid(AccessValues).required(),
+    search: Joi.string().valid(AccessValues).required(),
+    count: Joi.string().valid(AccessValues).required(),
 });
 //# sourceMappingURL=Access.js.map
