@@ -58,7 +58,6 @@ class RichAxiosError {
 }
 exports.RichAxiosError = RichAxiosError;
 let ApiService = class ApiService {
-    /** Constructor */
     constructor(optionsService) {
         this.optionsService = optionsService;
     }

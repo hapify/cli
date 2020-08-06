@@ -43,27 +43,19 @@ const Channels_1 = require("../Channels");
 const Generator_1 = require("../Generator");
 const Joi = __importStar(require("joi"));
 let PathPreviewHandlerService = class PathPreviewHandlerService {
-    /**
-     * Constructor
-     * @param channelsService
-     * @param generatorService
-     */
     constructor(channelsService, generatorService) {
         this.channelsService = channelsService;
         this.generatorService = generatorService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'prv:path';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.object({
             model: Joi.string(),
             path: Joi.string().required(),
         });
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get model, if any

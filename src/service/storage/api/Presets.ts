@@ -25,19 +25,16 @@ export interface IApiPreset {
 
 @Service()
 export class PresetsApiStorageService extends BaseApiStorageService<IPreset, IApiPreset, PresetsSearchParams> {
-	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
 		s._limit = this.remoteConfig.presetsLimit;
 		return s;
 	}
 
-	/** @inheritDoc */
 	protected path(): string {
 		return 'preset';
 	}
 
-	/** @inheritDoc */
 	protected fromApi(object: IApiPreset): IPreset {
 		return {
 			id: object._id,

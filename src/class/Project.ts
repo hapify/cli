@@ -19,7 +19,6 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 	/** The loaded instances */
 	private static instances: { [id: string]: Project } = {};
 
-	/** Constructor */
 	constructor(object?: IProject) {
 		if (object) {
 			this.fromObject(object);
@@ -27,10 +26,7 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 		this.storageService = Container.get(ProjectsApiStorageService);
 	}
 
-	/**
-	 * Returns a singleton for this config
-	 * @param {string} project
-	 */
+	/** Returns a singleton for this config */
 	public static async getInstance(project: string) {
 		if (!this.instances[project]) {
 			this.instances[project] = new Project();
@@ -40,7 +36,6 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 		return this.instances[project];
 	}
 
-	/** @inheritDoc */
 	public fromObject(object: IProject): Project {
 		this.id = object.id;
 		this.created_at = object.created_at;
@@ -49,7 +44,6 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 		return this;
 	}
 
-	/** @inheritDoc */
 	public toObject(): IProject {
 		return {
 			id: this.id,
@@ -59,12 +53,10 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 		};
 	}
 
-	/** @inheritDoc */
 	public async load(): Promise<void> {
 		this.fromObject(await this.storageService.get(this.id));
 	}
 
-	/** @inheritDoc */
 	async save(): Promise<void> {
 		// Nothing to save
 	}

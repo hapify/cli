@@ -11,14 +11,12 @@ export class Boilerplate implements ISerializable<IBoilerplate, Boilerplate>, IB
 	/** The boilerplate's repository url */
 	git_url: string;
 
-	/** Constructor */
 	constructor(object?: IBoilerplate) {
 		if (object) {
 			this.fromObject(object);
 		}
 	}
 
-	/** @inheritDoc */
 	public fromObject(object: IBoilerplate): Boilerplate {
 		this.id = object.id;
 		this.slug = object.slug;
@@ -27,7 +25,6 @@ export class Boilerplate implements ISerializable<IBoilerplate, Boilerplate>, IB
 		return this;
 	}
 
-	/** @inheritDoc */
 	public toObject(): IBoilerplate {
 		return {
 			id: this.id,

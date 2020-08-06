@@ -17,18 +17,10 @@ const typedi_1 = require("typedi");
 const chalk_1 = __importDefault(require("chalk"));
 const Options_1 = require("./Options");
 let LoggerService = class LoggerService {
-    /**
-     * Constructor
-     * @param {OptionsService} optionsService
-     */
     constructor(optionsService) {
         this.optionsService = optionsService;
     }
-    /**
-     * Handle an error
-     * @param {Error} error
-     * @return {LoggerService}
-     */
+    /** Handle an error */
     handle(error) {
         let message = '✖ ';
         if (error.data) {
@@ -42,82 +34,49 @@ let LoggerService = class LoggerService {
         console.error(chalk_1.default.red(message));
         return this;
     }
-    /**
-     * Display a message
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display a message */
     raw(message) {
         console.log(message);
         return this;
     }
-    /**
-     * Display a success message
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display a success message */
     success(message) {
         console.log(`${chalk_1.default.green('✓')} ${message}`);
         return this;
     }
-    /**
-     * Display an info
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display an info */
     info(message) {
         console.log(`${chalk_1.default.blueBright('•')} ${message}`);
         return this;
     }
-    /**
-     * Display an info if in debug mode
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display an info if in debug mode */
     debug(message) {
         if (this.optionsService.debug()) {
             console.log(`${chalk_1.default.cyan('*')} ${message}`);
         }
         return this;
     }
-    /**
-     * Display an error
-     * @param {string} message
-     */
+    /** Display an error */
     error(message) {
         console.log(`${chalk_1.default.red('✖')} ${message}`);
         return this;
     }
-    /**
-     * Add new lines
-     * @param {number} count
-     * @return {LoggerService}
-     */
+    /** Add new lines */
     newLine(count = 1) {
         console.log(`\n`.repeat(count - 1));
         return this;
     }
-    /**
-     * Display an error
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display an error */
     warning(message) {
         console.log(`${chalk_1.default.yellow('!')} ${message}`);
         return this;
     }
-    /**
-     * Display ascii art
-     * @return {LoggerService}
-     */
+    /** Display ascii art */
     art() {
         console.log(this.getArt());
         return this;
     }
-    /**
-     * Get ascii art
-     * @return {string}
-     */
+    /** Get ascii art */
     getArt() {
         return chalk_1.default.magentaBright('  _    _             _  __       \n' +
             ' | |  | |           (_)/ _|      \n' +
@@ -128,10 +87,7 @@ let LoggerService = class LoggerService {
             '              | |           __/ |\n' +
             '              |_|          |___/ ');
     }
-    /**
-     * Display the running time
-     * @return {LoggerService}
-     */
+    /** Display the running time */
     time() {
         if (this.optionsService.debug()) {
             const message = `Process ran in ${process.uptime()}`;

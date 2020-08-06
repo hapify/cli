@@ -1,28 +1,28 @@
 import { Engine, IField, Input } from './Generator';
 export interface IConfigTemplate {
-    /** @type {string} The template's path */
+    /** The template's path */
     path: string;
-    /** @type {string} The template's type */
+    /** The template's type */
     engine: Engine;
-    /** @type {string} Denotes if the template has to to be ran for one or all models */
+    /** Denotes if the template has to to be ran for one or all models */
     input: Input;
 }
 export interface IConfig {
-    /** @type {string} The channel's configuration version */
+    /** The channel's configuration version */
     version: string;
-    /** @type {string} The channel's validation script path */
+    /** The channel's validation script path */
     validatorPath: string;
-    /** @type {string} The project id containing the models */
+    /** The project id containing the models */
     project: string;
-    /** @type {string} The channel's name */
+    /** The channel's name */
     name?: string;
-    /** @type {string} The channel's short description */
+    /** The channel's short description */
     description?: string;
-    /** @type {string} The channel's logo URL */
+    /** The channel's logo URL */
     logo?: string;
-    /** @type {IField[]} A list of model that should be added on each new model */
+    /** A list of model that should be added on each new model */
     defaultFields?: IField[];
-    /** @type {IConfigTemplate[]} The templates of the channel */
+    /** The templates of the channel */
     templates: IConfigTemplate[];
 }
 export interface ILimits {
@@ -52,8 +52,8 @@ export interface IInternalConfig {
     validatorTimeout: number;
 }
 export interface IGlobalConfig {
-    /** @type {string} The API Key */
+    /** The API Key */
     apiKey?: string;
-    /** @type {string} The API Url */
+    /** The API Url */
     apiUrl?: string;
 }

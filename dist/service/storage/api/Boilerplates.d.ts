@@ -30,11 +30,8 @@ export interface IApiBoilerplate {
     features?: string[] | any[];
 }
 export declare class BoilerplatesApiStorageService extends BaseApiStorageService<IBoilerplate, IApiBoilerplate, BoilerplatesSearchParams> {
-    /** @inheritDoc */
     protected defaultSearchParams(): any;
-    /** @inheritDoc */
     protected path(): string;
-    /** @inheritDoc */
     protected fromApi(object: IApiBoilerplate): IBoilerplate;
 }
 export {};

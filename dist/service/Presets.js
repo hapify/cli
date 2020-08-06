@@ -25,26 +25,17 @@ const Info_1 = require("./Info");
 const PresetsCollection_1 = require("../class/PresetsCollection");
 const Field_1 = require("../class/Field");
 let PresetsService = class PresetsService {
-    /**
-     * Constructor
-     */
     constructor(channelsService, infoService) {
         this.channelsService = channelsService;
         this.infoService = infoService;
     }
-    /**
-     * Returns the presets collection
-     * @return {PresetsCollection}
-     * @throws {Error}
-     */
+    /** Returns the presets collection */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PresetsCollection_1.PresetsCollection.getInstance();
         });
     }
-    /**
-     * Apply one preset to models
-     */
+    /** Apply one preset to models */
     apply(presetModels) {
         return __awaiter(this, void 0, void 0, function* () {
             // Add or update each models

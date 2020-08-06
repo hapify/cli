@@ -10,46 +10,40 @@ const DetectPort = require('detect-port');
 
 @Service()
 export class HttpServerService {
-	/** @type {string} WebApp root */
+	/** WebApp root */
 	private rootPath: string = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
 
-	/** @type {number} Start port number */
+	/** Start port number */
 	private _minPort: number = 4800;
-	/** @return {number} Start port getter */
+	/** Start port getter */
 	get minPort(): number {
 		return this._minPort;
 	}
 
-	/** @type {number} Maximum port number */
+	/** Maximum port number */
 	private _maxPort: number = 4820;
-	/** @return {number} Maximum port getter */
+	/** Maximum port getter */
 	get maxPort(): number {
 		return this._maxPort;
 	}
 
-	/** @type {number} Current port number */
+	/** Current port number */
 	private _port: number = this._minPort;
-	/** @return {number} Current port getter */
+	/** Current port getter */
 	get port(): number {
 		return this._port;
 	}
 
-	/** @type {http.Server} The server instance */
+	/** The server instance */
 	private server: Server;
-	/** @type {boolean} Denotes if the server is started */
+	/** Denotes if the server is started */
 	private serverStarted: boolean;
 
-	/**
-	 * Constructor
-	 * @param {OptionsService} optionsService
-	 * @param {WebSocketServerService} webSocketServerService
-	 */
 	constructor(private optionsService: OptionsService, private webSocketServerService: WebSocketServerService) {}
 
 	/**
 	 * Starts the http server
 	 * Check if running before starting
-	 * @return {Promise<void>}
 	 */
 	public async serve(): Promise<void> {
 		if (this.started()) return;
@@ -106,7 +100,6 @@ export class HttpServerService {
 	/**
 	 * Stops the http server
 	 * Check if running before stop
-	 * @return {Promise<void>}
 	 */
 	public async stop(): Promise<void> {
 		if (!this.started()) return;
@@ -116,10 +109,7 @@ export class HttpServerService {
 		this.server = null;
 	}
 
-	/**
-	 * Denotes if the HTTP server is running
-	 * @return {boolean}
-	 */
+	/** Denotes if the HTTP server is running */
 	public started(): boolean {
 		return this.server && this.serverStarted;
 	}
@@ -127,7 +117,6 @@ export class HttpServerService {
 	/**
 	 * Open the browser for the current server
 	 * Do not open if not started
-	 * @return {void}
 	 */
 	public open(): void {
 		const url = this.url();
@@ -139,17 +128,12 @@ export class HttpServerService {
 	/**
 	 * Get the URL of the current session
 	 * Returns null if not started
-	 * @return {string|null}
 	 */
 	public url(): string | null {
 		return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
 	}
 
-	/**
-	 * Test ports and returns the first one available
-	 * @param {number} increment
-	 * @return {Promise<number>}
-	 */
+	/** Test ports and returns the first one available */
 	private async findAvailablePort(increment: number = 0): Promise<number> {
 		if (this._port > this._maxPort) {
 			throw new Error(`Reached maximum port number ${this._maxPort} to start HTTP server`);

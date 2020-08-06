@@ -122,17 +122,14 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
     static hash(model) {
         return md5_1.default(JSON.stringify(new Model_1.Model(model).toObject()));
     }
-    /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
         s._limit = this.remoteConfig.modelsLimit;
         return s;
     }
-    /** @inheritDoc */
     path() {
         return 'model';
     }
-    /** @inheritDoc */
     fromApi(object) {
         return {
             id: object._id,

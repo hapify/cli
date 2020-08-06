@@ -23,7 +23,6 @@ const typedi_1 = require("typedi");
 const Api_1 = require("./Api");
 const hapify_generator_1 = require("hapify-generator");
 let GeneratorService = class GeneratorService {
-    /** Constructor */
     constructor(apiService) {
         this.apiService = apiService;
     }
@@ -36,11 +35,7 @@ let GeneratorService = class GeneratorService {
             return this._limits;
         });
     }
-    /**
-     * Compile for a whole channel
-     * @param {Channel} channel
-     * @returns {Promise<IGeneratorResult[]>}
-     */
+    /** Compile for a whole channel */
     runChannel(channel) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield channel.modelsCollection.list();
@@ -51,8 +46,6 @@ let GeneratorService = class GeneratorService {
      * Compile a template to multiple files.
      * One per model, if applicable.
      *
-     * @param {Template} template
-     * @returns {Promise<IGeneratorResult[]>}
      */
     runTemplate(template) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,12 +55,7 @@ let GeneratorService = class GeneratorService {
     }
     /**
      * Run generation process for one template/model
-     *
-     * @param {Template} template
-     * @param {Model|null} model
-     * @returns {Promise<IGeneratorResult>}
-     * @throws {Error}
-     *  If the template needs a model and no model is passed
+     * @throws {Error} If the template needs a model and no model is passed
      */
     run(template, model) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -79,14 +67,7 @@ let GeneratorService = class GeneratorService {
             return result[0];
         });
     }
-    /**
-     * Compute path from a string
-     *
-     * @param {string} path
-     * @param {Model|null} model
-     *  Default null
-     * @returns {string}
-     */
+    /** Compute path from a string */
     pathPreview(path, model = null) {
         return __awaiter(this, void 0, void 0, function* () {
             return hapify_generator_1.Generator.path(path, model ? model.name : null);

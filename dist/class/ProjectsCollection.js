@@ -14,9 +14,8 @@ const typedi_1 = require("typedi");
 const Project_1 = require("./Project");
 const Projects_1 = require("../service/storage/api/Projects");
 class ProjectsCollection {
-    /** Constructor */
     constructor() {
-        /** @type {Project[]} The list of project instances */
+        /** The list of project instances */
         this.projects = [];
         this.storageService = typedi_1.Container.get(Projects_1.ProjectsApiStorageService);
     }
@@ -31,43 +30,30 @@ class ProjectsCollection {
             return ProjectsCollection.instance;
         });
     }
-    /**
-     * Load the projects
-     * @return {Promise<void>}
-     */
+    /** Load the projects */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             this.fromObject(yield this.storageService.list());
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             // Nothing to save
         });
     }
-    /**
-     * Returns the list of projects
-     * @returns {Promise<Project[]>}
-     */
+    /** Returns the list of projects */
     list() {
         return __awaiter(this, void 0, void 0, function* () {
             return this.projects;
         });
     }
-    /**
-     * Returns one project
-     * @returns {Promise<Project>}
-     */
+    /** Returns one project */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.projects.find((p) => p.id === id);
         });
     }
-    /**
-     * Returns one project
-     * @returns {Promise<Project>}
-     */
+    /** Returns one project */
     add(name, description) {
         return __awaiter(this, void 0, void 0, function* () {
             const object = yield this.storageService.create({
@@ -77,12 +63,10 @@ class ProjectsCollection {
             return new Project_1.Project(object);
         });
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.projects = object.map((p) => new Project_1.Project(p));
         return this.projects;
     }
-    /** @inheritDoc */
     toObject() {
         return this.projects.map((p) => p.toObject());
     }

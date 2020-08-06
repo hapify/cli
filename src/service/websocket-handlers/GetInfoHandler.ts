@@ -6,20 +6,16 @@ import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class GetInfoHandlerService implements IWebSocketHandler {
-	/** Constructor */
 	constructor(private infoService: InfoService, private generatorService: GeneratorService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'get:info';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.any();
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		return {
 			project: await this.infoService.project(),

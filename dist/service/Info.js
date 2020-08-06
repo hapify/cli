@@ -22,7 +22,6 @@ exports.InfoService = void 0;
 const typedi_1 = require("typedi");
 const Channels_1 = require("./Channels");
 let InfoService = class InfoService {
-    /** Constructor */
     constructor(channelsService) {
         this.channelsService = channelsService;
     }

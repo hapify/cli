@@ -5,7 +5,6 @@ export declare class InfoService {
     private channelsService;
     /** Stores the default fields */
     private _fields;
-    /** Constructor */
     constructor(channelsService: ChannelsService);
     /** Get the project once and returns it */
     project(): Promise<IProject>;

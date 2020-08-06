@@ -46,18 +46,10 @@ const Fs = __importStar(require("fs"));
 const Hoek = __importStar(require("@hapi/hoek"));
 const Channel_1 = require("../class/Channel");
 let ChannelsService = ChannelsService_1 = class ChannelsService {
-    /**
-     * Constructor
-     * @param optionsService
-     */
     constructor(optionsService) {
         this.optionsService = optionsService;
     }
-    /**
-     * Get the channels. Load them if not loaded yet
-     * @return {Channel[]}
-     * @throws {Error}
-     */
+    /** Get the channels. Load them if not loaded yet */
     channels() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(this._channels instanceof Array)) {
@@ -72,10 +64,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             return this._channels;
         });
     }
-    /**
-     * Ensure that all channels refers to the same project
-     * @throws {Error}
-     */
+    /** Ensure that all channels refers to the same project */
     ensureSameProject() {
         return __awaiter(this, void 0, void 0, function* () {
             const channels = yield this.channels();
@@ -87,10 +76,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             }
         });
     }
-    /**
-     * Ensure that all channels define the same default fields
-     * @throws {Error}
-     */
+    /** Ensure that all channels define the same default fields */
     ensureSameDefaultFields() {
         return __awaiter(this, void 0, void 0, function* () {
             // Get defined fields
@@ -130,11 +116,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             }
         });
     }
-    /**
-     * Returns the first models collection
-     * @return {ModelsCollection}
-     * @throws {Error}
-     */
+    /** Returns the first models collection */
     modelsCollection() {
         return __awaiter(this, void 0, void 0, function* () {
             const channels = yield this.channels();
@@ -144,10 +126,6 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
     /**
      * This method detect all channels in the directory and its sub-directories, and create instances for them.
      * We can define the depth level of subdirectories.
-     * @param {string} path
-     * @param {number} depth  Default: 2
-     * @param {number} from  Default: path
-     * @return {Channel[]}
      */
     static sniff(path, depth = 2, from = path) {
         return __awaiter(this, void 0, void 0, function* () {

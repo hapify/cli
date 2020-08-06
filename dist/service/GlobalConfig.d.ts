@@ -8,7 +8,6 @@ export declare class GlobalConfigService {
     private filePath;
     /** Store the config data */
     private data;
-    /** Constructor */
     constructor();
     /** Create file if not exists */
     private init;

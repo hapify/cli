@@ -18,7 +18,6 @@ export class GlobalConfigService {
 	/** Store the config data */
 	private data: IGlobalConfig = {};
 
-	/** Constructor */
 	constructor() {
 		this.init();
 	}

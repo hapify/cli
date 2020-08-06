@@ -2,13 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Field = void 0;
 class Field {
-    /** Constructor */
     constructor(object) {
         if (object) {
             this.fromObject(object);
         }
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.name = object.name;
         this.notes = object.notes || null;
@@ -29,7 +27,6 @@ class Field {
         this.ownership = !!object.ownership;
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             name: this.name,

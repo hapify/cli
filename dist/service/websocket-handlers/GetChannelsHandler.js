@@ -42,22 +42,15 @@ const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
 let GetChannelsHandlerService = class GetChannelsHandlerService {
-    /**
-     * Constructor
-     * @param channelsService
-     */
     constructor(channelsService) {
         this.channelsService = channelsService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'get:channels';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.any();
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const channels = yield this.channelsService.channels();

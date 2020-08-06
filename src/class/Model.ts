@@ -1,4 +1,3 @@
-/** Random function */
 import { ISerializable } from '../interface/Storage';
 import { IAccesses, IModel } from '../interface/Generator';
 import { Field } from './Field';
@@ -9,25 +8,23 @@ function p8(s?: boolean) {
 }
 
 export class Model implements ISerializable<IModel, Model>, IModel {
-	/** @type {string} The model's unique id */
+	/** The model's unique id */
 	id: string;
-	/** @type {string} The model's name */
+	/** The model's name */
 	name: string;
-	/** @type {string} The model's notes */
+	/** The model's notes */
 	notes?: string;
-	/** @type {Field[]} The fields of the model */
+	/** The fields of the model */
 	fields: Field[];
-	/** @type IAccesses The model privacy access */
+	/** The model privacy access */
 	accesses: IAccesses;
 
-	/** Constructor */
 	constructor(object?: IModel) {
 		if (object) {
 			this.fromObject(object);
 		}
 	}
 
-	/** @inheritDoc */
 	public fromObject(object: IModel): Model {
 		this.id = object.id;
 		this.name = object.name;
@@ -37,7 +34,6 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 		return this;
 	}
 
-	/** @inheritDoc */
 	public toObject(): IModel {
 		return {
 			id: this.id,
@@ -51,8 +47,6 @@ export class Model implements ISerializable<IModel, Model>, IModel {
 	/**
 	 * Randomly generate id
 	 *
-	 * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
-	 * @returns {string}
 	 */
 	static generateTempId(): string {
 		return p8() + p8(true) + p8(true) + p8();

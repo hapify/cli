@@ -15,19 +15,11 @@ export declare class Project implements IStorable, ISerializable<IProject, Proje
     private storageService;
     /** The loaded instances */
     private static instances;
-    /** Constructor */
     constructor(object?: IProject);
-    /**
-     * Returns a singleton for this config
-     * @param {string} project
-     */
+    /** Returns a singleton for this config */
     static getInstance(project: string): Promise<Project>;
-    /** @inheritDoc */
     fromObject(object: IProject): Project;
-    /** @inheritDoc */
     toObject(): IProject;
-    /** @inheritDoc */
     load(): Promise<void>;
-    /** @inheritDoc */
     save(): Promise<void>;
 }

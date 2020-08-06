@@ -1,13 +1,6 @@
 import { ProjectsCollection } from '../class/ProjectsCollection';
 export declare class ProjectsService {
-    /**
-     * Constructor
-     */
     constructor();
-    /**
-     * Returns the projects collection
-     * @return {ProjectsCollection}
-     * @throws {Error}
-     */
+    /** Returns the projects collection */
     collection(): Promise<ProjectsCollection>;
 }

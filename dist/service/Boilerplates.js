@@ -22,15 +22,8 @@ exports.BoilerplatesService = void 0;
 const typedi_1 = require("typedi");
 const BoilerplatesCollection_1 = require("../class/BoilerplatesCollection");
 let BoilerplatesService = class BoilerplatesService {
-    /**
-     * Constructor
-     */
     constructor() { }
-    /**
-     * Returns the boilerplates collection
-     * @return {BoilerplatesCollection}
-     * @throws {Error}
-     */
+    /** Returns the boilerplates collection */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield BoilerplatesCollection_1.BoilerplatesCollection.getInstance();

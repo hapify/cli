@@ -10,25 +10,18 @@ interface IWebSocketHandler {}
 
 @Service()
 export class ApplyPresetHandlerService implements IWebSocketHandler {
-	/**
-	 * Constructor
-	 * @param presetsService
-	 */
 	constructor(private presetsService: PresetsService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'apply:presets';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
 			models: Joi.array().items(ModelSchema).required().min(0),
 		});
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		const models = message.data.models.map((m: IModel) => new Model(m));
 

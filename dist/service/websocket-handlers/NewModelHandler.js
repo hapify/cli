@@ -43,21 +43,17 @@ const Joi = __importStar(require("joi"));
 const Info_1 = require("../Info");
 const Model_1 = require("../../class/Model");
 let NewModelHandlerService = class NewModelHandlerService {
-    /** Constructor */
     constructor(infoService) {
         this.infoService = infoService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'new:model';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.object({
             name: Joi.string().required(),
         });
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Model_1.Model({

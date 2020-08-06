@@ -3,13 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Preset = void 0;
 const Model_1 = require("./Model");
 class Preset {
-    /** Constructor */
     constructor(object) {
         if (object) {
             this.fromObject(object);
         }
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
         this.icon = object.icon;
@@ -20,7 +18,6 @@ class Preset {
         this.models = object.models.map((m) => new Model_1.Model(m));
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             id: this.id,

@@ -7,22 +7,20 @@ import { Channel } from './Channel';
 import { StringService } from '../service/String';
 
 export class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
-	/** @type {string} */
 	private static defaultFolder = 'model';
 	/** Template storage */
 	private storageService: TemplatesFileStorageService;
-	/** @type {string} The template's path */
+	/** The template's path */
 	path: string;
-	/** @type {string} The template's type */
+	/** The template's type */
 	engine: Engine;
-	/** @type {string} Denotes if the template has to to be ran for one or all models */
+	/** Denotes if the template has to to be ran for one or all models */
 	input: Input;
-	/** @type {string} The template's path */
+	/** The template's path */
 	contentPath: string;
-	/** @type {string} The template's content */
+	/** The template's content */
 	content: string;
 
-	/** Constructor */
 	constructor(private parent: Channel, object?: ITemplate) {
 		this.storageService = Container.get(TemplatesFileStorageService);
 		if (object) {
@@ -30,7 +28,6 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		}
 	}
 
-	/** @inheritDoc */
 	public fromObject(object: ITemplate): Template {
 		this.path = object.path;
 		this.engine = object.engine;
@@ -40,7 +37,6 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		return this;
 	}
 
-	/** @inheritDoc */
 	public toObject(): ITemplate {
 		return {
 			path: this.path,
@@ -50,64 +46,43 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		};
 	}
 
-	/**
-	 * Denotes if the template should be considered as empty
-	 * @returns {boolean}
-	 */
+	/** Denotes if the template should be considered as empty */
 	public isEmpty(): boolean {
 		return typeof this.content !== 'string' || this.content.trim().length === 0;
 	}
 
-	/**
-	 * Denotes if the template needs a specific model to be generated
-	 * @returns {boolean}
-	 */
+	/** Denotes if the template needs a specific model to be generated */
 	public needsModel(): boolean {
 		return this.input === 'one';
 	}
 
-	/**
-	 * Get the extension of the input file
-	 * @returns {string}
-	 */
+	/** Get the extension of the input file */
 	public extension(): string {
 		return Template.computeExtension(this);
 	}
 
-	/**
-	 * Get the parent channel
-	 * @returns {Channel}
-	 */
+	/** Get the parent channel */
 	public channel(): Channel {
 		return this.parent;
 	}
 
-	/** @inheritDoc */
 	public async load(): Promise<void> {
 		await this.validate();
 		this.content = await this.storageService.get([this.parent.templatesPath, this.contentPath]);
 	}
 
-	/** @inheritDoc */
 	async save(): Promise<void> {
 		await this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
 	}
 
-	/**
-	 * Check resource validity
-	 * @throws {Error}
-	 */
+	/** Check resource validity */
 	private async validate(): Promise<void> {
 		if (!(await this.storageService.exists([this.parent.templatesPath, this.contentPath]))) {
 			throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
 		}
 	}
 
-	/**
-	 * Compute the content path from the dynamic path
-	 * @param {Template|IConfigTemplate} template
-	 * @return {string}
-	 */
+	/** Compute the content path from the dynamic path */
 	static computeContentPath(template: Template | IConfigTemplate): string {
 		// Get string service
 		const stringService: StringService = Container.get(StringService);
@@ -122,11 +97,7 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		return `${path}.${Template.computeExtension(template)}`;
 	}
 
-	/**
-	 * Compute the extension of the template
-	 * @param {Template|IConfigTemplate} template
-	 * @return {string}
-	 */
+	/** Compute the extension of the template */
 	private static computeExtension(template: Template | IConfigTemplate): string {
 		if (template.engine === 'hpf') {
 			return 'hpf';

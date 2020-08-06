@@ -34,21 +34,14 @@ const Path = __importStar(require("path"));
 const GlobalConfig_1 = require("./GlobalConfig");
 const Remote_1 = require("../config/Remote");
 let OptionsService = class OptionsService {
-    /** Constructor */
     constructor(globalConfigService) {
         this.globalConfigService = globalConfigService;
     }
-    /**
-     * Set program entity
-     * @param {commander.CommanderStatic} program
-     */
+    /** Set program entity */
     setProgram(program) {
         this.program = program;
     }
-    /**
-     * Set command entity
-     * @param {commander.Command} command
-     */
+    /** Set command entity */
     setCommand(command) {
         this.command = command;
     }
@@ -58,7 +51,7 @@ let OptionsService = class OptionsService {
         configs.uri = this.apiUrl();
         return configs;
     }
-    /** @return {string} Return the working directory computed with the --dir option */
+    /** Return the working directory computed with the --dir option */
     dir() {
         if (this.program.dir) {
             if (Path.isAbsolute(this.program.dir)) {
@@ -68,7 +61,7 @@ let OptionsService = class OptionsService {
         }
         return process.cwd();
     }
-    /** @return {string} Return the API Key to use (explicit or global) */
+    /** Return the API Key to use (explicit or global) */
     apiKey() {
         const key = this.program.key || this.globalConfigService.getData().apiKey;
         if (!key) {
@@ -76,32 +69,32 @@ let OptionsService = class OptionsService {
         }
         return key;
     }
-    /** @return {string} Return the API URL to use or default URL */
+    /** Return the API URL to use or default URL */
     apiUrl() {
         const url = this.globalConfigService.getData().apiUrl;
         return url || Remote_1.RemoteConfig.uri;
     }
-    /** @return {boolean} Denotes if the debug mode is enabled */
+    /** Denotes if the debug mode is enabled */
     debug() {
         return !!this.program.debug;
     }
-    /** @return {number} Get the depth for recursive search */
+    /** Get the depth for recursive search */
     depth() {
         return this.command.depth;
     }
-    /** @return {string} Get the output file path */
+    /** Get the output file path */
     output() {
         return this.command.output;
     }
-    /** @return {number} Get the required http port */
+    /** Get the required http port */
     port() {
         return this.command.port;
     }
-    /** @return {string} Get the required http hostname */
+    /** Get the required http hostname */
     hostname() {
         return this.command.hostname;
     }
-    /** @return {boolean} Denotes if a new tab should be opened */
+    /** Denotes if a new tab should be opened */
     open() {
         return !!this.command.open;
     }

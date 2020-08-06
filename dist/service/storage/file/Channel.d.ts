@@ -1,9 +1,7 @@
 import { FilePath, SingleSaveFileStorage } from './SingleSave';
 import { IConfig } from '../../../interface/Config';
 export declare class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
-    /** @inheritDoc */
     protected serialize(content: IConfig): Promise<string>;
-    /** @inheritDoc */
     protected deserialize(content: string): Promise<IConfig>;
     /** Cleanup unused files */
     cleanup(root: FilePath, legitFiles: FilePath[]): Promise<void>;

@@ -7,20 +7,12 @@ import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class GenerateTemplateHandlerService implements IWebSocketHandler {
-	/**
-	 * Constructor
-	 * @param {ChannelsService} channelsService
-	 * @param {GeneratorService} generatorService
-	 * @param {WriterService} writerService
-	 */
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService, private writerService: WriterService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'gen:template';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
 			channel: Joi.string().required(),
@@ -28,7 +20,6 @@ export class GenerateTemplateHandlerService implements IWebSocketHandler {
 		});
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		// Get channel
 		const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);

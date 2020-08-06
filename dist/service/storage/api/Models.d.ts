@@ -28,11 +28,8 @@ export declare class ModelsApiStorageService extends BaseApiStorageService<IMode
     private updateHashes;
     /** Create a hash for the model */
     private static hash;
-    /** @inheritDoc */
     protected defaultSearchParams(): any;
-    /** @inheritDoc */
     protected path(): string;
-    /** @inheritDoc */
     protected fromApi(object: IApiModel): IModel;
 }
 export {};

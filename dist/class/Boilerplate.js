@@ -2,13 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Boilerplate = void 0;
 class Boilerplate {
-    /** Constructor */
     constructor(object) {
         if (object) {
             this.fromObject(object);
         }
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
         this.slug = object.slug;
@@ -16,7 +14,6 @@ class Boilerplate {
         this.git_url = object.git_url;
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             id: this.id,

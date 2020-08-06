@@ -14,34 +14,28 @@ import { ConfigSchema } from '../interface/schema/Config';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
 
 export class Channel implements IStorable, ISerializable<IChannel, Channel> {
-	/** @type {string} */
 	public name: string;
-	/** @type {string} */
+
 	public id: string;
-	/** @type {string} */
+
 	private static defaultFolder = 'hapify';
-	/** @type {string} */
+
 	private static configFile = 'hapify.json';
-	/** @type {IConfig} */
+
 	public config: IConfig;
-	/** @type {Template[]} Templates instances */
+	/** Templates instances */
 	public templates: Template[] = [];
-	/** @type {Template[]} Templates instances */
+	/** Templates instances */
 	public validator: Validator;
-	/** @type {Project} Current project */
+	/** Current project */
 	public project: Project;
-	/** @type {ModelsCollection} List of models container */
+	/** List of models container */
 	public modelsCollection: ModelsCollection;
-	/** @type {string} */
+
 	public templatesPath: string;
 	/** Channel storage */
 	private storageService: ChannelFileStorageService;
 
-	/**
-	 * Constructor
-	 * @param {string} path
-	 * @param {string|null} name
-	 */
 	constructor(public path: string, name: string = null) {
 		this.storageService = Container.get(ChannelFileStorageService);
 		this.name = name ? name : Path.basename(path);
@@ -49,7 +43,6 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		this.templatesPath = Path.join(this.path, Channel.defaultFolder);
 	}
 
-	/** @inheritDoc */
 	async load(): Promise<void> {
 		// Validate storage
 		await this.validate();
@@ -91,7 +84,6 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		await this.validator.load();
 	}
 
-	/** @inheritDoc */
 	async save(): Promise<void> {
 		// Saves subs instances
 		for (const template of this.templates) {
@@ -116,28 +108,19 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		await this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
 	}
 
-	/**
-	 * Denotes if the template should be considered as empty
-	 * @returns {boolean}
-	 */
+	/** Denotes if the template should be considered as empty */
 	isEmpty(): boolean {
 		const validatorIsEmpty = this.validator.isEmpty();
 		const templatesAreEmpty = this.templates.every((t) => t.isEmpty());
 		return validatorIsEmpty && templatesAreEmpty;
 	}
 
-	/**
-	 * Remove empty templates
-	 * @returns {void}
-	 */
+	/** Remove empty templates */
 	filter(): void {
 		this.templates = this.templates.filter((t) => !t.isEmpty());
 	}
 
-	/**
-	 * Check resource validity
-	 * @throws {Error}
-	 */
+	/** Check resource validity */
 	private async validate(): Promise<void> {
 		if (!(await this.storageService.exists([this.path, Channel.configFile]))) {
 			throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
@@ -221,7 +204,6 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		return channel;
 	}
 
-	/** @inheritDoc */
 	public fromObject(object: IChannel): Channel {
 		// Do not update name nor id
 		// Create or update templates if necessary
@@ -242,7 +224,6 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		return this;
 	}
 
-	/** @inheritDoc */
 	public toObject(): IChannel {
 		return {
 			id: this.id,

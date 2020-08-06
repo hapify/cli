@@ -40,7 +40,6 @@ const mkdirp_1 = __importDefault(require("mkdirp"));
 const Joi = __importStar(require("joi"));
 const Config_1 = require("../interface/schema/Config");
 let GlobalConfigService = class GlobalConfigService {
-    /** Constructor */
     constructor() {
         /** Define the config root path */
         this.rootPath = Path.resolve(Os.homedir(), '.hapify');

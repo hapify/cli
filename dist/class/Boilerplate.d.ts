@@ -9,10 +9,7 @@ export declare class Boilerplate implements ISerializable<IBoilerplate, Boilerpl
     name: string;
     /** The boilerplate's repository url */
     git_url: string;
-    /** Constructor */
     constructor(object?: IBoilerplate);
-    /** @inheritDoc */
     fromObject(object: IBoilerplate): Boilerplate;
-    /** @inheritDoc */
     toObject(): IBoilerplate;
 }

@@ -14,9 +14,8 @@ const typedi_1 = require("typedi");
 const Boilerplate_1 = require("./Boilerplate");
 const Boilerplates_1 = require("../service/storage/api/Boilerplates");
 class BoilerplatesCollection {
-    /** Constructor */
     constructor() {
-        /** @type {Boilerplate[]} The list of boilerplate instances */
+        /** The list of boilerplate instances */
         this.boilerplates = [];
         this.storageService = typedi_1.Container.get(Boilerplates_1.BoilerplatesApiStorageService);
     }
@@ -31,43 +30,30 @@ class BoilerplatesCollection {
             return BoilerplatesCollection.instance;
         });
     }
-    /**
-     * Load the boilerplates
-     * @return {Promise<void>}
-     */
+    /** Load the boilerplates */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             this.fromObject(yield this.storageService.list());
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             // Nothing to save
         });
     }
-    /**
-     * Returns the list of boilerplates
-     * @returns {Promise<Boilerplate[]>}
-     */
+    /** Returns the list of boilerplates */
     list() {
         return __awaiter(this, void 0, void 0, function* () {
             return this.boilerplates;
         });
     }
-    /**
-     * Returns one boilerplate
-     * @returns {Promise<Boilerplate>}
-     */
+    /** Returns one boilerplate */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.boilerplates.find((p) => p.id === id);
         });
     }
-    /**
-     * Returns one boilerplate by its slug
-     * @returns {Promise<Boilerplate>}
-     */
+    /** Returns one boilerplate by its slug */
     getBySlug(slug) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = yield this.storageService.list({
@@ -77,12 +63,10 @@ class BoilerplatesCollection {
             return data.length ? new Boilerplate_1.Boilerplate(data[0]) : null;
         });
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.boilerplates = object.map((p) => new Boilerplate_1.Boilerplate(p));
         return this.boilerplates;
     }
-    /** @inheritDoc */
     toObject() {
         return this.boilerplates.map((p) => p.toObject());
     }

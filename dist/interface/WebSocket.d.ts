@@ -8,22 +8,13 @@ export interface WebSocket {
 }
 export declare const WebSocketMessageSchema: Joi.ObjectSchema;
 export interface IWebSocketHandler {
-    /**
-     * Denotes if the handler can handle this message
-     * @param {WebSocket} message
-     * @return {boolean}
-     */
+    /** Denotes if the handler can handle this message */
     canHandle(message: WebSocket): boolean;
     /**
      * Handle message.
      * Returns data if necessary, null otherwise
-     * @param {WebSocket} message
-     * @return {Promise<any>}
      */
     handle(message: WebSocket): Promise<any>;
-    /**
-     * Returns the JOi validator for the input payload
-     * @return {Schema}
-     */
+    /** Returns the JOi validator for the input payload */
     validator(): Joi.Schema;
 }

@@ -43,20 +43,16 @@ const Joi = __importStar(require("joi"));
 const Info_1 = require("../Info");
 const Generator_1 = require("../Generator");
 let GetInfoHandlerService = class GetInfoHandlerService {
-    /** Constructor */
     constructor(infoService, generatorService) {
         this.infoService = infoService;
         this.generatorService = generatorService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'get:info';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.any();
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             return {

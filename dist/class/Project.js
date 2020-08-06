@@ -13,17 +13,13 @@ exports.Project = void 0;
 const typedi_1 = require("typedi");
 const Projects_1 = require("../service/storage/api/Projects");
 class Project {
-    /** Constructor */
     constructor(object) {
         if (object) {
             this.fromObject(object);
         }
         this.storageService = typedi_1.Container.get(Projects_1.ProjectsApiStorageService);
     }
-    /**
-     * Returns a singleton for this config
-     * @param {string} project
-     */
+    /** Returns a singleton for this config */
     static getInstance(project) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.instances[project]) {
@@ -34,7 +30,6 @@ class Project {
             return this.instances[project];
         });
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
         this.created_at = object.created_at;
@@ -42,7 +37,6 @@ class Project {
         this.description = object.description;
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             id: this.id,
@@ -51,13 +45,11 @@ class Project {
             description: this.description,
         };
     }
-    /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             this.fromObject(yield this.storageService.get(this.id));
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             // Nothing to save

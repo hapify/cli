@@ -7,26 +7,17 @@ import { IRemoteConfig } from '../interface/Config';
 
 @Service()
 export class OptionsService {
-	/** @type {commander.CommanderStatic} program */
 	private program: CommanderStatic;
-	/** @type {commander.CommanderStatic} program */
 	private command: Command;
 
-	/** Constructor */
 	constructor(private globalConfigService: GlobalConfigService) {}
 
-	/**
-	 * Set program entity
-	 * @param {commander.CommanderStatic} program
-	 */
+	/** Set program entity */
 	setProgram(program: CommanderStatic): void {
 		this.program = program;
 	}
 
-	/**
-	 * Set command entity
-	 * @param {commander.Command} command
-	 */
+	/** Set command entity */
 	setCommand(command: Command): void {
 		this.command = command;
 	}
@@ -38,7 +29,7 @@ export class OptionsService {
 		return configs;
 	}
 
-	/** @return {string} Return the working directory computed with the --dir option */
+	/** Return the working directory computed with the --dir option */
 	dir(): string {
 		if (this.program.dir) {
 			if (Path.isAbsolute(this.program.dir)) {
@@ -49,7 +40,7 @@ export class OptionsService {
 		return process.cwd();
 	}
 
-	/** @return {string} Return the API Key to use (explicit or global) */
+	/** Return the API Key to use (explicit or global) */
 	apiKey(): string {
 		const key = this.program.key || this.globalConfigService.getData().apiKey;
 		if (!key) {
@@ -60,38 +51,38 @@ export class OptionsService {
 		return key;
 	}
 
-	/** @return {string} Return the API URL to use or default URL */
+	/** Return the API URL to use or default URL */
 	apiUrl(): string {
 		const url = this.globalConfigService.getData().apiUrl;
 		return url || RemoteConfig.uri;
 	}
 
-	/** @return {boolean} Denotes if the debug mode is enabled */
+	/** Denotes if the debug mode is enabled */
 	debug(): boolean {
 		return !!this.program.debug;
 	}
 
-	/** @return {number} Get the depth for recursive search */
+	/** Get the depth for recursive search */
 	depth(): number {
 		return this.command.depth;
 	}
 
-	/** @return {string} Get the output file path */
+	/** Get the output file path */
 	output(): string {
 		return this.command.output;
 	}
 
-	/** @return {number} Get the required http port */
+	/** Get the required http port */
 	port(): number {
 		return this.command.port;
 	}
 
-	/** @return {string} Get the required http hostname */
+	/** Get the required http hostname */
 	hostname(): string {
 		return this.command.hostname;
 	}
 
-	/** @return {boolean} Denotes if a new tab should be opened */
+	/** Denotes if a new tab should be opened */
 	open(): boolean {
 		return !!this.command.open;
 	}

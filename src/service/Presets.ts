@@ -12,23 +12,14 @@ export interface PresetMergeResults {
 
 @Service()
 export class PresetsService {
-	/**
-	 * Constructor
-	 */
 	constructor(private channelsService: ChannelsService, private infoService: InfoService) {}
 
-	/**
-	 * Returns the presets collection
-	 * @return {PresetsCollection}
-	 * @throws {Error}
-	 */
+	/** Returns the presets collection */
 	async collection(): Promise<PresetsCollection> {
 		return await PresetsCollection.getInstance();
 	}
 
-	/**
-	 * Apply one preset to models
-	 */
+	/** Apply one preset to models */
 	async apply(presetModels: Model[]): Promise<PresetMergeResults> {
 		// Add or update each models
 		const updated: Model[] = [];

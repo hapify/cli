@@ -6,19 +6,12 @@ import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class PathPreviewHandlerService implements IWebSocketHandler {
-	/**
-	 * Constructor
-	 * @param channelsService
-	 * @param generatorService
-	 */
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'prv:path';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
 			model: Joi.string(),
@@ -26,7 +19,6 @@ export class PathPreviewHandlerService implements IWebSocketHandler {
 		});
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		// Get model, if any
 		const model = message.data.model ? await (await this.channelsService.modelsCollection()).find(message.data.model) : null;

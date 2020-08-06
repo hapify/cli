@@ -8,19 +8,12 @@ import { Template } from '../../class/Template';
 
 @Service()
 export class TemplatePreviewHandlerService implements IWebSocketHandler {
-	/**
-	 * Constructor
-	 * @param channelsService
-	 * @param generatorService
-	 */
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'prv:template';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
 			model: Joi.string(),
@@ -29,7 +22,6 @@ export class TemplatePreviewHandlerService implements IWebSocketHandler {
 		});
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		// Get channel
 		const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);

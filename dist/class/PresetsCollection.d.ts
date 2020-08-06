@@ -5,35 +5,22 @@ import { PresetsApiStorageService } from '../service/storage/api/Presets';
 export declare class PresetsCollection implements IStorable, ISerializable<IPreset[], Preset[]> {
     get storageService(): PresetsApiStorageService;
     set storageService(value: PresetsApiStorageService);
-    /** @type {Preset[]} The list of preset instances */
+    /** The list of preset instances */
     private presets;
     /** Presets storage */
     private _storageService;
-    /** @type {string} The loaded instance */
+    /** The loaded instance */
     private static instance;
-    /** Constructor */
     private constructor();
     /** Returns a singleton for this config */
     static getInstance(): Promise<PresetsCollection>;
-    /**
-     * Load the presets
-     * @return {Promise<void>}
-     */
+    /** Load the presets */
     load(): Promise<void>;
-    /** @inheritDoc */
     save(): Promise<void>;
-    /**
-     * Returns the list of presets
-     * @returns {Promise<Preset[]>}
-     */
+    /** Returns the list of presets */
     list(): Promise<Preset[]>;
-    /**
-     * Returns one preset
-     * @returns {Promise<Preset>}
-     */
+    /** Returns one preset */
     get(id: string): Promise<Preset>;
-    /** @inheritDoc */
     fromObject(object: IPreset[]): Preset[];
-    /** @inheritDoc */
     toObject(): IPreset[];
 }

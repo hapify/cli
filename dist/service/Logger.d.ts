@@ -1,71 +1,27 @@
 import { OptionsService } from './Options';
 export declare class LoggerService {
     private optionsService;
-    /**
-     * Constructor
-     * @param {OptionsService} optionsService
-     */
     constructor(optionsService: OptionsService);
-    /**
-     * Handle an error
-     * @param {Error} error
-     * @return {LoggerService}
-     */
+    /** Handle an error */
     handle(error: Error): LoggerService;
-    /**
-     * Display a message
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display a message */
     raw(message: string): LoggerService;
-    /**
-     * Display a success message
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display a success message */
     success(message: string): LoggerService;
-    /**
-     * Display an info
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display an info */
     info(message: string): LoggerService;
-    /**
-     * Display an info if in debug mode
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display an info if in debug mode */
     debug(message: string): LoggerService;
-    /**
-     * Display an error
-     * @param {string} message
-     */
+    /** Display an error */
     error(message: string): LoggerService;
-    /**
-     * Add new lines
-     * @param {number} count
-     * @return {LoggerService}
-     */
+    /** Add new lines */
     newLine(count?: number): LoggerService;
-    /**
-     * Display an error
-     * @param {string} message
-     * @return {LoggerService}
-     */
+    /** Display an error */
     warning(message: string): LoggerService;
-    /**
-     * Display ascii art
-     * @return {LoggerService}
-     */
+    /** Display ascii art */
     art(): LoggerService;
-    /**
-     * Get ascii art
-     * @return {string}
-     */
+    /** Get ascii art */
     getArt(): string;
-    /**
-     * Display the running time
-     * @return {LoggerService}
-     */
+    /** Display the running time */
     time(): LoggerService;
 }

@@ -13,33 +13,23 @@ exports.Validator = void 0;
 const typedi_1 = require("typedi");
 const Validator_1 = require("../service/storage/file/Validator");
 class Validator {
-    /**
-     * Constructor
-     * @param {Channel} parent
-     * @param {string} path
-     */
     constructor(parent, path) {
         this.parent = parent;
         this.path = path;
         this.storageService = typedi_1.Container.get(Validator_1.ValidatorFileStorageService);
     }
-    /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate();
             this.content = yield this.storageService.get([this.parent.path, this.path]);
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.storageService.set([this.parent.path, this.path], this.content);
         });
     }
-    /**
-     * Check resource validity
-     * @throws {Error}
-     */
+    /** Check resource validity */
     validate() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(yield this.storageService.exists([this.parent.path, this.path]))) {
@@ -47,10 +37,7 @@ class Validator {
             }
         });
     }
-    /**
-     * Denotes if the validator should be considered as empty
-     * @returns {boolean}
-     */
+    /** Denotes if the validator should be considered as empty */
     isEmpty() {
         return typeof this.content !== 'string' || this.content.trim().length === 0;
     }

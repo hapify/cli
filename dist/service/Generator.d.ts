@@ -8,41 +8,22 @@ export declare class GeneratorService {
     private apiService;
     /** Stores the limits */
     private _limits;
-    /** Constructor */
     constructor(apiService: ApiService);
     /** Get the limits once and returns them */
     limits(): Promise<ILimits>;
-    /**
-     * Compile for a whole channel
-     * @param {Channel} channel
-     * @returns {Promise<IGeneratorResult[]>}
-     */
+    /** Compile for a whole channel */
     runChannel(channel: Channel): Promise<IGeneratorResult[]>;
     /**
      * Compile a template to multiple files.
      * One per model, if applicable.
      *
-     * @param {Template} template
-     * @returns {Promise<IGeneratorResult[]>}
      */
     runTemplate(template: Template): Promise<IGeneratorResult[]>;
     /**
      * Run generation process for one template/model
-     *
-     * @param {Template} template
-     * @param {Model|null} model
-     * @returns {Promise<IGeneratorResult>}
-     * @throws {Error}
-     *  If the template needs a model and no model is passed
+     * @throws {Error} If the template needs a model and no model is passed
      */
     run(template: Template, model: Model | null): Promise<IGeneratorResult>;
-    /**
-     * Compute path from a string
-     *
-     * @param {string} path
-     * @param {Model|null} model
-     *  Default null
-     * @returns {string}
-     */
+    /** Compute path from a string */
     pathPreview(path: string, model?: Model | null): Promise<string>;
 }

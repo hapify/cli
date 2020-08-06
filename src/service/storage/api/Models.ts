@@ -126,19 +126,16 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 		return md5(JSON.stringify(new Model(model).toObject()));
 	}
 
-	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
 		s._limit = this.remoteConfig.modelsLimit;
 		return s;
 	}
 
-	/** @inheritDoc */
 	protected path(): string {
 		return 'model';
 	}
 
-	/** @inheritDoc */
 	protected fromApi(object: IApiModel): IModel {
 		return {
 			id: object._id,

@@ -15,19 +15,16 @@ export interface IApiProject {
 
 @Service()
 export class ProjectsApiStorageService extends BaseApiStorageService<IProject, IApiProject, ProjectsSearchParams> {
-	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
 		s._limit = this.remoteConfig.projectsLimit;
 		return s;
 	}
 
-	/** @inheritDoc */
 	protected path(): string {
 		return 'project';
 	}
 
-	/** @inheritDoc */
 	protected fromApi(object: IApiProject): IProject {
 		return {
 			id: object._id,

@@ -12,7 +12,6 @@ export class GeneratorService {
 	/** Stores the limits */
 	private _limits: ILimits;
 
-	/** Constructor */
 	constructor(private apiService: ApiService) {}
 
 	/** Get the limits once and returns them */
@@ -23,11 +22,7 @@ export class GeneratorService {
 		return this._limits;
 	}
 
-	/**
-	 * Compile for a whole channel
-	 * @param {Channel} channel
-	 * @returns {Promise<IGeneratorResult[]>}
-	 */
+	/** Compile for a whole channel */
 	async runChannel(channel: Channel): Promise<IGeneratorResult[]> {
 		const models = await channel.modelsCollection.list();
 		return await Generator.run(channel.templates, models);
@@ -37,8 +32,6 @@ export class GeneratorService {
 	 * Compile a template to multiple files.
 	 * One per model, if applicable.
 	 *
-	 * @param {Template} template
-	 * @returns {Promise<IGeneratorResult[]>}
 	 */
 	async runTemplate(template: Template): Promise<IGeneratorResult[]> {
 		const models = await template.channel().modelsCollection.list();
@@ -47,12 +40,7 @@ export class GeneratorService {
 
 	/**
 	 * Run generation process for one template/model
-	 *
-	 * @param {Template} template
-	 * @param {Model|null} model
-	 * @returns {Promise<IGeneratorResult>}
-	 * @throws {Error}
-	 *  If the template needs a model and no model is passed
+	 * @throws {Error} If the template needs a model and no model is passed
 	 */
 	async run(template: Template, model: Model | null): Promise<IGeneratorResult> {
 		if (template.needsModel() && !model) {
@@ -64,14 +52,7 @@ export class GeneratorService {
 		return result[0];
 	}
 
-	/**
-	 * Compute path from a string
-	 *
-	 * @param {string} path
-	 * @param {Model|null} model
-	 *  Default null
-	 * @returns {string}
-	 */
+	/** Compute path from a string */
 	async pathPreview(path: string, model: Model | null = null): Promise<string> {
 		return Generator.path(path, model ? model.name : null);
 	}

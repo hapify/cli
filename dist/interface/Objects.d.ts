@@ -1,16 +1,16 @@
 import { IModel, ITemplate } from './Generator';
 export interface IChannel {
-    /** @type {string} The channel's unique id */
+    /** The channel's unique id */
     id: string;
-    /** @type {string} The channel's name */
+    /** The channel's name */
     name: string;
-    /** @type {string} The channel's short description */
+    /** The channel's short description */
     description: string;
-    /** @type {string} The channel's logo URL */
+    /** The channel's logo URL */
     logo: string;
-    /** @type {ITemplate[]} The templates of the channel */
+    /** The templates of the channel */
     templates: ITemplate[];
-    /** @type {string} The channel's validation script */
+    /** The channel's validation script */
     validator: string;
 }
 export interface IPreset {

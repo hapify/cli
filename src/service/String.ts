@@ -5,16 +5,11 @@ import { IStringVariants } from '../interface/Generator';
 
 @Service()
 export class StringService {
-	/**
-	 * Constructor
-	 */
 	constructor() {}
 
 	/**
 	 * Returns the string with all formats
 	 *
-	 * @param {string} value
-	 * @returns {string}
 	 */
 	public variants(value: string): IStringVariants {
 		return {

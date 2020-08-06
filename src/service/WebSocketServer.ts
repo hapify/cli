@@ -32,29 +32,24 @@ interface TokenData {
 
 @Service()
 export class WebSocketServerService {
-	/** @type {string} Websocket endpoint */
+	/** Websocket endpoint */
 	private baseUri: string = '/websocket';
-	/** @type {ws.Server} The server instance */
+	/** The server instance */
 	private server: ws.Server;
-	/** @type {boolean} Denotes if the server is started */
+	/** Denotes if the server is started */
 	private serverStarted: boolean;
 
-	/** @type {string} The path to save the token */
+	/** The path to save the token */
 	private wsInfoPath: string = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
-	/** @type {string} Random name to generate token */
+	/** Random name to generate token */
 	private randomName: string = RandomString.generate({ length: 24 });
-	/** @type {string} Random secret to generate token */
+	/** Random secret to generate token */
 	private randomSecret: string = RandomString.generate({ length: 48 });
-	/** @type {string} Random secret to generate token */
+	/** Random secret to generate token */
 	private tokenExpires: number = 24 * 60 * 60 * 1000; // 1 day;
-	/** @type {IWebSocketHandler[]} Messages handlers */
+	/** Messages handlers */
 	private handlers: IWebSocketHandler[] = [];
 
-	/**
-	 * Constructor
-	 * @param {OptionsService} optionsService
-	 * @param {LoggerService} loggerService
-	 */
 	constructor(private optionsService: OptionsService, private loggerService: LoggerService) {
 		this.addHandler(Container.get(ApplyPresetHandlerService));
 		this.addHandler(Container.get(GetModelsHandlerService));
@@ -75,8 +70,6 @@ export class WebSocketServerService {
 	 * Starts the http server
 	 * Check if running before starting
 	 * Every connection is checked against a JWT
-	 * @param {"http".Server} httpServer
-	 * @return {Promise<void>}
 	 */
 	public async serve(httpServer: http.Server): Promise<void> {
 		if (this.started()) return;
@@ -211,7 +204,6 @@ export class WebSocketServerService {
 	/**
 	 * Stops the http server
 	 * Check if running before stop
-	 * @return {Promise<void>}
 	 */
 	public async stop(): Promise<void> {
 		if (!this.started()) return;
@@ -238,26 +230,17 @@ export class WebSocketServerService {
 		}
 	}
 
-	/**
-	 * Denotes if the HTTP server is running
-	 * @return {boolean}
-	 */
+	/** Denotes if the HTTP server is running */
 	public started(): boolean {
 		return this.server && this.serverStarted;
 	}
 
-	/**
-	 * Add a new handler
-	 * @param {IWebSocketHandler} handler
-	 */
+	/** Add a new handler */
 	public addHandler(handler: IWebSocketHandler) {
 		this.handlers.push(handler);
 	}
 
-	/**
-	 * Create and store token
-	 * @return {Promise<void>}
-	 */
+	/** Create and store token */
 	private async createToken(): Promise<void> {
 		const wsAddress = <AddressInfo>this.server.address();
 		const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
@@ -273,20 +256,14 @@ export class WebSocketServerService {
 		Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
 	}
 
-	/**
-	 * Remove the token
-	 * @return {Promise<void>}
-	 */
+	/** Remove the token */
 	private async deleteToken(): Promise<void> {
 		if (Fs.existsSync(this.wsInfoPath)) {
 			Fs.unlinkSync(this.wsInfoPath);
 		}
 	}
 
-	/**
-	 * Create a unique id
-	 * @return {string}
-	 */
+	/** Create a unique id */
 	private makeId(): string {
 		let text = '';
 		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

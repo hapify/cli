@@ -22,15 +22,8 @@ exports.ProjectsService = void 0;
 const typedi_1 = require("typedi");
 const ProjectsCollection_1 = require("../class/ProjectsCollection");
 let ProjectsService = class ProjectsService {
-    /**
-     * Constructor
-     */
     constructor() { }
-    /**
-     * Returns the projects collection
-     * @return {ProjectsCollection}
-     * @throws {Error}
-     */
+    /** Returns the projects collection */
     collection() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProjectsCollection_1.ProjectsCollection.getInstance();

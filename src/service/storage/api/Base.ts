@@ -23,65 +23,39 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Stores the remote config to use */
 	protected remoteConfig: IRemoteConfig;
 
-	/** Constructor */
 	constructor(private apiService: ApiService, private optionsService: OptionsService) {
 		this.remoteConfig = optionsService.remoteConfig();
 	}
 
-	/**
-	 * Create a new model
-	 * @param {I} payload
-	 * @return {Promise<T>}
-	 */
+	/** Create a new model */
 	async create(payload: I): Promise<T> {
 		const output: I = (await this.apiService.post(`${this.path()}`, payload)).data;
 		return this.fromApi(output);
 	}
 
-	/**
-	 * Update an model selected from it's id
-	 * @param {string} id
-	 * @param {T} payload
-	 * @return {Promise<any>}
-	 */
+	/** Update an model selected from it's id */
 	async update(id: string, payload: I): Promise<void> {
 		await this.apiService.patch(`${this.path()}/${id}`, payload);
 	}
 
-	/**
-	 * Get an model from it's id
-	 * @param {string} id
-	 * @return {Promise<T>}
-	 */
+	/** Get an model from it's id */
 	async get(id: string): Promise<T> {
 		const output: I = (await this.apiService.get(`${this.path()}/${id}`)).data;
 		return this.fromApi(output);
 	}
 
-	/**
-	 * Delete an model selected from it's id
-	 * @param {string} id
-	 * @return {Promise<any>}
-	 */
+	/** Delete an model selected from it's id */
 	async remove(id: string): Promise<void> {
 		await this.apiService.delete(`${this.path()}/${id}`);
 	}
 
-	/**
-	 * Get list for model search
-	 * @param {S} searchParams
-	 * @return {Promise<T[]> >}
-	 */
+	/** Get list for model search */
 	async list(searchParams?: S): Promise<T[]> {
 		const output: I[] = (await this.apiService.get(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
 		return output.map((o) => this.fromApi(o));
 	}
 
-	/**
-	 * Count for model
-	 * @param {S} searchParams
-	 * @return {Promise<number>}
-	 */
+	/** Count for model */
 	async count(searchParams: S): Promise<number> {
 		// Remove unwanted properties
 		const params = Object.assign({}, this.defaultSearchParams(), searchParams);

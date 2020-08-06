@@ -46,39 +46,33 @@ const hapi_1 = require("@hapi/hapi");
 const opn = require('opn');
 const DetectPort = require('detect-port');
 let HttpServerService = class HttpServerService {
-    /**
-     * Constructor
-     * @param {OptionsService} optionsService
-     * @param {WebSocketServerService} webSocketServerService
-     */
     constructor(optionsService, webSocketServerService) {
         this.optionsService = optionsService;
         this.webSocketServerService = webSocketServerService;
-        /** @type {string} WebApp root */
+        /** WebApp root */
         this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
-        /** @type {number} Start port number */
+        /** Start port number */
         this._minPort = 4800;
-        /** @type {number} Maximum port number */
+        /** Maximum port number */
         this._maxPort = 4820;
-        /** @type {number} Current port number */
+        /** Current port number */
         this._port = this._minPort;
     }
-    /** @return {number} Start port getter */
+    /** Start port getter */
     get minPort() {
         return this._minPort;
     }
-    /** @return {number} Maximum port getter */
+    /** Maximum port getter */
     get maxPort() {
         return this._maxPort;
     }
-    /** @return {number} Current port getter */
+    /** Current port getter */
     get port() {
         return this._port;
     }
     /**
      * Starts the http server
      * Check if running before starting
-     * @return {Promise<void>}
      */
     serve() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -130,7 +124,6 @@ let HttpServerService = class HttpServerService {
     /**
      * Stops the http server
      * Check if running before stop
-     * @return {Promise<void>}
      */
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -142,17 +135,13 @@ let HttpServerService = class HttpServerService {
             this.server = null;
         });
     }
-    /**
-     * Denotes if the HTTP server is running
-     * @return {boolean}
-     */
+    /** Denotes if the HTTP server is running */
     started() {
         return this.server && this.serverStarted;
     }
     /**
      * Open the browser for the current server
      * Do not open if not started
-     * @return {void}
      */
     open() {
         const url = this.url();
@@ -163,16 +152,11 @@ let HttpServerService = class HttpServerService {
     /**
      * Get the URL of the current session
      * Returns null if not started
-     * @return {string|null}
      */
     url() {
         return this.started() ? `http://${this.optionsService.hostname()}:${this._port}` : null;
     }
-    /**
-     * Test ports and returns the first one available
-     * @param {number} increment
-     * @return {Promise<number>}
-     */
+    /** Test ports and returns the first one available */
     findAvailablePort(increment = 0) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this._port > this._maxPort) {

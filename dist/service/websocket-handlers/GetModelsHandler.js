@@ -42,22 +42,15 @@ const typedi_1 = require("typedi");
 const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
 let GetModelsHandlerService = class GetModelsHandlerService {
-    /**
-     * Constructor
-     * @param channelsService
-     */
     constructor(channelsService) {
         this.channelsService = channelsService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'get:models';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.any();
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             return (yield this.channelsService.modelsCollection()).toObject();

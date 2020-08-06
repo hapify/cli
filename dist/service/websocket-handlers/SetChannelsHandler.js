@@ -43,22 +43,15 @@ const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
 const Channel_1 = require("../../interface/schema/Channel");
 let SetChannelsHandlerService = class SetChannelsHandlerService {
-    /**
-     * Constructor
-     * @param channelsService
-     */
     constructor(channelsService) {
         this.channelsService = channelsService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'set:channels';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.array().items(Channel_1.ChannelSchema).min(0);
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Existing channels

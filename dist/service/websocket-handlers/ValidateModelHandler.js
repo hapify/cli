@@ -43,25 +43,18 @@ const Validator_1 = require("../Validator");
 const Joi = __importStar(require("joi"));
 const Model_1 = require("../../interface/schema/Model");
 let ValidateModelHandlerService = class ValidateModelHandlerService {
-    /**
-     * Constructor
-     * @param validatorService
-     */
     constructor(validatorService) {
         this.validatorService = validatorService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'val:model';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.object({
             model: Model_1.ModelSchema,
             content: Joi.string().required(),
         });
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // From content

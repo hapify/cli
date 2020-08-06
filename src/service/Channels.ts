@@ -8,20 +8,12 @@ import { ModelsCollection } from '../class/ModelsCollection';
 
 @Service()
 export class ChannelsService {
-	/** @type {Channel[]} Channels instances */
+	/** Channels instances */
 	private _channels: Channel[];
 
-	/**
-	 * Constructor
-	 * @param optionsService
-	 */
 	constructor(private optionsService: OptionsService) {}
 
-	/**
-	 * Get the channels. Load them if not loaded yet
-	 * @return {Channel[]}
-	 * @throws {Error}
-	 */
+	/** Get the channels. Load them if not loaded yet */
 	public async channels(): Promise<Channel[]> {
 		if (!(this._channels instanceof Array)) {
 			this._channels = await ChannelsService.sniff(this.optionsService.dir(), this.optionsService.depth());
@@ -35,10 +27,7 @@ export class ChannelsService {
 		return this._channels;
 	}
 
-	/**
-	 * Ensure that all channels refers to the same project
-	 * @throws {Error}
-	 */
+	/** Ensure that all channels refers to the same project */
 	public async ensureSameProject(): Promise<void> {
 		const channels = await this.channels();
 		const firstProject = channels[0].config.project;
@@ -49,10 +38,7 @@ export class ChannelsService {
 		}
 	}
 
-	/**
-	 * Ensure that all channels define the same default fields
-	 * @throws {Error}
-	 */
+	/** Ensure that all channels define the same default fields */
 	public async ensureSameDefaultFields(): Promise<void> {
 		// Get defined fields
 		const channels = await this.channels();
@@ -90,11 +76,7 @@ export class ChannelsService {
 		}
 	}
 
-	/**
-	 * Returns the first models collection
-	 * @return {ModelsCollection}
-	 * @throws {Error}
-	 */
+	/** Returns the first models collection */
 	public async modelsCollection(): Promise<ModelsCollection> {
 		const channels = await this.channels();
 		return channels[0].modelsCollection;
@@ -103,10 +85,6 @@ export class ChannelsService {
 	/**
 	 * This method detect all channels in the directory and its sub-directories, and create instances for them.
 	 * We can define the depth level of subdirectories.
-	 * @param {string} path
-	 * @param {number} depth  Default: 2
-	 * @param {number} from  Default: path
-	 * @return {Channel[]}
 	 */
 	private static async sniff(path: string, depth: number = 2, from: string = path): Promise<Channel[]> {
 		// Get channels in sub-directories first

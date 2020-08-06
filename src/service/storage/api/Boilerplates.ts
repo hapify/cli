@@ -34,19 +34,16 @@ export interface IApiBoilerplate {
 
 @Service()
 export class BoilerplatesApiStorageService extends BaseApiStorageService<IBoilerplate, IApiBoilerplate, BoilerplatesSearchParams> {
-	/** @inheritDoc */
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
 		s._limit = this.remoteConfig.boilerplatesLimit;
 		return s;
 	}
 
-	/** @inheritDoc */
 	protected path(): string {
 		return 'boilerplate';
 	}
 
-	/** @inheritDoc */
 	protected fromApi(object: IApiBoilerplate): IBoilerplate {
 		return {
 			id: object._id,

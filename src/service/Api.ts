@@ -48,7 +48,6 @@ export class ApiService {
 	/** Http client */
 	private http: AxiosInstance;
 
-	/** Constructor */
 	constructor(private optionsService: OptionsService) {}
 
 	/** Create and get the http client */

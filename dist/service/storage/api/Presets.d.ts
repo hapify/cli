@@ -20,11 +20,8 @@ export interface IApiPreset {
     models?: IApiModel[];
 }
 export declare class PresetsApiStorageService extends BaseApiStorageService<IPreset, IApiPreset, PresetsSearchParams> {
-    /** @inheritDoc */
     protected defaultSearchParams(): any;
-    /** @inheritDoc */
     protected path(): string;
-    /** @inheritDoc */
     protected fromApi(object: IApiPreset): IPreset;
 }
 export {};

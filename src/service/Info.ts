@@ -8,7 +8,6 @@ export class InfoService {
 	/** Stores the default fields */
 	private _fields: IField[];
 
-	/** Constructor */
 	constructor(private channelsService: ChannelsService) {}
 
 	/** Get the project once and returns it */

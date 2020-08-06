@@ -47,14 +47,8 @@ const Path = __importStar(require("path"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
 const jszip_1 = __importDefault(require("jszip"));
 let WriterService = class WriterService {
-    /** Constructor */
     constructor() { }
-    /**
-     * Zip results and write to disk
-     * @param {string} path
-     * @param {IGeneratorResult[]} results
-     * @return {Promise<void>}
-     */
+    /** Zip results and write to disk */
     zip(path, results) {
         return __awaiter(this, void 0, void 0, function* () {
             // Create ZIP
@@ -75,12 +69,7 @@ let WriterService = class WriterService {
             Fs.writeFileSync(path, content);
         });
     }
-    /**
-     * Write results to disk
-     * @param {string} root
-     * @param {IGeneratorResult[]} results
-     * @return {Promise<void>}
-     */
+    /** Write results to disk */
     writeMany(root, results) {
         return __awaiter(this, void 0, void 0, function* () {
             for (const result of results) {
@@ -88,12 +77,7 @@ let WriterService = class WriterService {
             }
         });
     }
-    /**
-     * Write on result to disk
-     * @param {string} root
-     * @param {IGeneratorResult} result
-     * @return {Promise<void>}
-     */
+    /** Write on result to disk */
     write(root, result) {
         return __awaiter(this, void 0, void 0, function* () {
             const path = Path.join(root, result.path);

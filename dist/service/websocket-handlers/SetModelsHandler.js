@@ -43,22 +43,15 @@ const Channels_1 = require("../Channels");
 const Joi = __importStar(require("joi"));
 const Model_1 = require("../../interface/schema/Model");
 let SetModelsHandlerService = class SetModelsHandlerService {
-    /**
-     * Constructor
-     * @param channelsService
-     */
     constructor(channelsService) {
         this.channelsService = channelsService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'set:models';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.array().items(Model_1.ModelSchema).min(0);
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const modelsCollection = yield this.channelsService.modelsCollection();

@@ -15,44 +15,18 @@ export declare abstract class BaseApiStorageService<T, I, S extends BaseSearchPa
     private optionsService;
     /** Stores the remote config to use */
     protected remoteConfig: IRemoteConfig;
-    /** Constructor */
     constructor(apiService: ApiService, optionsService: OptionsService);
-    /**
-     * Create a new model
-     * @param {I} payload
-     * @return {Promise<T>}
-     */
+    /** Create a new model */
     create(payload: I): Promise<T>;
-    /**
-     * Update an model selected from it's id
-     * @param {string} id
-     * @param {T} payload
-     * @return {Promise<any>}
-     */
+    /** Update an model selected from it's id */
     update(id: string, payload: I): Promise<void>;
-    /**
-     * Get an model from it's id
-     * @param {string} id
-     * @return {Promise<T>}
-     */
+    /** Get an model from it's id */
     get(id: string): Promise<T>;
-    /**
-     * Delete an model selected from it's id
-     * @param {string} id
-     * @return {Promise<any>}
-     */
+    /** Delete an model selected from it's id */
     remove(id: string): Promise<void>;
-    /**
-     * Get list for model search
-     * @param {S} searchParams
-     * @return {Promise<T[]> >}
-     */
+    /** Get list for model search */
     list(searchParams?: S): Promise<T[]>;
-    /**
-     * Count for model
-     * @param {S} searchParams
-     * @return {Promise<number>}
-     */
+    /** Count for model */
     count(searchParams: S): Promise<number>;
     /** Get the default search params (limit, page, etc...) */
     protected defaultSearchParams(): any;

@@ -7,13 +7,11 @@ function p8(s) {
     return s ? '-' + p.substr(0, 4) + '-' + p.substr(4, 4) : p;
 }
 class Model {
-    /** Constructor */
     constructor(object) {
         if (object) {
             this.fromObject(object);
         }
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.id = object.id;
         this.name = object.name;
@@ -22,7 +20,6 @@ class Model {
         this.accesses = object.accesses;
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             id: this.id,
@@ -35,8 +32,6 @@ class Model {
     /**
      * Randomly generate id
      *
-     * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
-     * @returns {string}
      */
     static generateTempId() {
         return p8() + p8(true) + p8(true) + p8();

@@ -44,24 +44,17 @@ const Joi = __importStar(require("joi"));
 const Model_1 = require("../../class/Model");
 const Model_2 = require("../../interface/schema/Model");
 let ApplyPresetHandlerService = class ApplyPresetHandlerService {
-    /**
-     * Constructor
-     * @param presetsService
-     */
     constructor(presetsService) {
         this.presetsService = presetsService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'apply:presets';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.object({
             models: Joi.array().items(Model_2.ModelSchema).required().min(0),
         });
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = message.data.models.map((m) => new Model_1.Model(m));

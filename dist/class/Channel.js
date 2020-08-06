@@ -44,21 +44,15 @@ const Channel_1 = require("../service/storage/file/Channel");
 const Config_1 = require("../interface/schema/Config");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 class Channel {
-    /**
-     * Constructor
-     * @param {string} path
-     * @param {string|null} name
-     */
     constructor(path, name = null) {
         this.path = path;
-        /** @type {Template[]} Templates instances */
+        /** Templates instances */
         this.templates = [];
         this.storageService = typedi_1.Container.get(Channel_1.ChannelFileStorageService);
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
         this.templatesPath = Path.join(this.path, Channel.defaultFolder);
     }
-    /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             // Validate storage
@@ -93,7 +87,6 @@ class Channel {
             yield this.validator.load();
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             // Saves subs instances
@@ -116,26 +109,17 @@ class Channel {
             yield this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
         });
     }
-    /**
-     * Denotes if the template should be considered as empty
-     * @returns {boolean}
-     */
+    /** Denotes if the template should be considered as empty */
     isEmpty() {
         const validatorIsEmpty = this.validator.isEmpty();
         const templatesAreEmpty = this.templates.every((t) => t.isEmpty());
         return validatorIsEmpty && templatesAreEmpty;
     }
-    /**
-     * Remove empty templates
-     * @returns {void}
-     */
+    /** Remove empty templates */
     filter() {
         this.templates = this.templates.filter((t) => !t.isEmpty());
     }
-    /**
-     * Check resource validity
-     * @throws {Error}
-     */
+    /** Check resource validity */
     validate() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(yield this.storageService.exists([this.path, Channel.configFile]))) {
@@ -218,7 +202,6 @@ class Channel {
             return channel;
         });
     }
-    /** @inheritDoc */
     fromObject(object) {
         // Do not update name nor id
         // Create or update templates if necessary
@@ -236,7 +219,6 @@ class Channel {
         this.validator.content = object.validator;
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             id: this.id,
@@ -249,8 +231,6 @@ class Channel {
     }
 }
 exports.Channel = Channel;
-/** @type {string} */
 Channel.defaultFolder = 'hapify';
-/** @type {string} */
 Channel.configFile = 'hapify.json';
 //# sourceMappingURL=Channel.js.map

@@ -7,23 +7,16 @@ import { IChannel } from '../../interface/Objects';
 
 @Service()
 export class SetChannelsHandlerService implements IWebSocketHandler {
-	/**
-	 * Constructor
-	 * @param channelsService
-	 */
 	constructor(private channelsService: ChannelsService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'set:channels';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.array().items(ChannelSchema).min(0);
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		// Existing channels
 		const channels = await this.channelsService.channels();

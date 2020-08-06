@@ -7,27 +7,18 @@ import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
 
 @Service()
 export class GenerateChannelHandlerService implements IWebSocketHandler {
-	/**
-	 * Constructor
-	 * @param {ChannelsService} channelsService
-	 * @param {GeneratorService} generatorService
-	 * @param {WriterService} writerService
-	 */
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService, private writerService: WriterService) {}
 
-	/** @inheritDoc */
 	canHandle(message: WebSocket): boolean {
 		return message.id === 'gen:channel';
 	}
 
-	/** @inheritDoc */
 	validator(): Joi.Schema {
 		return Joi.object({
 			channel: Joi.string().required(),
 		});
 	}
 
-	/** @inheritDoc */
 	async handle(message: WebSocket): Promise<any> {
 		// Get channel
 		const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);

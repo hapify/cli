@@ -44,28 +44,19 @@ const Generator_1 = require("../Generator");
 const Writer_1 = require("../Writer");
 const Joi = __importStar(require("joi"));
 let GenerateChannelHandlerService = class GenerateChannelHandlerService {
-    /**
-     * Constructor
-     * @param {ChannelsService} channelsService
-     * @param {GeneratorService} generatorService
-     * @param {WriterService} writerService
-     */
     constructor(channelsService, generatorService, writerService) {
         this.channelsService = channelsService;
         this.generatorService = generatorService;
         this.writerService = writerService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'gen:channel';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.object({
             channel: Joi.string().required(),
         });
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             // Get channel

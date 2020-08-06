@@ -14,19 +14,12 @@ const typedi_1 = require("typedi");
 const Model_1 = require("./Model");
 const Models_1 = require("../service/storage/api/Models");
 class ModelsCollection {
-    /**
-     * Constructor
-     * @param {string} project
-     */
     constructor(project) {
         this.project = project;
         this.storageService = typedi_1.Container.get(Models_1.ModelsApiStorageService);
         this.path = ModelsCollection.path(project);
     }
-    /**
-     * Returns a singleton for this config
-     * @param {string} project
-     */
+    /** Returns a singleton for this config */
     static getInstance(project) {
         return __awaiter(this, void 0, void 0, function* () {
             const path = ModelsCollection.path(project);
@@ -43,13 +36,11 @@ class ModelsCollection {
             return collection;
         });
     }
-    /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             this.fromObject(yield this.storageService.forProject(this.project));
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield this.storageService.set(this.project, this.toObject());
@@ -96,38 +87,26 @@ class ModelsCollection {
             }
         });
     }
-    /**
-     * Find a instance with its id
-     * @param {string} id
-     * @returns {Promise<Model|null>}
-     */
+    /** Find a instance with its id */
     find(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.models.find((instance) => instance.id === id);
         });
     }
-    /**
-     * Returns the list of models
-     * @returns {Promise<Model[]>}
-     */
+    /** Returns the list of models */
     list() {
         return __awaiter(this, void 0, void 0, function* () {
             return this.models;
         });
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.models = object.map((m) => new Model_1.Model(m));
         return this.models;
     }
-    /** @inheritDoc */
     toObject() {
         return this.models.map((m) => m.toObject());
     }
-    /**
-     * Returns a pseudo path
-     * @returns {string}
-     */
+    /** Returns a pseudo path */
     static path(project) {
         return `project:${project}`;
     }

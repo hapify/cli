@@ -11,11 +11,8 @@ export interface IApiProject {
     owner?: string | any;
 }
 export declare class ProjectsApiStorageService extends BaseApiStorageService<IProject, IApiProject, ProjectsSearchParams> {
-    /** @inheritDoc */
     protected defaultSearchParams(): any;
-    /** @inheritDoc */
     protected path(): string;
-    /** @inheritDoc */
     protected fromApi(object: IApiProject): IProject;
 }
 export {};

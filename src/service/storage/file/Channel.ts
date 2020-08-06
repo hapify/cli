@@ -6,11 +6,9 @@ import { IConfig } from '../../../interface/Config';
 
 @Service()
 export class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
-	/** @inheritDoc */
 	protected async serialize(content: IConfig): Promise<string> {
 		return JSON.stringify(content, null, 2);
 	}
-	/** @inheritDoc */
 	protected async deserialize(content: string): Promise<IConfig> {
 		try {
 			return JSON.parse(content);

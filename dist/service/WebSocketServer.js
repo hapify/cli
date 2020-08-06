@@ -64,25 +64,20 @@ const GenerateTemplateHandler_1 = require("./websocket-handlers/GenerateTemplate
 const WebSocket_1 = require("../interface/WebSocket");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 let WebSocketServerService = class WebSocketServerService {
-    /**
-     * Constructor
-     * @param {OptionsService} optionsService
-     * @param {LoggerService} loggerService
-     */
     constructor(optionsService, loggerService) {
         this.optionsService = optionsService;
         this.loggerService = loggerService;
-        /** @type {string} Websocket endpoint */
+        /** Websocket endpoint */
         this.baseUri = '/websocket';
-        /** @type {string} The path to save the token */
+        /** The path to save the token */
         this.wsInfoPath = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
-        /** @type {string} Random name to generate token */
+        /** Random name to generate token */
         this.randomName = RandomString.generate({ length: 24 });
-        /** @type {string} Random secret to generate token */
+        /** Random secret to generate token */
         this.randomSecret = RandomString.generate({ length: 48 });
-        /** @type {string} Random secret to generate token */
+        /** Random secret to generate token */
         this.tokenExpires = 24 * 60 * 60 * 1000; // 1 day;
-        /** @type {IWebSocketHandler[]} Messages handlers */
+        /** Messages handlers */
         this.handlers = [];
         this.addHandler(typedi_1.Container.get(ApplyPresetHandler_1.ApplyPresetHandlerService));
         this.addHandler(typedi_1.Container.get(GetModelsHandler_1.GetModelsHandlerService));
@@ -102,8 +97,6 @@ let WebSocketServerService = class WebSocketServerService {
      * Starts the http server
      * Check if running before starting
      * Every connection is checked against a JWT
-     * @param {"http".Server} httpServer
-     * @return {Promise<void>}
      */
     serve(httpServer) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -230,7 +223,6 @@ let WebSocketServerService = class WebSocketServerService {
     /**
      * Stops the http server
      * Check if running before stop
-     * @return {Promise<void>}
      */
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -260,24 +252,15 @@ let WebSocketServerService = class WebSocketServerService {
             }
         }
     }
-    /**
-     * Denotes if the HTTP server is running
-     * @return {boolean}
-     */
+    /** Denotes if the HTTP server is running */
     started() {
         return this.server && this.serverStarted;
     }
-    /**
-     * Add a new handler
-     * @param {IWebSocketHandler} handler
-     */
+    /** Add a new handler */
     addHandler(handler) {
         this.handlers.push(handler);
     }
-    /**
-     * Create and store token
-     * @return {Promise<void>}
-     */
+    /** Create and store token */
     createToken() {
         return __awaiter(this, void 0, void 0, function* () {
             const wsAddress = this.server.address();
@@ -290,10 +273,7 @@ let WebSocketServerService = class WebSocketServerService {
             Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
         });
     }
-    /**
-     * Remove the token
-     * @return {Promise<void>}
-     */
+    /** Remove the token */
     deleteToken() {
         return __awaiter(this, void 0, void 0, function* () {
             if (Fs.existsSync(this.wsInfoPath)) {
@@ -301,10 +281,7 @@ let WebSocketServerService = class WebSocketServerService {
             }
         });
     }
-    /**
-     * Create a unique id
-     * @return {string}
-     */
+    /** Create a unique id */
     makeId() {
         let text = '';
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

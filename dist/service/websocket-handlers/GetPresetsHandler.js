@@ -42,22 +42,15 @@ const typedi_1 = require("typedi");
 const Presets_1 = require("../Presets");
 const Joi = __importStar(require("joi"));
 let GetPresetsHandlerService = class GetPresetsHandlerService {
-    /**
-     * Constructor
-     * @param presetsService
-     */
     constructor(presetsService) {
         this.presetsService = presetsService;
     }
-    /** @inheritDoc */
     canHandle(message) {
         return message.id === 'get:presets';
     }
-    /** @inheritDoc */
     validator() {
         return Joi.any();
     }
-    /** @inheritDoc */
     handle(message) {
         return __awaiter(this, void 0, void 0, function* () {
             return (yield this.presetsService.collection()).toObject();

@@ -12,17 +12,9 @@ interface RichError extends Error {
 
 @Service()
 export class LoggerService {
-	/**
-	 * Constructor
-	 * @param {OptionsService} optionsService
-	 */
 	constructor(private optionsService: OptionsService) {}
 
-	/**
-	 * Handle an error
-	 * @param {Error} error
-	 * @return {LoggerService}
-	 */
+	/** Handle an error */
 	handle(error: Error): LoggerService {
 		let message = '✖ ';
 		if ((<RichError>error).data) {
@@ -37,41 +29,25 @@ export class LoggerService {
 		return this;
 	}
 
-	/**
-	 * Display a message
-	 * @param {string} message
-	 * @return {LoggerService}
-	 */
+	/** Display a message */
 	raw(message: string): LoggerService {
 		console.log(message);
 		return this;
 	}
 
-	/**
-	 * Display a success message
-	 * @param {string} message
-	 * @return {LoggerService}
-	 */
+	/** Display a success message */
 	success(message: string): LoggerService {
 		console.log(`${chalk.green('✓')} ${message}`);
 		return this;
 	}
 
-	/**
-	 * Display an info
-	 * @param {string} message
-	 * @return {LoggerService}
-	 */
+	/** Display an info */
 	info(message: string): LoggerService {
 		console.log(`${chalk.blueBright('•')} ${message}`);
 		return this;
 	}
 
-	/**
-	 * Display an info if in debug mode
-	 * @param {string} message
-	 * @return {LoggerService}
-	 */
+	/** Display an info if in debug mode */
 	debug(message: string): LoggerService {
 		if (this.optionsService.debug()) {
 			console.log(`${chalk.cyan('*')} ${message}`);
@@ -79,48 +55,31 @@ export class LoggerService {
 		return this;
 	}
 
-	/**
-	 * Display an error
-	 * @param {string} message
-	 */
+	/** Display an error */
 	error(message: string): LoggerService {
 		console.log(`${chalk.red('✖')} ${message}`);
 		return this;
 	}
 
-	/**
-	 * Add new lines
-	 * @param {number} count
-	 * @return {LoggerService}
-	 */
+	/** Add new lines */
 	newLine(count: number = 1): LoggerService {
 		console.log(`\n`.repeat(count - 1));
 		return this;
 	}
 
-	/**
-	 * Display an error
-	 * @param {string} message
-	 * @return {LoggerService}
-	 */
+	/** Display an error */
 	warning(message: string): LoggerService {
 		console.log(`${chalk.yellow('!')} ${message}`);
 		return this;
 	}
 
-	/**
-	 * Display ascii art
-	 * @return {LoggerService}
-	 */
+	/** Display ascii art */
 	art(): LoggerService {
 		console.log(this.getArt());
 		return this;
 	}
 
-	/**
-	 * Get ascii art
-	 * @return {string}
-	 */
+	/** Get ascii art */
 	getArt(): string {
 		return chalk.magentaBright(
 			'  _    _             _  __       \n' +
@@ -134,10 +93,7 @@ export class LoggerService {
 		);
 	}
 
-	/**
-	 * Display the running time
-	 * @return {LoggerService}
-	 */
+	/** Display the running time */
 	time(): LoggerService {
 		if (this.optionsService.debug()) {
 			const message = `Process ran in ${process.uptime()}`;

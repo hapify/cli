@@ -12,14 +12,13 @@ export class PresetsCollection implements IStorable, ISerializable<IPreset[], Pr
 	set storageService(value: PresetsApiStorageService) {
 		this._storageService = value;
 	}
-	/** @type {Preset[]} The list of preset instances */
+	/** The list of preset instances */
 	private presets: Preset[] = [];
 	/** Presets storage */
 	private _storageService: PresetsApiStorageService;
-	/** @type {string} The loaded instance */
+	/** The loaded instance */
 	private static instance: PresetsCollection;
 
-	/** Constructor */
 	private constructor() {
 		this._storageService = Container.get(PresetsApiStorageService);
 	}
@@ -34,42 +33,30 @@ export class PresetsCollection implements IStorable, ISerializable<IPreset[], Pr
 		return PresetsCollection.instance;
 	}
 
-	/**
-	 * Load the presets
-	 * @return {Promise<void>}
-	 */
+	/** Load the presets */
 	async load(): Promise<void> {
 		this.fromObject(await this._storageService.list());
 	}
 
-	/** @inheritDoc */
 	async save(): Promise<void> {
 		// Nothing to save
 	}
 
-	/**
-	 * Returns the list of presets
-	 * @returns {Promise<Preset[]>}
-	 */
+	/** Returns the list of presets */
 	async list(): Promise<Preset[]> {
 		return this.presets;
 	}
 
-	/**
-	 * Returns one preset
-	 * @returns {Promise<Preset>}
-	 */
+	/** Returns one preset */
 	async get(id: string): Promise<Preset> {
 		return this.presets.find((p) => p.id === id);
 	}
 
-	/** @inheritDoc */
 	public fromObject(object: IPreset[]): Preset[] {
 		this.presets = object.map((p) => new Preset(p));
 		return this.presets;
 	}
 
-	/** @inheritDoc */
 	public toObject(): IPreset[] {
 		return this.presets.map((p) => p.toObject());
 	}

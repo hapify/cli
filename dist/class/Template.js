@@ -14,7 +14,6 @@ const typedi_1 = require("typedi");
 const Template_1 = require("../service/storage/file/Template");
 const String_1 = require("../service/String");
 class Template {
-    /** Constructor */
     constructor(parent, object) {
         this.parent = parent;
         this.storageService = typedi_1.Container.get(Template_1.TemplatesFileStorageService);
@@ -22,7 +21,6 @@ class Template {
             this.fromObject(object);
         }
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.path = object.path;
         this.engine = object.engine;
@@ -31,7 +29,6 @@ class Template {
         this.contentPath = Template.computeContentPath(this);
         return this;
     }
-    /** @inheritDoc */
     toObject() {
         return {
             path: this.path,
@@ -40,51 +37,34 @@ class Template {
             content: this.content,
         };
     }
-    /**
-     * Denotes if the template should be considered as empty
-     * @returns {boolean}
-     */
+    /** Denotes if the template should be considered as empty */
     isEmpty() {
         return typeof this.content !== 'string' || this.content.trim().length === 0;
     }
-    /**
-     * Denotes if the template needs a specific model to be generated
-     * @returns {boolean}
-     */
+    /** Denotes if the template needs a specific model to be generated */
     needsModel() {
         return this.input === 'one';
     }
-    /**
-     * Get the extension of the input file
-     * @returns {string}
-     */
+    /** Get the extension of the input file */
     extension() {
         return Template.computeExtension(this);
     }
-    /**
-     * Get the parent channel
-     * @returns {Channel}
-     */
+    /** Get the parent channel */
     channel() {
         return this.parent;
     }
-    /** @inheritDoc */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate();
             this.content = yield this.storageService.get([this.parent.templatesPath, this.contentPath]);
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
         });
     }
-    /**
-     * Check resource validity
-     * @throws {Error}
-     */
+    /** Check resource validity */
     validate() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(yield this.storageService.exists([this.parent.templatesPath, this.contentPath]))) {
@@ -92,11 +72,7 @@ class Template {
             }
         });
     }
-    /**
-     * Compute the content path from the dynamic path
-     * @param {Template|IConfigTemplate} template
-     * @return {string}
-     */
+    /** Compute the content path from the dynamic path */
     static computeContentPath(template) {
         // Get string service
         const stringService = typedi_1.Container.get(String_1.StringService);
@@ -108,11 +84,7 @@ class Template {
         }
         return `${path}.${Template.computeExtension(template)}`;
     }
-    /**
-     * Compute the extension of the template
-     * @param {Template|IConfigTemplate} template
-     * @return {string}
-     */
+    /** Compute the extension of the template */
     static computeExtension(template) {
         if (template.engine === 'hpf') {
             return 'hpf';
@@ -121,6 +93,5 @@ class Template {
     }
 }
 exports.Template = Template;
-/** @type {string} */
 Template.defaultFolder = 'model';
 //# sourceMappingURL=Template.js.map

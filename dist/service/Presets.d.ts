@@ -9,18 +9,9 @@ export interface PresetMergeResults {
 export declare class PresetsService {
     private channelsService;
     private infoService;
-    /**
-     * Constructor
-     */
     constructor(channelsService: ChannelsService, infoService: InfoService);
-    /**
-     * Returns the presets collection
-     * @return {PresetsCollection}
-     * @throws {Error}
-     */
+    /** Returns the presets collection */
     collection(): Promise<PresetsCollection>;
-    /**
-     * Apply one preset to models
-     */
+    /** Apply one preset to models */
     apply(presetModels: Model[]): Promise<PresetMergeResults>;
 }

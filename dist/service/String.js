@@ -32,15 +32,10 @@ exports.StringService = void 0;
 const typedi_1 = require("typedi");
 const Case = __importStar(require("case"));
 let StringService = class StringService {
-    /**
-     * Constructor
-     */
     constructor() { }
     /**
      * Returns the string with all formats
      *
-     * @param {string} value
-     * @returns {string}
      */
     variants(value) {
         return {

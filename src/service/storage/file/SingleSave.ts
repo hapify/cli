@@ -37,20 +37,13 @@ export abstract class SingleSaveFileStorage<T> {
 	protected abstract async serialize(content: T): Promise<string>;
 	/** Convert content to string before saving */
 	protected abstract async deserialize(content: string): Promise<T>;
-	/**
-	 * Should be called after loading to hash the content
-	 * @param {string} bucket
-	 * @param {string} data
-	 */
+	/** Should be called after loading to hash the content */
 	protected didLoad(bucket: string, data: string): void {
 		this.contentMd5[bucket] = md5(data);
 	}
 	/**
 	 * Denotes if the data has changed and update the hash if necessary
 	 * This method should not be called twice at the same time as it updates the hash.
-	 * @param {string} bucket
-	 * @param {string} data
-	 * @return {boolean}
 	 */
 	protected shouldSave(bucket: string, data: string): boolean {
 		const contentMd5 = md5(data);

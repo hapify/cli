@@ -45,16 +45,10 @@ const Internal_1 = require("../config/Internal");
 const RichError_1 = require("../class/RichError");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 let ValidatorService = class ValidatorService {
-    /**
-     * Constructor
-     */
     constructor() { }
     /**
      * Run validation on a single model for a single channel
      *
-     * @param {string} content
-     * @param {IModel} model
-     * @return {Promise<Validator>}
      */
     run(content, model) {
         return __awaiter(this, void 0, void 0, function* () {

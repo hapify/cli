@@ -14,9 +14,8 @@ const typedi_1 = require("typedi");
 const Preset_1 = require("./Preset");
 const Presets_1 = require("../service/storage/api/Presets");
 class PresetsCollection {
-    /** Constructor */
     constructor() {
-        /** @type {Preset[]} The list of preset instances */
+        /** The list of preset instances */
         this.presets = [];
         this._storageService = typedi_1.Container.get(Presets_1.PresetsApiStorageService);
     }
@@ -37,45 +36,33 @@ class PresetsCollection {
             return PresetsCollection.instance;
         });
     }
-    /**
-     * Load the presets
-     * @return {Promise<void>}
-     */
+    /** Load the presets */
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             this.fromObject(yield this._storageService.list());
         });
     }
-    /** @inheritDoc */
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             // Nothing to save
         });
     }
-    /**
-     * Returns the list of presets
-     * @returns {Promise<Preset[]>}
-     */
+    /** Returns the list of presets */
     list() {
         return __awaiter(this, void 0, void 0, function* () {
             return this.presets;
         });
     }
-    /**
-     * Returns one preset
-     * @returns {Promise<Preset>}
-     */
+    /** Returns one preset */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return this.presets.find((p) => p.id === id);
         });
     }
-    /** @inheritDoc */
     fromObject(object) {
         this.presets = object.map((p) => new Preset_1.Preset(p));
         return this.presets;
     }
-    /** @inheritDoc */
     toObject() {
         return this.presets.map((p) => p.toObject());
     }

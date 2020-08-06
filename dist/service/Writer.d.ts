@@ -1,26 +1,10 @@
 import { IGeneratorResult } from '../interface/Generator';
 export declare class WriterService {
-    /** Constructor */
     constructor();
-    /**
-     * Zip results and write to disk
-     * @param {string} path
-     * @param {IGeneratorResult[]} results
-     * @return {Promise<void>}
-     */
+    /** Zip results and write to disk */
     zip(path: string, results: IGeneratorResult[]): Promise<void>;
-    /**
-     * Write results to disk
-     * @param {string} root
-     * @param {IGeneratorResult[]} results
-     * @return {Promise<void>}
-     */
+    /** Write results to disk */
     writeMany(root: string, results: IGeneratorResult[]): Promise<void>;
-    /**
-     * Write on result to disk
-     * @param {string} root
-     * @param {IGeneratorResult} result
-     * @return {Promise<void>}
-     */
+    /** Write on result to disk */
     write(root: string, result: IGeneratorResult): Promise<void>;
 }

@@ -7,15 +7,9 @@ import { IGeneratorResult } from '../interface/Generator';
 
 @Service()
 export class WriterService {
-	/** Constructor */
 	constructor() {}
 
-	/**
-	 * Zip results and write to disk
-	 * @param {string} path
-	 * @param {IGeneratorResult[]} results
-	 * @return {Promise<void>}
-	 */
+	/** Zip results and write to disk */
 	async zip(path: string, results: IGeneratorResult[]): Promise<void> {
 		// Create ZIP
 		const zip = new JSZip();
@@ -35,24 +29,14 @@ export class WriterService {
 		Fs.writeFileSync(path, content);
 	}
 
-	/**
-	 * Write results to disk
-	 * @param {string} root
-	 * @param {IGeneratorResult[]} results
-	 * @return {Promise<void>}
-	 */
+	/** Write results to disk */
 	async writeMany(root: string, results: IGeneratorResult[]): Promise<void> {
 		for (const result of results) {
 			await this.write(root, result);
 		}
 	}
 
-	/**
-	 * Write on result to disk
-	 * @param {string} root
-	 * @param {IGeneratorResult} result
-	 * @return {Promise<void>}
-	 */
+	/** Write on result to disk */
 	async write(root: string, result: IGeneratorResult): Promise<void> {
 		const path = Path.join(root, result.path);
 		mkdirp.sync(Path.dirname(path));

@@ -3,16 +3,9 @@ import { ProjectsCollection } from '../class/ProjectsCollection';
 
 @Service()
 export class ProjectsService {
-	/**
-	 * Constructor
-	 */
 	constructor() {}
 
-	/**
-	 * Returns the projects collection
-	 * @return {ProjectsCollection}
-	 * @throws {Error}
-	 */
+	/** Returns the projects collection */
 	async collection(): Promise<ProjectsCollection> {
 		return await ProjectsCollection.getInstance();
 	}
