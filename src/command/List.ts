@@ -54,6 +54,6 @@ export async function ListCommand(cmd: Command) {
 
 		logger.time();
 	} catch (error) {
-		logger.handle(error);
+		logger.handleAndExit(error);
 	}
 }

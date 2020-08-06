@@ -78,20 +78,13 @@ let SingleSaveFileStorage = class SingleSaveFileStorage {
             return Fs.existsSync(JoinPath(path));
         });
     }
-    /**
-     * Should be called after loading to hash the content
-     * @param {string} bucket
-     * @param {string} data
-     */
+    /** Should be called after loading to hash the content */
     didLoad(bucket, data) {
         this.contentMd5[bucket] = md5_1.default(data);
     }
     /**
      * Denotes if the data has changed and update the hash if necessary
      * This method should not be called twice at the same time as it updates the hash.
-     * @param {string} bucket
-     * @param {string} data
-     * @return {boolean}
      */
     shouldSave(bucket, data) {
         const contentMd5 = md5_1.default(data);

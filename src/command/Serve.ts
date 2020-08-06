@@ -31,6 +31,6 @@ export async function ServeCommand(cmd: Command) {
 
 		logger.time();
 	} catch (error) {
-		logger.handle(error);
+		logger.handleAndExit(error);
 	}
 }

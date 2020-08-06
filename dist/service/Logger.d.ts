@@ -3,25 +3,27 @@ export declare class LoggerService {
     private optionsService;
     constructor(optionsService: OptionsService);
     /** Handle an error */
-    handle(error: Error): LoggerService;
+    handle(error: Error): this;
+    /** Handle an error */
+    handleAndExit(error: Error, code?: number): this;
     /** Display a message */
-    raw(message: string): LoggerService;
+    raw(message: string): this;
     /** Display a success message */
-    success(message: string): LoggerService;
+    success(message: string): this;
     /** Display an info */
-    info(message: string): LoggerService;
+    info(message: string): this;
     /** Display an info if in debug mode */
-    debug(message: string): LoggerService;
+    debug(message: string): this;
     /** Display an error */
-    error(message: string): LoggerService;
+    error(message: string): this;
     /** Add new lines */
-    newLine(count?: number): LoggerService;
+    newLine(count?: number): this;
     /** Display an error */
-    warning(message: string): LoggerService;
+    warning(message: string): this;
     /** Display ascii art */
-    art(): LoggerService;
+    art(): this;
     /** Get ascii art */
     getArt(): string;
     /** Display the running time */
-    time(): LoggerService;
+    time(): this;
 }

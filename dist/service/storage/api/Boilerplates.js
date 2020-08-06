@@ -10,17 +10,14 @@ exports.BoilerplatesApiStorageService = void 0;
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
 let BoilerplatesApiStorageService = class BoilerplatesApiStorageService extends Base_1.BaseApiStorageService {
-    /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
         s._limit = this.remoteConfig.boilerplatesLimit;
         return s;
     }
-    /** @inheritDoc */
     path() {
         return 'boilerplate';
     }
-    /** @inheritDoc */
     fromApi(object) {
         return {
             id: object._id,

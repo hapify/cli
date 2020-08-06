@@ -10,17 +10,14 @@ exports.PresetsApiStorageService = void 0;
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
 let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.BaseApiStorageService {
-    /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
         s._limit = this.remoteConfig.presetsLimit;
         return s;
     }
-    /** @inheritDoc */
     path() {
         return 'preset';
     }
-    /** @inheritDoc */
     fromApi(object) {
         return {
             id: object._id,

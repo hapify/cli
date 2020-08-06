@@ -42,6 +42,6 @@ export async function PatchCommand(cmd: Command) {
 
 		logger.time();
 	} catch (error) {
-		logger.handle(error);
+		logger.handleAndExit(error);
 	}
 }

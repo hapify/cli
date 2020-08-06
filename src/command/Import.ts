@@ -32,6 +32,6 @@ export async function ImportCommand(cmd: Command) {
 
 		logger.time();
 	} catch (error) {
-		logger.handle(error);
+		logger.handleAndExit(error);
 	}
 }

@@ -44,6 +44,6 @@ export async function ConfigCommand(cmd: Command) {
 
 		logger.time();
 	} catch (error) {
-		logger.handle(error);
+		logger.handleAndExit(error);
 	}
 }

@@ -29,71 +29,45 @@ let BaseApiStorageService =
  * S: Search params
  */
 class BaseApiStorageService {
-    /** Constructor */
     constructor(apiService, optionsService) {
         this.apiService = apiService;
         this.optionsService = optionsService;
         this.remoteConfig = optionsService.remoteConfig();
     }
-    /**
-     * Create a new model
-     * @param {I} payload
-     * @return {Promise<T>}
-     */
+    /** Create a new model */
     create(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.post(`${this.path()}`, payload)).data;
             return this.fromApi(output);
         });
     }
-    /**
-     * Update an model selected from it's id
-     * @param {string} id
-     * @param {T} payload
-     * @return {Promise<any>}
-     */
+    /** Update an model selected from it's id */
     update(id, payload) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.apiService.patch(`${this.path()}/${id}`, payload);
         });
     }
-    /**
-     * Get an model from it's id
-     * @param {string} id
-     * @return {Promise<T>}
-     */
+    /** Get an model from it's id */
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.get(`${this.path()}/${id}`)).data;
             return this.fromApi(output);
         });
     }
-    /**
-     * Delete an model selected from it's id
-     * @param {string} id
-     * @return {Promise<any>}
-     */
+    /** Delete an model selected from it's id */
     remove(id) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.apiService.delete(`${this.path()}/${id}`);
         });
     }
-    /**
-     * Get list for model search
-     * @param {S} searchParams
-     * @return {Promise<T[]> >}
-     */
+    /** Get list for model search */
     list(searchParams) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.get(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
             return output.map((o) => this.fromApi(o));
         });
     }
-    /**
-     * Count for model
-     * @param {S} searchParams
-     * @return {Promise<number>}
-     */
+    /** Count for model */
     count(searchParams) {
         return __awaiter(this, void 0, void 0, function* () {
             // Remove unwanted properties

@@ -34,6 +34,12 @@ let LoggerService = class LoggerService {
         console.error(chalk_1.default.red(message));
         return this;
     }
+    /** Handle an error */
+    handleAndExit(error, code = 1) {
+        this.handle(error);
+        process.exit(code);
+        return this;
+    }
     /** Display a message */
     raw(message) {
         console.log(message);

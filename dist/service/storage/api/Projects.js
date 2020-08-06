@@ -10,17 +10,14 @@ exports.ProjectsApiStorageService = void 0;
 const typedi_1 = require("typedi");
 const Base_1 = require("./Base");
 let ProjectsApiStorageService = class ProjectsApiStorageService extends Base_1.BaseApiStorageService {
-    /** @inheritDoc */
     defaultSearchParams() {
         const s = super.defaultSearchParams();
         s._limit = this.remoteConfig.projectsLimit;
         return s;
     }
-    /** @inheritDoc */
     path() {
         return 'project';
     }
-    /** @inheritDoc */
     fromApi(object) {
         return {
             id: object._id,

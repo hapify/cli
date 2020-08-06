@@ -15,7 +15,7 @@ export class LoggerService {
 	constructor(private optionsService: OptionsService) {}
 
 	/** Handle an error */
-	handle(error: Error): LoggerService {
+	handle(error: Error): this {
 		let message = '✖ ';
 		if ((<RichError>error).data) {
 			const data = (<RichError>error).data;
@@ -28,27 +28,33 @@ export class LoggerService {
 		console.error(chalk.red(message));
 		return this;
 	}
+	/** Handle an error */
+	handleAndExit(error: Error, code = 1): this {
+		this.handle(error);
+		process.exit(code);
+		return this;
+	}
 
 	/** Display a message */
-	raw(message: string): LoggerService {
+	raw(message: string): this {
 		console.log(message);
 		return this;
 	}
 
 	/** Display a success message */
-	success(message: string): LoggerService {
+	success(message: string): this {
 		console.log(`${chalk.green('✓')} ${message}`);
 		return this;
 	}
 
 	/** Display an info */
-	info(message: string): LoggerService {
+	info(message: string): this {
 		console.log(`${chalk.blueBright('•')} ${message}`);
 		return this;
 	}
 
 	/** Display an info if in debug mode */
-	debug(message: string): LoggerService {
+	debug(message: string): this {
 		if (this.optionsService.debug()) {
 			console.log(`${chalk.cyan('*')} ${message}`);
 		}
@@ -56,25 +62,25 @@ export class LoggerService {
 	}
 
 	/** Display an error */
-	error(message: string): LoggerService {
+	error(message: string): this {
 		console.log(`${chalk.red('✖')} ${message}`);
 		return this;
 	}
 
 	/** Add new lines */
-	newLine(count: number = 1): LoggerService {
+	newLine(count: number = 1): this {
 		console.log(`\n`.repeat(count - 1));
 		return this;
 	}
 
 	/** Display an error */
-	warning(message: string): LoggerService {
+	warning(message: string): this {
 		console.log(`${chalk.yellow('!')} ${message}`);
 		return this;
 	}
 
 	/** Display ascii art */
-	art(): LoggerService {
+	art(): this {
 		console.log(this.getArt());
 		return this;
 	}
@@ -94,7 +100,7 @@ export class LoggerService {
 	}
 
 	/** Display the running time */
-	time(): LoggerService {
+	time(): this {
 		if (this.optionsService.debug()) {
 			const message = `Process ran in ${process.uptime()}`;
 			console.log(message);

@@ -41,13 +41,11 @@ const SingleSave_1 = require("./SingleSave");
 const Path = __importStar(require("path"));
 const Fs = __importStar(require("fs"));
 let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileStorageService extends SingleSave_1.SingleSaveFileStorage {
-    /** @inheritDoc */
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
             return JSON.stringify(content, null, 2);
         });
     }
-    /** @inheritDoc */
     deserialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

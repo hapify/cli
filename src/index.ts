@@ -74,7 +74,7 @@ program
 	.option(
 		'--preset [id]',
 		'ids of presets to preload',
-		(val, acc) => {
+		(val, acc: string[]) => {
 			acc.push(val);
 			return acc;
 		},
@@ -94,7 +94,7 @@ program
 	.option(
 		'--preset [id]',
 		'ids of presets to preload',
-		(val, acc) => {
+		(val, acc: string[]) => {
 			acc.push(val);
 			return acc;
 		},

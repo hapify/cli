@@ -30,6 +30,6 @@ export async function KeyCommand(key: string, cmd: Command) {
 
 		logger.time();
 	} catch (error) {
-		logger.handle(error);
+		logger.handleAndExit(error);
 	}
 }

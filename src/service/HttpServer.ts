@@ -1,6 +1,5 @@
 import { Service } from 'typedi';
 import * as Path from 'path';
-import * as http from 'http';
 import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
 import { Server } from '@hapi/hapi';

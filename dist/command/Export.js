@@ -61,7 +61,7 @@ function ExportCommand(cmd) {
             logger.time();
         }
         catch (error) {
-            logger.handle(error);
+            logger.handleAndExit(error);
         }
     });
 }

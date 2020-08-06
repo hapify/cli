@@ -19,13 +19,11 @@ exports.ValidatorFileStorageService = void 0;
 const typedi_1 = require("typedi");
 const SingleSave_1 = require("./SingleSave");
 let ValidatorFileStorageService = class ValidatorFileStorageService extends SingleSave_1.SingleSaveFileStorage {
-    /** @inheritDoc */
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
             return content;
         });
     }
-    /** @inheritDoc */
     deserialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
             return content;
