@@ -1,5 +1,8 @@
 import * as Path from 'path';
 import * as ChildProcess from 'child_process';
+import * as Fs from 'fs';
+import { IGlobalConfig } from '../src/interface/Config';
+import * as Os from 'os';
 
 interface CliReturn {
 	code: number;
@@ -30,4 +33,25 @@ export function CLI(cmd: string, args: string[]): Promise<CliReturn> {
 			});
 		});
 	});
+}
+
+export function GetFileContent(path: string): string {
+	return Fs.readFileSync(Path.resolve(path), { encoding: 'utf8' });
+}
+
+export function GetJSONFileContent<T = object>(path: string): T {
+	const content = GetFileContent(path);
+	return JSON.parse(content);
+}
+
+export function GetJSONFileContentSafe<T = object>(path: string, defaultValue: T): T {
+	try {
+		const content = GetFileContent(path);
+		return JSON.parse(content);
+	} catch (e) {
+		return defaultValue;
+	}
+}
+export function GetGlobalConfig(): IGlobalConfig {
+	return GetJSONFileContentSafe<IGlobalConfig>(`${Os.homedir()}/.hapify/config.json`, {});
 }
