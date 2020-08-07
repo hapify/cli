@@ -2,8 +2,8 @@
 
 ## Short-term
 
-- Use local `hapify-generator`.
-- Import `hapify-gui` pre-built package as dependency
+- ~~Use local `hapify-generator`.~~
+- ~~Import `hapify-gui` pre-built package as dependency.~~
 - ~~Cleanup interfaces definitions.~~
 - Contextualize websocket config file with http host. We should be able to open multiple web console for multiple projects.
 - Do not override all templates on saving. We should be able to work with multiple editors simultaneously.
