@@ -38,12 +38,12 @@ class ModelsCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.fromObject(yield this.storageService.forProject(this.project));
+            this.fromObject(yield this.storageService.forProject(this.project.id));
         });
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = yield this.storageService.set(this.project, this.toObject());
+            const models = yield this.storageService.set(this.project.id, this.toObject());
             this.fromObject(models);
         });
     }
@@ -108,7 +108,7 @@ class ModelsCollection {
     }
     /** Returns a pseudo path */
     static path(project) {
-        return `project:${project}`;
+        return project.storageType === 'local' ? project.id : `project:${project.id}`;
     }
 }
 exports.ModelsCollection = ModelsCollection;

@@ -1,4 +1,4 @@
-import { Engine, IField, Input } from './Generator';
+import { Engine, IField, IModel, Input } from './Generator';
 
 export interface IConfigTemplate {
 	/** The template's path */
@@ -13,7 +13,7 @@ export interface IConfig {
 	version: string;
 	/** The channel's validation script path */
 	validatorPath: string;
-	/** The project id containing the models */
+	/** The project id containing the models or the project file path */
 	project: string;
 	/** The channel's name */
 	name?: string;
@@ -25,6 +25,16 @@ export interface IConfig {
 	defaultFields?: IField[];
 	/** The templates of the channel */
 	templates: IConfigTemplate[];
+}
+export interface IProjectConfig {
+	/** The project's configuration version */
+	version: string;
+	/** The project's name */
+	name?: string;
+	/** The project's description */
+	description?: string;
+	/** The project's model list */
+	models: IModel[];
 }
 
 export interface ILimits {

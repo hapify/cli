@@ -67,7 +67,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		}
 
 		// Load project
-		this.project = await Project.getInstance(this.config.project);
+		this.project = await Project.getInstance(this.guessProjectIdOrPath());
 
 		// Load each content file
 		for (let i = 0; i < this.config.templates.length; i++) {
@@ -77,7 +77,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		}
 
 		// Load models
-		this.modelsCollection = await ModelsCollection.getInstance(this.config.project);
+		this.modelsCollection = await ModelsCollection.getInstance(this.project);
 
 		// Load validator
 		this.validator = new Validator(this, this.config.validatorPath);
@@ -118,6 +118,14 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	/** Remove empty templates */
 	filter(): void {
 		this.templates = this.templates.filter((t) => !t.isEmpty());
+	}
+
+	/** Determines if the project is an id or not and resolve path if necessary */
+	private guessProjectIdOrPath() {
+		if (!Project.isMongoId(this.config.project) && !Path.isAbsolute(this.config.project)) {
+			return Path.resolve(this.path, this.config.project);
+		}
+		return this.config.project;
 	}
 
 	/** Check resource validity */

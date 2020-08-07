@@ -28,13 +28,13 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	}
 
 	/** Create a new model */
-	async create(payload: I): Promise<T> {
+	async create(payload: Partial<I>): Promise<T> {
 		const output: I = (await this.apiService.post(`${this.path()}`, payload)).data;
 		return this.fromApi(output);
 	}
 
 	/** Update an model selected from it's id */
-	async update(id: string, payload: I): Promise<void> {
+	async update(id: string, payload: Partial<I>): Promise<void> {
 		await this.apiService.patch(`${this.path()}/${id}`, payload);
 	}
 

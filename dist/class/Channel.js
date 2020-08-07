@@ -81,7 +81,7 @@ class Channel {
                 this.templates.push(template);
             }
             // Load models
-            this.modelsCollection = yield ModelsCollection_1.ModelsCollection.getInstance(this.config.project);
+            this.modelsCollection = yield ModelsCollection_1.ModelsCollection.getInstance(this.project);
             // Load validator
             this.validator = new Validator_1.Validator(this, this.config.validatorPath);
             yield this.validator.load();

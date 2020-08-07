@@ -24,3 +24,5 @@ export interface IStorageService<T> {
 	/** List items */
 	get(id: any): Promise<T>;
 }
+
+export type StorageType = 'local' | 'remote';
