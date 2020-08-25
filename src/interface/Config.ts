@@ -26,17 +26,6 @@ export interface IConfig {
 	/** The templates of the channel */
 	templates: IConfigTemplate[];
 }
-export interface IProjectConfig {
-	/** The project's configuration version */
-	version: string;
-	/** The project's name */
-	name?: string;
-	/** The project's description */
-	description?: string;
-	/** The project's model list */
-	models: IModel[];
-}
-
 export interface ILimits {
 	/** The max number of allowed projects */
 	projects: number;

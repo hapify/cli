@@ -4,7 +4,7 @@ import { IModel } from '../interface/Generator';
 import { Model } from './Model';
 import { Project } from './Project';
 import { ModelsApiStorageService } from '../service/storage/api/Models';
-import { ModelsFileStorageService } from '../service/storage/file/Models';
+import { ProjectFileStorageService } from '../service/storage/file/Project';
 
 export class ModelsCollection implements IStorable, ISerializable<IModel[], Model[]> {
 	/** The list of model instances */
@@ -15,11 +15,11 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 	private static instances: ModelsCollection[] = [];
 	/** Models storage */
 	private remoteStorageService: ModelsApiStorageService;
-	private localStorageService: ModelsFileStorageService;
+	private localStorageService: ProjectFileStorageService;
 
 	private constructor(private project: Project) {
 		this.remoteStorageService = Container.get(ModelsApiStorageService);
-		this.localStorageService = Container.get(ModelsFileStorageService);
+		this.localStorageService = Container.get(ProjectFileStorageService);
 		this.path = ModelsCollection.path(project);
 	}
 
@@ -42,7 +42,7 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 
 	public async load(): Promise<void> {
 		if (this.project.storageType === 'local') {
-			this.fromObject(await this.localStorageService.forProject(this.project.id));
+			this.fromObject(await this.localStorageService.getModels(this.project.id));
 		} else {
 			this.fromObject(await this.remoteStorageService.forProject(this.project.id));
 		}
