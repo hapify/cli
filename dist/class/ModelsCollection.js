@@ -13,10 +13,12 @@ exports.ModelsCollection = void 0;
 const typedi_1 = require("typedi");
 const Model_1 = require("./Model");
 const Models_1 = require("../service/storage/api/Models");
+const Project_1 = require("../service/storage/file/Project");
 class ModelsCollection {
     constructor(project) {
         this.project = project;
-        this.storageService = typedi_1.Container.get(Models_1.ModelsApiStorageService);
+        this.remoteStorageService = typedi_1.Container.get(Models_1.ModelsApiStorageService);
+        this.localStorageService = typedi_1.Container.get(Project_1.ProjectFileStorageService);
         this.path = ModelsCollection.path(project);
     }
     /** Returns a singleton for this config */
@@ -38,13 +40,23 @@ class ModelsCollection {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.fromObject(yield this.storageService.forProject(this.project.id));
+            if (this.project.storageType === 'local') {
+                this.fromObject(yield this.localStorageService.getModels(this.project.id));
+            }
+            else {
+                this.fromObject(yield this.remoteStorageService.forProject(this.project.id));
+            }
         });
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            const models = yield this.storageService.set(this.project.id, this.toObject());
-            this.fromObject(models);
+            if (this.project.storageType === 'local') {
+                yield this.localStorageService.setModels(this.project.id, this.toObject());
+            }
+            else {
+                const models = yield this.remoteStorageService.set(this.project.id, this.toObject());
+                this.fromObject(models);
+            }
         });
     }
     /** Add one or more object to the stack */

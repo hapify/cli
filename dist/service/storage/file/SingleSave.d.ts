@@ -9,8 +9,6 @@ export declare abstract class SingleSaveFileStorage<T> {
     set(path: FilePath, input: T): Promise<void>;
     /** Check if the resource exists */
     exists(path: FilePath): boolean;
-    /** Resolve path */
-    resolve(path: FilePath): string;
     /** Convert content to string before saving */
     protected abstract serialize(content: T): Promise<string>;
     /** Convert content to string before saving */

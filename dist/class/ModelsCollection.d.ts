@@ -1,7 +1,7 @@
 import { ISerializable, IStorable } from '../interface/Storage';
 import { IModel } from '../interface/Generator';
 import { Model } from './Model';
-import { Project } from "./Project";
+import { Project } from './Project';
 export declare class ModelsCollection implements IStorable, ISerializable<IModel[], Model[]> {
     private project;
     /** The list of model instances */
@@ -10,8 +10,9 @@ export declare class ModelsCollection implements IStorable, ISerializable<IModel
     path: string;
     /** The loaded instances */
     private static instances;
-    /** Presets storage */
-    private storageService;
+    /** Models storage */
+    private remoteStorageService;
+    private localStorageService;
     private constructor();
     /** Returns a singleton for this config */
     static getInstance(project: Project): Promise<ModelsCollection>;

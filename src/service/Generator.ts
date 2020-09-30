@@ -17,7 +17,7 @@ export class GeneratorService {
 	/** Get the limits once and returns them */
 	async limits(): Promise<ILimits> {
 		if (!this._limits) {
-			this._limits = (await this.apiService.get('generator/limits')).data;
+			this._limits = (await this.apiService.get<ILimits>('generator/limits')).data;
 		}
 		return this._limits;
 	}

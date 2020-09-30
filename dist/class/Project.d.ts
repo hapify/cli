@@ -14,7 +14,7 @@ export declare class Project implements IStorable, ISerializable<IProject, Proje
     /** Storage type */
     private _storageType;
     get storageType(): StorageType;
-    /** Project storages */
+    /** Project storage */
     private remoteStorageService;
     private localStorageService;
     /** The loaded instances */
@@ -26,5 +26,5 @@ export declare class Project implements IStorable, ISerializable<IProject, Proje
     toObject(): IProject;
     load(): Promise<void>;
     save(): Promise<void>;
-    private static isMongoId;
+    static isMongoId(value: string): boolean;
 }

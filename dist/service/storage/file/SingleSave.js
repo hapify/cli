@@ -76,10 +76,6 @@ let SingleSaveFileStorage = class SingleSaveFileStorage {
     exists(path) {
         return Fs.existsSync(JoinPath(path));
     }
-    /** Resolve path */
-    resolve(path) {
-        return Path.resolve(JoinPath(path));
-    }
     /** Should be called after loading to hash the content */
     didLoad(bucket, data) {
         this.contentMd5[bucket] = md5_1.default(data);
