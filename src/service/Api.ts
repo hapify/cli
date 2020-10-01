@@ -46,19 +46,14 @@ export class RichAxiosError implements AxiosError {
 @Service()
 export class ApiService {
 	/** Http client */
-	private http: AxiosInstance;
+	protected http: AxiosInstance;
 
-	constructor(private optionsService: OptionsService) {}
+	constructor(protected optionsService: OptionsService) {}
 
 	/** Create and get the http client */
 	client() {
 		if (!this.http) {
-			this.http = axios.create({
-				baseURL: this.optionsService.remoteConfig().uri,
-				headers: {
-					'X-Api-Key': this.optionsService.apiKey(),
-				},
-			});
+			this.http = axios.create({ baseURL: this.optionsService.remoteConfig().uri });
 		}
 		return this.http;
 	}
@@ -100,7 +95,7 @@ export class ApiService {
 	}
 
 	/** Helper to return a stringified query */
-	private query(url: string, object?: any): string {
+	protected query(url: string, object?: any): string {
 		return !!object ? `${url}?${querystring.stringify(object)}` : url;
 	}
 }

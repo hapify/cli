@@ -52,4 +52,8 @@ export class BoilerplatesApiStorageService extends BaseApiStorageService<IBoiler
 			git_url: object.git_url,
 		};
 	}
+
+	protected requiresAuthentication(): boolean {
+		return false;
+	}
 }

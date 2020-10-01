@@ -1,8 +1,9 @@
-import { Service } from 'typedi';
+import { Container, Service } from 'typedi';
 import { OptionsService } from '../../Options';
 import { ApiService } from '../../Api';
 import { IStorageService } from '../../../interface/Storage';
 import { IRemoteConfig } from '../../../interface/Config';
+import { AuthenticatedApiService } from '../../AuthenticatedApi';
 
 /** Used to export and import search params */
 export interface BaseSearchParams {
@@ -33,8 +34,11 @@ interface CountResult {
 export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> implements IStorageService<T> {
 	/** Stores the remote config to use */
 	protected remoteConfig: IRemoteConfig;
+	/** Api service to use (authenticated or not) */
+	private apiService: ApiService;
 
-	constructor(private apiService: ApiService, private optionsService: OptionsService) {
+	constructor(private optionsService: OptionsService) {
+		this.apiService = this.requiresAuthentication() ? Container.get(AuthenticatedApiService) : Container.get(ApiService);
 		this.remoteConfig = optionsService.remoteConfig();
 	}
 
@@ -84,6 +88,9 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 			_limit: 20,
 		};
 	}
+
+	/** Denotes if the calls to the API need the X-Api-Token header */
+	protected abstract requiresAuthentication(): boolean;
 
 	/** Returns the base URI for this model */
 	protected abstract path(): string;

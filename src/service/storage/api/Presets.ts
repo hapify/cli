@@ -54,4 +54,8 @@ export class PresetsApiStorageService extends BaseApiStorageService<IPreset, IAp
 			),
 		};
 	}
+
+	protected requiresAuthentication(): boolean {
+		return false;
+	}
 }

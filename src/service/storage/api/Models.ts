@@ -145,4 +145,8 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 			accesses: object.accesses,
 		};
 	}
+
+	protected requiresAuthentication(): boolean {
+		return true;
+	}
 }

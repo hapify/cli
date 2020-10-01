@@ -2,9 +2,9 @@ import { Service } from 'typedi';
 import { ChannelsService } from './Channels';
 import { IField } from '../interface/Generator';
 import { IProject } from '../interface/Objects';
-import { ApiService } from './Api';
 import { ILimits } from '../interface/Config';
 import { InternalConfig } from '../config/Internal';
+import { AuthenticatedApiService } from './AuthenticatedApi';
 
 @Service()
 export class InfoService {
@@ -13,7 +13,7 @@ export class InfoService {
 	/** Stores the default fields */
 	private _fields: IField[];
 
-	constructor(private channelsService: ChannelsService, private apiService: ApiService) {}
+	constructor(private channelsService: ChannelsService, private authenticatedApiService: AuthenticatedApiService) {}
 
 	/** Get the project once and returns it */
 	async project(): Promise<IProject> {
@@ -38,7 +38,7 @@ export class InfoService {
 		const channel = (await this.channelsService.channels())[0];
 		if (!this._limits) {
 			if (channel.project.storageType === 'remote') {
-				this._limits = (await this.apiService.get<ILimits>('generator/limits')).data;
+				this._limits = (await this.authenticatedApiService.get<ILimits>('generator/limits')).data;
 			} else {
 				this._limits = Object.assign({}, InternalConfig.limits);
 			}

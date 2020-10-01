@@ -33,4 +33,8 @@ export class ProjectsApiStorageService extends BaseApiStorageService<IProject, I
 			description: object.description,
 		};
 	}
+
+	protected requiresAuthentication(): boolean {
+		return true;
+	}
 }
