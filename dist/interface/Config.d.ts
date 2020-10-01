@@ -50,6 +50,8 @@ export interface IRemoteConfig {
 export interface IInternalConfig {
     /** Max duration to process validator */
     validatorTimeout: number;
+    /** Models, fields, templates and projects limits when using local storage */
+    limits: ILimits;
 }
 export interface IGlobalConfig {
     /** The API Key */

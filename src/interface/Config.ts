@@ -1,4 +1,4 @@
-import { Engine, IField, IModel, Input } from './Generator';
+import { Engine, IField, Input } from './Generator';
 
 export interface IConfigTemplate {
 	/** The template's path */
@@ -53,6 +53,8 @@ export interface IRemoteConfig {
 export interface IInternalConfig {
 	/** Max duration to process validator */
 	validatorTimeout: number;
+	/** Models, fields, templates and projects limits when using local storage */
+	limits: ILimits;
 }
 
 export interface IGlobalConfig {

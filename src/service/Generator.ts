@@ -1,6 +1,4 @@
 import { Service } from 'typedi';
-import { ApiService } from './Api';
-import { ILimits } from '../interface/Config';
 import { Channel } from '../class/Channel';
 import { IGeneratorResult } from '../interface/Generator';
 import { Template } from '../class/Template';
@@ -9,19 +7,6 @@ import { Generator } from 'hapify-generator';
 
 @Service()
 export class GeneratorService {
-	/** Stores the limits */
-	private _limits: ILimits;
-
-	constructor(private apiService: ApiService) {}
-
-	/** Get the limits once and returns them */
-	async limits(): Promise<ILimits> {
-		if (!this._limits) {
-			this._limits = (await this.apiService.get<ILimits>('generator/limits')).data;
-		}
-		return this._limits;
-	}
-
 	/** Compile for a whole channel */
 	async runChannel(channel: Channel): Promise<IGeneratorResult[]> {
 		const models = await channel.modelsCollection.list();
@@ -31,7 +16,6 @@ export class GeneratorService {
 	/**
 	 * Compile a template to multiple files.
 	 * One per model, if applicable.
-	 *
 	 */
 	async runTemplate(template: Template): Promise<IGeneratorResult[]> {
 		const models = await template.channel().modelsCollection.list();
