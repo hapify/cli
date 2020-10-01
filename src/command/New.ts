@@ -16,7 +16,7 @@ const SimpleGit = require('simple-git/promise');
 const GetDirectories = (s: string) =>
 	Fs.readdirSync(s)
 		.map((n: string) => Path.join(s, n))
-		.filter((d: string) => Fs.lstatSync(s).isDirectory());
+		.filter((d: string) => Fs.lstatSync(d).isDirectory());
 
 // ############################################
 // Get services
