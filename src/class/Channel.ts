@@ -21,6 +21,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	private static defaultFolder = 'hapify';
 
 	private static configFile = 'hapify.json';
+	private static projectFile = 'hapify-models.json';
 
 	public config: IConfig;
 	/** Templates instances */
@@ -121,7 +122,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	}
 
 	/** Determines if the project is an id or not and resolve path if necessary */
-	private guessProjectIdOrPath() {
+	guessProjectIdOrPath() {
 		if (!Project.isMongoId(this.config.project) && !Path.isAbsolute(this.config.project)) {
 			return Path.resolve(this.path, this.config.project);
 		}
@@ -165,7 +166,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			name: name || channel.name,
 			description: description || 'A new Hapify channel',
 			logo: logo || undefined,
-			project: 'projectId',
+			project: Channel.projectFile,
 			defaultFields: [
 				{
 					name: 'Id',

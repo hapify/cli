@@ -4,21 +4,18 @@ import { cPath } from './helpers';
 import { LoggerService } from '../service/Logger';
 import { OptionsService } from '../service/Options';
 import { ChannelDescriptionQuery, DescribeChannel } from './question/Channel';
-import { AskProject, ProjectQuery, SetupProject } from './question/Project';
 import { Channel } from '../class/Channel';
-import { ChannelsService } from '../service/Channels';
+import { Project } from '../class/Project';
 
 // ############################################
 // Get services
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
-const channelsService = Container.get(ChannelsService);
 
 export async function InitCommand(cmd: Command) {
 	try {
 		options.setCommand(cmd);
 
-		const qProject: ProjectQuery = {};
 		const qChannelDescription: ChannelDescriptionQuery = {};
 
 		// =================================
@@ -30,19 +27,11 @@ export async function InitCommand(cmd: Command) {
 		const channel = await Channel.create(options.dir(), qChannelDescription.name, qChannelDescription.description, qChannelDescription.logo);
 
 		// =================================
-		// Get project
-		await AskProject(cmd, qProject);
-
-		// =================================
-		// Create project if necessary
-		await SetupProject(qProject);
-
-		// =================================
-		// Set project in channel and save
+		// Create project from channel and save
+		await Project.createLocalForChannel(channel);
 		await channel.save();
-		await channelsService.changeProject(qProject.id, channel.path);
 
-		logger.success(`Initialized a channel in ${cPath(options.dir())}`);
+		logger.success(`Initialized a channel in ${cPath(options.dir())}. Run 'hpf use' to connect a remote project.`);
 		// Action Ends
 		// ---------------------------------
 

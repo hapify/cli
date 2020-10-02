@@ -6,6 +6,7 @@ import { ProjectFileStorageService } from '../service/storage/file/Project';
 import * as Joi from '@hapi/joi';
 import { ProjectConfigSchema } from '../interface/schema/Config';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
+import { Channel } from './Channel';
 
 export class Project implements IStorable, ISerializable<IProject, Project>, IProject {
 	/** The project's unique id */
@@ -96,6 +97,18 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 	}
 	async save(): Promise<void> {
 		// Nothing to save
+	}
+
+	static async createLocalForChannel(channel: Channel): Promise<void> {
+		await Container.get(ProjectFileStorageService).setProject(
+			channel.guessProjectIdOrPath(),
+			{
+				id: channel.config.project,
+				name: 'My project',
+				description: 'A new Hapify project',
+			},
+			[]
+		);
 	}
 
 	static isMongoId(value: string): boolean {
