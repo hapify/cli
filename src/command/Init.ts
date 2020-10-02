@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { cPath } from './helpers';
+import { cMedium, cPath } from './helpers';
 import { LoggerService } from '../service/Logger';
 import { OptionsService } from '../service/Options';
 import { ChannelDescriptionQuery, DescribeChannel } from './question/Channel';
@@ -31,7 +31,8 @@ export async function InitCommand(cmd: Command) {
 		await Project.createLocalForChannel(channel);
 		await channel.save();
 
-		logger.success(`Initialized a channel in ${cPath(options.dir())}. Run 'hpf use' to connect a remote project.`);
+		logger.success(`Initialized a channel in ${cPath(options.dir())}.
+Run ${cMedium('hpf use')} to connect a remote project (optional)`);
 		// Action Ends
 		// ---------------------------------
 

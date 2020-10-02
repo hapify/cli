@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { cPath } from './helpers';
+import { cHigh, cImportant, cMedium, cPath } from './helpers';
 import * as Rimraf from 'rimraf';
 import * as Fs from 'fs';
 import * as Path from 'path';
@@ -72,9 +72,10 @@ export async function NewCommand(cmd: Command) {
 		await ApplyPreset(qPresets);
 
 		logger.success(
-			`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(
-				currentDir
-			)}. Run 'hpf serve' to edit. Run 'hpf use' to connect a remote project.`
+			`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}.
+Run ${cMedium('hpf use')} to connect a remote project (optional).
+Run ${cHigh('hpf serve')} to edit models and templates.
+Run ${cImportant('hpf generate')} to generate the source code.`
 		);
 		// Action Ends
 		// ---------------------------------
