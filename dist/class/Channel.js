@@ -73,7 +73,7 @@ class Channel {
                 this.name = this.config.name;
             }
             // Load project
-            this.project = yield Project_1.Project.getInstance(this.config.project);
+            this.project = yield Project_1.Project.getInstance(this.guessProjectIdOrPath());
             // Load each content file
             for (let i = 0; i < this.config.templates.length; i++) {
                 const template = new Template_1.Template(this, Object.assign(this.config.templates[i], { content: '' }));
@@ -81,7 +81,7 @@ class Channel {
                 this.templates.push(template);
             }
             // Load models
-            this.modelsCollection = yield ModelsCollection_1.ModelsCollection.getInstance(this.config.project);
+            this.modelsCollection = yield ModelsCollection_1.ModelsCollection.getInstance(this.project);
             // Load validator
             this.validator = new Validator_1.Validator(this, this.config.validatorPath);
             yield this.validator.load();
@@ -118,6 +118,13 @@ class Channel {
     /** Remove empty templates */
     filter() {
         this.templates = this.templates.filter((t) => !t.isEmpty());
+    }
+    /** Determines if the project is an id or not and resolve path if necessary */
+    guessProjectIdOrPath() {
+        if (!Project_1.Project.isMongoId(this.config.project) && !Path.isAbsolute(this.config.project)) {
+            return Path.resolve(this.path, this.config.project);
+        }
+        return this.config.project;
     }
     /** Check resource validity */
     validate() {

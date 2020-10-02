@@ -41,11 +41,9 @@ exports.GetInfoHandlerService = void 0;
 const typedi_1 = require("typedi");
 const Joi = __importStar(require("joi"));
 const Info_1 = require("../Info");
-const Generator_1 = require("../Generator");
 let GetInfoHandlerService = class GetInfoHandlerService {
-    constructor(infoService, generatorService) {
+    constructor(infoService) {
         this.infoService = infoService;
-        this.generatorService = generatorService;
     }
     canHandle(message) {
         return message.id === 'get:info';
@@ -57,14 +55,14 @@ let GetInfoHandlerService = class GetInfoHandlerService {
         return __awaiter(this, void 0, void 0, function* () {
             return {
                 project: yield this.infoService.project(),
-                limits: yield this.generatorService.limits(),
+                limits: yield this.infoService.limits(),
             };
         });
     }
 };
 GetInfoHandlerService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Info_1.InfoService, Generator_1.GeneratorService])
+    __metadata("design:paramtypes", [Info_1.InfoService])
 ], GetInfoHandlerService);
 exports.GetInfoHandlerService = GetInfoHandlerService;
 //# sourceMappingURL=GetInfoHandler.js.map

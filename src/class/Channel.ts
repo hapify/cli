@@ -21,6 +21,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	private static defaultFolder = 'hapify';
 
 	private static configFile = 'hapify.json';
+	private static projectFile = 'hapify-models.json';
 
 	public config: IConfig;
 	/** Templates instances */
@@ -67,7 +68,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		}
 
 		// Load project
-		this.project = await Project.getInstance(this.config.project);
+		this.project = await Project.getInstance(this.guessProjectIdOrPath());
 
 		// Load each content file
 		for (let i = 0; i < this.config.templates.length; i++) {
@@ -77,7 +78,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		}
 
 		// Load models
-		this.modelsCollection = await ModelsCollection.getInstance(this.config.project);
+		this.modelsCollection = await ModelsCollection.getInstance(this.project);
 
 		// Load validator
 		this.validator = new Validator(this, this.config.validatorPath);
@@ -120,6 +121,14 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		this.templates = this.templates.filter((t) => !t.isEmpty());
 	}
 
+	/** Determines if the project is an id or not and resolve path if necessary */
+	guessProjectIdOrPath() {
+		if (!Project.isMongoId(this.config.project) && !Path.isAbsolute(this.config.project)) {
+			return Path.resolve(this.path, this.config.project);
+		}
+		return this.config.project;
+	}
+
 	/** Check resource validity */
 	private async validate(): Promise<void> {
 		if (!(await this.storageService.exists([this.path, Channel.configFile]))) {
@@ -157,7 +166,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 			name: name || channel.name,
 			description: description || 'A new Hapify channel',
 			logo: logo || undefined,
-			project: 'projectId',
+			project: Channel.projectFile,
 			defaultFields: [
 				{
 					name: 'Id',

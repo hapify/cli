@@ -6,16 +6,16 @@ interface ModelsSearchParams extends BaseSearchParams {
     name?: string;
 }
 export interface IApiModel {
-    _id?: string;
-    created_at?: number;
+    _id: string;
+    created_at: number;
     updated_at?: number | null;
-    version?: string;
-    owner?: string | any;
-    project?: string | any;
-    name?: string;
-    notes?: string;
-    fields?: any[];
-    accesses?: any;
+    version: string;
+    owner: string | any;
+    project: string | any;
+    name: string;
+    notes: string;
+    fields: any[];
+    accesses: any;
 }
 export declare class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiModel, ModelsSearchParams> {
     /** The models fingerprints */

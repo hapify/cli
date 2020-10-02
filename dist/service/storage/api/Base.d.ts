@@ -17,9 +17,9 @@ export declare abstract class BaseApiStorageService<T, I, S extends BaseSearchPa
     protected remoteConfig: IRemoteConfig;
     constructor(apiService: ApiService, optionsService: OptionsService);
     /** Create a new model */
-    create(payload: I): Promise<T>;
+    create(payload: Partial<I>): Promise<T>;
     /** Update an model selected from it's id */
-    update(id: string, payload: I): Promise<void>;
+    update(id: string, payload: Partial<I>): Promise<void>;
     /** Get an model from it's id */
     get(id: string): Promise<T>;
     /** Delete an model selected from it's id */

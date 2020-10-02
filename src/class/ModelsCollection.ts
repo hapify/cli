@@ -2,7 +2,9 @@ import { Container } from 'typedi';
 import { ISerializable, IStorable } from '../interface/Storage';
 import { IModel } from '../interface/Generator';
 import { Model } from './Model';
+import { Project } from './Project';
 import { ModelsApiStorageService } from '../service/storage/api/Models';
+import { ProjectFileStorageService } from '../service/storage/file/Project';
 
 export class ModelsCollection implements IStorable, ISerializable<IModel[], Model[]> {
 	/** The list of model instances */
@@ -11,16 +13,18 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 	public path: string;
 	/** The loaded instances */
 	private static instances: ModelsCollection[] = [];
-	/** Presets storage */
-	private storageService: ModelsApiStorageService;
+	/** Models storage */
+	private remoteStorageService: ModelsApiStorageService;
+	private localStorageService: ProjectFileStorageService;
 
-	private constructor(public project: string) {
-		this.storageService = Container.get(ModelsApiStorageService);
+	private constructor(private project: Project) {
+		this.remoteStorageService = Container.get(ModelsApiStorageService);
+		this.localStorageService = Container.get(ProjectFileStorageService);
 		this.path = ModelsCollection.path(project);
 	}
 
 	/** Returns a singleton for this config */
-	public static async getInstance(project: string) {
+	public static async getInstance(project: Project) {
 		const path = ModelsCollection.path(project);
 		// Try to find an existing collection
 		const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
@@ -37,12 +41,20 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 	}
 
 	public async load(): Promise<void> {
-		this.fromObject(await this.storageService.forProject(this.project));
+		if (this.project.storageType === 'local') {
+			this.fromObject(await this.localStorageService.getModels(this.project.id));
+		} else {
+			this.fromObject(await this.remoteStorageService.forProject(this.project.id));
+		}
 	}
 
 	async save(): Promise<void> {
-		const models = await this.storageService.set(this.project, this.toObject());
-		this.fromObject(models);
+		if (this.project.storageType === 'local') {
+			await this.localStorageService.setModels(this.project.id, this.toObject());
+		} else {
+			const models = await this.remoteStorageService.set(this.project.id, this.toObject());
+			this.fromObject(models);
+		}
 	}
 
 	/** Add one or more object to the stack */
@@ -97,7 +109,7 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 	}
 
 	/** Returns a pseudo path */
-	private static path(project: string): string {
-		return `project:${project}`;
+	private static path(project: Project): string {
+		return project.storageType === 'local' ? project.id : `project:${project.id}`;
 	}
 }

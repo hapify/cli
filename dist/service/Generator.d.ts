@@ -1,22 +1,13 @@
-import { ApiService } from './Api';
-import { ILimits } from '../interface/Config';
 import { Channel } from '../class/Channel';
 import { IGeneratorResult } from '../interface/Generator';
 import { Template } from '../class/Template';
 import { Model } from '../class/Model';
 export declare class GeneratorService {
-    private apiService;
-    /** Stores the limits */
-    private _limits;
-    constructor(apiService: ApiService);
-    /** Get the limits once and returns them */
-    limits(): Promise<ILimits>;
     /** Compile for a whole channel */
     runChannel(channel: Channel): Promise<IGeneratorResult[]>;
     /**
      * Compile a template to multiple files.
      * One per model, if applicable.
-     *
      */
     runTemplate(template: Template): Promise<IGeneratorResult[]>;
     /**

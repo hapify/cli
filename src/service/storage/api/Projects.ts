@@ -6,11 +6,11 @@ interface ProjectsSearchParams extends BaseSearchParams {
 	name?: string;
 }
 export interface IApiProject {
-	_id?: string;
-	created_at?: number;
-	name?: string;
+	_id: string;
+	created_at: number;
+	name: string;
 	description?: string | null;
-	owner?: string | any;
+	owner: string | any;
 }
 
 @Service()
@@ -32,5 +32,9 @@ export class ProjectsApiStorageService extends BaseApiStorageService<IProject, I
 			name: object.name,
 			description: object.description,
 		};
+	}
+
+	protected requiresAuthentication(): boolean {
+		return true;
 	}
 }

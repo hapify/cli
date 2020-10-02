@@ -1,13 +1,11 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
-import { cPath } from './helpers';
+import { cHigh, cImportant, cMedium, cPath } from './helpers';
 import * as Rimraf from 'rimraf';
 import * as Fs from 'fs';
 import * as Path from 'path';
 import { OptionsService } from '../service/Options';
 import { LoggerService } from '../service/Logger';
-import { ChannelsService } from '../service/Channels';
-import { AskProject, ProjectQuery, SetupProject } from './question/Project';
 import { AskBoilerplate, BoilerplateQuery, FindBoilerplate } from './question/Boilerplate';
 import { ApplyPreset, AskPreset } from './question/Preset';
 
@@ -16,13 +14,12 @@ const SimpleGit = require('simple-git/promise');
 const GetDirectories = (s: string) =>
 	Fs.readdirSync(s)
 		.map((n: string) => Path.join(s, n))
-		.filter((d: string) => Fs.lstatSync(s).isDirectory());
+		.filter((d: string) => Fs.lstatSync(d).isDirectory());
 
 // ############################################
 // Get services
 const options = Container.get(OptionsService);
 const logger = Container.get(LoggerService);
-const channelsService = Container.get(ChannelsService);
 
 export async function NewCommand(cmd: Command) {
 	try {
@@ -30,7 +27,6 @@ export async function NewCommand(cmd: Command) {
 
 		// ---------------------------------
 		// Action starts
-		const qProject: ProjectQuery = {};
 		const qBoilerplate: BoilerplateQuery = {};
 
 		// ---------------------------------
@@ -42,20 +38,12 @@ export async function NewCommand(cmd: Command) {
 		}
 
 		// =================================
-		// Get project
-		await AskProject(cmd, qProject);
-
-		// =================================
 		// Get boilerplate
 		await AskBoilerplate(cmd, qBoilerplate);
 
 		// =================================
 		// Get presets
 		const qPresets = await AskPreset(cmd);
-
-		// =================================
-		// Create project if necessary
-		await SetupProject(qProject);
 
 		// =================================
 		// Get boilerplate URL
@@ -80,14 +68,15 @@ export async function NewCommand(cmd: Command) {
 		}
 
 		// =================================
-		// Init & validate channel for this new folder
-		await channelsService.changeProject(qProject.id);
-
-		// =================================
 		// Get models and apply presets if necessary
 		await ApplyPreset(qPresets);
 
-		logger.success(`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}. Run 'hpf serve' to edit.`);
+		logger.success(
+			`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}.
+Run ${cMedium('hpf use')} to connect a remote project (optional).
+Run ${cHigh('hpf serve')} to edit models and templates.
+Run ${cImportant('hpf generate')} to generate the source code.`
+		);
 		// Action Ends
 		// ---------------------------------
 

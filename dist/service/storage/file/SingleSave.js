@@ -74,9 +74,7 @@ let SingleSaveFileStorage = class SingleSaveFileStorage {
     }
     /** Check if the resource exists */
     exists(path) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Fs.existsSync(JoinPath(path));
-        });
+        return Fs.existsSync(JoinPath(path));
     }
     /** Should be called after loading to hash the content */
     didLoad(bucket, data) {

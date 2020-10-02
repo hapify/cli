@@ -19,20 +19,27 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GlobalConfigSchema = exports.ConfigSchema = void 0;
+exports.GlobalConfigSchema = exports.ProjectConfigSchema = exports.ConfigSchema = void 0;
 const Template_1 = require("./Template");
 const Joi = __importStar(require("joi"));
 const Field_1 = require("./Field");
+const Model_1 = require("./Model");
 const Versions = ['1'];
 exports.ConfigSchema = Joi.object({
     version: Joi.string().valid(Versions).required(),
     validatorPath: Joi.string().required(),
-    project: Joi.string().hex().required(),
+    project: Joi.string().required(),
     name: Joi.string(),
     description: Joi.string(),
     logo: Joi.string(),
     defaultFields: Joi.array().items(Field_1.FieldSchema).min(0),
     templates: Joi.array().items(Template_1.ConfigTemplateSchema).required().min(0),
+});
+exports.ProjectConfigSchema = Joi.object({
+    version: Joi.string().valid(Versions).required(),
+    name: Joi.string(),
+    description: Joi.string(),
+    models: Joi.array().items(Model_1.ModelSchema).required().min(0),
 });
 exports.GlobalConfigSchema = Joi.object({
     apiKey: Joi.string().length(48),

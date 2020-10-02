@@ -30,7 +30,7 @@ export abstract class SingleSaveFileStorage<T> {
 		}
 	}
 	/** Check if the resource exists */
-	async exists(path: FilePath): Promise<boolean> {
+	exists(path: FilePath): boolean {
 		return Fs.existsSync(JoinPath(path));
 	}
 	/** Convert content to string before saving */

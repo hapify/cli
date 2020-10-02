@@ -1,29 +1,55 @@
 import { Container } from 'typedi';
-import { ISerializable, IStorable } from '../interface/Storage';
+import { ISerializable, IStorable, StorageType } from '../interface/Storage';
 import { IProject } from '../interface/Objects';
 import { ProjectsApiStorageService } from '../service/storage/api/Projects';
+import { ProjectFileStorageService } from '../service/storage/file/Project';
+import * as Joi from '@hapi/joi';
+import { ProjectConfigSchema } from '../interface/schema/Config';
+import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
+import { Channel } from './Channel';
 
 export class Project implements IStorable, ISerializable<IProject, Project>, IProject {
 	/** The project's unique id */
-	id: string;
-	/** The project's unique id */
-	created_at: number;
+	private _id: string;
+	get id(): string {
+		return this._id;
+	}
+	set id(value: string) {
+		// If the id is not a MongoDB Id, then it should be a file path
+		if (Project.isMongoId(value)) {
+			this._id = value;
+			this._storageType = 'remote';
+		} else {
+			if (!this.localStorageService.exists(value)) {
+				throw new Error(`Invalid path "${value}" for project`);
+			}
+			this._id = value;
+			this._storageType = 'local';
+		}
+	}
+	/** The project's creation date */
+	created_at?: number;
 	/** The project's name */
 	name: string;
 	/** The project's description */
-	description: string;
-	/** The project's owner payload */
-	owner: string | any;
+	description?: string;
+	/** Storage type */
+	private _storageType: StorageType;
+	get storageType(): StorageType {
+		return this._storageType;
+	}
 	/** Project storage */
-	private storageService: ProjectsApiStorageService;
+	private remoteStorageService: ProjectsApiStorageService;
+	private localStorageService: ProjectFileStorageService;
 	/** The loaded instances */
 	private static instances: { [id: string]: Project } = {};
 
-	constructor(object?: IProject) {
+	public constructor(object?: IProject) {
+		this.remoteStorageService = Container.get(ProjectsApiStorageService);
+		this.localStorageService = Container.get(ProjectFileStorageService);
 		if (object) {
 			this.fromObject(object);
 		}
-		this.storageService = Container.get(ProjectsApiStorageService);
 	}
 
 	/** Returns a singleton for this config */
@@ -46,7 +72,7 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 
 	public toObject(): IProject {
 		return {
-			id: this.id,
+			id: this._id,
 			created_at: this.created_at,
 			name: this.name,
 			description: this.description,
@@ -54,10 +80,39 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 	}
 
 	public async load(): Promise<void> {
-		this.fromObject(await this.storageService.get(this.id));
-	}
+		if (this.storageType === 'local') {
+			// Validate config format
+			const projectConfig = await this.localStorageService.get(this._id);
+			const validation = Joi.validate(projectConfig, ProjectConfigSchema);
+			if (validation.error) {
+				// Transform Joi message
+				TransformValidationMessage(validation.error);
+				throw validation.error;
+			}
 
+			this.fromObject(await this.localStorageService.getProject(this._id));
+		} else {
+			this.fromObject(await this.remoteStorageService.get(this._id));
+		}
+	}
 	async save(): Promise<void> {
 		// Nothing to save
+	}
+
+	static async createLocalForChannel(channel: Channel): Promise<void> {
+		await Container.get(ProjectFileStorageService).setProject(
+			channel.guessProjectIdOrPath(),
+			{
+				id: channel.config.project,
+				name: 'My project',
+				description: 'A new Hapify project',
+			},
+			[]
+		);
+	}
+
+	static isMongoId(value: string): boolean {
+		const regex = /^([a-f0-9]{24})$/i;
+		return regex.exec(value) !== null;
 	}
 }

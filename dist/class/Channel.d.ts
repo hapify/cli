@@ -30,6 +30,8 @@ export declare class Channel implements IStorable, ISerializable<IChannel, Chann
     isEmpty(): boolean;
     /** Remove empty templates */
     filter(): void;
+    /** Determines if the project is an id or not and resolve path if necessary */
+    private guessProjectIdOrPath;
     /** Check resource validity */
     private validate;
     /** Change project in config file */

@@ -13,7 +13,7 @@ export interface IConfig {
 	version: string;
 	/** The channel's validation script path */
 	validatorPath: string;
-	/** The project id containing the models */
+	/** The project id containing the models or the project file path */
 	project: string;
 	/** The channel's name */
 	name?: string;
@@ -26,7 +26,6 @@ export interface IConfig {
 	/** The templates of the channel */
 	templates: IConfigTemplate[];
 }
-
 export interface ILimits {
 	/** The max number of allowed projects */
 	projects: number;
@@ -54,6 +53,8 @@ export interface IRemoteConfig {
 export interface IInternalConfig {
 	/** Max duration to process validator */
 	validatorTimeout: number;
+	/** Models, fields, templates and projects limits when using local storage */
+	limits: ILimits;
 }
 
 export interface IGlobalConfig {

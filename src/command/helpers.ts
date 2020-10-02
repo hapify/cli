@@ -13,4 +13,6 @@ export const logChannel = (channel: Channel) => {
 export const cChannel = chalk.yellow;
 export const cModel = chalk.magentaBright;
 export const cPath = chalk.blueBright;
+export const cImportant = chalk.green.bold;
 export const cHigh = chalk.green;
+export const cMedium = chalk.yellow;

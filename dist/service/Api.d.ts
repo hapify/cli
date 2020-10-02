@@ -24,13 +24,13 @@ export declare class ApiService {
     /** Create and get the http client */
     client(): AxiosInstance;
     /** Get */
-    get(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse>;
+    get<T>(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
     /** Post */
-    post(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse>;
+    post<T>(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
     /** Patch */
-    patch(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse>;
+    patch<T>(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
     /** Delete */
-    delete(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse>;
+    delete<T>(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
     /** Helper to return a stringified query */
     private query;
 }

@@ -43,7 +43,7 @@ export interface IProject {
     /** The project's unique id */
     id: string;
     /** The project's creation date */
-    created_at: number;
+    created_at?: number;
     /** The project's name */
     name: string;
     /** The project's description */

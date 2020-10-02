@@ -46,61 +46,56 @@ export class RichAxiosError implements AxiosError {
 @Service()
 export class ApiService {
 	/** Http client */
-	private http: AxiosInstance;
+	protected http: AxiosInstance;
 
-	constructor(private optionsService: OptionsService) {}
+	constructor(protected optionsService: OptionsService) {}
 
 	/** Create and get the http client */
 	client() {
 		if (!this.http) {
-			this.http = axios.create({
-				baseURL: this.optionsService.remoteConfig().uri,
-				headers: {
-					'X-Api-Key': this.optionsService.apiKey(),
-				},
-			});
+			this.http = axios.create({ baseURL: this.optionsService.remoteConfig().uri });
 		}
 		return this.http;
 	}
 
 	/** Get */
-	async get(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+	async get<T>(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
 		try {
-			return await this.client().get(this.query(url, query), config);
+			return await this.client().get<T>(this.query(url, query), config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
 	}
 
 	/** Post */
-	async post(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+	async post<T>(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
 		try {
-			return await this.client().post(this.query(url, query), payload, config);
+			return await this.client().post<T>(this.query(url, query), payload, config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
 	}
 
 	/** Patch */
-	async patch(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+	async patch<T>(url: string, payload?: any, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
 		try {
-			return await this.client().patch(this.query(url, query), payload, config);
+			return await this.client().patch<T>(this.query(url, query), payload, config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
 	}
 
 	/** Delete */
-	async delete(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
+	async delete<T>(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
 		try {
-			return await this.client().delete(this.query(url, query), config);
+			return await this.client().delete<T>(this.query(url, query), config);
 		} catch (e) {
 			throw new RichAxiosError(e);
 		}
 	}
 
 	/** Helper to return a stringified query */
-	private query(url: string, object?: any): string {
+	protected query(url: string, object?: any): string {
 		return !!object ? `${url}?${querystring.stringify(object)}` : url;
 	}
 }
