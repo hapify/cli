@@ -146,8 +146,6 @@ It will prompt a form to:
 _Options_
 
 -   `-p <id>`, `--project <id>`: The project to use (if already existing)
--   `--project-name <name>`: The project's name to create
--   `--project-desc <description>`: The project's description to create
 -   `-b <slug>`, `--boilerplate <slug>`: The slug name of the boilerplate to clone
 -   `--boilerplate-id <id>`: The id of the boilerplate to clone
 -   `--boilerplate-url <url>`: The git URL of the boilerplate to clone
@@ -170,8 +168,6 @@ It will prompt a form to select or create a project.
 _Options_
 
 -   `-p <id>`, `--project <id>`: The project to use (if already created)
--   `--project-name <name>`: The project's name to create
--   `--project-desc <description>`: The project's description to create
 -   `--channel-name <name>`: The name of the channel to init
 -   `--channel-desc <description>`: The description of the channel to init
 -   `--channel-logo <url>`: The URL of the logo of the channel to init
