@@ -37,6 +37,9 @@ export function CLI(cmd: string, args: string[]): Promise<CliReturn> {
 	});
 }
 
+export const ProjectDir = Path.resolve(__dirname, '..');
+export const SamplesDir = Path.resolve(ProjectDir, 'samples');
+
 export function GetFileContent(path: string, encoding = 'utf8'): string {
 	return Fs.readFileSync(Path.resolve(path), { encoding });
 }
@@ -61,7 +64,7 @@ export function GetGlobalConfig(): IGlobalConfig {
 export class Sandbox {
 	private readonly rootPath: string;
 	constructor(private name: string = 'sandbox') {
-		this.rootPath = Path.join(__dirname, name);
+		this.rootPath = Path.join(ProjectDir, 'test', name);
 		this.create();
 	}
 	private create(): void {
