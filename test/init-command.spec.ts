@@ -45,4 +45,28 @@ describe('init command', () => {
 			expect(sandbox.fileExists(['hapify', realPath])).to.be.true();
 		}
 	});
+	it('busy folder', async () => {
+		const sandbox = new Sandbox();
+		sandbox.clear();
+		sandbox.touch('hapify.json', JSON.stringify({}));
+
+		const channelName = 'Test channel';
+		const channelDescription = 'Test channel description';
+		const channelLogo = 'http://example.com/logo';
+
+		const response = await CLI('init', [
+			'--dir',
+			sandbox.getPath(),
+			'--channel-name',
+			channelName,
+			'--channel-desc',
+			channelDescription,
+			'--channel-logo',
+			channelLogo,
+		]);
+
+		expect(response.code).to.equal(1);
+		expect(response.stdout).to.be.empty();
+		expect(response.stderr).to.contains('channel already exists');
+	});
 });

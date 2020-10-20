@@ -92,4 +92,7 @@ export class Sandbox {
 		const path = Path.join(this.rootPath, ...subPath);
 		return Fs.existsSync(path) && Fs.lstatSync(path).isDirectory();
 	}
+	touch(name = 'placeholder', content = ''): void {
+		Fs.writeFileSync(Path.join(this.rootPath, name), content);
+	}
 }

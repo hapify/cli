@@ -26,6 +26,8 @@ export async function InitCommand(cmd: Command) {
 		// Init channel to save
 		const channel = await Channel.create(options.dir(), qChannelDescription.name, qChannelDescription.description, qChannelDescription.logo);
 
+		// Todo get and save project name and description
+
 		// =================================
 		// Create project from channel and save
 		await Project.createLocalForChannel(channel);
