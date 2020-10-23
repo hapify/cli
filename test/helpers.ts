@@ -33,6 +33,7 @@ export async function CLI(cmd: string, args: string[]): Promise<CliReturn> {
 
 export const ProjectDir = Path.resolve(__dirname, '..');
 export const SamplesDir = Path.resolve(ProjectDir, 'samples');
+export const SampleHapiJSDir = Path.resolve(SamplesDir, 'hapijs');
 
 export function GetFileContent(path: string, encoding = 'utf8'): string {
 	return Fs.readFileSync(Path.resolve(path), { encoding });
