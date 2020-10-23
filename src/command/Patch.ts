@@ -6,42 +6,35 @@ import { ApplyDiff, AskDiff, DiffQuery } from './question/Diff';
 
 const SimpleGit = require('simple-git/promise');
 
-// ############################################
-// Get services
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-
 export async function PatchCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
 
-		// ---------------------------------
-		// Action starts
-		const qDiif: DiffQuery = {};
-		const currentDir = options.dir();
+	options.setCommand(cmd);
 
-		// =================================
-		// Clone git repo
-		const git = SimpleGit(currentDir);
+	// ---------------------------------
+	// Action starts
+	const qDiif: DiffQuery = {};
+	const currentDir = options.dir();
 
-		// =================================
-		// Get source and destination
-		await AskDiff(cmd, qDiif, git);
+	// =================================
+	// Clone git repo
+	const git = SimpleGit(currentDir);
 
-		// =================================
-		// Run patch
-		const result = await ApplyDiff(qDiif, git);
-		if (result === null) {
-			logger.info('Aborted');
-		} else {
-			logger.success(`Success:\n${result}`);
-		}
+	// =================================
+	// Get source and destination
+	await AskDiff(cmd, qDiif, git);
 
-		// Action Ends
-		// ---------------------------------
-
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
+	// =================================
+	// Run patch
+	const result = await ApplyDiff(qDiif, git);
+	if (result === null) {
+		logger.info('Aborted');
+	} else {
+		logger.success(`Success:\n${result}`);
 	}
+
+	// Action Ends
+	// ---------------------------------
 }

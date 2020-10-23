@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { expect } from '@hapi/code';
 import 'mocha';
 import { CLI, Sandbox } from './helpers';
@@ -23,9 +24,9 @@ describe('init command', () => {
 			channelLogo,
 		]);
 
+		expect(response.stderr).to.be.empty();
 		expect(response.code).to.equal(0);
 		expect(response.stdout).to.contains(['Initialized a channel in', sandbox.getPath()]);
-		expect(response.stderr).to.be.empty();
 
 		const hapifyJSON = sandbox.getJSONFileContent<IConfig>(['hapify.json']);
 		expect(hapifyJSON.name).to.equal(channelName);

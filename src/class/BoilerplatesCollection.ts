@@ -9,8 +9,6 @@ export class BoilerplatesCollection implements IStorable, ISerializable<IBoilerp
 	private boilerplates: Boilerplate[] = [];
 	/** Boilerplates storage */
 	private storageService: BoilerplatesApiStorageService;
-	/** The loaded instance */
-	private static instance: BoilerplatesCollection;
 
 	private constructor() {
 		this.storageService = Container.get(BoilerplatesApiStorageService);
@@ -18,12 +16,15 @@ export class BoilerplatesCollection implements IStorable, ISerializable<IBoilerp
 
 	/** Returns a singleton for this config */
 	public static async getInstance() {
-		if (!BoilerplatesCollection.instance) {
+		const key = 'BoilerplatesCollectionSingleton';
+		let instance = Container.has(key) ? Container.get<BoilerplatesCollection>(key) : null;
+		if (!instance) {
 			// Create and load a new collection
-			BoilerplatesCollection.instance = new BoilerplatesCollection();
-			await BoilerplatesCollection.instance.load();
+			instance = new BoilerplatesCollection();
+			await instance.load();
+			Container.set(key, instance);
 		}
-		return BoilerplatesCollection.instance;
+		return instance;
 	}
 
 	/** Load the boilerplates */

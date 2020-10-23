@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { expect } from '@hapi/code';
 import 'mocha';
 import { CLI, SamplesDir, Sandbox } from './helpers';
@@ -6,14 +7,11 @@ describe('list command', () => {
 	it('success', async () => {
 		const response = await CLI('list', ['--dir', SamplesDir, '--depth', '1']);
 
+		expect(response.stderr).to.be.empty();
 		expect(response.code).to.equal(0);
 		expect(response.stdout).to.contains(['HapiJS', 'Angular']);
-		expect(response.stderr).to.be.empty();
 	});
 	it('depth too low', async () => {
-		const sandbox = new Sandbox();
-		sandbox.clear();
-
 		const response = await CLI('list', ['--dir', SamplesDir, '--depth', '0']);
 
 		expect(response.code).to.equal(1);

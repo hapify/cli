@@ -12,6 +12,7 @@
     "start": "ts-node src/index.ts",
     "update": "npm-check -u",
     "test": "nyc mocha",
+    "mocha": "mocha",
     "lint": "prettier --write '**/*.ts'",
     "build": "rimraf dist && tsc -p ."
   },
@@ -33,7 +34,7 @@
     "axios": "^0.19.2",
     "case": "^1.6.3",
     "chalk": "^2.4.1",
-    "commander": "^2.20.0",
+    "commander": "^6.1.0",
     "detect-port": "^1.2.3",
     "inquirer": "^6.3.1",
     "joi": "^13.6.0",

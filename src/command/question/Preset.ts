@@ -9,24 +9,26 @@ export async function AskPreset(cmd: Command): Promise<string[]> {
 	const presetsCollection = await Container.get(PresetsService).collection();
 	let qPresets: string[] = [];
 
-	if (cmd.preset && cmd.preset.length) {
-		qPresets = cmd.preset;
-	} else {
-		// Get presets from remote
-		const list = (await presetsCollection.list()).map((p: any) => ({
-			name: p.name,
-			value: p.id,
-		}));
+	if (cmd.presets) {
+		if (cmd.preset && cmd.preset.length) {
+			qPresets = cmd.preset;
+		} else {
+			// Get presets from remote
+			const list = (await presetsCollection.list()).map((p: any) => ({
+				name: p.name,
+				value: p.id,
+			}));
 
-		qPresets = ((await Inquirer.prompt([
-			{
-				name: 'presets',
-				message: 'Choose some presets to preload in your project',
-				type: 'checkbox',
-				choices: list,
-				when: () => list.length > 0,
-			},
-		])) as any).presets;
+			qPresets = ((await Inquirer.prompt([
+				{
+					name: 'presets',
+					message: 'Choose some presets to preload in your project',
+					type: 'checkbox',
+					choices: list,
+					when: () => list.length > 0,
+				},
+			])) as any).presets;
+		}
 	}
 
 	return qPresets;

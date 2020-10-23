@@ -9,8 +9,6 @@ export class ProjectsCollection implements IStorable, ISerializable<IProject[], 
 	private projects: Project[] = [];
 	/** Projects storage */
 	private storageService: ProjectsApiStorageService;
-	/** The loaded instance */
-	private static instance: ProjectsCollection;
 
 	private constructor() {
 		this.storageService = Container.get(ProjectsApiStorageService);
@@ -18,12 +16,15 @@ export class ProjectsCollection implements IStorable, ISerializable<IProject[], 
 
 	/** Returns a singleton for this config */
 	public static async getInstance() {
-		if (!ProjectsCollection.instance) {
+		const key = 'ProjectsCollectionSingleton';
+		let instance = Container.has(key) ? Container.get<ProjectsCollection>(key) : null;
+		if (!instance) {
 			// Create and load a new collection
-			ProjectsCollection.instance = new ProjectsCollection();
-			await ProjectsCollection.instance.load();
+			instance = new ProjectsCollection();
+			await instance.load();
+			Container.set(key, instance);
 		}
-		return ProjectsCollection.instance;
+		return instance;
 	}
 
 	/** Load the projects */
@@ -45,7 +46,7 @@ export class ProjectsCollection implements IStorable, ISerializable<IProject[], 
 		return this.projects.find((p) => p.id === id);
 	}
 
-	/** Returns one project */
+	/** Create new project */
 	async add(name: string, description: string): Promise<Project> {
 		const object = await this.storageService.create({
 			name,

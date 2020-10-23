@@ -15,8 +15,8 @@ export async function AskBoilerplate(cmd: Command, qBoilerplate: BoilerplateQuer
 		qBoilerplate.slug = cmd.boilerplate;
 	} else if (cmd.boilerplateId) {
 		qBoilerplate.id = cmd.boilerplateId;
-	} else if (cmd.boilerplateUrl) {
-		qBoilerplate.urls = [cmd.boilerplateUrl];
+	} else if (cmd.boilerplateUrl && cmd.boilerplateUrl.length) {
+		qBoilerplate.urls = cmd.boilerplateUrl;
 	} else {
 		// Get boilerplates from remote
 		const list = (await boilerplatesCollection.list()).map((b: any) => ({

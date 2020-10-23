@@ -6,8 +6,6 @@ import * as util from 'util';
 import { Container } from 'typedi';
 import { OptionsService } from '../../service/Options';
 
-const options = Container.get(OptionsService);
-
 export interface DiffQuery {
 	from?: string;
 	to?: string;
@@ -74,6 +72,7 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 	])) as any).destination;
 }
 export async function ApplyDiff(qDiff: DiffQuery, git: SimpleGit): Promise<string> {
+	const options = Container.get(OptionsService);
 	const command = `git format-patch --stdout ${qDiff.from}..${qDiff.to} | git am -3 -k`;
 	const confirm = ((await Inquirer.prompt([
 		{

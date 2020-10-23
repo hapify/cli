@@ -1,10 +1,12 @@
 import * as Path from 'path';
-import * as ChildProcess from 'child_process';
 import * as Fs from 'fs';
 import { IGlobalConfig } from '../src/interface/Config';
 import * as Os from 'os';
 import mkdirp from 'mkdirp';
 import * as Rimraf from 'rimraf';
+import { Container } from 'typedi';
+import { LoggerService } from '../src/service/Logger';
+import { Program } from '../src/class/Program';
 
 interface CliReturn {
 	code: number;
@@ -12,29 +14,21 @@ interface CliReturn {
 	stderr: string;
 }
 
-export function CLI(cmd: string, args: string[]): Promise<CliReturn> {
-	const entryPoint = Path.resolve('src/index.ts');
-	const cwd = Path.resolve('./');
-	return new Promise((resolve) => {
-		const ls = ChildProcess.fork(entryPoint, [cmd].concat(args), { cwd, silent: true });
-		let stdout: string = '';
-		let stderr: string = '';
-		const pushStdout = (data: string) => {
-			stdout += data;
-		};
-		const pushStderr = (data: string) => {
-			stderr += data;
-		};
-		ls.stdout.on('data', pushStdout);
-		ls.stderr.on('data', pushStderr);
-		ls.on('exit', (code) => {
-			resolve({
-				code,
-				stdout,
-				stderr,
-			});
-		});
+export async function CLI(cmd: string, args: string[]): Promise<CliReturn> {
+	// Clear context
+	Container.reset();
+	// Execute fake node command
+	const logger = Container.get(LoggerService);
+	await new Program().run(['node', 'test.js', '--silent', cmd].concat(args)).catch((error) => {
+		logger.handle(error);
 	});
+	const output = Container.get(LoggerService).getOutput();
+
+	return {
+		code: output.stderr.length ? 1 : 0,
+		stdout: output.stdout,
+		stderr: output.stderr,
+	};
 }
 
 export const ProjectDir = Path.resolve(__dirname, '..');

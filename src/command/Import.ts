@@ -5,33 +5,26 @@ import { ChannelsService } from '../service/Channels';
 import { LoggerService } from '../service/Logger';
 import { ApplyPreset, AskPreset } from './question/Preset';
 
-// ############################################
-// Get services
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-const channelsService = Container.get(ChannelsService);
-
 export async function ImportCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
+	const channelsService = Container.get(ChannelsService);
 
-		// ---------------------------------
-		// Action starts
-		await channelsService.ensureSameProject();
-		await channelsService.ensureSameDefaultFields();
+	options.setCommand(cmd);
 
-		// =================================
-		// Get presets
-		const qPresets = await AskPreset(cmd);
+	// ---------------------------------
+	// Action starts
+	await channelsService.ensureSameProject();
+	await channelsService.ensureSameDefaultFields();
 
-		// =================================
-		// Get models and apply presets if necessary
-		await ApplyPreset(qPresets);
-		// Action Ends
-		// ---------------------------------
+	// =================================
+	// Get presets
+	const qPresets = await AskPreset(cmd);
 
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
-	}
+	// =================================
+	// Get models and apply presets if necessary
+	await ApplyPreset(qPresets);
+	// Action Ends
+	// ---------------------------------
 }

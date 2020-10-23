@@ -41,8 +41,6 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 	/** Project storage */
 	private remoteStorageService: ProjectsApiStorageService;
 	private localStorageService: ProjectFileStorageService;
-	/** The loaded instances */
-	private static instances: { [id: string]: Project } = {};
 
 	public constructor(object?: IProject) {
 		this.remoteStorageService = Container.get(ProjectsApiStorageService);
@@ -54,12 +52,16 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 
 	/** Returns a singleton for this config */
 	public static async getInstance(project: string) {
-		if (!this.instances[project]) {
-			this.instances[project] = new Project();
-			this.instances[project].id = project;
-			await this.instances[project].load();
+		const key = 'ProjectSingletons';
+		const instances = Container.has(key) ? Container.get<{ [id: string]: Project }>(key) : {};
+
+		if (!instances[project]) {
+			instances[project] = new Project();
+			instances[project].id = project;
+			await instances[project].load();
+			Container.set(key, instances);
 		}
-		return this.instances[project];
+		return instances[project];
 	}
 
 	public fromObject(object: IProject): Project {

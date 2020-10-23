@@ -16,8 +16,6 @@ export class PresetsCollection implements IStorable, ISerializable<IPreset[], Pr
 	private presets: Preset[] = [];
 	/** Presets storage */
 	private _storageService: PresetsApiStorageService;
-	/** The loaded instance */
-	private static instance: PresetsCollection;
 
 	private constructor() {
 		this._storageService = Container.get(PresetsApiStorageService);
@@ -25,12 +23,15 @@ export class PresetsCollection implements IStorable, ISerializable<IPreset[], Pr
 
 	/** Returns a singleton for this config */
 	public static async getInstance() {
-		if (!PresetsCollection.instance) {
+		const key = 'PresetsCollectionSingleton';
+		let instance = Container.has(key) ? Container.get<PresetsCollection>(key) : null;
+		if (!instance) {
 			// Create and load a new collection
-			PresetsCollection.instance = new PresetsCollection();
-			await PresetsCollection.instance.load();
+			instance = new PresetsCollection();
+			await instance.load();
+			Container.set(key, instance);
 		}
-		return PresetsCollection.instance;
+		return instance;
 	}
 
 	/** Load the presets */

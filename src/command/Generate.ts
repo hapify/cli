@@ -7,36 +7,29 @@ import { OptionsService } from '../service/Options';
 import { WriterService } from '../service/Writer';
 import { ChannelsService } from '../service/Channels';
 
-// ############################################
-// Get services
-const generator = Container.get(GeneratorService);
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-const writer = Container.get(WriterService);
-const channelsService = Container.get(ChannelsService);
-
 export async function GenerateCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const generator = Container.get(GeneratorService);
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
+	const writer = Container.get(WriterService);
+	const channelsService = Container.get(ChannelsService);
 
-		// ---------------------------------
-		// Action starts
-		const channels = await channelsService.channels();
+	options.setCommand(cmd);
 
-		for (const channel of channels) {
-			logChannel(channel);
-		}
+	// ---------------------------------
+	// Action starts
+	const channels = await channelsService.channels();
 
-		for (const channel of channels) {
-			const results = await generator.runChannel(channel);
-			await writer.writeMany(channel.path, results);
-			logger.success(`Generated ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)}`);
-		}
-		// Action Ends
-		// ---------------------------------
-
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
+	for (const channel of channels) {
+		logChannel(channel);
 	}
+
+	for (const channel of channels) {
+		const results = await generator.runChannel(channel);
+		await writer.writeMany(channel.path, results);
+		logger.success(`Generated ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)}`);
+	}
+	// Action Ends
+	// ---------------------------------
 }

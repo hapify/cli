@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { expect } from '@hapi/code';
 import 'mocha';
 import { CLI, GetGlobalConfig } from './helpers';
@@ -13,9 +14,9 @@ describe('config command', () => {
 
 		const response = await CLI('config', ['--apiKey', key, '--apiUrl', url]);
 
+		expect(response.stderr).to.be.empty();
 		expect(response.code).to.equal(0);
 		expect(response.stdout).to.contains(['Did update global configuration']);
-		expect(response.stderr).to.be.empty();
 
 		const globalConfig = GetGlobalConfig();
 		expect(globalConfig.apiKey).to.equal(key);
@@ -35,8 +36,8 @@ describe('config command', () => {
 
 	it('set wrong url', async () => {
 		const response = await CLI('config', ['--apiUrl', '']);
+		expect(response.stderr).to.be.empty();
 		expect(response.code).to.equal(0);
 		expect(response.stdout).to.contains(['Nothing update']);
-		expect(response.stderr).to.be.empty();
 	});
 });
