@@ -29,7 +29,7 @@ describe('new command', () => {
 
 		expect(sandbox.fileExists(['hapify.json'])).to.be.true();
 	});
-	it('success by url (x2)', async () => {
+	it('success by url (x2) with preset', async () => {
 		const sandbox = new Sandbox();
 		sandbox.clear();
 
@@ -40,7 +40,8 @@ describe('new command', () => {
 			'https://github.com/Tractr/boilerplate-hapijs.git',
 			'--boilerplate-url',
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
-			'--no-presets',
+			'--preset',
+			'5c8607a696d1ff00107de412',
 		]);
 
 		expect(response.stderr).to.be.empty();
