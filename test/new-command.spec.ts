@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { expect } from '@hapi/code';
 import 'mocha';
 import { CLI, Sandbox } from './helpers';
+import { IStorableCompactProject } from '../src/interface/Storage';
 
 describe('new command', () => {
 	it('success by slug', async () => {
@@ -48,6 +49,32 @@ describe('new command', () => {
 
 		expect(sandbox.dirExists(['boilerplate-hapijs'])).to.be.true();
 		expect(sandbox.dirExists(['boilerplate-ngx-components'])).to.be.true();
+	});
+	it('success with presets', async () => {
+		const sandbox = new Sandbox();
+		sandbox.clear();
+
+		const response = await CLI('new', [
+			'--dir',
+			sandbox.getPath(),
+			'--boilerplate',
+			'hapijs_tractr',
+			'--preset',
+			'5c8607a696d1ff00107de412',
+			'--preset',
+			'5c86966796d1ff00107de41c',
+		]);
+
+		expect(response.stderr).to.be.empty();
+		expect(response.code).to.equal(0);
+		expect(response.stdout).to.contains('Created 1 new dynamic boilerplate');
+
+		expect(sandbox.fileExists(['hapify.json'])).to.be.true();
+		expect(sandbox.fileExists(['hapify-models.json'])).to.be.true();
+		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>(['hapify-models.json']);
+		expect(hapifyModelsJSON.models.length).to.least(2);
+		expect(hapifyModelsJSON.models.some((m) => m.name.toLowerCase() === 'user')).to.be.true();
+		expect(hapifyModelsJSON.models.some((m) => m.name.toLowerCase() === 'place')).to.be.true();
 	});
 	it('busy folder', async () => {
 		const sandbox = new Sandbox();
