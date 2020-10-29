@@ -24,7 +24,13 @@ export async function ImportCommand(cmd: Command) {
 
 	// =================================
 	// Get models and apply presets if necessary
-	await ApplyPreset(qPresets);
+	const success = await ApplyPreset(qPresets);
+
+	if (success) {
+		logger.success(`Did apply ${qPresets.length} preset(s)`);
+	} else {
+		logger.error('Operation aborted');
+	}
 	// Action Ends
 	// ---------------------------------
 }

@@ -89,6 +89,6 @@ export class OptionsService {
 
 	/** Denotes if a new tab should be opened */
 	open(): boolean {
-		return !!this.command.open;
+		return this.command.open !== false;
 	}
 }

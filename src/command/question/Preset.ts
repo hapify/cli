@@ -9,7 +9,7 @@ export async function AskPreset(cmd: Command): Promise<string[]> {
 	const presetsCollection = await Container.get(PresetsService).collection();
 	let qPresets: string[] = [];
 
-	if (cmd.presets) {
+	if (cmd.presets !== false) {
 		if (cmd.preset && cmd.preset.length) {
 			qPresets = cmd.preset;
 		} else {
@@ -33,7 +33,7 @@ export async function AskPreset(cmd: Command): Promise<string[]> {
 
 	return qPresets;
 }
-export async function ApplyPreset(qPresets: string[]) {
+export async function ApplyPreset(qPresets: string[]): Promise<boolean> {
 	const logger = Container.get(LoggerService);
 	const presets = Container.get(PresetsService);
 	const presetsCollection = await presets.collection();
@@ -44,6 +44,7 @@ export async function ApplyPreset(qPresets: string[]) {
 		// If the project already has models, ignore add presets
 		if (models.length) {
 			logger.warning('Project already contains models. Ignore presets import.');
+			return false;
 		} else {
 			// Get and apply presets
 			for (const id of qPresets) {
@@ -54,6 +55,7 @@ export async function ApplyPreset(qPresets: string[]) {
 			}
 			// Save models
 			await modelsCollection.save();
+			return true;
 		}
 	}
 }
