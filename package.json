@@ -36,6 +36,10 @@
     "chalk": "^2.4.1",
     "commander": "^6.1.0",
     "detect-port": "^1.2.3",
+    "find-package-json": "^1.2.0",
+    "hapify-generator": "github:hapify/generator#v0.5.3",
+    "hapify-gui": "github:hapify/gui#v0.5.0",
+    "hapify-vm": "github:hapify/vm#v0.3.2",
     "inquirer": "^6.3.1",
     "joi": "^13.6.0",
     "jsonwebtoken": "^8.5.1",
@@ -50,10 +54,7 @@
     "simple-git": "^1.115.0",
     "typedi": "^0.8.0",
     "vm2": "^3.9.2",
-    "ws": "^6.2.1",
-    "hapify-vm": "github:hapify/vm#v0.3.2",
-    "hapify-generator": "github:hapify/generator#v0.5.3",
-    "hapify-gui": "github:hapify/gui#v0.5.0"
+    "ws": "^6.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
@@ -62,6 +63,7 @@
     "@types/chalk": "^2.2.0",
     "@types/commander": "^2.12.2",
     "@types/detect-port": "^1.3.0",
+    "@types/find-package-json": "^1.1.1",
     "@types/hapi__hapi": "^18.2.4",
     "@types/hapi__hoek": "^6.2.0",
     "@types/hapi__inert": "^5.2.0",

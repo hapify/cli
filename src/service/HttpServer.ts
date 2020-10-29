@@ -3,14 +3,16 @@ import * as Path from 'path';
 import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
 import { Server } from '@hapi/hapi';
+import FindPackageJson from 'find-package-json';
 
 const opn = require('opn');
 const DetectPort = require('detect-port');
+const RootDir = Path.dirname(FindPackageJson(__dirname).next().filename);
 
 @Service()
 export class HttpServerService {
 	/** WebApp root */
-	private rootPath: string = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
+	private rootPath: string = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
 
 	/** Start port number */
 	private _minPort: number = 4800;

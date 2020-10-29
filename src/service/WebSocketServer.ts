@@ -25,10 +25,12 @@ import { GenerateChannelHandlerService } from './websocket-handlers/GenerateChan
 import { GenerateTemplateHandlerService } from './websocket-handlers/GenerateTemplateHandler';
 import { IWebSocketHandler, WebSocket, WebSocketMessage, WebSocketMessageSchema } from '../interface/WebSocket';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
+import FindPackageJson from 'find-package-json';
 
 interface TokenData {
 	name: string;
 }
+const RootDir = Path.dirname(FindPackageJson(__dirname).next().filename);
 
 @Service()
 export class WebSocketServerService {
@@ -40,7 +42,7 @@ export class WebSocketServerService {
 	private serverStarted: boolean;
 
 	/** The path to save the token */
-	private wsInfoPath: string = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
+	private wsInfoPath: string = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
 	/** Random name to generate token */
 	private randomName: string = RandomString.generate({ length: 24 });
 	/** Random secret to generate token */

@@ -2,11 +2,12 @@ import * as Path from 'path';
 import * as Fs from 'fs';
 import { IGlobalConfig } from '../src/interface/Config';
 import * as Os from 'os';
-import mkdirp from 'mkdirp';
+import * as mkdirp from 'mkdirp';
 import * as Rimraf from 'rimraf';
 import { Container } from 'typedi';
 import { LoggerService } from '../src/service/Logger';
 import { Program } from '../src/class/Program';
+import axios from 'axios';
 
 interface CliReturn {
 	code: number;
@@ -29,6 +30,14 @@ export async function CLI(cmd: string, args: string[]): Promise<CliReturn> {
 		stdout: output.stdout,
 		stderr: output.stderr,
 	};
+}
+
+export async function Fetch<T = any>(url: string, params: any = null): Promise<T> {
+	const response = await axios.get<T>(url, { params });
+	if (response.status > 299) {
+		throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+	}
+	return response.data;
 }
 
 export const ProjectDir = Path.resolve(__dirname, '..');
