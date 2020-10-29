@@ -41,7 +41,7 @@ describe('new command', () => {
 			'--boilerplate-url',
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--preset',
-			'5c8607a696d1ff00107de412',
+			'5c8607a696d1ff00107de412', // User
 		]);
 
 		expect(response.stderr).to.be.empty();
@@ -61,9 +61,9 @@ describe('new command', () => {
 			'--boilerplate',
 			'hapijs_tractr',
 			'--preset',
-			'5c8607a696d1ff00107de412',
+			'5c8607a696d1ff00107de412', // User
 			'--preset',
-			'5c86966796d1ff00107de41c',
+			'5c86966796d1ff00107de41c', // Place
 		]);
 
 		expect(response.stderr).to.be.empty();
