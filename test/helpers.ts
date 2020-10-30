@@ -8,6 +8,9 @@ import { Container } from 'typedi';
 import { LoggerService } from '../src/service/Logger';
 import { Program } from '../src/class/Program';
 import axios from 'axios';
+import { WebSocketMessage } from '../src/interface/WebSocket';
+
+const WebSocket = require('ws');
 
 interface CliReturn {
 	code: number;
@@ -38,6 +41,32 @@ export async function Fetch<T = any>(url: string, params: any = null): Promise<T
 		throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
 	}
 	return response.data;
+}
+
+interface WebSocketErrorPayload {
+	message: string;
+	data?: any;
+}
+export function SingleUseWebSocketClient<I, O>(url: string, data: WebSocketMessage<I>): Promise<O> {
+	return new Promise((resolve, reject) => {
+		const client = new WebSocket(url);
+		client.on('open', () => {
+			client.send(JSON.stringify(data));
+		});
+		client.on('message', (message: string) => {
+			client.close();
+			const decoded = JSON.parse(message) as WebSocketMessage<O | WebSocketErrorPayload>;
+			if (decoded.id === 'error') {
+				reject(new Error((decoded as WebSocketMessage<WebSocketErrorPayload>).data.message));
+			} else {
+				resolve((decoded as WebSocketMessage<O>).data);
+			}
+		});
+		client.on('error', (error: Error) => {
+			client.close();
+			reject(error);
+		});
+	});
 }
 
 export const ProjectDir = Path.resolve(__dirname, '..');
