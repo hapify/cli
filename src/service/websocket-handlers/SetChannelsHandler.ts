@@ -1,15 +1,15 @@
 import { Service } from 'typedi';
 import { ChannelsService } from '../Channels';
 import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { ChannelSchema } from '../../interface/schema/Channel';
 import { IChannel } from '../../interface/Objects';
 
 @Service()
-export class SetChannelsHandlerService implements IWebSocketHandler {
+export class SetChannelsHandlerService implements IWebSocketHandler<IChannel[], void> {
 	constructor(private channelsService: ChannelsService) {}
 
-	canHandle(message: WebSocket): boolean {
+	canHandle(message: WebSocketMessage<IChannel[]>): boolean {
 		return message.id === 'set:channels';
 	}
 
@@ -17,11 +17,11 @@ export class SetChannelsHandlerService implements IWebSocketHandler {
 		return Joi.array().items(ChannelSchema).min(0);
 	}
 
-	async handle(message: WebSocket): Promise<any> {
+	async handle(message: WebSocketMessage<IChannel[]>): Promise<void> {
 		// Existing channels
 		const channels = await this.channelsService.channels();
 		// New contents
-		const toSaves: IChannel[] = message.data;
+		const toSaves = message.data;
 		// For each new content, get the corresponding channel and save it
 		for (const toSave of toSaves) {
 			const channel = channels.find((c) => c.id === toSave.id);

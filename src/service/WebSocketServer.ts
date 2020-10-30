@@ -2,7 +2,6 @@ import { Container, Service } from 'typedi';
 import * as Path from 'path';
 import * as Fs from 'fs';
 import * as ws from 'ws';
-import { AddressInfo } from 'ws';
 import * as http from 'http';
 import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
@@ -23,7 +22,7 @@ import { GetInfoHandlerService } from './websocket-handlers/GetInfoHandler';
 import { GetPresetsHandlerService } from './websocket-handlers/GetPresetsHandler';
 import { GenerateChannelHandlerService } from './websocket-handlers/GenerateChannelHandler';
 import { GenerateTemplateHandlerService } from './websocket-handlers/GenerateTemplateHandler';
-import { IWebSocketHandler, WebSocket, WebSocketMessage, WebSocketMessageSchema } from '../interface/WebSocket';
+import { IWebSocketHandler, WebSocketMessage, WebSocketMessageId, WebSocketMessageSchema } from '../interface/WebSocket';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
 import FindPackageJson from 'find-package-json';
 
@@ -50,7 +49,7 @@ export class WebSocketServerService {
 	/** Random secret to generate token */
 	private tokenExpires: number = 24 * 60 * 60 * 1000; // 1 day;
 	/** Messages handlers */
-	private handlers: IWebSocketHandler[] = [];
+	private handlers: IWebSocketHandler<any, any>[] = [];
 
 	constructor(private optionsService: OptionsService, private loggerService: LoggerService) {
 		this.addHandler(Container.get(ApplyPresetHandlerService));
@@ -108,8 +107,8 @@ export class WebSocketServerService {
 			const id = this.makeId();
 
 			// Create a reply method for this connection
-			const reply = (id: WebSocketMessage, data: any, type?: string, tag?: string) => {
-				const payload: WebSocket = { id, data };
+			const reply = (id: WebSocketMessageId, data: any, type?: string, tag?: string) => {
+				const payload: WebSocketMessage<any> = { id, data };
 				if (type) {
 					payload.type = type;
 				}
@@ -122,11 +121,11 @@ export class WebSocketServerService {
 			this.loggerService.debug(`[WS:${id}] Did open new websocket connection`);
 
 			ws.on('message', async (message: string) => {
-				let decoded: WebSocket;
+				let decoded: WebSocketMessage<any>;
 
 				try {
 					// Decode and verify message
-					const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<WebSocket>;
+					const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<WebSocketMessage<any>>;
 					if (parsed.error) {
 						(parsed.error as any).data = {
 							code: 4002,
@@ -238,13 +237,13 @@ export class WebSocketServerService {
 	}
 
 	/** Add a new handler */
-	public addHandler(handler: IWebSocketHandler) {
+	public addHandler(handler: IWebSocketHandler<any, any>) {
 		this.handlers.push(handler);
 	}
 
 	/** Create and store token */
 	private async createToken(): Promise<void> {
-		const wsAddress = <AddressInfo>this.server.address();
+		const wsAddress = <ws.AddressInfo>this.server.address();
 		const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
 			expiresIn: this.tokenExpires,
 		});

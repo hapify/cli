@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 
-export type WebSocketMessage =
+export type WebSocketMessageId =
 	| 'error'
 	| 'get:models'
 	| 'set:models'
@@ -16,7 +16,7 @@ export type WebSocketMessage =
 	| 'gen:template'
 	| 'gen:channel';
 
-const WebSocketMessages = [
+const WebSocketMessageIds: WebSocketMessageId[] = [
 	'get:models',
 	'set:models',
 	'new:model',
@@ -32,29 +32,29 @@ const WebSocketMessages = [
 	'gen:channel',
 ];
 
-export interface WebSocket {
-	id: WebSocketMessage;
+export interface WebSocketMessage<T> {
+	id: WebSocketMessageId;
 	type?: string;
 	tag?: string;
-	data: any;
+	data: T;
 }
 
 export const WebSocketMessageSchema = Joi.object({
-	id: Joi.string().valid(WebSocketMessages).required(),
+	id: Joi.string().valid(WebSocketMessageIds).required(),
 	type: Joi.string().valid(['error', 'success']),
 	tag: Joi.string(),
 	data: Joi.any(),
 });
 
-export interface IWebSocketHandler {
+export interface IWebSocketHandler<I, O> {
 	/** Denotes if the handler can handle this message */
-	canHandle(message: WebSocket): boolean;
+	canHandle(message: WebSocketMessage<I>): boolean;
 
 	/**
 	 * Handle message.
 	 * Returns data if necessary, null otherwise
 	 */
-	handle(message: WebSocket): Promise<any>;
+	handle(message: WebSocketMessage<I>): Promise<O>;
 
 	/** Returns the JOi validator for the input payload */
 	validator(): Joi.Schema;
