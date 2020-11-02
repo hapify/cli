@@ -13,7 +13,7 @@
 ## Medium-term
 
 - Strong use of TypeScript definitions. No `any` allowed.
-- Add automated tests suite.
+- ~~Add automated tests suite.~~
 - ~~Ability to store models locally (no account on hapify.io needed).~~
 
 ## Long-term
