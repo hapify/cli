@@ -3,7 +3,6 @@ import * as Path from 'path';
 import * as Fs from 'fs';
 import * as Os from 'os';
 import mkdirp from 'mkdirp';
-import * as Joi from 'joi';
 import { IGlobalConfig } from '../interface/Config';
 import { GlobalConfigSchema } from '../interface/schema/Config';
 
@@ -49,7 +48,7 @@ export class GlobalConfigService {
 
 	/** Validate the current config or scream */
 	private validate(data: IGlobalConfig = this.data): void {
-		const validation = Joi.validate(data, GlobalConfigSchema);
+		const validation = GlobalConfigSchema.validate(data);
 		if (validation.error) {
 			const errorMessage = validation.error.details
 				.map((v) => {

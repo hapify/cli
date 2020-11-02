@@ -6,7 +6,7 @@ import * as http from 'http';
 import * as Jwt from 'jsonwebtoken';
 import * as RandomString from 'randomstring';
 import { URL } from 'url';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { LoggerService } from './Logger';
 import { OptionsService } from './Options';
 import { ApplyPresetHandlerService } from './websocket-handlers/ApplyPresetHandler';
@@ -125,7 +125,7 @@ export class WebSocketServerService {
 
 				try {
 					// Decode and verify message
-					const parsed = Joi.validate(JSON.parse(message), WebSocketMessageSchema) as Joi.ValidationResult<WebSocketMessage<any>>;
+					const parsed = WebSocketMessageSchema.validate(JSON.parse(message)) as Joi.ValidationResult;
 					if (parsed.error) {
 						(parsed.error as any).data = {
 							code: 4002,
@@ -142,7 +142,7 @@ export class WebSocketServerService {
 					for (const handler of this.handlers) {
 						if (handler.canHandle(decoded)) {
 							// Validate the incoming payload
-							const validation = Joi.validate(decoded.data, handler.validator());
+							const validation = handler.validator().validate(decoded.data);
 							if (validation.error) {
 								const { error } = validation;
 								// Transform Joi message

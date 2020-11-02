@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import Joi from 'joi';
 
 export type WebSocketMessageId =
 	| 'error'
@@ -40,8 +40,10 @@ export interface WebSocketMessage<T> {
 }
 
 export const WebSocketMessageSchema = Joi.object({
-	id: Joi.string().valid(WebSocketMessageIds).required(),
-	type: Joi.string().valid(['error', 'success']),
+	id: Joi.string()
+		.valid(...WebSocketMessageIds)
+		.required(),
+	type: Joi.string().valid('error', 'success'),
 	tag: Joi.string(),
 	data: Joi.any(),
 });

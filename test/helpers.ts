@@ -73,11 +73,11 @@ export const ProjectDir = Path.resolve(__dirname, '..');
 export const SamplesDir = Path.resolve(ProjectDir, 'samples');
 export const SampleHapiJSDir = Path.resolve(SamplesDir, 'hapijs');
 
-export function GetFileContent(path: string, encoding = 'utf8'): string {
+export function GetFileContent(path: string, encoding: BufferEncoding = 'utf8'): string {
 	return Fs.readFileSync(Path.resolve(path), { encoding });
 }
 
-export function GetJSONFileContent<T = unknown>(path: string, encoding = 'utf8'): T {
+export function GetJSONFileContent<T = unknown>(path: string, encoding: BufferEncoding = 'utf8'): T {
 	const content = GetFileContent(path, encoding);
 	return JSON.parse(content);
 }
@@ -114,10 +114,10 @@ export class Sandbox {
 		return Path.join(this.rootPath, ...subPath);
 	}
 
-	getFileContent(subPath: string[], encoding = 'utf8'): string {
+	getFileContent(subPath: string[], encoding: BufferEncoding = 'utf8'): string {
 		return GetFileContent(Path.join(this.rootPath, ...subPath), encoding);
 	}
-	getJSONFileContent<T = unknown>(subPath: string[], encoding = 'utf8'): T {
+	getJSONFileContent<T = unknown>(subPath: string[], encoding: BufferEncoding = 'utf8'): T {
 		return GetJSONFileContent<T>(Path.join(this.rootPath, ...subPath), encoding);
 	}
 	fileExists(subPath: string[]): boolean {

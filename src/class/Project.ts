@@ -3,7 +3,6 @@ import { ISerializable, IStorable, StorageType } from '../interface/Storage';
 import { IProject } from '../interface/Objects';
 import { ProjectsApiStorageService } from '../service/storage/api/Projects';
 import { ProjectFileStorageService } from '../service/storage/file/Project';
-import * as Joi from '@hapi/joi';
 import { ProjectConfigSchema } from '../interface/schema/Config';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
 import { Channel } from './Channel';
@@ -85,7 +84,7 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 		if (this.storageType === 'local') {
 			// Validate config format
 			const projectConfig = await this.localStorageService.get(this._id);
-			const validation = Joi.validate(projectConfig, ProjectConfigSchema);
+			const validation = ProjectConfigSchema.validate(projectConfig);
 			if (validation.error) {
 				// Transform Joi message
 				TransformValidationMessage(validation.error);

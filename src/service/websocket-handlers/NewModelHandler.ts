@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { InfoService } from '../Info';
 import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { Model } from '../../class/Model';

@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { ChannelsService } from '../Channels';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { IChannel } from '../../interface/Objects';
 

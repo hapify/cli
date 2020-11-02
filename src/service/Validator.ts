@@ -1,6 +1,5 @@
 import { Service } from 'typedi';
 import { HapifyVM } from 'hapify-vm';
-import * as Joi from 'joi';
 import { Validator } from '../interface/Validator';
 import { IModel } from '../interface/Generator';
 import { InternalConfig } from '../config/Internal';
@@ -53,7 +52,7 @@ export class ValidatorService {
 		}
 
 		// Check result and return
-		const validation = Joi.validate(result, ValidatorResultSchema);
+		const validation = ValidatorResultSchema.validate(result);
 		if (validation.error) {
 			throw new RichError(`Invalid validator output. Must return { errors: string[], warnings: string[] }`, {
 				code: 4007,

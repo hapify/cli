@@ -20,7 +20,7 @@ import { IChannel, IPreset } from '../src/interface/Objects';
 import { Validator } from '../src/interface/Validator';
 import { IConfig } from '../src/interface/Config';
 import { IStorableCompactProject } from '../src/interface/Storage';
-import * as Hoek from '@hapi/hoek';
+import Hoek from '@hapi/hoek';
 
 let authJson: { url: string };
 let sandbox: Sandbox;
@@ -66,7 +66,7 @@ describe('serve command', () => {
 	//	ERRORS
 	// =======================================================================================
 	it('wrong message', async () => {
-		await expect(SingleUseWebSocketClient(authJson.url, { id: 'get:wrong' as any, data: {} })).to.reject(/child "id" fails because/);
+		await expect(SingleUseWebSocketClient(authJson.url, { id: 'get:wrong' as any, data: {} })).to.reject(/"id" must be one of/);
 	});
 
 	it('no token', async () => {

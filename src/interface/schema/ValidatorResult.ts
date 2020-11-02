@@ -1,5 +1,4 @@
-import * as Joi from 'joi';
-import { ValidationError } from 'joi';
+import Joi, { ValidationError } from 'joi';
 
 export const ValidatorResultSchema = Joi.object({
 	errors: Joi.array().items(Joi.string()).required().min(0),

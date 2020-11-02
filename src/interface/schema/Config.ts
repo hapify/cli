@@ -1,12 +1,14 @@
 import { ConfigTemplateSchema } from './Template';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { FieldSchema } from './Field';
 import { ModelSchema } from './Model';
 
 const Versions = ['1'];
 
 export const ConfigSchema = Joi.object({
-	version: Joi.string().valid(Versions).required(),
+	version: Joi.string()
+		.valid(...Versions)
+		.required(),
 	validatorPath: Joi.string().required(),
 	project: Joi.string().required(),
 	name: Joi.string(),
@@ -17,7 +19,9 @@ export const ConfigSchema = Joi.object({
 });
 
 export const ProjectConfigSchema = Joi.object({
-	version: Joi.string().valid(Versions).required(),
+	version: Joi.string()
+		.valid(...Versions)
+		.required(),
 	name: Joi.string(),
 	description: Joi.string(),
 	models: Joi.array().items(ModelSchema).required().min(0),

@@ -1,6 +1,5 @@
 import * as Path from 'path';
 import md5 from 'md5';
-import * as Joi from 'joi';
 import { Container } from 'typedi';
 import { ISerializable, IStorable } from '../interface/Storage';
 import { IChannel } from '../interface/Objects';
@@ -52,7 +51,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		const config = await this.storageService.get([this.path, Channel.configFile]);
 
 		// Validate the incoming config
-		const validation = Joi.validate(config, ConfigSchema);
+		const validation = ConfigSchema.validate(config);
 		if (validation.error) {
 			// Transform Joi message
 			TransformValidationMessage(validation.error);

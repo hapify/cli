@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { PresetsService } from '../Presets';
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { Model } from '../../class/Model';
 import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { ModelSchema } from '../../interface/schema/Model';
