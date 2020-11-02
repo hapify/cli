@@ -10,8 +10,16 @@ interface RichError extends Error {
 	data: ErrorData;
 }
 
+type LogType = 'stderr' | 'stdout';
+type LoggerOutput = { [key in LogType]: string };
+
 @Service()
 export class LoggerService {
+	private output: LoggerOutput = {
+		stdout: '',
+		stderr: '',
+	};
+
 	constructor(private optionsService: OptionsService) {}
 
 	/** Handle an error */
@@ -25,7 +33,7 @@ export class LoggerService {
 		if (this.optionsService.debug()) {
 			message += `\n${error.stack.toString()}`;
 		}
-		console.error(chalk.red(message));
+		this.log(chalk.red(message), 'stderr');
 		return this;
 	}
 	/** Handle an error */
@@ -37,51 +45,51 @@ export class LoggerService {
 
 	/** Display a message */
 	raw(message: string): this {
-		console.log(message);
+		this.log(message, 'stdout');
 		return this;
 	}
 
 	/** Display a success message */
 	success(message: string): this {
-		console.log(`${chalk.green('✓')} ${message}`);
+		this.log(`${chalk.green('✓')} ${message}`, 'stdout');
 		return this;
 	}
 
 	/** Display an info */
 	info(message: string): this {
-		console.log(`${chalk.blueBright('•')} ${message}`);
+		this.log(`${chalk.blueBright('•')} ${message}`, 'stdout');
 		return this;
 	}
 
 	/** Display an info if in debug mode */
 	debug(message: string): this {
 		if (this.optionsService.debug()) {
-			console.log(`${chalk.cyan('*')} ${message}`);
+			this.log(`${chalk.cyan('*')} ${message}`, 'stdout');
 		}
 		return this;
 	}
 
 	/** Display an error */
 	error(message: string): this {
-		console.log(`${chalk.red('✖')} ${message}`);
+		this.log(`${chalk.red('✖')} ${message}`, 'stdout');
 		return this;
 	}
 
 	/** Add new lines */
 	newLine(count: number = 1): this {
-		console.log(`\n`.repeat(count - 1));
+		this.log(`\n`.repeat(count - 1), 'stdout');
 		return this;
 	}
 
 	/** Display an error */
 	warning(message: string): this {
-		console.log(`${chalk.yellow('!')} ${message}`);
+		this.log(`${chalk.yellow('!')} ${message}`, 'stdout');
 		return this;
 	}
 
 	/** Display ascii art */
 	art(): this {
-		console.log(this.getArt());
+		this.log(this.getArt(), 'stdout');
 		return this;
 	}
 
@@ -103,8 +111,19 @@ export class LoggerService {
 	time(): this {
 		if (this.optionsService.debug()) {
 			const message = `Process ran in ${process.uptime()}`;
-			console.log(message);
+			this.log(message, 'stdout');
 		}
 		return this;
+	}
+
+	private log(message: string, type: LogType): void {
+		if (!this.optionsService.silent()) {
+			console.log(message);
+		}
+		this.output[type] += message;
+	}
+
+	getOutput(): LoggerOutput {
+		return this.output;
 	}
 }

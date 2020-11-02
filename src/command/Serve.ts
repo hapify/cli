@@ -6,31 +6,26 @@ import { LoggerService } from '../service/Logger';
 import { HttpServerService } from '../service/HttpServer';
 import { ChannelsService } from '../service/Channels';
 
-// ############################################
-// Get services
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-const http = Container.get(HttpServerService);
-const channelsService = Container.get(ChannelsService);
-
 export async function ServeCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
+	const http = Container.get(HttpServerService);
+	const channelsService = Container.get(ChannelsService);
 
-		// ---------------------------------
-		// Action starts
-		await channelsService.ensureSameProject();
-		await channelsService.ensureSameDefaultFields();
-		await http.serve();
-		logger.info(`Server is running at: ${cPath(http.url())}`);
-		if (options.open()) {
-			http.open();
-		}
-		// Action Ends
-		// ---------------------------------
+	options.setCommand(cmd);
 
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
+	// ---------------------------------
+	// Action starts
+	await channelsService.ensureSameProject();
+	await channelsService.ensureSameDefaultFields();
+	await http.serve();
+	logger.info(`Server is running at: ${cPath(http.url())}`);
+	if (options.open()) {
+		http.open();
 	}
+	// Action Ends
+	// ---------------------------------
+
+	logger.time();
 }

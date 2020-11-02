@@ -6,43 +6,36 @@ import { LoggerService } from '../service/Logger';
 import { ChannelsService } from '../service/Channels';
 import { AskProject, ProjectQuery, SetupProject } from './question/Project';
 
-// ############################################
-// Get services
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-const channelsService = Container.get(ChannelsService);
-
 export async function UseCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
+	const channelsService = Container.get(ChannelsService);
 
-		// ---------------------------------
-		// Action starts
-		const qProject: ProjectQuery = {};
+	options.setCommand(cmd);
 
-		// =================================
-		// Get project
-		await AskProject(cmd, qProject);
+	// ---------------------------------
+	// Action starts
+	const qProject: ProjectQuery = {};
 
-		// =================================
-		// Create project if necessary
-		await SetupProject(qProject);
+	// =================================
+	// Get project
+	await AskProject(cmd, qProject);
 
-		// =================================
-		// Set project in channel and save
-		await channelsService.changeProject(qProject.id);
+	// =================================
+	// Create project if necessary
+	await SetupProject(qProject);
 
-		// =================================
-		// Log changes
-		const channels = await channelsService.channels();
-		for (const channel of channels) {
-			logger.success(`Did set project ${cHigh(qProject.id)} for channel ${cChannel(channel.name)}`);
-		}
-		// Action Ends
-		// ---------------------------------
+	// =================================
+	// Set project in channel and save
+	await channelsService.changeProject(qProject.id);
 
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
+	// =================================
+	// Log changes
+	const channels = await channelsService.channels();
+	for (const channel of channels) {
+		logger.success(`Did set project ${cHigh(qProject.id)} for channel ${cChannel(channel.name)}`);
 	}
+	// Action Ends
+	// ---------------------------------
 }

@@ -3,11 +3,9 @@ import { Container } from 'typedi';
 import { LoggerService } from '../service/Logger';
 import { Channel } from '../class/Channel';
 
-const logger = Container.get(LoggerService);
-
-// ############################################
 // Common methods
 export const logChannel = (channel: Channel) => {
+	const logger = Container.get(LoggerService);
 	logger.info(`Found channel ${chalk.yellow(channel.name)} in ${chalk.blueBright(channel.path)}`);
 };
 export const cChannel = chalk.yellow;

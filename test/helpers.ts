@@ -1,8 +1,16 @@
 import * as Path from 'path';
-import * as ChildProcess from 'child_process';
 import * as Fs from 'fs';
 import { IGlobalConfig } from '../src/interface/Config';
 import * as Os from 'os';
+import * as mkdirp from 'mkdirp';
+import * as Rimraf from 'rimraf';
+import { Container } from 'typedi';
+import { LoggerService } from '../src/service/Logger';
+import { Program } from '../src/class/Program';
+import axios from 'axios';
+import { WebSocketMessage } from '../src/interface/WebSocket';
+
+const WebSocket = require('ws');
 
 interface CliReturn {
 	code: number;
@@ -10,41 +18,71 @@ interface CliReturn {
 	stderr: string;
 }
 
-export function CLI(cmd: string, args: string[]): Promise<CliReturn> {
-	const entryPoint = Path.resolve('src/index.ts');
-	const cwd = Path.resolve('./');
-	return new Promise((resolve) => {
-		const ls = ChildProcess.fork(entryPoint, [cmd].concat(args), { cwd, silent: true });
-		let stdout: string = '';
-		let stderr: string = '';
-		const pushStdout = (data: string) => {
-			stdout += data;
-		};
-		const pushStderr = (data: string) => {
-			stderr += data;
-		};
-		ls.stdout.on('data', pushStdout);
-		ls.stderr.on('data', pushStderr);
-		ls.on('exit', (code) => {
-			resolve({
-				code,
-				stdout,
-				stderr,
-			});
+export async function CLI(cmd: string, args: string[]): Promise<CliReturn> {
+	// Clear context
+	Container.reset();
+	// Execute fake node command
+	const logger = Container.get(LoggerService);
+	await new Program().run(['node', 'test.js', '--silent', cmd].concat(args)).catch((error) => {
+		logger.handle(error);
+	});
+	const output = Container.get(LoggerService).getOutput();
+
+	return {
+		code: output.stderr.length ? 1 : 0,
+		stdout: output.stdout,
+		stderr: output.stderr,
+	};
+}
+
+export async function Fetch<T = any>(url: string, params: any = null): Promise<T> {
+	const response = await axios.get<T>(url, { params });
+	if (response.status > 299) {
+		throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+	}
+	return response.data;
+}
+
+interface WebSocketErrorPayload {
+	message: string;
+	data?: any;
+}
+export function SingleUseWebSocketClient<I, O>(url: string, data: WebSocketMessage<I>): Promise<O> {
+	return new Promise((resolve, reject) => {
+		const client = new WebSocket(url);
+		client.on('open', () => {
+			client.send(JSON.stringify(data));
+		});
+		client.on('message', (message: string) => {
+			client.close();
+			const decoded = JSON.parse(message) as WebSocketMessage<O | WebSocketErrorPayload>;
+			if (decoded.id === 'error') {
+				reject(new Error((decoded as WebSocketMessage<WebSocketErrorPayload>).data.message));
+			} else {
+				resolve((decoded as WebSocketMessage<O>).data);
+			}
+		});
+		client.on('error', (error: Error) => {
+			client.close();
+			reject(error);
 		});
 	});
 }
 
-export function GetFileContent(path: string): string {
-	return Fs.readFileSync(Path.resolve(path), { encoding: 'utf8' });
+export const ProjectDir = Path.resolve(__dirname, '..');
+export const SamplesDir = Path.resolve(ProjectDir, 'samples');
+export const SampleHapiJSDir = Path.resolve(SamplesDir, 'hapijs');
+
+export function GetFileContent(path: string, encoding = 'utf8'): string {
+	return Fs.readFileSync(Path.resolve(path), { encoding });
 }
 
-export function GetJSONFileContent<T = object>(path: string): T {
-	const content = GetFileContent(path);
+export function GetJSONFileContent<T = unknown>(path: string, encoding = 'utf8'): T {
+	const content = GetFileContent(path, encoding);
 	return JSON.parse(content);
 }
 
-export function GetJSONFileContentSafe<T = object>(path: string, defaultValue: T): T {
+export function GetJSONFileContentSafe<T = unknown>(path: string, defaultValue: T): T {
 	try {
 		const content = GetFileContent(path);
 		return JSON.parse(content);
@@ -54,4 +92,43 @@ export function GetJSONFileContentSafe<T = object>(path: string, defaultValue: T
 }
 export function GetGlobalConfig(): IGlobalConfig {
 	return GetJSONFileContentSafe<IGlobalConfig>(`${Os.homedir()}/.hapify/config.json`, {});
+}
+
+export class Sandbox {
+	private readonly rootPath: string;
+	constructor(private name: string = 'sandbox') {
+		this.rootPath = Path.join(ProjectDir, 'test', name);
+		this.create();
+	}
+	private create(): void {
+		// Make dir if not exists
+		mkdirp.sync(this.rootPath);
+	}
+	clear(): void {
+		Rimraf.sync(this.rootPath);
+		this.create();
+	}
+	cloneFrom(path: string): void {}
+
+	getPath(subPath: string[] = []): string {
+		return Path.join(this.rootPath, ...subPath);
+	}
+
+	getFileContent(subPath: string[], encoding = 'utf8'): string {
+		return GetFileContent(Path.join(this.rootPath, ...subPath), encoding);
+	}
+	getJSONFileContent<T = unknown>(subPath: string[], encoding = 'utf8'): T {
+		return GetJSONFileContent<T>(Path.join(this.rootPath, ...subPath), encoding);
+	}
+	fileExists(subPath: string[]): boolean {
+		const path = Path.join(this.rootPath, ...subPath);
+		return Fs.existsSync(path) && Fs.lstatSync(path).isFile();
+	}
+	dirExists(subPath: string[]): boolean {
+		const path = Path.join(this.rootPath, ...subPath);
+		return Fs.existsSync(path) && Fs.lstatSync(path).isDirectory();
+	}
+	touch(name = 'placeholder', content = ''): void {
+		Fs.writeFileSync(Path.join(this.rootPath, name), content);
+	}
 }

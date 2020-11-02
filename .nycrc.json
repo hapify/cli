@@ -11,7 +11,8 @@
   ],
   "exclude": [
     "dist",
-    "test/**/*.spec.ts"
+    "test/**/*.spec.ts",
+    "src/index.ts"
   ],
   "require": [
     "ts-node/register"

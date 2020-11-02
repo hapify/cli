@@ -8,33 +8,26 @@ import { LoggerService } from '../service/Logger';
 import { WriterService } from '../service/Writer';
 import { Channel } from '../class/Channel';
 
-// ############################################
-// Get services
-const generator = Container.get(GeneratorService);
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-const writer = Container.get(WriterService);
-
 export async function ExportCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const generator = Container.get(GeneratorService);
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
+	const writer = Container.get(WriterService);
 
-		// ---------------------------------
-		// Action starts
-		const channel: Channel = new Channel(options.dir());
-		await channel.load();
-		logChannel(channel);
+	options.setCommand(cmd);
 
-		const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
+	// ---------------------------------
+	// Action starts
+	const channel: Channel = new Channel(options.dir());
+	await channel.load();
+	logChannel(channel);
 
-		const results = await generator.runChannel(channel);
-		await writer.zip(outputPath, results);
-		logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
-		// Action Ends
-		// ---------------------------------
+	const outputPath = options.output() || Path.join(options.dir(), `${channel.name}.zip`);
 
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
-	}
+	const results = await generator.runChannel(channel);
+	await writer.zip(outputPath, results);
+	logger.success(`Generated and zipped ${cHigh(`${results.length} files`)} for channel ${cChannel(channel.name)} to ${cPath(outputPath)}`);
+	// Action Ends
+	// ---------------------------------
 }

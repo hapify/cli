@@ -11,8 +11,6 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 	private models: Model[];
 	/** The pseudo path */
 	public path: string;
-	/** The loaded instances */
-	private static instances: ModelsCollection[] = [];
 	/** Models storage */
 	private remoteStorageService: ModelsApiStorageService;
 	private localStorageService: ProjectFileStorageService;
@@ -26,16 +24,22 @@ export class ModelsCollection implements IStorable, ISerializable<IModel[], Mode
 	/** Returns a singleton for this config */
 	public static async getInstance(project: Project) {
 		const path = ModelsCollection.path(project);
+		const key = 'ModelsCollectionSingletons';
+		const instances = Container.has(key) ? Container.get<ModelsCollection[]>(key) : [];
+
 		// Try to find an existing collection
-		const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
+		const modelsCollection = instances.find((m) => m.path === path);
 		if (modelsCollection) {
 			return modelsCollection;
 		}
+
 		// Create and load a new collection
 		const collection = new ModelsCollection(project);
 		await collection.load();
+
 		// Keep the collection
-		ModelsCollection.instances.push(collection);
+		instances.push(collection);
+		Container.set(key, instances);
 
 		return collection;
 	}

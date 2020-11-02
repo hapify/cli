@@ -2,15 +2,17 @@ import { Service } from 'typedi';
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { TemplateSchema } from '../../interface/schema/Template';
 import { Template } from '../../class/Template';
+import { WebSocketTemplatePreviewHandlerInput } from '../../interface/WebSocketHandlers';
+import { IGeneratorResult } from '../../interface/Generator';
 
 @Service()
-export class TemplatePreviewHandlerService implements IWebSocketHandler {
+export class TemplatePreviewHandlerService implements IWebSocketHandler<WebSocketTemplatePreviewHandlerInput, IGeneratorResult> {
 	constructor(private channelsService: ChannelsService, private generatorService: GeneratorService) {}
 
-	canHandle(message: WebSocket): boolean {
+	canHandle(message: WebSocketMessage<WebSocketTemplatePreviewHandlerInput>): boolean {
 		return message.id === 'prv:template';
 	}
 
@@ -22,7 +24,7 @@ export class TemplatePreviewHandlerService implements IWebSocketHandler {
 		});
 	}
 
-	async handle(message: WebSocket): Promise<any> {
+	async handle(message: WebSocketMessage<WebSocketTemplatePreviewHandlerInput>): Promise<IGeneratorResult> {
 		// Get channel
 		const channel = (await this.channelsService.channels()).find((c) => c.id === message.data.channel);
 		if (!channel) {

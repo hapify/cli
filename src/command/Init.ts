@@ -7,37 +7,32 @@ import { ChannelDescriptionQuery, DescribeChannel } from './question/Channel';
 import { Channel } from '../class/Channel';
 import { Project } from '../class/Project';
 
-// ############################################
-// Get services
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-
 export async function InitCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
 
-		const qChannelDescription: ChannelDescriptionQuery = {};
+	options.setCommand(cmd);
 
-		// =================================
-		// Describe channel
-		await DescribeChannel(cmd, qChannelDescription);
+	const qChannelDescription: ChannelDescriptionQuery = {};
 
-		// =================================
-		// Init channel to save
-		const channel = await Channel.create(options.dir(), qChannelDescription.name, qChannelDescription.description, qChannelDescription.logo);
+	// =================================
+	// Describe channel
+	await DescribeChannel(cmd, qChannelDescription);
 
-		// =================================
-		// Create project from channel and save
-		await Project.createLocalForChannel(channel);
-		await channel.save();
+	// =================================
+	// Init channel to save
+	const channel = await Channel.create(options.dir(), qChannelDescription.name, qChannelDescription.description, qChannelDescription.logo);
 
-		logger.success(`Initialized a channel in ${cPath(options.dir())}.
+	// Todo get and save project name and description
+
+	// =================================
+	// Create project from channel and save
+	await Project.createLocalForChannel(channel);
+	await channel.save();
+
+	logger.success(`Initialized a channel in ${cPath(options.dir())}.
 Run ${cMedium('hpf use')} to connect a remote project (optional)`);
-		// Action Ends
-		// ---------------------------------
-
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
-	}
+	// Action Ends
+	// ---------------------------------
 }

@@ -1,14 +1,15 @@
 import { Service } from 'typedi';
 import { ChannelsService } from '../Channels';
 import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { ModelSchema } from '../../interface/schema/Model';
+import { IModel } from '../../interface/Generator';
 
 @Service()
-export class SetModelsHandlerService implements IWebSocketHandler {
+export class SetModelsHandlerService implements IWebSocketHandler<IModel[], void> {
 	constructor(private channelsService: ChannelsService) {}
 
-	canHandle(message: WebSocket): boolean {
+	canHandle(message: WebSocketMessage<IModel[]>): boolean {
 		return message.id === 'set:models';
 	}
 
@@ -16,7 +17,7 @@ export class SetModelsHandlerService implements IWebSocketHandler {
 		return Joi.array().items(ModelSchema).min(0);
 	}
 
-	async handle(message: WebSocket): Promise<any> {
+	async handle(message: WebSocketMessage<IModel[]>): Promise<void> {
 		const modelsCollection = await this.channelsService.modelsCollection();
 		modelsCollection.fromObject(message.data);
 		await modelsCollection.save();

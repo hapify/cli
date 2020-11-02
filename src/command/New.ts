@@ -16,72 +16,65 @@ const GetDirectories = (s: string) =>
 		.map((n: string) => Path.join(s, n))
 		.filter((d: string) => Fs.lstatSync(d).isDirectory());
 
-// ############################################
-// Get services
-const options = Container.get(OptionsService);
-const logger = Container.get(LoggerService);
-
 export async function NewCommand(cmd: Command) {
-	try {
-		options.setCommand(cmd);
+	// Get services
+	const options = Container.get(OptionsService);
+	const logger = Container.get(LoggerService);
 
-		// ---------------------------------
-		// Action starts
-		const qBoilerplate: BoilerplateQuery = {};
+	options.setCommand(cmd);
 
-		// ---------------------------------
-		// Verify current dir
-		const currentDir = options.dir();
-		const files = Fs.readdirSync(currentDir);
-		if (files.length) {
-			throw new Error('Current folder is not empty, cannot create a new project.');
+	// ---------------------------------
+	// Action starts
+	const qBoilerplate: BoilerplateQuery = {};
+
+	// ---------------------------------
+	// Verify current dir
+	const currentDir = options.dir();
+	const files = Fs.readdirSync(currentDir);
+	if (files.length) {
+		throw new Error('Current folder is not empty, cannot create a new project.');
+	}
+
+	// =================================
+	// Get boilerplate
+	await AskBoilerplate(cmd, qBoilerplate);
+
+	// =================================
+	// Get presets
+	const qPresets = await AskPreset(cmd);
+
+	// =================================
+	// Get boilerplate URL
+	await FindBoilerplate(qBoilerplate);
+
+	// =================================
+	// Clone git repo
+	// Init & validate channel for this new folder
+	const git = SimpleGit(currentDir);
+	const count = qBoilerplate.urls.length;
+	if (count > 1) {
+		for (const url of qBoilerplate.urls) {
+			await git.clone(url);
 		}
-
-		// =================================
-		// Get boilerplate
-		await AskBoilerplate(cmd, qBoilerplate);
-
-		// =================================
-		// Get presets
-		const qPresets = await AskPreset(cmd);
-
-		// =================================
-		// Get boilerplate URL
-		await FindBoilerplate(qBoilerplate);
-
-		// =================================
-		// Clone git repo
-		// Init & validate channel for this new folder
-		const git = SimpleGit(currentDir);
-		const count = qBoilerplate.urls.length;
-		if (count > 1) {
-			for (const url of qBoilerplate.urls) {
-				await git.clone(url);
-			}
-			const dirs = GetDirectories(currentDir);
-			for (const dir of dirs) {
-				Rimraf.sync(Path.join(dir, '.git'));
-			}
-		} else {
-			await git.clone(qBoilerplate.urls[0], currentDir);
-			Rimraf.sync(Path.join(currentDir, '.git'));
+		const dirs = GetDirectories(currentDir);
+		for (const dir of dirs) {
+			Rimraf.sync(Path.join(dir, '.git'));
 		}
+	} else {
+		await git.clone(qBoilerplate.urls[0], currentDir);
+		Rimraf.sync(Path.join(currentDir, '.git'));
+	}
 
-		// =================================
-		// Get models and apply presets if necessary
-		await ApplyPreset(qPresets);
+	// =================================
+	// Get models and apply presets if necessary
+	await ApplyPreset(qPresets);
 
-		logger.success(
-			`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}.
+	logger.success(
+		`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}.
 Run ${cMedium('hpf use')} to connect a remote project (optional).
 Run ${cHigh('hpf serve')} to edit models and templates.
 Run ${cImportant('hpf generate')} to generate the source code.`
-		);
-		// Action Ends
-		// ---------------------------------
-
-		logger.time();
-	} catch (error) {
-		logger.handleAndExit(error);
-	}
+	);
+	// Action Ends
+	// ---------------------------------
 }

@@ -1,15 +1,16 @@
 import { Service } from 'typedi';
 import * as Joi from 'joi';
 import { InfoService } from '../Info';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { Model } from '../../class/Model';
 import { IModel } from '../../interface/Generator';
+import { WebSocketNewModelHandlerInput } from '../../interface/WebSocketHandlers';
 
 @Service()
-export class NewModelHandlerService implements IWebSocketHandler {
+export class NewModelHandlerService implements IWebSocketHandler<WebSocketNewModelHandlerInput, IModel> {
 	constructor(private infoService: InfoService) {}
 
-	canHandle(message: WebSocket): boolean {
+	canHandle(message: WebSocketMessage<WebSocketNewModelHandlerInput>): boolean {
 		return message.id === 'new:model';
 	}
 
@@ -19,10 +20,10 @@ export class NewModelHandlerService implements IWebSocketHandler {
 		});
 	}
 
-	async handle(message: WebSocket): Promise<IModel> {
+	async handle(message: WebSocketMessage<WebSocketNewModelHandlerInput>): Promise<IModel> {
 		return new Model({
 			id: Model.generateTempId(),
-			name: message.data.name as string,
+			name: message.data.name,
 			fields: await this.infoService.fields(),
 			accesses: Model.defaultAccesses(),
 		}).toObject();

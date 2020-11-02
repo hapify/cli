@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { expect } from '@hapi/code';
 import 'mocha';
 import { CLI, GetGlobalConfig } from './helpers';
@@ -9,9 +10,9 @@ describe('key command', () => {
 
 		const response = await CLI('key', [key]);
 
+		expect(response.stderr).to.be.empty();
 		expect(response.code).to.equal(0);
 		expect(response.stdout).to.contains(['Did update global api key']);
-		expect(response.stderr).to.be.empty();
 
 		const globalConfig = GetGlobalConfig();
 		expect(globalConfig.apiKey).to.equal(key);

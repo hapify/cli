@@ -1,14 +1,16 @@
 import { Service } from 'typedi';
 import { ValidatorService } from '../Validator';
 import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
 import { ModelSchema } from '../../interface/schema/Model';
+import { Validator } from '../../interface/Validator';
+import { WebSocketValidateModelHandlerInput } from '../../interface/WebSocketHandlers';
 
 @Service()
-export class ValidateModelHandlerService implements IWebSocketHandler {
+export class ValidateModelHandlerService implements IWebSocketHandler<WebSocketValidateModelHandlerInput, Validator> {
 	constructor(private validatorService: ValidatorService) {}
 
-	canHandle(message: WebSocket): boolean {
+	canHandle(message: WebSocketMessage<WebSocketValidateModelHandlerInput>): boolean {
 		return message.id === 'val:model';
 	}
 
@@ -19,7 +21,7 @@ export class ValidateModelHandlerService implements IWebSocketHandler {
 		});
 	}
 
-	async handle(message: WebSocket): Promise<any> {
+	async handle(message: WebSocketMessage<WebSocketValidateModelHandlerInput>): Promise<Validator> {
 		// From content
 		return await this.validatorService.run(message.data.content, message.data.model);
 	}

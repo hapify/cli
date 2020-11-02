@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { Command, CommanderStatic } from 'commander';
+import commander from 'commander';
 import * as Path from 'path';
 import { GlobalConfigService } from './GlobalConfig';
 import { RemoteConfig } from '../config/Remote';
@@ -7,18 +7,18 @@ import { IRemoteConfig } from '../interface/Config';
 
 @Service()
 export class OptionsService {
-	private program: CommanderStatic;
-	private command: Command;
+	private program: commander.Command;
+	private command: commander.Command;
 
 	constructor(private globalConfigService: GlobalConfigService) {}
 
 	/** Set program entity */
-	setProgram(program: CommanderStatic): void {
+	setProgram(program: commander.Command): void {
 		this.program = program;
 	}
 
 	/** Set command entity */
-	setCommand(command: Command): void {
+	setCommand(command: commander.Command): void {
 		this.command = command;
 	}
 
@@ -62,9 +62,14 @@ export class OptionsService {
 		return !!this.program.debug;
 	}
 
+	/** Denotes if the silent mode is enabled */
+	silent(): boolean {
+		return !!this.program.silent;
+	}
+
 	/** Get the depth for recursive search */
 	depth(): number {
-		return this.command.depth;
+		return Number(this.command.depth);
 	}
 
 	/** Get the output file path */
@@ -74,7 +79,7 @@ export class OptionsService {
 
 	/** Get the required http port */
 	port(): number {
-		return this.command.port;
+		return Number(this.command.port);
 	}
 
 	/** Get the required http hostname */
@@ -84,6 +89,6 @@ export class OptionsService {
 
 	/** Denotes if a new tab should be opened */
 	open(): boolean {
-		return !!this.command.open;
+		return this.command.open !== false;
 	}
 }
