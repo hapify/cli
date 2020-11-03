@@ -1,16 +1,23 @@
 # Changelog
 
-## Unreleased
+## [0.7.0] - 2020-11-03
 
 ### Added
+
+- Added automated tests
 
 ### Changed
 
-### Removed
+- Store models locally
+
+## [0.6.0] - 2020-08-03
+
+### Changed
+
+- Use open-source generator and GUI
+- Generate the code locally
 
 ## [0.5.6] - 2019-11-15
-
-### Added
 
 ### Changed
 
