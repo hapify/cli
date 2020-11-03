@@ -150,6 +150,9 @@ _Options_
 -   `--boilerplate-id <id>`: The id of the boilerplate to clone
 -   `--boilerplate-url <url>`: The git URL of the boilerplate to clone
 -   `--preset [id]`: Ids of presets to preload in the project
+-   `--no-presets`: Do not prompt for presets
+-   `--project-name <name>`: The project's name to create
+-   `--project-desc <description>`: The project's description to create (name must be defined)
 
 To browse available boilerplates, please visit [hub.hapify.io](https://hub.hapify.io).
 
@@ -171,6 +174,8 @@ _Options_
 -   `--channel-name <name>`: The name of the channel to init
 -   `--channel-desc <description>`: The description of the channel to init
 -   `--channel-logo <url>`: The URL of the logo of the channel to init
+-   `--project-name <name>`: The project's name to create
+-   `--project-desc <description>`: The project's description to create (name must be defined)
 
 #### Define project to use in a channel
 
