@@ -56,8 +56,8 @@ export class ProjectFileStorageService extends SingleSaveFileStorage<IStorablePr
 			const compact: IStorableCompactProject = JSON.parse(content);
 			return {
 				version: compact.version,
-				name: compact.name || null,
-				description: compact.description || null,
+				name: compact.name,
+				description: compact.description,
 				models: compact.models.map((model) => {
 					return {
 						id: model.id,

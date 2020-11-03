@@ -22,7 +22,7 @@ export const ProjectConfigSchema = Joi.object({
 	version: Joi.string()
 		.valid(...Versions)
 		.required(),
-	name: Joi.string(),
+	name: Joi.string().required(),
 	description: Joi.string(),
 	models: Joi.array().items(ModelSchema).required().min(0),
 });

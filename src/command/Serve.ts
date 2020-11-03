@@ -26,6 +26,4 @@ export async function ServeCommand(cmd: Command) {
 	}
 	// Action Ends
 	// ---------------------------------
-
-	logger.time();
 }

@@ -85,6 +85,10 @@ describe('new command', () => {
 
 		// Ensure both config are using the same local project
 		expect(sandbox.getPath(['boilerplate-hapijs', hapifyJSON1.project])).to.equal(sandbox.getPath(['boilerplate-ngx-components', hapifyJSON2.project]));
+
+		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>(['boilerplate-hapijs', hapifyJSON1.project]);
+		expect(hapifyModelsJSON.models.length).to.equal(1);
+		expect(hapifyModelsJSON.models.some((m) => m.name.toLowerCase() === 'user')).to.be.true();
 	});
 	it('success with presets', async () => {
 		const sandbox = new Sandbox();
