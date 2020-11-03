@@ -6,6 +6,8 @@ import * as Fs from 'fs';
 import * as Path from 'path';
 import { OptionsService } from '../service/Options';
 import { LoggerService } from '../service/Logger';
+import { ChannelsService } from '../service/Channels';
+import { AskLocalProject, AskRemoteProject, ProjectQuery } from './question/Project';
 import { AskBoilerplate, BoilerplateQuery, FindBoilerplate } from './question/Boilerplate';
 import { ApplyPreset, AskPreset } from './question/Preset';
 
@@ -20,11 +22,13 @@ export async function NewCommand(cmd: Command) {
 	// Get services
 	const options = Container.get(OptionsService);
 	const logger = Container.get(LoggerService);
+	const channelsService = Container.get(ChannelsService);
 
 	options.setCommand(cmd);
 
 	// ---------------------------------
 	// Action starts
+	const qProject: ProjectQuery = {};
 	const qBoilerplate: BoilerplateQuery = {};
 
 	// ---------------------------------
@@ -51,8 +55,8 @@ export async function NewCommand(cmd: Command) {
 	// Clone git repo
 	// Init & validate channel for this new folder
 	const git = SimpleGit(currentDir);
-	const count = qBoilerplate.urls.length;
-	if (count > 1) {
+	const boilerplatesCount = qBoilerplate.urls.length;
+	if (boilerplatesCount > 1) {
 		for (const url of qBoilerplate.urls) {
 			await git.clone(url);
 		}
@@ -66,11 +70,29 @@ export async function NewCommand(cmd: Command) {
 	}
 
 	// =================================
+	// Use only one local project in case of multiple boilerplates
+	// If a single boilerplate contains more than one channel, we assume they use the same project
+	const projectIsLocal = await channelsService.mergeLocalProjects();
+
+	// =================================
+	// Get project and store info
+	if (projectIsLocal) {
+		await AskLocalProject(cmd, qProject);
+		// Get the the first channel's project and change its name
+		const project = (await channelsService.channels())[0].project;
+		project.setNameAndDescription(qProject.name, qProject.description);
+		await project.save();
+	} else {
+		await AskRemoteProject(cmd, qProject);
+		await channelsService.changeRemoteProject(qProject.id);
+	}
+
+	// =================================
 	// Get models and apply presets if necessary
 	await ApplyPreset(qPresets);
 
 	logger.success(
-		`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${cPath(currentDir)}.
+		`Created ${boilerplatesCount} new dynamic boilerplate${boilerplatesCount > 1 ? 's' : ''} in ${cPath(currentDir)}.
 Run ${cMedium('hpf use')} to connect a remote project (optional).
 Run ${cHigh('hpf serve')} to edit models and templates.
 Run ${cImportant('hpf generate')} to generate the source code.`

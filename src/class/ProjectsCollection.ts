@@ -33,7 +33,9 @@ export class ProjectsCollection implements IStorable, ISerializable<IProject[], 
 	}
 
 	async save(): Promise<void> {
-		// Nothing to save
+		for (const project of this.projects) {
+			await project.save();
+		}
 	}
 
 	/** Returns the list of projects */

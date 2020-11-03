@@ -8,14 +8,36 @@ export interface ProjectQuery {
 	name?: string;
 	description?: string;
 }
-export async function AskProject(cmd: Command, qProject: ProjectQuery) {
+
+export async function AskLocalProject(cmd: Command, qProject: ProjectQuery) {
+	if (cmd.projectName) {
+		qProject.name = cmd.projectName;
+		qProject.description = cmd.projectDesc;
+	} else {
+		const answer: any = await Inquirer.prompt([
+			{
+				name: 'name',
+				message: 'Enter a project name',
+				validate: (input: any) => input.length > 0,
+			},
+			{
+				name: 'description',
+				message: 'Enter a project description',
+			},
+		]);
+		qProject.name = answer.name;
+		qProject.description = answer.description;
+	}
+}
+
+export async function AskRemoteProject(cmd: Command, qProject: ProjectQuery) {
 	const projectsCollection = await Container.get(ProjectsService).collection();
 
 	if (cmd.project) {
 		qProject.id = cmd.project;
 	} else if (cmd.projectName) {
 		qProject.name = cmd.projectName;
-		qProject.description = cmd.projectDescription;
+		qProject.description = cmd.projectDesc;
 	} else {
 		// Get projects from remote
 		const list = (await projectsCollection.list()).map((b: any) => ({
@@ -51,7 +73,7 @@ export async function AskProject(cmd: Command, qProject: ProjectQuery) {
 		throw new Error('No project is defined');
 	}
 }
-export async function SetupProject(qProject: ProjectQuery) {
+export async function SetupRemoteProject(qProject: ProjectQuery) {
 	const projectsCollection = await Container.get(ProjectsService).collection();
 
 	if (!qProject.id) {

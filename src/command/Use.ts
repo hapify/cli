@@ -4,7 +4,7 @@ import { cChannel, cHigh } from './helpers';
 import { OptionsService } from '../service/Options';
 import { LoggerService } from '../service/Logger';
 import { ChannelsService } from '../service/Channels';
-import { AskProject, ProjectQuery, SetupProject } from './question/Project';
+import { AskRemoteProject, ProjectQuery, SetupRemoteProject } from './question/Project';
 
 export async function UseCommand(cmd: Command) {
 	// Get services
@@ -20,15 +20,15 @@ export async function UseCommand(cmd: Command) {
 
 	// =================================
 	// Get project
-	await AskProject(cmd, qProject);
+	await AskRemoteProject(cmd, qProject);
 
 	// =================================
 	// Create project if necessary
-	await SetupProject(qProject);
+	await SetupRemoteProject(qProject);
 
 	// =================================
 	// Set project in channel and save
-	await channelsService.changeProject(qProject.id);
+	await channelsService.changeRemoteProject(qProject.id);
 
 	// =================================
 	// Log changes

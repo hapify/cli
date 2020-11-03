@@ -94,6 +94,8 @@ export class Program {
 			.option('--boilerplate-url [url]', 'urls of the boilerplates to clone', Aggregate, [])
 			.option('--preset [id]', 'ids of presets to preload', Aggregate, [])
 			.option('--no-presets', 'do not prompt for presets')
+			.option('--project-name <name>', 'name of the project to create')
+			.option('--project-desc <description>', 'description of the project to create (name must be defined)')
 			.description('Clone and init a boilerplate')
 			.action(NewCommand);
 
@@ -104,6 +106,8 @@ export class Program {
 			.option('--channel-name <name>', 'name of the channel to init')
 			.option('--channel-desc <description>', 'description of the channel to init')
 			.option('--channel-logo <url>', 'url of the logo of the channel to init')
+			.option('--project-name <name>', 'name of the project to create')
+			.option('--project-desc <description>', 'description of the project to create (name must be defined)')
 			.description('Init a new Hapify channel in the directory')
 			.action(InitCommand);
 

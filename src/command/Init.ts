@@ -6,6 +6,7 @@ import { OptionsService } from '../service/Options';
 import { ChannelDescriptionQuery, DescribeChannel } from './question/Channel';
 import { Channel } from '../class/Channel';
 import { Project } from '../class/Project';
+import { AskLocalProject, ProjectQuery } from './question/Project';
 
 export async function InitCommand(cmd: Command) {
 	// Get services
@@ -14,7 +15,12 @@ export async function InitCommand(cmd: Command) {
 
 	options.setCommand(cmd);
 
+	const qProject: ProjectQuery = {};
 	const qChannelDescription: ChannelDescriptionQuery = {};
+
+	// =================================
+	// Get project
+	await AskLocalProject(cmd, qProject);
 
 	// =================================
 	// Describe channel
@@ -24,11 +30,9 @@ export async function InitCommand(cmd: Command) {
 	// Init channel to save
 	const channel = await Channel.create(options.dir(), qChannelDescription.name, qChannelDescription.description, qChannelDescription.logo);
 
-	// Todo get and save project name and description
-
 	// =================================
 	// Create project from channel and save
-	await Project.createLocalForChannel(channel);
+	await Project.createLocalForChannel(channel, qProject.name, qProject.description);
 	await channel.save();
 
 	logger.success(`Initialized a channel in ${cPath(options.dir())}.

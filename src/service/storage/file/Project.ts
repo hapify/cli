@@ -103,12 +103,12 @@ export class ProjectFileStorageService extends SingleSaveFileStorage<IStorablePr
 		};
 	}
 
-	async setProject(path: string, project: IProject, models: IModel[]): Promise<void> {
+	async setProject(path: string, project: IProject, models?: IModel[]): Promise<void> {
 		const projectWithModels: IStorableProject = {
 			version: '1',
 			name: project.name,
 			description: project.description,
-			models,
+			models: !models ? await this.getModels(path) : models,
 		};
 		await this.set(path, projectWithModels);
 	}

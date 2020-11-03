@@ -18,6 +18,10 @@ describe('generate command', () => {
 			'5c8607a696d1ff00107de412', // User
 			'--preset',
 			'5c86966796d1ff00107de41c', // Place
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
 		]);
 
 		expect(responseNew.stderr).to.be.empty();
@@ -50,6 +54,10 @@ describe('generate command', () => {
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--preset',
 			'5c8607a696d1ff00107de412', // User
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
 		]);
 
 		expect(responseNew.stderr).to.be.empty();

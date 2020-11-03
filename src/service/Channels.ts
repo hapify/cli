@@ -5,6 +5,7 @@ import * as Fs from 'fs';
 import Hoek from '@hapi/hoek';
 import { Channel } from '../class/Channel';
 import { ModelsCollection } from '../class/ModelsCollection';
+import { Project } from '../class/Project';
 
 @Service()
 export class ChannelsService {
@@ -30,9 +31,9 @@ export class ChannelsService {
 	/** Ensure that all channels refers to the same project */
 	public async ensureSameProject(): Promise<void> {
 		const channels = await this.channels();
-		const firstProject = channels[0].config.project;
+		const firstProject = channels[0].guessProjectIdOrPath();
 		for (const channel of channels) {
-			if (channel.config.project !== firstProject) {
+			if (channel.guessProjectIdOrPath() !== firstProject) {
 				throw new Error('Channels must refer to the same project');
 			}
 		}
@@ -57,23 +58,69 @@ export class ChannelsService {
 
 	/**
 	 * Change project in all found channels from a given or current dir
-	 * Returns modified channels
-	 * Defined path for a specific channel
+	 * This change the project without loading the channels
 	 */
-	public async changeProject(project: string, path?: string): Promise<void> {
-		if (path) {
-			await Channel.changeProject(path, project);
+	public async changeRemoteProject(project: string): Promise<void> {
+		const channels = await ChannelsService.sniff(this.optionsService.dir(), this.optionsService.depth());
+		if (channels.length === 0) {
+			throw new Error('No channel found');
 		}
+		for (const channel of channels) {
+			await Channel.changeProject(channel.path, project);
+		}
+	}
+
+	/**
+	 * Use the same local project for all found channels
+	 * This change the project without loading the channels
+	 */
+	public async mergeLocalProjects(): Promise<boolean> {
 		// Try to find channels
-		else {
-			const channels = await ChannelsService.sniff(this.optionsService.dir(), this.optionsService.depth());
-			if (channels.length === 0) {
-				throw new Error('No channel found');
-			}
-			for (const channel of channels) {
-				await Channel.changeProject(channel.path, project);
+		const channels = await ChannelsService.sniff(this.optionsService.dir(), this.optionsService.depth());
+		if (channels.length === 0) {
+			throw new Error('No channel found');
+		}
+
+		// If the one channel's project is local, use this project as reference and bind all other channels to this project
+		let mainChannel;
+		let mainChannelProjectPath;
+		for (const channel of channels) {
+			const projectPath = await this.resolveLocalProjectPath(channel);
+			if (projectPath) {
+				mainChannel = channel;
+				mainChannelProjectPath = projectPath;
+				break;
 			}
 		}
+
+		if (!mainChannel) {
+			// The user should choose a remote project
+			return false;
+		}
+
+		for (const channel of channels) {
+			if (channel === mainChannel) continue;
+
+			// Remove project file
+			const projectPath = await this.resolveLocalProjectPath(channel);
+			if (projectPath && Fs.existsSync(projectPath)) {
+				Fs.unlinkSync(projectPath);
+			}
+
+			// Get relative path
+			const newPath = Path.relative(Path.resolve(channel.path), mainChannelProjectPath);
+
+			await Channel.changeProject(channel.path, newPath);
+		}
+
+		return true;
+	}
+
+	/** Returns null if the project is not local */
+	private async resolveLocalProjectPath(channel: Channel): Promise<string> {
+		const config = await channel.readConfigFile();
+		if (Project.isRemoteId(config.project)) return null;
+		return Path.isAbsolute(config.project) ? config.project : Path.resolve(channel.path, config.project);
 	}
 
 	/** Returns the first models collection */

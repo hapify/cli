@@ -3,6 +3,7 @@ import { expect } from '@hapi/code';
 import 'mocha';
 import { CLI, Sandbox } from './helpers';
 import { IConfig } from '../src/interface/Config';
+import { IStorableCompactProject } from '../src/interface/Storage';
 
 describe('init command', () => {
 	it('success', async () => {
@@ -12,6 +13,8 @@ describe('init command', () => {
 		const channelName = 'Test channel';
 		const channelDescription = 'Test channel description';
 		const channelLogo = 'http://example.com/logo';
+		const projectName = 'The Name';
+		const projectDescription = 'The Description';
 
 		const response = await CLI('init', [
 			'--dir',
@@ -22,6 +25,10 @@ describe('init command', () => {
 			channelDescription,
 			'--channel-logo',
 			channelLogo,
+			'--project-name',
+			projectName,
+			'--project-desc',
+			projectDescription,
 		]);
 
 		expect(response.stderr).to.be.empty();
@@ -45,6 +52,11 @@ describe('init command', () => {
 			const realPath = `${template.path.replace('{kebab}', 'model')}.${template.engine}`;
 			expect(sandbox.fileExists(['hapify', realPath])).to.be.true();
 		}
+		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>([hapifyJSON.project]);
+		expect(hapifyModelsJSON.name).to.equal(projectName);
+		expect(hapifyModelsJSON.description).to.equal(projectDescription);
+		expect(hapifyModelsJSON.models).to.equal([]);
+		expect(hapifyModelsJSON.version).to.be.a.string().and.to.not.be.empty();
 	});
 	it('busy folder', async () => {
 		const sandbox = new Sandbox();
@@ -54,6 +66,8 @@ describe('init command', () => {
 		const channelName = 'Test channel';
 		const channelDescription = 'Test channel description';
 		const channelLogo = 'http://example.com/logo';
+		const projectName = 'The Name';
+		const projectDescription = 'The Description';
 
 		const response = await CLI('init', [
 			'--dir',
@@ -64,6 +78,10 @@ describe('init command', () => {
 			channelDescription,
 			'--channel-logo',
 			channelLogo,
+			'--project-name',
+			projectName,
+			'--project-desc',
+			projectDescription,
 		]);
 
 		expect(response.code).to.equal(1);

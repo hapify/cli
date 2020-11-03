@@ -10,7 +10,17 @@ describe('import command', () => {
 		sandbox.clear();
 
 		// Clone repository first
-		const responseNew = await CLI('new', ['--dir', sandbox.getPath(), '--boilerplate', 'hapijs_tractr', '--no-presets']);
+		const responseNew = await CLI('new', [
+			'--dir',
+			sandbox.getPath(),
+			'--boilerplate',
+			'hapijs_tractr',
+			'--no-presets',
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
+		]);
 
 		expect(responseNew.stderr).to.be.empty();
 		expect(responseNew.code).to.equal(0);
@@ -47,6 +57,10 @@ describe('import command', () => {
 			'--boilerplate-url',
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--no-presets',
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
 		]);
 
 		expect(responseNew.stderr).to.be.empty();
@@ -69,9 +83,6 @@ describe('import command', () => {
 
 		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>(['boilerplate-hapijs', 'hapify-models.json']);
 		expect(hapifyModelsJSON.models.map((m) => m.name)).to.includes(['User', 'Place']);
-
-		const hapifyModelsJSON2 = sandbox.getJSONFileContent<IStorableCompactProject>(['boilerplate-ngx-components', 'hapify-models.json']);
-		expect(hapifyModelsJSON2.models.map((m) => m.name)).to.includes(['User', 'Place']);
 	});
 
 	it('already has models', async () => {
@@ -79,7 +90,17 @@ describe('import command', () => {
 		sandbox.clear();
 
 		// Clone repository first
-		const responseNew = await CLI('new', ['--dir', sandbox.getPath(), '--boilerplate', 'hapijs_tractr', '--no-presets']);
+		const responseNew = await CLI('new', [
+			'--dir',
+			sandbox.getPath(),
+			'--boilerplate',
+			'hapijs_tractr',
+			'--no-presets',
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
+		]);
 
 		expect(responseNew.stderr).to.be.empty();
 		expect(responseNew.code).to.equal(0);

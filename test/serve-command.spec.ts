@@ -26,7 +26,7 @@ let authJson: { url: string };
 let sandbox: Sandbox;
 
 describe('serve command', () => {
-	before('start server', async () => {
+	before('start server with two boilerplates', async () => {
 		sandbox = new Sandbox();
 		sandbox.clear();
 
@@ -34,15 +34,21 @@ describe('serve command', () => {
 		const responseNew = await CLI('new', [
 			'--dir',
 			sandbox.getPath(),
-			'--boilerplate',
-			'hapijs_tractr',
+			'--boilerplate-url',
+			'https://github.com/Tractr/boilerplate-hapijs.git',
+			'--boilerplate-url',
+			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--preset',
 			'5c8607a696d1ff00107de412', // User
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
 		]);
 
 		expect(responseNew.stderr).to.be.empty();
 		expect(responseNew.code).to.equal(0);
-		expect(responseNew.stdout).to.contains('Created 1 new dynamic boilerplate');
+		expect(responseNew.stdout).to.contains('Created 2 new dynamic boilerplates');
 
 		// Start server
 		const response = await CLI('serve', ['--dir', sandbox.getPath(), '--no-open']);
@@ -89,8 +95,8 @@ describe('serve command', () => {
 		expect(response.limits.projects).to.be.a.number();
 
 		expect(response.project).to.be.an.object();
-		expect(response.project.name).to.be.a.string();
-		expect(response.project.description).to.be.a.string();
+		expect(response.project.name).to.equal('The Name');
+		expect(response.project.description).to.equal('The Description');
 	});
 
 	it('get models', async () => {
@@ -236,7 +242,7 @@ describe('serve command', () => {
 		expect(typeof response).to.equal('undefined');
 
 		// Check if the file has been generated
-		expect(sandbox.fileExists(['routes', 'user', 'read.js'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'routes', 'user', 'read.js'])).to.be.true();
 	});
 
 	it('generate channel', async () => {
@@ -250,10 +256,10 @@ describe('serve command', () => {
 		expect(typeof response).to.equal('undefined');
 
 		// Check if the file has been generated
-		expect(sandbox.fileExists(['routes', 'user', 'create.js'])).to.be.true();
-		expect(sandbox.fileExists(['routes', 'user', 'update.js'])).to.be.true();
-		expect(sandbox.fileExists(['routes', 'user', 'delete.js'])).to.be.true();
-		expect(sandbox.fileExists(['routes', 'user', 'inc.js'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'routes', 'user', 'create.js'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'routes', 'user', 'update.js'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'routes', 'user', 'delete.js'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'routes', 'user', 'inc.js'])).to.be.true();
 	});
 
 	it('new model', async () => {
@@ -283,12 +289,12 @@ describe('serve command', () => {
 		});
 		expect(typeof response).to.equal('undefined');
 
-		expect(sandbox.fileExists(['hapify', 'routes', 'model', 'create.js.hpf'])).to.be.true();
-		expect(sandbox.fileExists(['hapify', 'routes', 'model', 'new.js.hpf'])).to.be.true();
-		expect(sandbox.fileExists(['hapify', 'routes', 'model', 'delete.js.hpf'])).to.be.false();
-		expect(sandbox.fileExists(['hapify', 'routes', 'model', 'read.js.hpf'])).to.be.false();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'create.js.hpf'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'new.js.hpf'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'delete.js.hpf'])).to.be.false();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'read.js.hpf'])).to.be.false();
 
-		const hapifyJSON = sandbox.getJSONFileContent<IConfig>(['hapify.json']);
+		const hapifyJSON = sandbox.getJSONFileContent<IConfig>(['boilerplate-hapijs', 'hapify.json']);
 		expect(hapifyJSON.templates.length).to.equal(5);
 	});
 
@@ -304,7 +310,7 @@ describe('serve command', () => {
 		});
 		expect(typeof response).to.equal('undefined');
 
-		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>(['hapify-models.json']);
+		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>(['boilerplate-hapijs', 'hapify-models.json']);
 
 		// Check that model has been written
 		expect(hapifyModelsJSON.models.length).to.equal(2);

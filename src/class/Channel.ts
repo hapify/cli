@@ -44,11 +44,8 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	}
 
 	async load(): Promise<void> {
-		// Validate storage
-		await this.validate();
-
 		// Get config from storage
-		const config = await this.storageService.get([this.path, Channel.configFile]);
+		const config = await this.readConfigFile();
 
 		// Validate the incoming config
 		const validation = ConfigSchema.validate(config);
@@ -122,22 +119,15 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 
 	/** Determines if the project is an id or not and resolve path if necessary */
 	guessProjectIdOrPath() {
-		if (!Project.isMongoId(this.config.project) && !Path.isAbsolute(this.config.project)) {
+		if (!Project.isRemoteId(this.config.project) && !Path.isAbsolute(this.config.project)) {
 			return Path.resolve(this.path, this.config.project);
 		}
 		return this.config.project;
 	}
 
-	/** Check resource validity */
-	private async validate(): Promise<void> {
-		if (!(await this.storageService.exists([this.path, Channel.configFile]))) {
-			throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
-		}
-	}
-
 	/** Change project in config file */
 	public static async changeProject(path: string, project: string): Promise<void> {
-		if (!Channel.configExists(path)) {
+		if (!(await Channel.configExists(path))) {
 			throw new Error(`Cannot find config file in ${path}`);
 		}
 		const storage = Container.get(ChannelFileStorageService);
@@ -147,9 +137,17 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		config.project = project;
 		await storage.set([path, Channel.configFile], config);
 	}
+
+	/** Returns the config from ori file */
+	public async readConfigFile(): Promise<IConfig> {
+		if (!(await this.storageService.exists([this.path, Channel.configFile]))) {
+			throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
+		}
+		return await this.storageService.get([this.path, Channel.configFile]);
+	}
 	/** Denotes if the config file exists */
 	public static async configExists(path: string): Promise<boolean> {
-		return await Container.get(ChannelFileStorageService).exists([path, Channel.configFile]);
+		return Container.get(ChannelFileStorageService).exists([path, Channel.configFile]);
 	}
 	/** Init a Hapify structure within a directory */
 	public static async create(path: string, name?: string, description?: string, logo?: string): Promise<Channel> {

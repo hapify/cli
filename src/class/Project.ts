@@ -15,7 +15,7 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 	}
 	set id(value: string) {
 		// If the id is not a MongoDB Id, then it should be a file path
-		if (Project.isMongoId(value)) {
+		if (Project.isRemoteId(value)) {
 			this._id = value;
 			this._storageType = 'remote';
 		} else {
@@ -97,23 +97,35 @@ export class Project implements IStorable, ISerializable<IProject, Project>, IPr
 		}
 	}
 	async save(): Promise<void> {
-		// Nothing to save
+		if (this.storageType === 'local') {
+			await this.localStorageService.setProject(this._id, this.toObject());
+		} else {
+			await this.remoteStorageService.update(this._id, {
+				name: this.name,
+				description: this.description,
+			});
+		}
 	}
 
-	static async createLocalForChannel(channel: Channel): Promise<void> {
+	static async createLocalForChannel(channel: Channel, name: string = 'My project', description: string = 'A new Hapify project'): Promise<void> {
 		await Container.get(ProjectFileStorageService).setProject(
 			channel.guessProjectIdOrPath(),
 			{
 				id: channel.config.project,
-				name: 'My project',
-				description: 'A new Hapify project',
+				name,
+				description,
 			},
 			[]
 		);
 	}
 
-	static isMongoId(value: string): boolean {
-		const regex = /^([a-f0-9]{24})$/i;
+	static isRemoteId(value: string): boolean {
+		const regex = /^([a-f0-9]{24})$/i; // MongoId
 		return regex.exec(value) !== null;
+	}
+
+	public setNameAndDescription(name: string, description: string = null) {
+		this.name = name;
+		this.description = description;
 	}
 }
