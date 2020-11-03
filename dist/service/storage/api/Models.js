@@ -139,6 +139,9 @@ let ModelsApiStorageService = ModelsApiStorageService_1 = class ModelsApiStorage
             accesses: object.accesses,
         };
     }
+    requiresAuthentication() {
+        return true;
+    }
 };
 ModelsApiStorageService = ModelsApiStorageService_1 = __decorate([
     typedi_1.Service()

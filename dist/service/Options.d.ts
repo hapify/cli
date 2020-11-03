@@ -1,4 +1,4 @@
-import { Command, CommanderStatic } from 'commander';
+import commander from 'commander';
 import { GlobalConfigService } from './GlobalConfig';
 import { IRemoteConfig } from '../interface/Config';
 export declare class OptionsService {
@@ -7,9 +7,9 @@ export declare class OptionsService {
     private command;
     constructor(globalConfigService: GlobalConfigService);
     /** Set program entity */
-    setProgram(program: CommanderStatic): void;
+    setProgram(program: commander.Command): void;
     /** Set command entity */
-    setCommand(command: Command): void;
+    setCommand(command: commander.Command): void;
     /** Returns the remote config and override defaults with global config (if any) */
     remoteConfig(): IRemoteConfig;
     /** Return the working directory computed with the --dir option */
@@ -20,6 +20,8 @@ export declare class OptionsService {
     apiUrl(): string;
     /** Denotes if the debug mode is enabled */
     debug(): boolean;
+    /** Denotes if the silent mode is enabled */
+    silent(): boolean;
     /** Get the depth for recursive search */
     depth(): number;
     /** Get the output file path */

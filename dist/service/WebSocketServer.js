@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -36,6 +36,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebSocketServerService = void 0;
 const typedi_1 = require("typedi");
@@ -45,7 +48,6 @@ const ws = __importStar(require("ws"));
 const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));
 const url_1 = require("url");
-const Joi = __importStar(require("joi"));
 const Logger_1 = require("./Logger");
 const Options_1 = require("./Options");
 const ApplyPresetHandler_1 = require("./websocket-handlers/ApplyPresetHandler");
@@ -63,6 +65,8 @@ const GenerateChannelHandler_1 = require("./websocket-handlers/GenerateChannelHa
 const GenerateTemplateHandler_1 = require("./websocket-handlers/GenerateTemplateHandler");
 const WebSocket_1 = require("../interface/WebSocket");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
+const find_package_json_1 = __importDefault(require("find-package-json"));
+const RootDir = Path.dirname(find_package_json_1.default(__dirname).next().filename);
 let WebSocketServerService = class WebSocketServerService {
     constructor(optionsService, loggerService) {
         this.optionsService = optionsService;
@@ -70,7 +74,7 @@ let WebSocketServerService = class WebSocketServerService {
         /** Websocket endpoint */
         this.baseUri = '/websocket';
         /** The path to save the token */
-        this.wsInfoPath = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
+        this.wsInfoPath = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
         /** Random name to generate token */
         this.randomName = RandomString.generate({ length: 24 });
         /** Random secret to generate token */
@@ -151,7 +155,7 @@ let WebSocketServerService = class WebSocketServerService {
                     let decoded;
                     try {
                         // Decode and verify message
-                        const parsed = Joi.validate(JSON.parse(message), WebSocket_1.WebSocketMessageSchema);
+                        const parsed = WebSocket_1.WebSocketMessageSchema.validate(JSON.parse(message));
                         if (parsed.error) {
                             parsed.error.data = {
                                 code: 4002,
@@ -166,7 +170,7 @@ let WebSocketServerService = class WebSocketServerService {
                         for (const handler of this.handlers) {
                             if (handler.canHandle(decoded)) {
                                 // Validate the incoming payload
-                                const validation = Joi.validate(decoded.data, handler.validator());
+                                const validation = handler.validator().validate(decoded.data);
                                 if (validation.error) {
                                     const { error } = validation;
                                     // Transform Joi message

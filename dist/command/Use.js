@@ -16,40 +16,33 @@ const Options_1 = require("../service/Options");
 const Logger_1 = require("../service/Logger");
 const Channels_1 = require("../service/Channels");
 const Project_1 = require("./question/Project");
-// ############################################
-// Get services
-const options = typedi_1.Container.get(Options_1.OptionsService);
-const logger = typedi_1.Container.get(Logger_1.LoggerService);
-const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function UseCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            options.setCommand(cmd);
-            // ---------------------------------
-            // Action starts
-            const qProject = {};
-            // =================================
-            // Get project
-            yield Project_1.AskProject(cmd, qProject);
-            // =================================
-            // Create project if necessary
-            yield Project_1.SetupProject(qProject);
-            // =================================
-            // Set project in channel and save
-            yield channelsService.changeProject(qProject.id);
-            // =================================
-            // Log changes
-            const channels = yield channelsService.channels();
-            for (const channel of channels) {
-                logger.success(`Did set project ${helpers_1.cHigh(qProject.id)} for channel ${helpers_1.cChannel(channel.name)}`);
-            }
-            // Action Ends
-            // ---------------------------------
-            logger.time();
+        // Get services
+        const options = typedi_1.Container.get(Options_1.OptionsService);
+        const logger = typedi_1.Container.get(Logger_1.LoggerService);
+        const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        const qProject = {};
+        // =================================
+        // Get project
+        yield Project_1.AskRemoteProject(cmd, qProject);
+        // =================================
+        // Create project if necessary
+        yield Project_1.SetupRemoteProject(qProject);
+        // =================================
+        // Set project in channel and save
+        yield channelsService.changeRemoteProject(qProject.id);
+        // =================================
+        // Log changes
+        const channels = yield channelsService.channels();
+        for (const channel of channels) {
+            logger.success(`Did set project ${helpers_1.cHigh(qProject.id)} for channel ${helpers_1.cChannel(channel.name)}`);
         }
-        catch (error) {
-            logger.handleAndExit(error);
-        }
+        // Action Ends
+        // ---------------------------------
     });
 }
 exports.UseCommand = UseCommand;

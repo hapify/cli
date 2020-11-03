@@ -19,6 +19,10 @@ const Options_1 = require("./Options");
 let LoggerService = class LoggerService {
     constructor(optionsService) {
         this.optionsService = optionsService;
+        this.output = {
+            stdout: '',
+            stderr: '',
+        };
     }
     /** Handle an error */
     handle(error) {
@@ -31,7 +35,7 @@ let LoggerService = class LoggerService {
         if (this.optionsService.debug()) {
             message += `\n${error.stack.toString()}`;
         }
-        console.error(chalk_1.default.red(message));
+        this.log(chalk_1.default.red(message), 'stderr');
         return this;
     }
     /** Handle an error */
@@ -42,44 +46,44 @@ let LoggerService = class LoggerService {
     }
     /** Display a message */
     raw(message) {
-        console.log(message);
+        this.log(message, 'stdout');
         return this;
     }
     /** Display a success message */
     success(message) {
-        console.log(`${chalk_1.default.green('✓')} ${message}`);
+        this.log(`${chalk_1.default.green('✓')} ${message}`, 'stdout');
         return this;
     }
     /** Display an info */
     info(message) {
-        console.log(`${chalk_1.default.blueBright('•')} ${message}`);
+        this.log(`${chalk_1.default.blueBright('•')} ${message}`, 'stdout');
         return this;
     }
     /** Display an info if in debug mode */
     debug(message) {
         if (this.optionsService.debug()) {
-            console.log(`${chalk_1.default.cyan('*')} ${message}`);
+            this.log(`${chalk_1.default.cyan('*')} ${message}`, 'stdout');
         }
         return this;
     }
     /** Display an error */
     error(message) {
-        console.log(`${chalk_1.default.red('✖')} ${message}`);
+        this.log(`${chalk_1.default.red('✖')} ${message}`, 'stdout');
         return this;
     }
     /** Add new lines */
     newLine(count = 1) {
-        console.log(`\n`.repeat(count - 1));
+        this.log(`\n`.repeat(count - 1), 'stdout');
         return this;
     }
     /** Display an error */
     warning(message) {
-        console.log(`${chalk_1.default.yellow('!')} ${message}`);
+        this.log(`${chalk_1.default.yellow('!')} ${message}`, 'stdout');
         return this;
     }
     /** Display ascii art */
     art() {
-        console.log(this.getArt());
+        this.log(this.getArt(), 'stdout');
         return this;
     }
     /** Get ascii art */
@@ -97,9 +101,18 @@ let LoggerService = class LoggerService {
     time() {
         if (this.optionsService.debug()) {
             const message = `Process ran in ${process.uptime()}`;
-            console.log(message);
+            this.log(message, 'stdout');
         }
         return this;
+    }
+    log(message, type) {
+        if (!this.optionsService.silent()) {
+            console.log(message);
+        }
+        this.output[type] += message;
+    }
+    getOutput() {
+        return this.output;
     }
 };
 LoggerService = __decorate([

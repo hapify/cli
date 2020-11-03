@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -43,74 +43,78 @@ const Preset_1 = require("./question/Preset");
 const SimpleGit = require('simple-git/promise');
 const GetDirectories = (s) => Fs.readdirSync(s)
     .map((n) => Path.join(s, n))
-    .filter((d) => Fs.lstatSync(s).isDirectory());
-// ############################################
-// Get services
-const options = typedi_1.Container.get(Options_1.OptionsService);
-const logger = typedi_1.Container.get(Logger_1.LoggerService);
-const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
+    .filter((d) => Fs.lstatSync(d).isDirectory());
 function NewCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            options.setCommand(cmd);
-            // ---------------------------------
-            // Action starts
-            const qProject = {};
-            const qBoilerplate = {};
-            // ---------------------------------
-            // Verify current dir
-            const currentDir = options.dir();
-            const files = Fs.readdirSync(currentDir);
-            if (files.length) {
-                throw new Error('Current folder is not empty, cannot create a new project.');
-            }
-            // =================================
-            // Get project
-            yield Project_1.AskProject(cmd, qProject);
-            // =================================
-            // Get boilerplate
-            yield Boilerplate_1.AskBoilerplate(cmd, qBoilerplate);
-            // =================================
-            // Get presets
-            const qPresets = yield Preset_1.AskPreset(cmd);
-            // =================================
-            // Create project if necessary
-            yield Project_1.SetupProject(qProject);
-            // =================================
-            // Get boilerplate URL
-            yield Boilerplate_1.FindBoilerplate(qBoilerplate);
-            // =================================
-            // Clone git repo
-            // Init & validate channel for this new folder
-            const git = SimpleGit(currentDir);
-            const count = qBoilerplate.urls.length;
-            if (count > 1) {
-                for (const url of qBoilerplate.urls) {
-                    yield git.clone(url);
-                }
-                const dirs = GetDirectories(currentDir);
-                for (const dir of dirs) {
-                    Rimraf.sync(Path.join(dir, '.git'));
-                }
-            }
-            else {
-                yield git.clone(qBoilerplate.urls[0], currentDir);
-                Rimraf.sync(Path.join(currentDir, '.git'));
-            }
-            // =================================
-            // Init & validate channel for this new folder
-            yield channelsService.changeProject(qProject.id);
-            // =================================
-            // Get models and apply presets if necessary
-            yield Preset_1.ApplyPreset(qPresets);
-            logger.success(`Created ${count} new dynamic boilerplate${count > 1 ? 's' : ''} in ${helpers_1.cPath(currentDir)}. Run 'hpf serve' to edit.`);
-            // Action Ends
-            // ---------------------------------
-            logger.time();
+        // Get services
+        const options = typedi_1.Container.get(Options_1.OptionsService);
+        const logger = typedi_1.Container.get(Logger_1.LoggerService);
+        const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        const qProject = {};
+        const qBoilerplate = {};
+        // ---------------------------------
+        // Verify current dir
+        const currentDir = options.dir();
+        const files = Fs.readdirSync(currentDir);
+        if (files.length) {
+            throw new Error('Current folder is not empty, cannot create a new project.');
         }
-        catch (error) {
-            logger.handleAndExit(error);
+        // =================================
+        // Get boilerplate
+        yield Boilerplate_1.AskBoilerplate(cmd, qBoilerplate);
+        // =================================
+        // Get presets
+        const qPresets = yield Preset_1.AskPreset(cmd);
+        // =================================
+        // Get boilerplate URL
+        yield Boilerplate_1.FindBoilerplate(qBoilerplate);
+        // =================================
+        // Clone git repo
+        // Init & validate channel for this new folder
+        const git = SimpleGit(currentDir);
+        const boilerplatesCount = qBoilerplate.urls.length;
+        if (boilerplatesCount > 1) {
+            for (const url of qBoilerplate.urls) {
+                yield git.clone(url);
+            }
+            const dirs = GetDirectories(currentDir);
+            for (const dir of dirs) {
+                Rimraf.sync(Path.join(dir, '.git'));
+            }
         }
+        else {
+            yield git.clone(qBoilerplate.urls[0], currentDir);
+            Rimraf.sync(Path.join(currentDir, '.git'));
+        }
+        // =================================
+        // Use only one local project in case of multiple boilerplates
+        // If a single boilerplate contains more than one channel, we assume they use the same project
+        const projectIsLocal = yield channelsService.mergeLocalProjects();
+        // =================================
+        // Get project and store info
+        if (projectIsLocal) {
+            yield Project_1.AskLocalProject(cmd, qProject);
+            // Get the the first channel's project and change its name
+            const project = (yield channelsService.channels())[0].project;
+            project.setNameAndDescription(qProject.name, qProject.description);
+            yield project.save();
+        }
+        else {
+            yield Project_1.AskRemoteProject(cmd, qProject);
+            yield channelsService.changeRemoteProject(qProject.id);
+        }
+        // =================================
+        // Get models and apply presets if necessary
+        yield Preset_1.ApplyPreset(qPresets);
+        logger.success(`Created ${boilerplatesCount} new dynamic boilerplate${boilerplatesCount > 1 ? 's' : ''} in ${helpers_1.cPath(currentDir)}.
+Run ${helpers_1.cMedium('hpf use')} to connect a remote project (optional).
+Run ${helpers_1.cHigh('hpf serve')} to edit models and templates.
+Run ${helpers_1.cImportant('hpf generate')} to generate the source code.`);
+        // Action Ends
+        // ---------------------------------
     });
 }
 exports.NewCommand = NewCommand;

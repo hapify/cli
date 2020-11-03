@@ -26,6 +26,9 @@ let BoilerplatesApiStorageService = class BoilerplatesApiStorageService extends 
             git_url: object.git_url,
         };
     }
+    requiresAuthentication() {
+        return false;
+    }
 };
 BoilerplatesApiStorageService = __decorate([
     typedi_1.Service()

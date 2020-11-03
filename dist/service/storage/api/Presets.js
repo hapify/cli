@@ -35,6 +35,9 @@ let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.Bas
             })),
         };
     }
+    requiresAuthentication() {
+        return false;
+    }
 };
 PresetsApiStorageService = __decorate([
     typedi_1.Service()

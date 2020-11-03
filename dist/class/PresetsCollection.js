@@ -28,12 +28,15 @@ class PresetsCollection {
     /** Returns a singleton for this config */
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!PresetsCollection.instance) {
+            const key = 'PresetsCollectionSingleton';
+            let instance = typedi_1.Container.has(key) ? typedi_1.Container.get(key) : null;
+            if (!instance) {
                 // Create and load a new collection
-                PresetsCollection.instance = new PresetsCollection();
-                yield PresetsCollection.instance.load();
+                instance = new PresetsCollection();
+                yield instance.load();
+                typedi_1.Container.set(key, instance);
             }
-            return PresetsCollection.instance;
+            return instance;
         });
     }
     /** Load the presets */

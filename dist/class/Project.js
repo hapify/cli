@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -32,7 +13,6 @@ exports.Project = void 0;
 const typedi_1 = require("typedi");
 const Projects_1 = require("../service/storage/api/Projects");
 const Project_1 = require("../service/storage/file/Project");
-const Joi = __importStar(require("@hapi/joi"));
 const Config_1 = require("../interface/schema/Config");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
 class Project {
@@ -48,7 +28,7 @@ class Project {
     }
     set id(value) {
         // If the id is not a MongoDB Id, then it should be a file path
-        if (Project.isMongoId(value)) {
+        if (Project.isRemoteId(value)) {
             this._id = value;
             this._storageType = 'remote';
         }
@@ -66,12 +46,15 @@ class Project {
     /** Returns a singleton for this config */
     static getInstance(project) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.instances[project]) {
-                this.instances[project] = new Project();
-                this.instances[project].id = project;
-                yield this.instances[project].load();
+            const key = 'ProjectSingletons';
+            const instances = typedi_1.Container.has(key) ? typedi_1.Container.get(key) : {};
+            if (!instances[project]) {
+                instances[project] = new Project();
+                instances[project].id = project;
+                yield instances[project].load();
+                typedi_1.Container.set(key, instances);
             }
-            return this.instances[project];
+            return instances[project];
         });
     }
     fromObject(object) {
@@ -94,7 +77,7 @@ class Project {
             if (this.storageType === 'local') {
                 // Validate config format
                 const projectConfig = yield this.localStorageService.get(this._id);
-                const validation = Joi.validate(projectConfig, Config_1.ProjectConfigSchema);
+                const validation = Config_1.ProjectConfigSchema.validate(projectConfig);
                 if (validation.error) {
                     // Transform Joi message
                     ValidatorResult_1.TransformValidationMessage(validation.error);
@@ -109,15 +92,34 @@ class Project {
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Nothing to save
+            if (this.storageType === 'local') {
+                yield this.localStorageService.setProject(this._id, this.toObject());
+            }
+            else {
+                yield this.remoteStorageService.update(this._id, {
+                    name: this.name,
+                    description: this.description,
+                });
+            }
         });
     }
-    static isMongoId(value) {
-        const regex = /^([a-f0-9]{24})$/i;
+    static createLocalForChannel(channel, name = 'My project', description = 'A new Hapify project') {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typedi_1.Container.get(Project_1.ProjectFileStorageService).setProject(channel.guessProjectIdOrPath(), {
+                id: channel.config.project,
+                name,
+                description,
+            }, []);
+        });
+    }
+    static isRemoteId(value) {
+        const regex = /^([a-f0-9]{24})$/i; // MongoId
         return regex.exec(value) !== null;
+    }
+    setNameAndDescription(name, description = null) {
+        this.name = name;
+        this.description = description;
     }
 }
 exports.Project = Project;
-/** The loaded instances */
-Project.instances = {};
 //# sourceMappingURL=Project.js.map

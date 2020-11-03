@@ -1,2 +1,2 @@
-import * as Joi from 'joi';
-export declare const FieldSchema: Joi.ObjectSchema;
+import Joi from 'joi';
+export declare const FieldSchema: Joi.ObjectSchema<any>;

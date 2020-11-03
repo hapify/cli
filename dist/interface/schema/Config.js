@@ -1,48 +1,36 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GlobalConfigSchema = exports.ProjectConfigSchema = exports.ConfigSchema = void 0;
 const Template_1 = require("./Template");
-const Joi = __importStar(require("joi"));
+const joi_1 = __importDefault(require("joi"));
 const Field_1 = require("./Field");
 const Model_1 = require("./Model");
 const Versions = ['1'];
-exports.ConfigSchema = Joi.object({
-    version: Joi.string().valid(Versions).required(),
-    validatorPath: Joi.string().required(),
-    project: Joi.string().required(),
-    name: Joi.string(),
-    description: Joi.string(),
-    logo: Joi.string(),
-    defaultFields: Joi.array().items(Field_1.FieldSchema).min(0),
-    templates: Joi.array().items(Template_1.ConfigTemplateSchema).required().min(0),
+exports.ConfigSchema = joi_1.default.object({
+    version: joi_1.default.string()
+        .valid(...Versions)
+        .required(),
+    validatorPath: joi_1.default.string().required(),
+    project: joi_1.default.string().required(),
+    name: joi_1.default.string(),
+    description: joi_1.default.string(),
+    logo: joi_1.default.string(),
+    defaultFields: joi_1.default.array().items(Field_1.FieldSchema).min(0),
+    templates: joi_1.default.array().items(Template_1.ConfigTemplateSchema).required().min(0),
 });
-exports.ProjectConfigSchema = Joi.object({
-    version: Joi.string().valid(Versions).required(),
-    name: Joi.string(),
-    description: Joi.string(),
-    models: Joi.array().items(Model_1.ModelSchema).required().min(0),
+exports.ProjectConfigSchema = joi_1.default.object({
+    version: joi_1.default.string()
+        .valid(...Versions)
+        .required(),
+    name: joi_1.default.string().required(),
+    description: joi_1.default.string(),
+    models: joi_1.default.array().items(Model_1.ModelSchema).required().min(0),
 });
-exports.GlobalConfigSchema = Joi.object({
-    apiKey: Joi.string().length(48),
-    apiUrl: Joi.string().min(1),
+exports.GlobalConfigSchema = joi_1.default.object({
+    apiKey: joi_1.default.string().length(48),
+    apiUrl: joi_1.default.string().min(1),
 });
 //# sourceMappingURL=Config.js.map

@@ -1,10 +1,11 @@
 import { ChannelsService } from '../Channels';
-import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
-export declare class GetChannelsHandlerService implements IWebSocketHandler {
+import Joi from 'joi';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
+import { IChannel } from '../../interface/Objects';
+export declare class GetChannelsHandlerService implements IWebSocketHandler<{}, IChannel[]> {
     private channelsService;
     constructor(channelsService: ChannelsService);
-    canHandle(message: WebSocket): boolean;
+    canHandle(message: WebSocketMessage<{}>): boolean;
     validator(): Joi.Schema;
-    handle(message: WebSocket): Promise<any>;
+    handle(message: WebSocketMessage<{}>): Promise<IChannel[]>;
 }

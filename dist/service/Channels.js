@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -36,6 +36,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var ChannelsService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChannelsService = void 0;
@@ -43,8 +46,9 @@ const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
 const Options_1 = require("./Options");
 const Fs = __importStar(require("fs"));
-const Hoek = __importStar(require("@hapi/hoek"));
+const hoek_1 = __importDefault(require("@hapi/hoek"));
 const Channel_1 = require("../class/Channel");
+const Project_1 = require("../class/Project");
 let ChannelsService = ChannelsService_1 = class ChannelsService {
     constructor(optionsService) {
         this.optionsService = optionsService;
@@ -68,9 +72,9 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
     ensureSameProject() {
         return __awaiter(this, void 0, void 0, function* () {
             const channels = yield this.channels();
-            const firstProject = channels[0].config.project;
+            const firstProject = channels[0].guessProjectIdOrPath();
             for (const channel of channels) {
-                if (channel.config.project !== firstProject) {
+                if (channel.guessProjectIdOrPath() !== firstProject) {
                     throw new Error('Channels must refer to the same project');
                 }
             }
@@ -88,7 +92,7 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
             // Compare each fields group to the first one
             const ref = fieldsGroup[0];
             for (let i = 1; i < fieldsGroup.length; i++) {
-                if (!Hoek.deepEqual(ref, fieldsGroup[i])) {
+                if (!hoek_1.default.deepEqual(ref, fieldsGroup[i])) {
                     throw new Error('Default fields must match for all channels if defined');
                 }
             }
@@ -96,24 +100,67 @@ let ChannelsService = ChannelsService_1 = class ChannelsService {
     }
     /**
      * Change project in all found channels from a given or current dir
-     * Returns modified channels
-     * Defined path for a specific channel
+     * This change the project without loading the channels
      */
-    changeProject(project, path) {
+    changeRemoteProject(project) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (path) {
-                yield Channel_1.Channel.changeProject(path, project);
+            const channels = yield ChannelsService_1.sniff(this.optionsService.dir(), this.optionsService.depth());
+            if (channels.length === 0) {
+                throw new Error('No channel found');
             }
+            for (const channel of channels) {
+                yield Channel_1.Channel.changeProject(channel.path, project);
+            }
+        });
+    }
+    /**
+     * Use the same local project for all found channels
+     * This change the project without loading the channels
+     */
+    mergeLocalProjects() {
+        return __awaiter(this, void 0, void 0, function* () {
             // Try to find channels
-            else {
-                const channels = yield ChannelsService_1.sniff(this.optionsService.dir(), this.optionsService.depth());
-                if (channels.length === 0) {
-                    throw new Error('No channel found');
-                }
-                for (const channel of channels) {
-                    yield Channel_1.Channel.changeProject(channel.path, project);
+            const channels = yield ChannelsService_1.sniff(this.optionsService.dir(), this.optionsService.depth());
+            if (channels.length === 0) {
+                throw new Error('No channel found');
+            }
+            // If the one channel's project is local, use this project as reference and bind all other channels to this project
+            let mainChannel;
+            let mainChannelProjectPath;
+            for (const channel of channels) {
+                const projectPath = yield this.resolveLocalProjectPath(channel);
+                if (projectPath) {
+                    mainChannel = channel;
+                    mainChannelProjectPath = projectPath;
+                    break;
                 }
             }
+            if (!mainChannel) {
+                // The user should choose a remote project
+                return false;
+            }
+            for (const channel of channels) {
+                if (channel === mainChannel)
+                    continue;
+                // Remove project file
+                const projectPath = yield this.resolveLocalProjectPath(channel);
+                if (projectPath && Fs.existsSync(projectPath)) {
+                    Fs.unlinkSync(projectPath);
+                }
+                // Get relative path
+                const newPath = Path.relative(Path.resolve(channel.path), mainChannelProjectPath);
+                yield Channel_1.Channel.changeProject(channel.path, newPath);
+            }
+            return true;
+        });
+    }
+    /** Returns null if the project is not local */
+    resolveLocalProjectPath(channel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const config = yield channel.readConfigFile();
+            if (Project_1.Project.isRemoteId(config.project))
+                return null;
+            return Path.isAbsolute(config.project) ? config.project : Path.resolve(channel.path, config.project);
         });
     }
     /** Returns the first models collection */

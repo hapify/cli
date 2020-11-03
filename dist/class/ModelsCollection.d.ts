@@ -8,8 +8,6 @@ export declare class ModelsCollection implements IStorable, ISerializable<IModel
     private models;
     /** The pseudo path */
     path: string;
-    /** The loaded instances */
-    private static instances;
     /** Models storage */
     private remoteStorageService;
     private localStorageService;

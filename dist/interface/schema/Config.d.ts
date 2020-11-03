@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
-export declare const ConfigSchema: Joi.ObjectSchema;
-export declare const ProjectConfigSchema: Joi.ObjectSchema;
-export declare const GlobalConfigSchema: Joi.ObjectSchema;
+import Joi from 'joi';
+export declare const ConfigSchema: Joi.ObjectSchema<any>;
+export declare const ProjectConfigSchema: Joi.ObjectSchema<any>;
+export declare const GlobalConfigSchema: Joi.ObjectSchema<any>;

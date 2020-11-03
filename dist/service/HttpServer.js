@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -36,6 +36,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpServerService = void 0;
 const typedi_1 = require("typedi");
@@ -43,14 +46,16 @@ const Path = __importStar(require("path"));
 const Options_1 = require("./Options");
 const WebSocketServer_1 = require("./WebSocketServer");
 const hapi_1 = require("@hapi/hapi");
+const find_package_json_1 = __importDefault(require("find-package-json"));
 const opn = require('opn');
 const DetectPort = require('detect-port');
+const RootDir = Path.dirname(find_package_json_1.default(__dirname).next().filename);
 let HttpServerService = class HttpServerService {
     constructor(optionsService, webSocketServerService) {
         this.optionsService = optionsService;
         this.webSocketServerService = webSocketServerService;
         /** WebApp root */
-        this.rootPath = Path.join(Path.dirname(require.main.filename), '..', 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
+        this.rootPath = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
         /** Start port number */
         this._minPort = 4800;
         /** Maximum port number */

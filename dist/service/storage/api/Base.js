@@ -22,6 +22,7 @@ exports.BaseApiStorageService = void 0;
 const typedi_1 = require("typedi");
 const Options_1 = require("../../Options");
 const Api_1 = require("../../Api");
+const AuthenticatedApi_1 = require("../../AuthenticatedApi");
 let BaseApiStorageService = 
 /**
  * T: Internal interface
@@ -29,9 +30,9 @@ let BaseApiStorageService =
  * S: Search params
  */
 class BaseApiStorageService {
-    constructor(apiService, optionsService) {
-        this.apiService = apiService;
+    constructor(optionsService) {
         this.optionsService = optionsService;
+        this.apiService = this.requiresAuthentication() ? typedi_1.Container.get(AuthenticatedApi_1.AuthenticatedApiService) : typedi_1.Container.get(Api_1.ApiService);
         this.remoteConfig = optionsService.remoteConfig();
     }
     /** Create a new model */
@@ -95,7 +96,7 @@ BaseApiStorageService = __decorate([
      * S: Search params
      */
     ,
-    __metadata("design:paramtypes", [Api_1.ApiService, Options_1.OptionsService])
+    __metadata("design:paramtypes", [Options_1.OptionsService])
 ], BaseApiStorageService);
 exports.BaseApiStorageService = BaseApiStorageService;
 //# sourceMappingURL=Base.js.map

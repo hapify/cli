@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -38,24 +38,26 @@ function AskPreset(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         const presetsCollection = yield typedi_1.Container.get(Presets_1.PresetsService).collection();
         let qPresets = [];
-        if (cmd.preset && cmd.preset.length) {
-            qPresets = cmd.preset;
-        }
-        else {
-            // Get presets from remote
-            const list = (yield presetsCollection.list()).map((p) => ({
-                name: p.name,
-                value: p.id,
-            }));
-            qPresets = (yield Inquirer.prompt([
-                {
-                    name: 'presets',
-                    message: 'Choose some presets to preload in your project',
-                    type: 'checkbox',
-                    choices: list,
-                    when: () => list.length > 0,
-                },
-            ])).presets;
+        if (cmd.presets !== false) {
+            if (cmd.preset && cmd.preset.length) {
+                qPresets = cmd.preset;
+            }
+            else {
+                // Get presets from remote
+                const list = (yield presetsCollection.list()).map((p) => ({
+                    name: p.name,
+                    value: p.id,
+                }));
+                qPresets = (yield Inquirer.prompt([
+                    {
+                        name: 'presets',
+                        message: 'Choose some presets to preload in your project',
+                        type: 'checkbox',
+                        choices: list,
+                        when: () => list.length > 0,
+                    },
+                ])).presets;
+            }
         }
         return qPresets;
     });
@@ -72,6 +74,7 @@ function ApplyPreset(qPresets) {
             // If the project already has models, ignore add presets
             if (models.length) {
                 logger.warning('Project already contains models. Ignore presets import.');
+                return false;
             }
             else {
                 // Get and apply presets
@@ -83,6 +86,7 @@ function ApplyPreset(qPresets) {
                 }
                 // Save models
                 yield modelsCollection.save();
+                return true;
             }
         }
     });

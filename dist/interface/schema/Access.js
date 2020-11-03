@@ -1,33 +1,29 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccessSchema = void 0;
-const Joi = __importStar(require("joi"));
+const joi_1 = __importDefault(require("joi"));
 const AccessValues = ['admin', 'owner', 'auth', 'guest'];
-exports.AccessSchema = Joi.object({
-    create: Joi.string().valid(AccessValues).required(),
-    read: Joi.string().valid(AccessValues).required(),
-    update: Joi.string().valid(AccessValues).required(),
-    remove: Joi.string().valid(AccessValues).required(),
-    search: Joi.string().valid(AccessValues).required(),
-    count: Joi.string().valid(AccessValues).required(),
+exports.AccessSchema = joi_1.default.object({
+    create: joi_1.default.string()
+        .valid(...AccessValues)
+        .required(),
+    read: joi_1.default.string()
+        .valid(...AccessValues)
+        .required(),
+    update: joi_1.default.string()
+        .valid(...AccessValues)
+        .required(),
+    remove: joi_1.default.string()
+        .valid(...AccessValues)
+        .required(),
+    search: joi_1.default.string()
+        .valid(...AccessValues)
+        .required(),
+    count: joi_1.default.string()
+        .valid(...AccessValues)
+        .required(),
 });
 //# sourceMappingURL=Access.js.map

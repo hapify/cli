@@ -6,8 +6,6 @@ export declare class BoilerplatesCollection implements IStorable, ISerializable<
     private boilerplates;
     /** Boilerplates storage */
     private storageService;
-    /** The loaded instance */
-    private static instance;
     private constructor();
     /** Returns a singleton for this config */
     static getInstance(): Promise<BoilerplatesCollection>;

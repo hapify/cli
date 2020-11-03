@@ -22,12 +22,15 @@ class BoilerplatesCollection {
     /** Returns a singleton for this config */
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!BoilerplatesCollection.instance) {
+            const key = 'BoilerplatesCollectionSingleton';
+            let instance = typedi_1.Container.has(key) ? typedi_1.Container.get(key) : null;
+            if (!instance) {
                 // Create and load a new collection
-                BoilerplatesCollection.instance = new BoilerplatesCollection();
-                yield BoilerplatesCollection.instance.load();
+                instance = new BoilerplatesCollection();
+                yield instance.load();
+                typedi_1.Container.set(key, instance);
             }
-            return BoilerplatesCollection.instance;
+            return instance;
         });
     }
     /** Load the boilerplates */

@@ -1,14 +1,15 @@
 import { ChannelsService } from '../Channels';
 import { GeneratorService } from '../Generator';
 import { WriterService } from '../Writer';
-import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
-export declare class GenerateTemplateHandlerService implements IWebSocketHandler {
+import Joi from 'joi';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
+import { WebSocketGenerateTemplateHandlerInput } from '../../interface/WebSocketHandlers';
+export declare class GenerateTemplateHandlerService implements IWebSocketHandler<WebSocketGenerateTemplateHandlerInput, void> {
     private channelsService;
     private generatorService;
     private writerService;
     constructor(channelsService: ChannelsService, generatorService: GeneratorService, writerService: WriterService);
-    canHandle(message: WebSocket): boolean;
+    canHandle(message: WebSocketMessage<WebSocketGenerateTemplateHandlerInput>): boolean;
     validator(): Joi.Schema;
-    handle(message: WebSocket): Promise<any>;
+    handle(message: WebSocketMessage<WebSocketGenerateTemplateHandlerInput>): Promise<void>;
 }

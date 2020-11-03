@@ -1,16 +1,16 @@
 import { ChannelsService } from './Channels';
 import { IField } from '../interface/Generator';
 import { IProject } from '../interface/Objects';
-import { ApiService } from './Api';
 import { ILimits } from '../interface/Config';
+import { AuthenticatedApiService } from './AuthenticatedApi';
 export declare class InfoService {
     private channelsService;
-    private apiService;
+    private authenticatedApiService;
     /** Stores the limits */
     private _limits;
     /** Stores the default fields */
     private _fields;
-    constructor(channelsService: ChannelsService, apiService: ApiService);
+    constructor(channelsService: ChannelsService, authenticatedApiService: AuthenticatedApiService);
     /** Get the project once and returns it */
     project(): Promise<IProject>;
     /** Get the default model field from channel */

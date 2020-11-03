@@ -14,5 +14,6 @@ export declare class ProjectsApiStorageService extends BaseApiStorageService<IPr
     protected defaultSearchParams(): any;
     protected path(): string;
     protected fromApi(object: IApiProject): IProject;
+    protected requiresAuthentication(): boolean;
 }
 export {};

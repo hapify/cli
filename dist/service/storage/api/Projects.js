@@ -26,6 +26,9 @@ let ProjectsApiStorageService = class ProjectsApiStorageService extends Base_1.B
             description: object.description,
         };
     }
+    requiresAuthentication() {
+        return true;
+    }
 };
 ProjectsApiStorageService = __decorate([
     typedi_1.Service()

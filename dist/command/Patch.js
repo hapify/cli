@@ -15,40 +15,33 @@ const Options_1 = require("../service/Options");
 const Logger_1 = require("../service/Logger");
 const Diff_1 = require("./question/Diff");
 const SimpleGit = require('simple-git/promise');
-// ############################################
-// Get services
-const options = typedi_1.Container.get(Options_1.OptionsService);
-const logger = typedi_1.Container.get(Logger_1.LoggerService);
 function PatchCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            options.setCommand(cmd);
-            // ---------------------------------
-            // Action starts
-            const qDiif = {};
-            const currentDir = options.dir();
-            // =================================
-            // Clone git repo
-            const git = SimpleGit(currentDir);
-            // =================================
-            // Get source and destination
-            yield Diff_1.AskDiff(cmd, qDiif, git);
-            // =================================
-            // Run patch
-            const result = yield Diff_1.ApplyDiff(qDiif, git);
-            if (result === null) {
-                logger.info('Aborted');
-            }
-            else {
-                logger.success(`Success:\n${result}`);
-            }
-            // Action Ends
-            // ---------------------------------
-            logger.time();
+        // Get services
+        const options = typedi_1.Container.get(Options_1.OptionsService);
+        const logger = typedi_1.Container.get(Logger_1.LoggerService);
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        const qDiif = {};
+        const currentDir = options.dir();
+        // =================================
+        // Clone git repo
+        const git = SimpleGit(currentDir);
+        // =================================
+        // Get source and destination
+        yield Diff_1.AskDiff(cmd, qDiif, git);
+        // =================================
+        // Run patch
+        const result = yield Diff_1.ApplyDiff(qDiif, git);
+        if (result === null) {
+            logger.info('Aborted');
         }
-        catch (error) {
-            logger.handleAndExit(error);
+        else {
+            logger.success(`Success:\n${result}`);
         }
+        // Action Ends
+        // ---------------------------------
     });
 }
 exports.PatchCommand = PatchCommand;

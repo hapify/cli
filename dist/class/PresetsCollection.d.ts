@@ -9,8 +9,6 @@ export declare class PresetsCollection implements IStorable, ISerializable<IPres
     private presets;
     /** Presets storage */
     private _storageService;
-    /** The loaded instance */
-    private static instance;
     private constructor();
     /** Returns a singleton for this config */
     static getInstance(): Promise<PresetsCollection>;

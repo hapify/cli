@@ -1,6 +1,11 @@
 import { OptionsService } from './Options';
+declare type LogType = 'stderr' | 'stdout';
+declare type LoggerOutput = {
+    [key in LogType]: string;
+};
 export declare class LoggerService {
     private optionsService;
+    private output;
     constructor(optionsService: OptionsService);
     /** Handle an error */
     handle(error: Error): this;
@@ -26,4 +31,7 @@ export declare class LoggerService {
     getArt(): string;
     /** Display the running time */
     time(): this;
+    private log;
+    getOutput(): LoggerOutput;
 }
+export {};

@@ -22,12 +22,15 @@ class ProjectsCollection {
     /** Returns a singleton for this config */
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!ProjectsCollection.instance) {
+            const key = 'ProjectsCollectionSingleton';
+            let instance = typedi_1.Container.has(key) ? typedi_1.Container.get(key) : null;
+            if (!instance) {
                 // Create and load a new collection
-                ProjectsCollection.instance = new ProjectsCollection();
-                yield ProjectsCollection.instance.load();
+                instance = new ProjectsCollection();
+                yield instance.load();
+                typedi_1.Container.set(key, instance);
             }
-            return ProjectsCollection.instance;
+            return instance;
         });
     }
     /** Load the projects */
@@ -38,7 +41,9 @@ class ProjectsCollection {
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Nothing to save
+            for (const project of this.projects) {
+                yield project.save();
+            }
         });
     }
     /** Returns the list of projects */
@@ -53,7 +58,7 @@ class ProjectsCollection {
             return this.projects.find((p) => p.id === id);
         });
     }
-    /** Returns one project */
+    /** Create new project */
     add(name, description) {
         return __awaiter(this, void 0, void 0, function* () {
             const object = yield this.storageService.create({

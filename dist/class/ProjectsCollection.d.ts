@@ -6,8 +6,6 @@ export declare class ProjectsCollection implements IStorable, ISerializable<IPro
     private projects;
     /** Projects storage */
     private storageService;
-    /** The loaded instance */
-    private static instance;
     private constructor();
     /** Returns a singleton for this config */
     static getInstance(): Promise<ProjectsCollection>;
@@ -18,7 +16,7 @@ export declare class ProjectsCollection implements IStorable, ISerializable<IPro
     list(): Promise<Project[]>;
     /** Returns one project */
     get(id: string): Promise<Project>;
-    /** Returns one project */
+    /** Create new project */
     add(name: string, description: string): Promise<Project>;
     fromObject(object: IProject[]): Project[];
     toObject(): IProject[];

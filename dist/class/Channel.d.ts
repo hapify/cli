@@ -11,6 +11,7 @@ export declare class Channel implements IStorable, ISerializable<IChannel, Chann
     id: string;
     private static defaultFolder;
     private static configFile;
+    private static projectFile;
     config: IConfig;
     /** Templates instances */
     templates: Template[];
@@ -31,11 +32,11 @@ export declare class Channel implements IStorable, ISerializable<IChannel, Chann
     /** Remove empty templates */
     filter(): void;
     /** Determines if the project is an id or not and resolve path if necessary */
-    private guessProjectIdOrPath;
-    /** Check resource validity */
-    private validate;
+    guessProjectIdOrPath(): string;
     /** Change project in config file */
     static changeProject(path: string, project: string): Promise<void>;
+    /** Returns the config from ori file */
+    readConfigFile(): Promise<IConfig>;
     /** Denotes if the config file exists */
     static configExists(path: string): Promise<boolean>;
     /** Init a Hapify structure within a directory */

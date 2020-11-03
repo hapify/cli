@@ -14,10 +14,16 @@ export declare class ChannelsService {
     ensureSameDefaultFields(): Promise<void>;
     /**
      * Change project in all found channels from a given or current dir
-     * Returns modified channels
-     * Defined path for a specific channel
+     * This change the project without loading the channels
      */
-    changeProject(project: string, path?: string): Promise<void>;
+    changeRemoteProject(project: string): Promise<void>;
+    /**
+     * Use the same local project for all found channels
+     * This change the project without loading the channels
+     */
+    mergeLocalProjects(): Promise<boolean>;
+    /** Returns null if the project is not local */
+    private resolveLocalProjectPath;
     /** Returns the first models collection */
     modelsCollection(): Promise<ModelsCollection>;
     /**

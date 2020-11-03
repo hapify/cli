@@ -25,8 +25,10 @@ class ModelsCollection {
     static getInstance(project) {
         return __awaiter(this, void 0, void 0, function* () {
             const path = ModelsCollection.path(project);
+            const key = 'ModelsCollectionSingletons';
+            const instances = typedi_1.Container.has(key) ? typedi_1.Container.get(key) : [];
             // Try to find an existing collection
-            const modelsCollection = ModelsCollection.instances.find((m) => m.path === path);
+            const modelsCollection = instances.find((m) => m.path === path);
             if (modelsCollection) {
                 return modelsCollection;
             }
@@ -34,7 +36,8 @@ class ModelsCollection {
             const collection = new ModelsCollection(project);
             yield collection.load();
             // Keep the collection
-            ModelsCollection.instances.push(collection);
+            instances.push(collection);
+            typedi_1.Container.set(key, instances);
             return collection;
         });
     }
@@ -124,6 +127,4 @@ class ModelsCollection {
     }
 }
 exports.ModelsCollection = ModelsCollection;
-/** The loaded instances */
-ModelsCollection.instances = [];
 //# sourceMappingURL=ModelsCollection.js.map

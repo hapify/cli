@@ -15,32 +15,31 @@ const Options_1 = require("../service/Options");
 const Channels_1 = require("../service/Channels");
 const Logger_1 = require("../service/Logger");
 const Preset_1 = require("./question/Preset");
-// ############################################
-// Get services
-const options = typedi_1.Container.get(Options_1.OptionsService);
-const logger = typedi_1.Container.get(Logger_1.LoggerService);
-const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function ImportCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            options.setCommand(cmd);
-            // ---------------------------------
-            // Action starts
-            yield channelsService.ensureSameProject();
-            yield channelsService.ensureSameDefaultFields();
-            // =================================
-            // Get presets
-            const qPresets = yield Preset_1.AskPreset(cmd);
-            // =================================
-            // Get models and apply presets if necessary
-            yield Preset_1.ApplyPreset(qPresets);
-            // Action Ends
-            // ---------------------------------
-            logger.time();
+        // Get services
+        const options = typedi_1.Container.get(Options_1.OptionsService);
+        const logger = typedi_1.Container.get(Logger_1.LoggerService);
+        const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        yield channelsService.ensureSameProject();
+        yield channelsService.ensureSameDefaultFields();
+        // =================================
+        // Get presets
+        const qPresets = yield Preset_1.AskPreset(cmd);
+        // =================================
+        // Get models and apply presets if necessary
+        const success = yield Preset_1.ApplyPreset(qPresets);
+        if (success) {
+            logger.success(`Did apply ${qPresets.length} preset(s)`);
         }
-        catch (error) {
-            logger.handleAndExit(error);
+        else {
+            logger.error('Operation aborted');
         }
+        // Action Ends
+        // ---------------------------------
     });
 }
 exports.ImportCommand = ImportCommand;

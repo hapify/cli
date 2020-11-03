@@ -23,5 +23,6 @@ export declare class PresetsApiStorageService extends BaseApiStorageService<IPre
     protected defaultSearchParams(): any;
     protected path(): string;
     protected fromApi(object: IApiPreset): IPreset;
+    protected requiresAuthentication(): boolean;
 }
 export {};

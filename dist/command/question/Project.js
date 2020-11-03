@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -28,11 +28,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SetupProject = exports.AskProject = void 0;
+exports.SetupRemoteProject = exports.AskRemoteProject = exports.AskLocalProject = void 0;
 const Inquirer = __importStar(require("inquirer"));
 const typedi_1 = require("typedi");
 const Projects_1 = require("../../service/Projects");
-function AskProject(cmd, qProject) {
+function AskLocalProject(cmd, qProject) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (cmd.projectName) {
+            qProject.name = cmd.projectName;
+            qProject.description = cmd.projectDesc;
+        }
+        else {
+            const answer = yield Inquirer.prompt([
+                {
+                    name: 'name',
+                    message: 'Enter a project name',
+                    validate: (input) => input.length > 0,
+                },
+                {
+                    name: 'description',
+                    message: 'Enter a project description',
+                },
+            ]);
+            qProject.name = answer.name;
+            qProject.description = answer.description;
+        }
+    });
+}
+exports.AskLocalProject = AskLocalProject;
+function AskRemoteProject(cmd, qProject) {
     return __awaiter(this, void 0, void 0, function* () {
         const projectsCollection = yield typedi_1.Container.get(Projects_1.ProjectsService).collection();
         if (cmd.project) {
@@ -40,7 +64,7 @@ function AskProject(cmd, qProject) {
         }
         else if (cmd.projectName) {
             qProject.name = cmd.projectName;
-            qProject.description = cmd.projectDescription;
+            qProject.description = cmd.projectDesc;
         }
         else {
             // Get projects from remote
@@ -77,8 +101,8 @@ function AskProject(cmd, qProject) {
         }
     });
 }
-exports.AskProject = AskProject;
-function SetupProject(qProject) {
+exports.AskRemoteProject = AskRemoteProject;
+function SetupRemoteProject(qProject) {
     return __awaiter(this, void 0, void 0, function* () {
         const projectsCollection = yield typedi_1.Container.get(Projects_1.ProjectsService).collection();
         if (!qProject.id) {
@@ -87,5 +111,5 @@ function SetupProject(qProject) {
         }
     });
 }
-exports.SetupProject = SetupProject;
+exports.SetupRemoteProject = SetupRemoteProject;
 //# sourceMappingURL=Project.js.map

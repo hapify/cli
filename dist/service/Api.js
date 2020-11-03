@@ -64,12 +64,7 @@ let ApiService = class ApiService {
     /** Create and get the http client */
     client() {
         if (!this.http) {
-            this.http = axios_1.default.create({
-                baseURL: this.optionsService.remoteConfig().uri,
-                headers: {
-                    'X-Api-Key': this.optionsService.apiKey(),
-                },
-            });
+            this.http = axios_1.default.create({ baseURL: this.optionsService.remoteConfig().uri });
         }
         return this.http;
     }

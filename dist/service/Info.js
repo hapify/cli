@@ -21,12 +21,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InfoService = void 0;
 const typedi_1 = require("typedi");
 const Channels_1 = require("./Channels");
-const Api_1 = require("./Api");
 const Internal_1 = require("../config/Internal");
+const AuthenticatedApi_1 = require("./AuthenticatedApi");
 let InfoService = class InfoService {
-    constructor(channelsService, apiService) {
+    constructor(channelsService, authenticatedApiService) {
         this.channelsService = channelsService;
-        this.apiService = apiService;
+        this.authenticatedApiService = authenticatedApiService;
     }
     /** Get the project once and returns it */
     project() {
@@ -54,7 +54,7 @@ let InfoService = class InfoService {
             const channel = (yield this.channelsService.channels())[0];
             if (!this._limits) {
                 if (channel.project.storageType === 'remote') {
-                    this._limits = (yield this.apiService.get('generator/limits')).data;
+                    this._limits = (yield this.authenticatedApiService.get('generator/limits')).data;
                 }
                 else {
                     this._limits = Object.assign({}, Internal_1.InternalConfig.limits);
@@ -66,7 +66,7 @@ let InfoService = class InfoService {
 };
 InfoService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Channels_1.ChannelsService, Api_1.ApiService])
+    __metadata("design:paramtypes", [Channels_1.ChannelsService, AuthenticatedApi_1.AuthenticatedApiService])
 ], InfoService);
 exports.InfoService = InfoService;
 //# sourceMappingURL=Info.js.map

@@ -16,32 +16,25 @@ const Options_1 = require("../service/Options");
 const Logger_1 = require("../service/Logger");
 const HttpServer_1 = require("../service/HttpServer");
 const Channels_1 = require("../service/Channels");
-// ############################################
-// Get services
-const options = typedi_1.Container.get(Options_1.OptionsService);
-const logger = typedi_1.Container.get(Logger_1.LoggerService);
-const http = typedi_1.Container.get(HttpServer_1.HttpServerService);
-const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
 function ServeCommand(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            options.setCommand(cmd);
-            // ---------------------------------
-            // Action starts
-            yield channelsService.ensureSameProject();
-            yield channelsService.ensureSameDefaultFields();
-            yield http.serve();
-            logger.info(`Server is running at: ${helpers_1.cPath(http.url())}`);
-            if (options.open()) {
-                http.open();
-            }
-            // Action Ends
-            // ---------------------------------
-            logger.time();
+        // Get services
+        const options = typedi_1.Container.get(Options_1.OptionsService);
+        const logger = typedi_1.Container.get(Logger_1.LoggerService);
+        const http = typedi_1.Container.get(HttpServer_1.HttpServerService);
+        const channelsService = typedi_1.Container.get(Channels_1.ChannelsService);
+        options.setCommand(cmd);
+        // ---------------------------------
+        // Action starts
+        yield channelsService.ensureSameProject();
+        yield channelsService.ensureSameDefaultFields();
+        yield http.serve();
+        logger.info(`Server is running at: ${helpers_1.cPath(http.url())}`);
+        if (options.open()) {
+            http.open();
         }
-        catch (error) {
-            logger.handleAndExit(error);
-        }
+        // Action Ends
+        // ---------------------------------
     });
 }
 exports.ServeCommand = ServeCommand;

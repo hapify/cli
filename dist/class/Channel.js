@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -34,7 +34,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Channel = void 0;
 const Path = __importStar(require("path"));
 const md5_1 = __importDefault(require("md5"));
-const Joi = __importStar(require("joi"));
 const typedi_1 = require("typedi");
 const Template_1 = require("./Template");
 const Validator_1 = require("./Validator");
@@ -55,12 +54,10 @@ class Channel {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            // Validate storage
-            yield this.validate();
             // Get config from storage
-            const config = yield this.storageService.get([this.path, Channel.configFile]);
+            const config = yield this.readConfigFile();
             // Validate the incoming config
-            const validation = Joi.validate(config, Config_1.ConfigSchema);
+            const validation = Config_1.ConfigSchema.validate(config);
             if (validation.error) {
                 // Transform Joi message
                 ValidatorResult_1.TransformValidationMessage(validation.error);
@@ -121,23 +118,15 @@ class Channel {
     }
     /** Determines if the project is an id or not and resolve path if necessary */
     guessProjectIdOrPath() {
-        if (!Project_1.Project.isMongoId(this.config.project) && !Path.isAbsolute(this.config.project)) {
+        if (!Project_1.Project.isRemoteId(this.config.project) && !Path.isAbsolute(this.config.project)) {
             return Path.resolve(this.path, this.config.project);
         }
         return this.config.project;
     }
-    /** Check resource validity */
-    validate() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!(yield this.storageService.exists([this.path, Channel.configFile]))) {
-                throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
-            }
-        });
-    }
     /** Change project in config file */
     static changeProject(path, project) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!Channel.configExists(path)) {
+            if (!(yield Channel.configExists(path))) {
                 throw new Error(`Cannot find config file in ${path}`);
             }
             const storage = typedi_1.Container.get(Channel_1.ChannelFileStorageService);
@@ -148,10 +137,19 @@ class Channel {
             yield storage.set([path, Channel.configFile], config);
         });
     }
+    /** Returns the config from ori file */
+    readConfigFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!(yield this.storageService.exists([this.path, Channel.configFile]))) {
+                throw new Error(`Channel config's path ${this.path}/${Channel.configFile} does not exists.`);
+            }
+            return yield this.storageService.get([this.path, Channel.configFile]);
+        });
+    }
     /** Denotes if the config file exists */
     static configExists(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield typedi_1.Container.get(Channel_1.ChannelFileStorageService).exists([path, Channel.configFile]);
+            return typedi_1.Container.get(Channel_1.ChannelFileStorageService).exists([path, Channel.configFile]);
         });
     }
     /** Init a Hapify structure within a directory */
@@ -168,7 +166,7 @@ class Channel {
                 name: name || channel.name,
                 description: description || 'A new Hapify channel',
                 logo: logo || undefined,
-                project: 'projectId',
+                project: Channel.projectFile,
                 defaultFields: [
                     {
                         name: 'Id',
@@ -240,4 +238,5 @@ class Channel {
 exports.Channel = Channel;
 Channel.defaultFolder = 'hapify';
 Channel.configFile = 'hapify.json';
+Channel.projectFile = 'hapify-models.json';
 //# sourceMappingURL=Channel.js.map

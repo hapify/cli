@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -94,8 +94,8 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
                 const compact = JSON.parse(content);
                 return {
                     version: compact.version,
-                    name: compact.name || null,
-                    description: compact.description || null,
+                    name: compact.name,
+                    description: compact.description,
                     models: compact.models.map((model) => {
                         return {
                             id: model.id,
@@ -141,6 +141,17 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
                 description: projectConfig.description,
                 name: projectConfig.name || Path.basename(Path.dirname(path)),
             };
+        });
+    }
+    setProject(path, project, models) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const projectWithModels = {
+                version: '1',
+                name: project.name,
+                description: project.description,
+                models: !models ? yield this.getModels(path) : models,
+            };
+            yield this.set(path, projectWithModels);
         });
     }
     getModels(path) {

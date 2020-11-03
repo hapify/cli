@@ -4,5 +4,6 @@ export interface ProjectQuery {
     name?: string;
     description?: string;
 }
-export declare function AskProject(cmd: Command, qProject: ProjectQuery): Promise<void>;
-export declare function SetupProject(qProject: ProjectQuery): Promise<void>;
+export declare function AskLocalProject(cmd: Command, qProject: ProjectQuery): Promise<void>;
+export declare function AskRemoteProject(cmd: Command, qProject: ProjectQuery): Promise<void>;
+export declare function SetupRemoteProject(qProject: ProjectQuery): Promise<void>;

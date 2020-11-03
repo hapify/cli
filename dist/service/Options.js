@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -78,9 +78,13 @@ let OptionsService = class OptionsService {
     debug() {
         return !!this.program.debug;
     }
+    /** Denotes if the silent mode is enabled */
+    silent() {
+        return !!this.program.silent;
+    }
     /** Get the depth for recursive search */
     depth() {
-        return this.command.depth;
+        return Number(this.command.depth);
     }
     /** Get the output file path */
     output() {
@@ -88,7 +92,7 @@ let OptionsService = class OptionsService {
     }
     /** Get the required http port */
     port() {
-        return this.command.port;
+        return Number(this.command.port);
     }
     /** Get the required http hostname */
     hostname() {
@@ -96,7 +100,7 @@ let OptionsService = class OptionsService {
     }
     /** Denotes if a new tab should be opened */
     open() {
-        return !!this.command.open;
+        return this.command.open !== false;
     }
 };
 OptionsService = __decorate([

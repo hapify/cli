@@ -39,7 +39,7 @@ export declare class WebSocketServerService {
     /** Denotes if the HTTP server is running */
     started(): boolean;
     /** Add a new handler */
-    addHandler(handler: IWebSocketHandler): void;
+    addHandler(handler: IWebSocketHandler<any, any>): void;
     /** Create and store token */
     private createToken;
     /** Remove the token */

@@ -1,10 +1,12 @@
 import { ValidatorService } from '../Validator';
-import * as Joi from 'joi';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
-export declare class ValidateModelHandlerService implements IWebSocketHandler {
+import Joi from 'joi';
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
+import { Validator } from '../../interface/Validator';
+import { WebSocketValidateModelHandlerInput } from '../../interface/WebSocketHandlers';
+export declare class ValidateModelHandlerService implements IWebSocketHandler<WebSocketValidateModelHandlerInput, Validator> {
     private validatorService;
     constructor(validatorService: ValidatorService);
-    canHandle(message: WebSocket): boolean;
+    canHandle(message: WebSocketMessage<WebSocketValidateModelHandlerInput>): boolean;
     validator(): Joi.Schema;
-    handle(message: WebSocket): Promise<any>;
+    handle(message: WebSocketMessage<WebSocketValidateModelHandlerInput>): Promise<Validator>;
 }

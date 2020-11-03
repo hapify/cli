@@ -33,5 +33,6 @@ export declare class BoilerplatesApiStorageService extends BaseApiStorageService
     protected defaultSearchParams(): any;
     protected path(): string;
     protected fromApi(object: IApiBoilerplate): IBoilerplate;
+    protected requiresAuthentication(): boolean;
 }
 export {};

@@ -17,9 +17,9 @@ export declare class RichAxiosError implements AxiosError {
     toJSON: () => object;
 }
 export declare class ApiService {
-    private optionsService;
+    protected optionsService: OptionsService;
     /** Http client */
-    private http;
+    protected http: AxiosInstance;
     constructor(optionsService: OptionsService);
     /** Create and get the http client */
     client(): AxiosInstance;
@@ -32,6 +32,6 @@ export declare class ApiService {
     /** Delete */
     delete<T>(url: string, query?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
     /** Helper to return a stringified query */
-    private query;
+    protected query(url: string, object?: any): string;
 }
 export {};

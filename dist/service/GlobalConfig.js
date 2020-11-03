@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -37,7 +37,6 @@ const Path = __importStar(require("path"));
 const Fs = __importStar(require("fs"));
 const Os = __importStar(require("os"));
 const mkdirp_1 = __importDefault(require("mkdirp"));
-const Joi = __importStar(require("joi"));
 const Config_1 = require("../interface/schema/Config");
 let GlobalConfigService = class GlobalConfigService {
     constructor() {
@@ -75,7 +74,7 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Validate the current config or scream */
     validate(data = this.data) {
-        const validation = Joi.validate(data, Config_1.GlobalConfigSchema);
+        const validation = Config_1.GlobalConfigSchema.validate(data);
         if (validation.error) {
             const errorMessage = validation.error.details
                 .map((v) => {

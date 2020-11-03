@@ -1,5 +1,6 @@
 import { ISerializable, IStorable, StorageType } from '../interface/Storage';
 import { IProject } from '../interface/Objects';
+import { Channel } from './Channel';
 export declare class Project implements IStorable, ISerializable<IProject, Project>, IProject {
     /** The project's unique id */
     private _id;
@@ -17,8 +18,6 @@ export declare class Project implements IStorable, ISerializable<IProject, Proje
     /** Project storage */
     private remoteStorageService;
     private localStorageService;
-    /** The loaded instances */
-    private static instances;
     constructor(object?: IProject);
     /** Returns a singleton for this config */
     static getInstance(project: string): Promise<Project>;
@@ -26,5 +25,7 @@ export declare class Project implements IStorable, ISerializable<IProject, Proje
     toObject(): IProject;
     load(): Promise<void>;
     save(): Promise<void>;
-    static isMongoId(value: string): boolean;
+    static createLocalForChannel(channel: Channel, name?: string, description?: string): Promise<void>;
+    static isRemoteId(value: string): boolean;
+    setNameAndDescription(name: string, description?: string): void;
 }

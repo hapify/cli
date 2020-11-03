@@ -1,10 +1,11 @@
-import * as Joi from 'joi';
+import Joi from 'joi';
 import { InfoService } from '../Info';
-import { IWebSocketHandler, WebSocket } from '../../interface/WebSocket';
-export declare class GetInfoHandlerService implements IWebSocketHandler {
+import { IWebSocketHandler, WebSocketMessage } from '../../interface/WebSocket';
+import { WebSocketGetInfoHandlerOutput } from '../../interface/WebSocketHandlers';
+export declare class GetInfoHandlerService implements IWebSocketHandler<{}, WebSocketGetInfoHandlerOutput> {
     private infoService;
     constructor(infoService: InfoService);
-    canHandle(message: WebSocket): boolean;
+    canHandle(message: WebSocketMessage<{}>): boolean;
     validator(): Joi.Schema;
-    handle(message: WebSocket): Promise<any>;
+    handle(message: WebSocketMessage<{}>): Promise<WebSocketGetInfoHandlerOutput>;
 }

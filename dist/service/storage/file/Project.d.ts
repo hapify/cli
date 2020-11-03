@@ -7,6 +7,7 @@ export declare class ProjectFileStorageService extends SingleSaveFileStorage<ISt
     protected serialize(content: IStorableProject): Promise<string>;
     protected deserialize(content: string): Promise<IStorableProject>;
     getProject(path: string): Promise<IProject>;
+    setProject(path: string, project: IProject, models?: IModel[]): Promise<void>;
     getModels(path: string): Promise<IModel[]>;
     setModels(path: string, models: IModel[]): Promise<void>;
 }

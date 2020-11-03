@@ -31,5 +31,6 @@ export declare class ModelsApiStorageService extends BaseApiStorageService<IMode
     protected defaultSearchParams(): any;
     protected path(): string;
     protected fromApi(object: IApiModel): IModel;
+    protected requiresAuthentication(): boolean;
 }
 export {};

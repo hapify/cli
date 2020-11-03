@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -34,7 +34,6 @@ const child_process_1 = require("child_process");
 const util = __importStar(require("util"));
 const typedi_1 = require("typedi");
 const Options_1 = require("../../service/Options");
-const options = typedi_1.Container.get(Options_1.OptionsService);
 function AskDiff(cmd, qDiff, git) {
     return __awaiter(this, void 0, void 0, function* () {
         const branches = yield git.branchLocal();
@@ -94,6 +93,7 @@ function AskDiff(cmd, qDiff, git) {
 exports.AskDiff = AskDiff;
 function ApplyDiff(qDiff, git) {
     return __awaiter(this, void 0, void 0, function* () {
+        const options = typedi_1.Container.get(Options_1.OptionsService);
         const command = `git format-patch --stdout ${qDiff.from}..${qDiff.to} | git am -3 -k`;
         const confirm = (yield Inquirer.prompt([
             {
