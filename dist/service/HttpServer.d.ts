@@ -38,7 +38,7 @@ export declare class HttpServerService {
      * Open the browser for the current server
      * Do not open if not started
      */
-    open(): void;
+    open(): Promise<void>;
     /**
      * Get the URL of the current session
      * Returns null if not started

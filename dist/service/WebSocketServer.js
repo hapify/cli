@@ -65,8 +65,8 @@ const GenerateChannelHandler_1 = require("./websocket-handlers/GenerateChannelHa
 const GenerateTemplateHandler_1 = require("./websocket-handlers/GenerateTemplateHandler");
 const WebSocket_1 = require("../interface/WebSocket");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
-const find_package_json_1 = __importDefault(require("find-package-json"));
-const RootDir = Path.dirname(find_package_json_1.default(__dirname).next().filename);
+const pkg_dir_1 = __importDefault(require("pkg-dir"));
+const RootDir = pkg_dir_1.default.sync(__dirname);
 let WebSocketServerService = class WebSocketServerService {
     constructor(optionsService, loggerService) {
         this.optionsService = optionsService;
@@ -74,7 +74,7 @@ let WebSocketServerService = class WebSocketServerService {
         /** Websocket endpoint */
         this.baseUri = '/websocket';
         /** The path to save the token */
-        this.wsInfoPath = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui', 'ws.json');
+        this.wsInfoPath = Path.join(RootDir, 'dist', 'html', 'ws.json');
         /** Random name to generate token */
         this.randomName = RandomString.generate({ length: 24 });
         /** Random secret to generate token */

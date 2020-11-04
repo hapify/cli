@@ -3,16 +3,16 @@ import * as Path from 'path';
 import { OptionsService } from './Options';
 import { WebSocketServerService } from './WebSocketServer';
 import { Server } from '@hapi/hapi';
-import FindPackageJson from 'find-package-json';
+import pkgDir from 'pkg-dir';
+import Open from 'open';
+import DetectPort from 'detect-port';
 
-const opn = require('opn');
-const DetectPort = require('detect-port');
-const RootDir = Path.dirname(FindPackageJson(__dirname).next().filename);
+const RootDir = pkgDir.sync(__dirname);
 
 @Service()
 export class HttpServerService {
 	/** WebApp root */
-	private rootPath: string = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
+	private rootPath: string = Path.join(RootDir, 'dist', 'html');
 
 	/** Start port number */
 	private _minPort: number = 4800;
@@ -119,10 +119,10 @@ export class HttpServerService {
 	 * Open the browser for the current server
 	 * Do not open if not started
 	 */
-	public open(): void {
+	public async open(): Promise<void> {
 		const url = this.url();
 		if (url) {
-			opn(url);
+			await Open(url);
 		}
 	}
 

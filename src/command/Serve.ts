@@ -22,7 +22,7 @@ export async function ServeCommand(cmd: Command) {
 	await http.serve();
 	logger.info(`Server is running at: ${cPath(http.url())}`);
 	if (options.open()) {
-		http.open();
+		await http.open();
 	}
 	// Action Ends
 	// ---------------------------------

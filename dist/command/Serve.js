@@ -31,7 +31,7 @@ function ServeCommand(cmd) {
         yield http.serve();
         logger.info(`Server is running at: ${helpers_1.cPath(http.url())}`);
         if (options.open()) {
-            http.open();
+            yield http.open();
         }
         // Action Ends
         // ---------------------------------

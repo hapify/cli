@@ -46,16 +46,16 @@ const Path = __importStar(require("path"));
 const Options_1 = require("./Options");
 const WebSocketServer_1 = require("./WebSocketServer");
 const hapi_1 = require("@hapi/hapi");
-const find_package_json_1 = __importDefault(require("find-package-json"));
-const opn = require('opn');
-const DetectPort = require('detect-port');
-const RootDir = Path.dirname(find_package_json_1.default(__dirname).next().filename);
+const pkg_dir_1 = __importDefault(require("pkg-dir"));
+const open_1 = __importDefault(require("open"));
+const detect_port_1 = __importDefault(require("detect-port"));
+const RootDir = pkg_dir_1.default.sync(__dirname);
 let HttpServerService = class HttpServerService {
     constructor(optionsService, webSocketServerService) {
         this.optionsService = optionsService;
         this.webSocketServerService = webSocketServerService;
         /** WebApp root */
-        this.rootPath = Path.join(RootDir, 'node_modules', 'hapify-gui', 'dist', 'hapify-gui');
+        this.rootPath = Path.join(RootDir, 'dist', 'html');
         /** Start port number */
         this._minPort = 4800;
         /** Maximum port number */
@@ -149,10 +149,12 @@ let HttpServerService = class HttpServerService {
      * Do not open if not started
      */
     open() {
-        const url = this.url();
-        if (url) {
-            opn(url);
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            const url = this.url();
+            if (url) {
+                yield open_1.default(url);
+            }
+        });
     }
     /**
      * Get the URL of the current session
@@ -168,7 +170,7 @@ let HttpServerService = class HttpServerService {
                 throw new Error(`Reached maximum port number ${this._maxPort} to start HTTP server`);
             }
             const requiredPort = this._port + increment;
-            const possiblePort = yield DetectPort(requiredPort);
+            const possiblePort = yield detect_port_1.default(requiredPort);
             return requiredPort !== possiblePort ? this.findAvailablePort(increment + 1) : requiredPort;
         });
     }
