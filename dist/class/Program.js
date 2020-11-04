@@ -47,7 +47,7 @@ class Program {
     }
     init() {
         this.program
-            .version('0.6.0')
+            .version('0.7.2')
             .description('Hapify Command Line Tool')
             .option('--debug', 'enable debug mode', false)
             .option('--silent', 'enable silent mode', false)
