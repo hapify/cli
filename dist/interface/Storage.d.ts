@@ -1,5 +1,5 @@
 import { IModel } from './Generator';
-import { Accesses, FieldSubType, FieldType } from 'hapify-generator/src/interfaces';
+import { Accesses, FieldSubType, FieldType } from '@hapify/generator/dist/interfaces';
 /** Represent a class that can be stringified and un-stringified */
 export interface ISerializable<IT, T> {
     /**

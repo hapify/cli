@@ -28,6 +28,7 @@ const Use_1 = require("../command/Use");
 const Patch_1 = require("../command/Patch");
 const Serve_1 = require("../command/Serve");
 const Options_1 = require("../service/Options");
+const packageJson = require('../../package.json');
 function Aggregate(val, acc) {
     acc.push(val);
     return acc;
@@ -47,7 +48,7 @@ class Program {
     }
     init() {
         this.program
-            .version('0.7.2')
+            .version(packageJson.version)
             .description('Hapify Command Line Tool')
             .option('--debug', 'enable debug mode', false)
             .option('--silent', 'enable silent mode', false)

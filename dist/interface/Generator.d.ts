@@ -1,4 +1,4 @@
-import { Access, Accesses, Engine, Field, FieldSubType, FieldType, GeneratorResult, Input, Model, StringVariations, Template } from 'hapify-generator/src/interfaces';
+import { Access, Accesses, Engine, Field, FieldSubType, FieldType, GeneratorResult, Input, Model, StringVariations, Template } from '@hapify/generator/dist/interfaces';
 export { Access, Engine, FieldSubType, FieldType, Input };
 export interface IStringVariants extends StringVariations {
 }

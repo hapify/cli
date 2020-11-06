@@ -1,19 +1,20 @@
-node_modules
-/src
-/samples
-/dist/html/ws.json
+.nyc_output/
+coverage/
+src/
+samples/
+test/
+dist/html/ws.json
 
 .idea
 .vscode
 
 .gitignore
-
-tsconfig.json
-tslint.json
-
+.mocharc.json
+.nycrc.json
 .prettierignore
 .prettierrc
-
+.travis.yml
+commitlint.config.js
 ERRORS.md
-CHANGELOG.md
 ROADMAP.md
+tsconfig.json

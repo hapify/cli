@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { HapifyVM } from 'hapify-vm';
+import { HapifyVM } from '@hapify/vm';
 import { Validator } from '../interface/Validator';
 import { IModel } from '../interface/Generator';
 import { InternalConfig } from '../config/Internal';

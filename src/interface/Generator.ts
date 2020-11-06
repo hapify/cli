@@ -10,7 +10,7 @@ import {
 	Model,
 	StringVariations,
 	Template,
-} from 'hapify-generator/src/interfaces';
+} from '@hapify/generator/dist/interfaces';
 
 // Export types
 export { Access, Engine, FieldSubType, FieldType, Input };

@@ -17,13 +17,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeneratorService = void 0;
 const typedi_1 = require("typedi");
-const hapify_generator_1 = require("hapify-generator");
+const generator_1 = require("@hapify/generator");
 let GeneratorService = class GeneratorService {
     /** Compile for a whole channel */
     runChannel(channel) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield channel.modelsCollection.list();
-            return yield hapify_generator_1.Generator.run(channel.templates, models);
+            return yield generator_1.Generator.run(channel.templates, models);
         });
     }
     /**
@@ -33,7 +33,7 @@ let GeneratorService = class GeneratorService {
     runTemplate(template) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield template.channel().modelsCollection.list();
-            return yield hapify_generator_1.Generator.run([template], models);
+            return yield generator_1.Generator.run([template], models);
         });
     }
     /**
@@ -46,14 +46,14 @@ let GeneratorService = class GeneratorService {
                 throw new Error('Model should be defined for this template');
             }
             const models = yield template.channel().modelsCollection.list();
-            const result = yield hapify_generator_1.Generator.run([template], models, model ? [model.id] : null);
+            const result = yield generator_1.Generator.run([template], models, model ? [model.id] : null);
             return result[0];
         });
     }
     /** Compute path from a string */
     pathPreview(path, model = null) {
         return __awaiter(this, void 0, void 0, function* () {
-            return hapify_generator_1.Generator.path(path, model ? model.name : null);
+            return generator_1.Generator.path(path, model ? model.name : null);
         });
     }
 };

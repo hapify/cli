@@ -20,7 +20,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidatorService = void 0;
 const typedi_1 = require("typedi");
-const hapify_vm_1 = require("hapify-vm");
+const vm_1 = require("@hapify/vm");
 const Internal_1 = require("../config/Internal");
 const RichError_1 = require("../class/RichError");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
@@ -35,7 +35,7 @@ let ValidatorService = class ValidatorService {
             let result;
             // Try or die
             try {
-                result = new hapify_vm_1.HapifyVM({
+                result = new vm_1.HapifyVM({
                     timeout: Internal_1.InternalConfig.validatorTimeout,
                     allowAnyOutput: true,
                 }).run(content, { model });

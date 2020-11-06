@@ -3,7 +3,7 @@ import { Channel } from '../class/Channel';
 import { IGeneratorResult } from '../interface/Generator';
 import { Template } from '../class/Template';
 import { Model } from '../class/Model';
-import { Generator } from 'hapify-generator';
+import { Generator } from '@hapify/generator';
 
 @Service()
 export class GeneratorService {
