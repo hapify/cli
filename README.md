@@ -13,7 +13,7 @@ It exposes a web-based console for models definition and templates writing.
 You need to install this package globally to have the `hpf` command:
 
 ```bash
-npm install -g hapify-cli
+npm install -g @hapify/cli
 ```
 
 To check the installed version, run `hpf --version`.
