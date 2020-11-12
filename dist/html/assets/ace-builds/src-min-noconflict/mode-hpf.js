@@ -590,13 +590,17 @@ ace.define('ace/mode/hpf_highlight_rules', [
 		.JavaScriptHighlightRules;
 
 	function pop(currentState, stack) {
-		stack.splice(0, 2);
+    stack.splice(0, 3);
 		return stack.shift() || 'start';
 	}
-	function pop2(currentState, stack) {
-		stack.splice(0, 3);
-		return stack.shift() || 'start';
-	}
+	// Words to highlight in a condition
+  /** @param type {'cond'|'iter'} */
+	var conditionWords = function(type) {
+    return {
+      token: 'hpf.'+type+'.word',
+      regex: /(\bor\b|\band\b|\bnot\b|\borNot\b|\bandNot\b|\*|\/|\+|-|&|!|\|\(\))/,
+    }
+  };
 	var HpfHighlightRules = function() {
 		JavaScriptHighlightRules.call(this);
 		var hpf = {
@@ -613,12 +617,12 @@ ace.define('ace/mode/hpf_highlight_rules', [
 		this.$rules.hapify = [
 			{
 				token: 'hpf.eval.start',
-				regex: /\<\<\<([\s\S]+?)/,
+				regex: '<<<',
 				push: [
 					{
 						token: 'hpf.eval.end',
 						regex: '>>>',
-						next: pop2
+						next: pop
 					},
 					{
 						defaultToken: 'hpf.eval'
@@ -627,12 +631,12 @@ ace.define('ace/mode/hpf_highlight_rules', [
 			},
 			{
 				token: 'hpf.cmt.start',
-				regex: /\<\<\#([\s\S]+?)/,
+				regex: '<<#',
 				push: [
 					{
 						token: 'hpf.cmt.end',
 						regex: '>>',
-						next: pop2
+						next: pop
 					},
 					{
 						defaultToken: 'hpf.cmt'
@@ -641,12 +645,13 @@ ace.define('ace/mode/hpf_highlight_rules', [
 			},
 			{
 				token: 'hpf.cond.start',
-				regex: /\<\<\?(\?)?\s*([\s\S]*?)\s*/,
+				regex: /<<(\?\?\d+|\?\d+|\?\?|\?|if\d+\b|if\b|elseif\d+\b|elseif\b|else\b|endif\b)/,
 				push: [
+          conditionWords('cond'),
 					{
 						token: 'hpf.cond.end',
 						regex: '>>',
-						next: pop2
+						next: pop
 					},
 					{
 						defaultToken: 'hpf.cond'
@@ -655,12 +660,13 @@ ace.define('ace/mode/hpf_highlight_rules', [
 			},
 			{
 				token: 'hpf.iter.start',
-				regex: /\<\<\@\s*([\s\S]*?)\s*/,
+				regex: /<<(@\d+|@|for\d+\b|for\b|endfor\b)/,
 				push: [
+          conditionWords('iter'),
 					{
 						token: 'hpf.iter.end',
 						regex: '>>',
-						next: pop2
+						next: pop
 					},
 					{
 						defaultToken: 'hpf.iter'
@@ -669,32 +675,33 @@ ace.define('ace/mode/hpf_highlight_rules', [
 			},
 			{
 				token: 'hpf.inter.start',
-				regex: /\<\<\=([\s\S]*?)\s*/,
+				regex: '<<=',
 				push: [
 					{
 						token: 'hpf.inter.end',
 						regex: '>>',
-						next: pop2
+						next: pop
 					},
 					{
 						defaultToken: 'hpf.inter'
 					}
 				]
 			},
-			{
-				token: 'hpf.inter.start.name',
-				regex: /\<\<[^\<]([\s\S]*?)\s*/,
-				push: [
-					{
-						token: 'hpf.inter.end.name',
-						regex: '>>',
-						next: pop2
-					},
-					{
-						defaultToken: 'hpf.inter.name'
-					}
-				]
-			}
+      {
+        token: 'hpf.inter.name.start',
+        // regex: /<<(?!@|\?|for\b|endfor\b|if\b|elseif\b|else\b|endif\b)\S+/,
+        regex: '<<',
+        push: [
+          {
+            token: 'hpf.inter.name.end',
+            regex: '>>',
+            next: pop
+          },
+          {
+            defaultToken: 'hpf.inter.name'
+          }
+        ]
+      }
 		];
 
 		this.normalizeRules();
