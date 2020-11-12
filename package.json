@@ -1,6 +1,6 @@
 {
   "name": "@hapify/cli",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Command Line Interface for Hapify",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,7 +31,7 @@
     "@hapi/hapi": "^20.0.2",
     "@hapi/hoek": "^9.1.0",
     "@hapi/inert": "^6.0.3",
-    "@hapify/generator": "^0.5.5",
+    "@hapify/generator": "^0.5.6",
     "@hapify/vm": "^0.3.3",
     "axios": "^0.21.0",
     "case": "^1.6.3",
