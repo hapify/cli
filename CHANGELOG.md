@@ -9,6 +9,7 @@
 ### Changed
 
 - Store models locally
+- Fix errors details handling
 
 ## [0.6.0] - 2020-08-03
 
