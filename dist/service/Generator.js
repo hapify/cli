@@ -18,12 +18,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeneratorService = void 0;
 const typedi_1 = require("typedi");
 const generator_1 = require("@hapify/generator");
+const RichError_1 = require("../class/RichError");
 let GeneratorService = class GeneratorService {
     /** Compile for a whole channel */
     runChannel(channel) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield channel.modelsCollection.list();
-            return yield generator_1.Generator.run(channel.templates, models);
+            return yield generator_1.Generator.run(channel.templates, models).catch((e) => {
+                throw this.formatGeneratorError(e);
+            });
         });
     }
     /**
@@ -33,7 +36,9 @@ let GeneratorService = class GeneratorService {
     runTemplate(template) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield template.channel().modelsCollection.list();
-            return yield generator_1.Generator.run([template], models);
+            return yield generator_1.Generator.run([template], models).catch((e) => {
+                throw this.formatGeneratorError(e);
+            });
         });
     }
     /**
@@ -46,15 +51,35 @@ let GeneratorService = class GeneratorService {
                 throw new Error('Model should be defined for this template');
             }
             const models = yield template.channel().modelsCollection.list();
-            const result = yield generator_1.Generator.run([template], models, model ? [model.id] : null);
+            const result = yield generator_1.Generator.run([template], models, model ? [model.id] : null).catch((e) => {
+                throw this.formatGeneratorError(e);
+            });
             return result[0];
         });
     }
     /** Compute path from a string */
     pathPreview(path, model = null) {
         return __awaiter(this, void 0, void 0, function* () {
-            return generator_1.Generator.path(path, model ? model.name : null);
+            try {
+                return generator_1.Generator.path(path, model ? model.name : null);
+            }
+            catch (e) {
+                throw this.formatGeneratorError(e);
+            }
         });
+    }
+    /** Convert generator errors to internal RichError */
+    formatGeneratorError(error) {
+        const richError = new RichError_1.RichError(error.message, {
+            code: error.code,
+            type: error.name,
+            columnNumber: error.columnNumber,
+            lineNumber: error.lineNumber,
+            details: error.details,
+        });
+        if (error.stack)
+            richError.stack = error.stack;
+        return richError;
     }
 };
 GeneratorService = __decorate([

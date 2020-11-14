@@ -30,8 +30,11 @@ let LoggerService = class LoggerService {
         if (error.data) {
             const data = error.data;
             message += `[${data.type}:${data.code}] `;
+            message += data.details ? data.details : error.message;
         }
-        message += error.message;
+        else {
+            message += error.message;
+        }
         if (this.optionsService.debug()) {
             message += `\n${error.stack.toString()}`;
         }

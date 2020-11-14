@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+### Changed
+
+- Fix errors details handling
+
+### Removed
+
 ## [0.7.0] - 2020-11-03
 
 ### Added
@@ -9,7 +19,6 @@
 ### Changed
 
 - Store models locally
-- Fix errors details handling
 
 ## [0.6.0] - 2020-08-03
 

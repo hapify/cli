@@ -17,4 +17,6 @@ export declare class GeneratorService {
     run(template: Template, model: Model | null): Promise<IGeneratorResult>;
     /** Compute path from a string */
     pathPreview(path: string, model?: Model | null): Promise<string>;
+    /** Convert generator errors to internal RichError */
+    private formatGeneratorError;
 }
