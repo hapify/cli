@@ -31,7 +31,7 @@
     "@hapi/hapi": "^20.0.2",
     "@hapi/hoek": "^9.1.0",
     "@hapi/inert": "^6.0.3",
-    "@hapify/generator": "^0.5.6",
+    "@hapify/generator": "^0.5.8",
     "@hapify/vm": "^0.3.3",
     "axios": "^0.21.0",
     "case": "^1.6.3",
@@ -50,7 +50,7 @@
     "randomstring": "^1.1.5",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^3.0.2",
-    "simple-git": "^2.21.0",
+    "simple-git": "^2.22.0",
     "typedi": "^0.8.0",
     "ws": "^7.4.0"
   },

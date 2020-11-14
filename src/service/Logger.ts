@@ -1,14 +1,7 @@
 import { Service } from 'typedi';
 import chalk from 'chalk';
 import { OptionsService } from './Options';
-
-interface ErrorData {
-	type: string;
-	code: number;
-}
-interface RichError extends Error {
-	data: ErrorData;
-}
+import { RichError } from '../class/RichError';
 
 type LogType = 'stderr' | 'stdout';
 type LoggerOutput = { [key in LogType]: string };
@@ -28,8 +21,10 @@ export class LoggerService {
 		if ((<RichError>error).data) {
 			const data = (<RichError>error).data;
 			message += `[${data.type}:${data.code}] `;
+			message += data.details ? data.details : error.message;
+		} else {
+			message += error.message;
 		}
-		message += error.message;
 		if (this.optionsService.debug()) {
 			message += `\n${error.stack.toString()}`;
 		}

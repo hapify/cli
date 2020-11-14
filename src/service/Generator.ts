@@ -3,14 +3,18 @@ import { Channel } from '../class/Channel';
 import { IGeneratorResult } from '../interface/Generator';
 import { Template } from '../class/Template';
 import { Model } from '../class/Model';
-import { Generator } from '@hapify/generator';
+import { EvaluationError, Generator } from '@hapify/generator';
+import { NumberedError } from '@hapify/generator/dist/interfaces';
+import { RichError } from '../class/RichError';
 
 @Service()
 export class GeneratorService {
 	/** Compile for a whole channel */
 	async runChannel(channel: Channel): Promise<IGeneratorResult[]> {
 		const models = await channel.modelsCollection.list();
-		return await Generator.run(channel.templates, models);
+		return await Generator.run(channel.templates, models).catch((e) => {
+			throw this.formatGeneratorError(e);
+		});
 	}
 
 	/**
@@ -19,7 +23,9 @@ export class GeneratorService {
 	 */
 	async runTemplate(template: Template): Promise<IGeneratorResult[]> {
 		const models = await template.channel().modelsCollection.list();
-		return await Generator.run([template], models);
+		return await Generator.run([template], models).catch((e) => {
+			throw this.formatGeneratorError(e);
+		});
 	}
 
 	/**
@@ -30,14 +36,32 @@ export class GeneratorService {
 		if (template.needsModel() && !model) {
 			throw new Error('Model should be defined for this template');
 		}
-
 		const models = await template.channel().modelsCollection.list();
-		const result = await Generator.run([template], models, model ? [model.id] : null);
+		const result = await Generator.run([template], models, model ? [model.id] : null).catch((e) => {
+			throw this.formatGeneratorError(e);
+		});
 		return result[0];
 	}
 
 	/** Compute path from a string */
 	async pathPreview(path: string, model: Model | null = null): Promise<string> {
-		return Generator.path(path, model ? model.name : null);
+		try {
+			return Generator.path(path, model ? model.name : null);
+		} catch (e) {
+			throw this.formatGeneratorError(e);
+		}
+	}
+
+	/** Convert generator errors to internal RichError */
+	private formatGeneratorError(error: NumberedError): RichError {
+		const richError = new RichError(error.message, {
+			code: error.code,
+			type: error.name,
+			columnNumber: (<EvaluationError>error).columnNumber,
+			lineNumber: (<EvaluationError>error).lineNumber,
+			details: (<EvaluationError>error).details,
+		});
+		if (error.stack) richError.stack = error.stack;
+		return richError;
 	}
 }

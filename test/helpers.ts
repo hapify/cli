@@ -76,6 +76,9 @@ export const SampleHapiJSDir = Path.resolve(SamplesDir, 'hapijs');
 export function GetFileContent(path: string, encoding: BufferEncoding = 'utf8'): string {
 	return Fs.readFileSync(Path.resolve(path), { encoding });
 }
+export function SetFileContent(path: string, content: string, encoding: BufferEncoding = 'utf8'): void {
+	Fs.writeFileSync(Path.resolve(path), content, { encoding });
+}
 
 export function GetJSONFileContent<T = unknown>(path: string, encoding: BufferEncoding = 'utf8'): T {
 	const content = GetFileContent(path, encoding);
@@ -116,6 +119,9 @@ export class Sandbox {
 
 	getFileContent(subPath: string[], encoding: BufferEncoding = 'utf8'): string {
 		return GetFileContent(Path.join(this.rootPath, ...subPath), encoding);
+	}
+	setFileContent(subPath: string[], content: string, encoding: BufferEncoding = 'utf8'): void {
+		SetFileContent(Path.join(this.rootPath, ...subPath), content, encoding);
 	}
 	getJSONFileContent<T = unknown>(subPath: string[], encoding: BufferEncoding = 'utf8'): T {
 		return GetJSONFileContent<T>(Path.join(this.rootPath, ...subPath), encoding);

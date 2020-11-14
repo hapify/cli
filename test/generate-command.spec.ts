@@ -74,4 +74,42 @@ describe('generate command', () => {
 		expect(sandbox.fileExists(['boilerplate-hapijs', 'routes', 'user', 'create.js'])).to.be.true();
 		expect(sandbox.fileExists(['boilerplate-ngx-components', 'src', 'app', 'models', 'user', 'user.ts'])).to.be.true();
 	});
+
+	it('error during generation', async () => {
+		const sandbox = new Sandbox();
+		sandbox.clear();
+
+		// Clone repository first
+		const responseNew = await CLI('new', [
+			'--dir',
+			sandbox.getPath(),
+			'--boilerplate',
+			'hapijs_tractr',
+			'--preset',
+			'5c8607a696d1ff00107de412', // User
+			'--preset',
+			'5c86966796d1ff00107de41c', // Place
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
+		]);
+
+		expect(responseNew.stderr).to.be.empty();
+		expect(responseNew.code).to.equal(0);
+		expect(responseNew.stdout).to.contains('Created 1 new dynamic boilerplate');
+
+		// Introduce an error in file
+		const path = ['hapify', 'routes', 'model', 'create.js.hpf'];
+		const content = sandbox.getFileContent(path);
+		const newContent = `${content}\n\n<<@ S f>>\n...\n<<@>>`;
+		sandbox.setFileContent(path, newContent);
+
+		// Generate code
+		const response = await CLI('generate', ['--dir', sandbox.getPath()]);
+
+		expect(response.stderr).to.contains(['SyntaxEvaluationError', 'S is not defined', 'Column', 'Line']);
+		expect(response.code).to.equal(1);
+		expect(response.stdout).to.be.a.string();
+	});
 });
