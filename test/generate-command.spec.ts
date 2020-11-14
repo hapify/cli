@@ -108,7 +108,7 @@ describe('generate command', () => {
 		// Generate code
 		const response = await CLI('generate', ['--dir', sandbox.getPath()]);
 
-		expect(response.stderr).to.contains(['SyntaxEvaluationError', 'S is not defined', 'Column', 'Line']);
+		expect(response.stderr).to.contains(['SyntaxEvaluationError', 'S is not defined', 'Column', 'Line', 'File']);
 		expect(response.code).to.equal(1);
 		expect(response.stdout).to.be.a.string();
 	});

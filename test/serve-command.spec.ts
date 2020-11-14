@@ -21,6 +21,7 @@ import { Validator } from '../src/interface/Validator';
 import { IConfig } from '../src/interface/Config';
 import { IStorableCompactProject } from '../src/interface/Storage';
 import Hoek from '@hapi/hoek';
+import { RichError } from '../src/class/RichError';
 
 let authJson: { url: string };
 let sandbox: Sandbox;
@@ -81,6 +82,30 @@ describe('serve command', () => {
 
 	it('wrong token', async () => {
 		await expect(SingleUseWebSocketClient(`${authJson.url}abcdef`, { id: 'get:info', data: {} })).to.reject('Unexpected server response: 401');
+	});
+
+	it('template preview error', async () => {
+		const channels = await SingleUseWebSocketClient<{}, IChannel[]>(authJson.url, { id: 'get:channels', data: {} });
+		const models = await SingleUseWebSocketClient<{}, IModel[]>(authJson.url, { id: 'get:models', data: {} });
+
+		const template = channels[0].templates.find((t) => t.input === 'one');
+		template.content = `${template.content}\n\n<<@ S f>>\n...\n<<@>>`;
+		// With one model
+		const response = await SingleUseWebSocketClient<WebSocketTemplatePreviewHandlerInput, RichError>(authJson.url, {
+			id: 'prv:template',
+			data: {
+				model: models[0].id,
+				channel: channels[0].id,
+				template,
+			},
+		});
+		expect(response.message).to.equal('S is not defined');
+		expect(response.data).to.be.an.object();
+		expect(response.data.code).to.be.a.number();
+		expect(response.data.type).to.equal('SyntaxEvaluationError');
+		expect(response.data.columnNumber).to.be.a.number();
+		expect(response.data.lineNumber).to.be.a.number();
+		expect(response.data.details).to.be.a.string();
 	});
 
 	// =======================================================================================
