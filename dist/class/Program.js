@@ -53,25 +53,25 @@ class Program {
             .option('--debug', 'enable debug mode', false)
             .option('--silent', 'enable silent mode', false)
             .option('-d, --dir <path>', 'change the working directory')
-            .option('-k, --key <secret>', 'override global api key for this command (If you want to define your api key permanently, you should use command "hpf key")');
+            .option('-k, --key <secret>', 'override global API key for this command (If you want to define your API key permanently, you should use command "hpf key")');
         this.program
             .command('config')
             .description('Define global configuration')
-            .option('--apiKey <secret>', 'define the api key to use permanently')
-            .option('--apiUrl <url>', 'override default api url')
+            .option('--apiKey <secret>', 'define the API key to use permanently')
+            .option('--apiUrl <url>', 'override default API url')
             .action(Config_1.ConfigCommand);
-        this.program.command('key <key>').description('Define the api key to use permanently').action(Key_1.KeyCommand);
+        this.program.command('key <key>').description('Define the API key to use permanently').action(Key_1.KeyCommand);
         this.program
             .command('list')
             .alias('ls')
             .description('List available channels from the current directory')
-            .option('--depth <n>', 'depth to recursively look for channels', '2')
+            .option('--depth <n>', 'depth for channels discovery', '2')
             .action(List_1.ListCommand);
         this.program
             .command('generate')
             .alias('g')
             .description('Generate channel(s) from current directory')
-            .option('--depth <n>', 'depth to recursively look for channels', '2')
+            .option('--depth <n>', 'depth for channels discovery', '2')
             .action(Generate_1.GenerateCommand);
         this.program
             .command('export')
@@ -101,7 +101,6 @@ class Program {
         this.program
             .command('init')
             .alias('i')
-            .option('-p, --project <id>', 'id of the project to use')
             .option('--channel-name <name>', 'name of the channel to init')
             .option('--channel-desc <description>', 'description of the channel to init')
             .option('--channel-logo <url>', 'url of the logo of the channel to init')
@@ -125,7 +124,7 @@ class Program {
             .option('-p, --port <n>', `the required port number (default between ${this.http.minPort} and ${this.http.maxPort})`)
             .option('-H, --hostname <hostname>', `the required hostname`, 'localhost')
             .option('--no-open', 'do not open a new tab in the browser')
-            .option('--depth <n>', 'depth to recursively look for channels', '2')
+            .option('--depth <n>', 'depth for channels discovery', '2')
             .action(Serve_1.ServeCommand);
     }
 }
