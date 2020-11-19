@@ -84,17 +84,17 @@ export class Program {
 			.command('import')
 			.alias('m')
 			.description('Import pre-defined models from cloud')
-			.option('--preset [id]', 'ids of presets to preload', Aggregate, [])
+			.option('--preset [id]', 'IDs of presets to preload', Aggregate, [])
 			.action(ImportCommand);
 
 		this.program
 			.command('new')
 			.alias('n')
-			.option('-p, --project <id>', 'id of the project to use')
+			.option('-p, --project <id>', 'ID of the project to use')
 			.option('-b, --boilerplate <slug>', 'slug-name of the boilerplate to clone')
-			.option('--boilerplate-id <id>', 'id of the boilerplate to clone')
+			.option('--boilerplate-id <id>', 'ID of the boilerplate to clone')
 			.option('--boilerplate-url [url]', 'urls of the boilerplates to clone', Aggregate, [])
-			.option('--preset [id]', 'ids of presets to preload', Aggregate, [])
+			.option('--preset [id]', 'ID of presets to preload', Aggregate, [])
 			.option('--no-presets', 'do not prompt for presets')
 			.option('--project-name <name>', 'name of the project to create')
 			.option('--project-desc <description>', 'description of the project to create (name must be defined)')
@@ -115,7 +115,7 @@ export class Program {
 		this.program
 			.command('use')
 			.alias('u')
-			.option('-p, --project <id>', 'id of the project to use')
+			.option('-p, --project <id>', 'ID of the project to use')
 			.option('--project-name <name>', 'name of the project to create')
 			.option('--project-desc <description>', 'description of the project to create (name must be defined)')
 			.description('Change the project used by existing channel(s)')
