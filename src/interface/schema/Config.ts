@@ -3,7 +3,7 @@ import Joi from 'joi';
 import { FieldSchema } from './Field';
 import { ModelSchema } from './Model';
 
-const Versions = ['1'];
+const Versions = ['2'];
 
 export const ConfigSchema = Joi.object({
 	version: Joi.string()

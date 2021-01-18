@@ -5,7 +5,7 @@ export const FieldSchema = Joi.object({
 	notes: Joi.string().allow(null),
 	type: Joi.string().required(),
 	subtype: Joi.string().required().allow(null),
-	reference: Joi.string().required().allow(null),
+	value: Joi.string().required().allow(null),
 	primary: Joi.boolean().required(),
 	unique: Joi.boolean().required(),
 	label: Joi.boolean().required(),

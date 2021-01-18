@@ -34,9 +34,9 @@ export abstract class SingleSaveFileStorage<T> {
 		return Fs.existsSync(JoinPath(path));
 	}
 	/** Convert content to string before saving */
-	protected abstract async serialize(content: T): Promise<string>;
+	protected abstract serialize(content: T): Promise<string>;
 	/** Convert content to string before saving */
-	protected abstract async deserialize(content: string): Promise<T>;
+	protected abstract deserialize(content: string): Promise<T>;
 	/** Should be called after loading to hash the content */
 	protected didLoad(bucket: string, data: string): void {
 		this.contentMd5[bucket] = md5(data);

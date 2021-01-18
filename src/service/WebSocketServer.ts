@@ -209,7 +209,7 @@ export class WebSocketServerService {
 	public async stop(): Promise<void> {
 		if (!this.started()) return;
 		this.serverStarted = false;
-		await new Promise((resolve, reject) => {
+		await new Promise<void>((resolve, reject) => {
 			this.server.close((error: Error) => {
 				if (error) reject(error);
 				else resolve();

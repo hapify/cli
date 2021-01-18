@@ -79,8 +79,8 @@ export class PresetsService {
 		// Change references to existing models
 		const changeReferencesToNewModels = (m: Model) => {
 			for (const f of m.fields) {
-				if (f.type === 'entity' && typeof referencesMap[f.reference] === 'string') {
-					f.reference = referencesMap[f.reference];
+				if (f.type === 'entity' && typeof f.value === 'string' && typeof referencesMap[f.value] === 'string') {
+					f.value = referencesMap[f.value];
 				}
 			}
 		};

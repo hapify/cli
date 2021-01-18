@@ -28,10 +28,10 @@
   "license": "MIT",
   "homepage": "https://www.hapify.io",
   "dependencies": {
-    "@hapi/hapi": "^20.0.2",
+    "@hapi/hapi": "^20.0.3",
     "@hapi/hoek": "^9.1.0",
     "@hapi/inert": "^6.0.3",
-    "@hapify/generator": "^0.5.11",
+    "@hapify/generator": "^0.6.1",
     "@hapify/vm": "^0.3.4",
     "axios": "^0.21.0",
     "case": "^1.6.3",
@@ -50,9 +50,9 @@
     "randomstring": "^1.1.5",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^3.0.2",
-    "simple-git": "^2.22.0",
+    "simple-git": "^2.24.0",
     "typedi": "^0.8.0",
-    "ws": "^7.4.0"
+    "ws": "^7.4.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -68,7 +68,7 @@
     "@types/md5": "^2.2.1",
     "@types/mkdirp": "^1.0.1",
     "@types/mocha": "^8.0.4",
-    "@types/node": "^14.14.8",
+    "@types/node": "^14.14.10",
     "@types/randomstring": "^1.1.6",
     "@types/rimraf": "^3.0.0",
     "@types/ws": "^7.4.0",
@@ -76,10 +76,10 @@
     "mocha": "^8.2.1",
     "npm-check": "^5.9.2",
     "nyc": "^15.0.1",
-    "prettier": "^2.1.2",
+    "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.5"
+    "ts-node": "^9.1.0",
+    "typescript": "^4.1.2"
   },
   "engines": {
     "node": ">=9"

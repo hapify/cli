@@ -90,8 +90,8 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 		const changeReferencesToNewModels = (m: IModel): boolean => {
 			let changed = false;
 			for (const f of m.fields) {
-				if (f.type === 'entity' && typeof referencesMap[f.reference] !== 'undefined') {
-					f.reference = referencesMap[f.reference];
+				if (f.type === 'entity' && typeof f.value === 'string' && typeof referencesMap[f.value] !== 'undefined') {
+					f.value = referencesMap[f.value];
 					changed = true;
 				}
 			}

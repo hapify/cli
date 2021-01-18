@@ -11,6 +11,7 @@ import { ModelsCollection } from './ModelsCollection';
 import { ChannelFileStorageService } from '../service/storage/file/Channel';
 import { ConfigSchema } from '../interface/schema/Config';
 import { TransformValidationMessage } from '../interface/schema/ValidatorResult';
+import { VersionService } from '../service/Version';
 
 export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 	public name: string;
@@ -158,7 +159,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		// Create a channel from scratch
 		const channel = new Channel(path);
 		channel.config = {
-			version: '1',
+			version: Container.get(VersionService).getCurrentVersion('channel'),
 			validatorPath: `${Channel.defaultFolder}/validator.js`,
 			name: name || channel.name,
 			description: description || 'A new Hapify channel',
@@ -169,7 +170,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 					name: 'Id',
 					type: 'string',
 					subtype: null,
-					reference: null,
+					value: null,
 					primary: true,
 					unique: false,
 					label: false,
