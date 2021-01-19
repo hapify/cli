@@ -21,8 +21,13 @@ const FieldSubTypes = [
 export const FieldSchema = Joi.object({
 	name: Joi.string().required(),
 	notes: Joi.string().allow(null),
-	type: Joi.string().valid(FieldTypes).required(),
-	subtype: Joi.string().valid(FieldSubTypes).allow(null).required(),
+	type: Joi.string()
+		.valid(...FieldTypes)
+		.required(),
+	subtype: Joi.string()
+		.valid(...FieldSubTypes)
+		.allow(null)
+		.required(),
 	value: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())).required().allow(null),
 	primary: Joi.boolean().required(),
 	unique: Joi.boolean().required(),

@@ -37,6 +37,6 @@ describe('list command', () => {
 
 		expect(response.code).to.equal(1);
 		expect(response.stdout).to.be.empty();
-		expect(response.stderr).to.contains('"version" is required'); // JSON is empty
+		expect(response.stderr).to.contains('Version undefined of channel is not supported'); // JSON is empty
 	});
 });

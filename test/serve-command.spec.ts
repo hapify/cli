@@ -20,7 +20,7 @@ import { IChannel, IPreset } from '../src/interface/Objects';
 import { Validator } from '../src/interface/Validator';
 import { IConfig } from '../src/interface/Config';
 import { IStorableCompactProject } from '../src/interface/Storage';
-import Hoek from '@hapi/hoek';
+import { clone as Clone } from '@hapi/hoek';
 import { RichError } from '../src/class/RichError';
 
 let authJson: { url: string };
@@ -325,7 +325,7 @@ describe('serve command', () => {
 
 	it('set models', async () => {
 		const models = await SingleUseWebSocketClient<{}, IModel[]>(authJson.url, { id: 'get:models', data: {} });
-		const newModel = Hoek.clone(models[0]);
+		const newModel = Clone(models[0]);
 		newModel.name = 'New Model';
 		newModel.fields = [];
 
