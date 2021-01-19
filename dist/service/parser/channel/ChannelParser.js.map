@@ -1,0 +1,1 @@
+{"version":3,"file":"ChannelParser.js","sourceRoot":"","sources":["../../../../src/service/parser/channel/ChannelParser.ts"],"names":[],"mappings":";;;AACA,uDAAoD;AACpD,uDAAoD;AACpD,sCAAmC;AAGnC,MAAa,aAAc,SAAQ,eAA8B;IACtD,QAAQ;QACjB,OAAO,SAAS,CAAC;IAClB,CAAC;IACS,aAAa;QACtB,OAAO;YACN,GAAG,EAAE,iCAAe;YACpB,GAAG,EAAE,iCAAe;SACpB,CAAC;IACH,CAAC;CACD;AAVD,sCAUC"}

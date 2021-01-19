@@ -24,6 +24,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,23 +41,14 @@ exports.ProjectFileStorageService = void 0;
 const typedi_1 = require("typedi");
 const SingleSave_1 = require("./SingleSave");
 const Path = __importStar(require("path"));
+const Version_1 = require("../../Version");
+const ProjectParser_1 = require("../../parser/project/ProjectParser");
+const Converter_1 = require("../../Converter");
 let ProjectFileStorageService = class ProjectFileStorageService extends SingleSave_1.SingleSaveFileStorage {
-    constructor() {
-        super(...arguments);
-        this.booleanPropertiesNames = [
-            'primary',
-            'unique',
-            'label',
-            'nullable',
-            'multiple',
-            'embedded',
-            'searchable',
-            'sortable',
-            'hidden',
-            'internal',
-            'restricted',
-            'ownership',
-        ];
+    constructor(versionService, converterService) {
+        super();
+        this.versionService = versionService;
+        this.converterService = converterService;
     }
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -67,20 +61,7 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
                         id: model.id,
                         name: model.name,
                         accesses: model.accesses,
-                        fields: model.fields.map((field) => {
-                            return {
-                                name: field.name,
-                                type: field.type,
-                                subtype: field.subtype || undefined,
-                                reference: field.reference || undefined,
-                                properties: this.booleanPropertiesNames
-                                    .map((property) => {
-                                    return field[property] ? property : null;
-                                })
-                                    .filter((p) => !!p),
-                                notes: field.notes || undefined,
-                            };
-                        }),
+                        fields: model.fields.map((f) => this.converterService.convertFieldToCompactFormat(f)),
                         notes: model.notes || undefined,
                     };
                 }),
@@ -91,7 +72,8 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
     deserialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const compact = JSON.parse(content);
+                const parsedContent = JSON.parse(content);
+                const compact = new ProjectParser_1.ProjectParser(parsedContent).convert();
                 return {
                     version: compact.version,
                     name: compact.name,
@@ -101,27 +83,7 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
                             id: model.id,
                             name: model.name,
                             accesses: model.accesses,
-                            fields: model.fields.map((field) => {
-                                return {
-                                    name: field.name,
-                                    type: field.type,
-                                    subtype: field.subtype || null,
-                                    reference: field.reference || null,
-                                    primary: field.properties.includes('primary'),
-                                    unique: field.properties.includes('unique'),
-                                    label: field.properties.includes('label'),
-                                    nullable: field.properties.includes('nullable'),
-                                    multiple: field.properties.includes('multiple'),
-                                    embedded: field.properties.includes('embedded'),
-                                    searchable: field.properties.includes('searchable'),
-                                    sortable: field.properties.includes('sortable'),
-                                    hidden: field.properties.includes('hidden'),
-                                    internal: field.properties.includes('internal'),
-                                    restricted: field.properties.includes('restricted'),
-                                    ownership: field.properties.includes('ownership'),
-                                    notes: field.notes || null,
-                                };
-                            }),
+                            fields: model.fields.map((f) => this.converterService.convertFieldFromCompactFormat(f)),
                             notes: model.notes || null,
                         };
                     }),
@@ -146,7 +108,7 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
     setProject(path, project, models) {
         return __awaiter(this, void 0, void 0, function* () {
             const projectWithModels = {
-                version: '1',
+                version: this.versionService.getCurrentVersion('project'),
                 name: project.name,
                 description: project.description,
                 models: !models ? yield this.getModels(path) : models,
@@ -169,7 +131,8 @@ let ProjectFileStorageService = class ProjectFileStorageService extends SingleSa
     }
 };
 ProjectFileStorageService = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [Version_1.VersionService, Converter_1.ConverterService])
 ], ProjectFileStorageService);
 exports.ProjectFileStorageService = ProjectFileStorageService;
 //# sourceMappingURL=Project.js.map

@@ -12,7 +12,7 @@ class Field {
         this.notes = object.notes || null;
         this.type = object.type;
         this.subtype = object.subtype;
-        this.reference = object.reference;
+        this.value = object.value;
         this.primary = !!object.primary;
         this.unique = !!object.unique;
         this.label = !!object.label;
@@ -33,7 +33,7 @@ class Field {
             notes: this.notes || null,
             type: this.type,
             subtype: this.subtype,
-            reference: this.type === 'entity' ? this.reference : null,
+            value: this.type === 'entity' || this.type === 'enum' ? this.value : null,
             primary: this.primary,
             unique: this.unique,
             label: this.label,

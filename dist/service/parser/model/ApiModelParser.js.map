@@ -1,0 +1,1 @@
+{"version":3,"file":"ApiModelParser.js","sourceRoot":"","sources":["../../../../src/service/parser/model/ApiModelParser.ts"],"names":[],"mappings":";;;AACA,yDAAsD;AACtD,yDAAsD;AACtD,sCAAmC;AAGnC,MAAa,cAAe,SAAQ,eAAiB;IAC1C,QAAQ;QACjB,OAAO,OAAO,CAAC;IAChB,CAAC;IACS,aAAa;QACtB,OAAO;YACN,GAAG,EAAE,mCAAgB;YACrB,GAAG,EAAE,mCAAgB;SACrB,CAAC;IACH,CAAC;CACD;AAVD,wCAUC"}

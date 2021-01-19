@@ -39,7 +39,7 @@ class BaseApiStorageService {
     create(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.post(`${this.path()}`, payload)).data;
-            return this.fromApi(output);
+            return this.parsePayloadFromApi(output);
         });
     }
     /** Update an model selected from it's id */
@@ -52,7 +52,7 @@ class BaseApiStorageService {
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.get(`${this.path()}/${id}`)).data;
-            return this.fromApi(output);
+            return this.parsePayloadFromApi(output);
         });
     }
     /** Delete an model selected from it's id */
@@ -65,7 +65,7 @@ class BaseApiStorageService {
     list(searchParams) {
         return __awaiter(this, void 0, void 0, function* () {
             const output = (yield this.apiService.get(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
-            return output.map((o) => this.fromApi(o));
+            return output.map((o) => this.parsePayloadFromApi(o));
         });
     }
     /** Count for model */
@@ -86,6 +86,18 @@ class BaseApiStorageService {
             _page: 0,
             _limit: 20,
         };
+    }
+    /** Convert an old payload to new payload */
+    parsePayloadFromApi(object) {
+        if (typeof object.version !== 'undefined') {
+            const converted = this.convertToCurrentVersion(object);
+            return this.fromApi(converted);
+        }
+        return this.fromApi(object);
+    }
+    /** Convert payload accordingly to version */
+    convertToCurrentVersion(object) {
+        return object;
     }
 };
 BaseApiStorageService = __decorate([

@@ -1,6 +1,7 @@
 import { OptionsService } from '../../Options';
 import { IStorageService } from '../../../interface/Storage';
 import { IRemoteConfig } from '../../../interface/Config';
+import { VersionedObject } from '../../../interface/Version';
 /** Used to export and import search params */
 export interface BaseSearchParams {
     _page?: string | number;
@@ -34,6 +35,10 @@ export declare abstract class BaseApiStorageService<T, I, S extends BaseSearchPa
     protected abstract requiresAuthentication(): boolean;
     /** Returns the base URI for this model */
     protected abstract path(): string;
+    /** Convert an old payload to new payload */
+    protected parsePayloadFromApi(object: VersionedObject | I): T;
+    /** Convert payload accordingly to version */
+    protected convertToCurrentVersion(object: VersionedObject | I): I;
     /** Convert an incoming payload to an internal payload */
     protected abstract fromApi(object: I): T;
 }
