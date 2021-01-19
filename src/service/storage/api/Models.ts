@@ -3,29 +3,26 @@ import { BaseApiStorageService, BaseSearchParams } from './Base';
 import md5 from 'md5';
 import { IModel } from '../../../interface/Generator';
 import { Model } from '../../../class/Model';
+import { VersionedObject } from '../../../interface/Version';
+import { ApiModelParser } from '../../parser/model/ApiModelParser';
+import { IApiModel } from '../../../interface/Api';
+import { OptionsService } from '../../Options';
+import { ConverterService } from '../../Converter';
 
 interface ModelsSearchParams extends BaseSearchParams {
 	version?: string;
 	project?: string;
 	name?: string;
 }
-export interface IApiModel {
-	_id: string;
-	created_at: number;
-	updated_at?: number | null;
-	version: string;
-	owner: string | any;
-	project: string | any;
-	name: string;
-	notes: string;
-	fields: any[];
-	accesses: any;
-}
 
 @Service()
 export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiModel, ModelsSearchParams> {
 	/** The models fingerprints */
 	private hashes: { [id: string]: string } = {};
+
+	constructor(optionsService: OptionsService, private converterService: ConverterService) {
+		super(optionsService);
+	}
 
 	/** Load the models from api for a specific project */
 	async forProject(project: string): Promise<IModel[]> {
@@ -50,7 +47,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 				project: project,
 				name: model.name,
 				notes: model.notes || null,
-				fields: model.fields,
+				fields: model.fields.map((f) => this.converterService.convertFieldToCompactFormat(f)),
 				accesses: model.accesses,
 			});
 			referencesMap[model.id] = response.id;
@@ -78,7 +75,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 			await this.update(model.id, {
 				name: model.name,
 				notes: model.notes || null,
-				fields: model.fields,
+				fields: model.fields.map((f) => this.converterService.convertFieldToCompactFormat(f)),
 				accesses: model.accesses,
 			});
 		}
@@ -101,7 +98,7 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 		for (const model of models) {
 			if (changeReferencesToNewModels(model)) {
 				await this.update(model.id, {
-					fields: model.fields,
+					fields: model.fields.map((f) => this.converterService.convertFieldToCompactFormat(f)),
 				});
 			}
 		}
@@ -136,12 +133,16 @@ export class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiM
 		return 'model';
 	}
 
+	protected convertToCurrentVersion(object: VersionedObject | IApiModel): IApiModel {
+		return new ApiModelParser(object).convert();
+	}
+
 	protected fromApi(object: IApiModel): IModel {
 		return {
 			id: object._id,
 			name: object.name,
 			notes: object.notes || null,
-			fields: object.fields,
+			fields: object.fields.map((f) => this.converterService.convertFieldFromCompactFormat(f)),
 			accesses: object.accesses,
 		};
 	}

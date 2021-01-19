@@ -4,6 +4,7 @@ import { ApiService } from '../../Api';
 import { IStorageService } from '../../../interface/Storage';
 import { IRemoteConfig } from '../../../interface/Config';
 import { AuthenticatedApiService } from '../../AuthenticatedApi';
+import { VersionedObject } from '../../../interface/Version';
 
 /** Used to export and import search params */
 export interface BaseSearchParams {
@@ -45,7 +46,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Create a new model */
 	async create(payload: Partial<I>): Promise<T> {
 		const output = (await this.apiService.post<I>(`${this.path()}`, payload)).data;
-		return this.fromApi(output);
+		return this.parsePayloadFromApi(output);
 	}
 
 	/** Update an model selected from it's id */
@@ -56,7 +57,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Get an model from it's id */
 	async get(id: string): Promise<T> {
 		const output = (await this.apiService.get<I>(`${this.path()}/${id}`)).data;
-		return this.fromApi(output);
+		return this.parsePayloadFromApi(output);
 	}
 
 	/** Delete an model selected from it's id */
@@ -67,7 +68,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Get list for model search */
 	async list(searchParams?: S): Promise<T[]> {
 		const output = (await this.apiService.get<ListResult<I>>(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
-		return output.map((o) => this.fromApi(o));
+		return output.map((o) => this.parsePayloadFromApi(o));
 	}
 
 	/** Count for model */
@@ -94,6 +95,20 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 
 	/** Returns the base URI for this model */
 	protected abstract path(): string;
+
+	/** Convert an old payload to new payload */
+	protected parsePayloadFromApi(object: VersionedObject | I): T {
+		if (typeof (object as VersionedObject).version !== 'undefined') {
+			const converted = this.convertToCurrentVersion(object as VersionedObject);
+			return this.fromApi(converted);
+		}
+		return this.fromApi(object as I);
+	}
+
+	/** Convert payload accordingly to version */
+	protected convertToCurrentVersion(object: VersionedObject | I): I {
+		return object as I;
+	}
 
 	/** Convert an incoming payload to an internal payload */
 	protected abstract fromApi(object: I): T;

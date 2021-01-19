@@ -7,11 +7,13 @@ export class VersionService {
 		model: ['1', '2'],
 		project: ['1', '2'],
 		channel: ['1', '2'],
+		preset: ['1', '2'],
 	};
 	private currentVersions: CurrentVersions = {
 		model: '2',
 		project: '2',
 		channel: '2',
+		preset: '2',
 	};
 
 	constructor() {}
