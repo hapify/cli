@@ -1,8 +1,7 @@
 import { Container } from 'typedi';
 import { Command } from 'commander';
 import { cHigh, cImportant, cMedium, cPath } from './helpers';
-import * as Rimraf from 'rimraf';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import * as Path from 'path';
 import { OptionsService } from '../service/Options';
 import { LoggerService } from '../service/Logger';
@@ -62,11 +61,11 @@ export async function NewCommand(cmd: Command) {
 		}
 		const dirs = GetDirectories(currentDir);
 		for (const dir of dirs) {
-			Rimraf.sync(Path.join(dir, '.git'));
+			Fs.removeSync(Path.join(dir, '.git'));
 		}
 	} else {
 		await git.clone(qBoilerplate.urls[0], currentDir);
-		Rimraf.sync(Path.join(currentDir, '.git'));
+		Fs.removeSync(Path.join(currentDir, '.git'));
 	}
 
 	// =================================

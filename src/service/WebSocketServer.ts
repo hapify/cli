@@ -1,6 +1,6 @@
 import { Container, Service } from 'typedi';
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import * as ws from 'ws';
 import * as http from 'http';
 import * as Jwt from 'jsonwebtoken';

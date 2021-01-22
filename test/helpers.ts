@@ -1,14 +1,12 @@
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import { IGlobalConfig } from '../src/interface/Config';
 import * as Os from 'os';
-import * as Rimraf from 'rimraf';
 import { Container } from 'typedi';
 import { LoggerService } from '../src/service/Logger';
 import { Program } from '../src/class/Program';
 import axios from 'axios';
 import { WebSocketMessage } from '../src/interface/WebSocket';
-import { copySync, mkdirpSync } from 'fs-extra';
 
 const WebSocket = require('ws');
 
@@ -105,15 +103,15 @@ export class Sandbox {
 	}
 	private create(): void {
 		// Make dir if not exists
-		mkdirpSync(this.rootPath);
+		Fs.ensureDirSync(this.rootPath);
 	}
 	clear(): void {
-		Rimraf.sync(this.rootPath);
+		Fs.removeSync(this.rootPath);
 		this.create();
 	}
 	cloneFrom(path: string, filter: (src: string, dest: string) => boolean = () => true): void {
 		const srcPath = Path.join(ProjectDir, path);
-		copySync(srcPath, this.rootPath, {
+		Fs.copySync(srcPath, this.rootPath, {
 			overwrite: true,
 			recursive: true,
 			filter,

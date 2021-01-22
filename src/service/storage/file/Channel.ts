@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { FilePath, JoinPath, SingleSaveFileStorage } from './SingleSave';
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import { IConfig } from '../../../interface/Config';
 import { VersionedObject } from '../../../interface/Version';
 import { ChannelParser } from '../../parser/channel/ChannelParser';

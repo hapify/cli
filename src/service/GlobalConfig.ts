@@ -1,8 +1,7 @@
 import { Service } from 'typedi';
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import * as Os from 'os';
-import mkdirp from 'mkdirp';
 import { IGlobalConfig } from '../interface/Config';
 import { GlobalConfigSchema } from '../interface/schema/Config';
 
@@ -25,7 +24,7 @@ export class GlobalConfigService {
 	private init(): void {
 		// Create path
 		if (!Fs.existsSync(this.rootPath) || !Fs.statSync(this.rootPath).isDirectory()) {
-			mkdirp.sync(this.rootPath);
+			Fs.ensureDirSync(this.rootPath);
 		}
 		// Create file
 		if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {

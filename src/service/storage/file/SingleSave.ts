@@ -1,7 +1,6 @@
 import md5 from 'md5';
 import { Service } from 'typedi';
-import * as Fs from 'fs';
-import mkdirp from 'mkdirp';
+import * as Fs from 'fs-extra';
 import * as Path from 'path';
 
 export type FilePath = string | string[];
@@ -25,7 +24,7 @@ export abstract class SingleSaveFileStorage<T> {
 		const content = await this.serialize(input);
 		const contentPath = JoinPath(path);
 		if (this.shouldSave(contentPath, content)) {
-			mkdirp.sync(Path.dirname(contentPath));
+			Fs.ensureDirSync(Path.dirname(contentPath));
 			Fs.writeFileSync(contentPath, content, 'utf8');
 		}
 	}

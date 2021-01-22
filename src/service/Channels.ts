@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import * as Path from 'path';
 import { OptionsService } from './Options';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import Hoek from '@hapi/hoek';
 import { Channel } from '../class/Channel';
 import { ModelsCollection } from '../class/ModelsCollection';
