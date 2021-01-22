@@ -247,14 +247,10 @@ export class WebSocketServerService {
 		const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
 			expiresIn: this.tokenExpires,
 		});
-		const data = JSON.stringify(
-			{
-				url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`,
-			},
-			null,
-			2
-		);
-		Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
+		const data = {
+			url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`,
+		};
+		Fs.writeJSONSync(this.wsInfoPath, data, { spaces: 2 });
 	}
 
 	/** Remove the token */

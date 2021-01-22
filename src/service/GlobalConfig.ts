@@ -37,12 +37,12 @@ export class GlobalConfigService {
 
 	/** Save data to config file */
 	private save(): void {
-		Fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 4), 'utf8');
+		Fs.writeJSONSync(this.filePath, this.data, { spaces: 2 });
 	}
 
 	/** Load data from config file */
 	private load(): void {
-		this.data = JSON.parse(<string>Fs.readFileSync(this.filePath, 'utf8'));
+		this.data = Fs.readJSONSync(this.filePath);
 	}
 
 	/** Validate the current config or scream */
