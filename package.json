@@ -33,7 +33,7 @@
     "@hapi/inert": "^6.0.3",
     "@hapify/generator": "^0.6.1",
     "@hapify/vm": "^0.3.4",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "case": "^1.6.3",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",

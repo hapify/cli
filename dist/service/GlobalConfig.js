@@ -62,11 +62,11 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Save data to config file */
     save() {
-        Fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 4), 'utf8');
+        Fs.writeJSONSync(this.filePath, this.data, { spaces: 2 });
     }
     /** Load data from config file */
     load() {
-        this.data = JSON.parse(Fs.readFileSync(this.filePath, 'utf8'));
+        this.data = Fs.readJSONSync(this.filePath);
     }
     /** Validate the current config or scream */
     validate(data = this.data) {
