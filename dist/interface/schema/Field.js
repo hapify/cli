@@ -21,13 +21,18 @@ const FieldSubTypes = [
     'image',
     'video',
     'audio',
-    'document'
+    'document',
 ];
 exports.FieldSchema = joi_1.default.object({
     name: joi_1.default.string().required(),
     notes: joi_1.default.string().allow(null),
-    type: joi_1.default.string().valid(FieldTypes).required(),
-    subtype: joi_1.default.string().valid(FieldSubTypes).allow(null).required(),
+    type: joi_1.default.string()
+        .valid(...FieldTypes)
+        .required(),
+    subtype: joi_1.default.string()
+        .valid(...FieldSubTypes)
+        .allow(null)
+        .required(),
     value: joi_1.default.alternatives().try(joi_1.default.string(), joi_1.default.array().items(joi_1.default.string())).required().allow(null),
     primary: joi_1.default.boolean().required(),
     unique: joi_1.default.boolean().required(),

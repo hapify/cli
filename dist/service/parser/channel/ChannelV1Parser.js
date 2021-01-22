@@ -15,14 +15,16 @@ class ChannelV1Parser {
             name: input.name,
             description: input.description,
             logo: input.logo,
-            defaultFields: input.defaultFields.map((f) => ({
-                name: f.name,
-                type: f.type,
-                subtype: f.subtype,
-                value: f.reference,
-                properties: this.converterService.convertBooleanPropertiesToCompactFormat(f),
-                notes: f.notes,
-            })),
+            defaultFields: input.defaultFields
+                ? input.defaultFields.map((f) => ({
+                    name: f.name,
+                    type: f.type,
+                    subtype: f.subtype,
+                    value: f.reference,
+                    properties: this.converterService.convertBooleanPropertiesToCompactFormat(f),
+                    notes: f.notes,
+                }))
+                : undefined,
             templates: input.templates,
         };
     }

@@ -14,7 +14,7 @@
     "test": "nyc mocha",
     "mocha": "mocha",
     "lint": "prettier --write '**/*.ts'",
-    "build": "rimraf dist && tsc -p . && cp -r node_modules/@hapify/gui/dist/hapify-gui dist/html"
+    "build": "rm -rf dist && tsc -p . && cp -r node_modules/@hapify/gui/dist/hapify-gui dist/html"
   },
   "repository": {
     "type": "git",

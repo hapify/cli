@@ -43,7 +43,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebSocketServerService = void 0;
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
-const Fs = __importStar(require("fs"));
+const Fs = __importStar(require("fs-extra"));
 const ws = __importStar(require("ws"));
 const Jwt = __importStar(require("jsonwebtoken"));
 const RandomString = __importStar(require("randomstring"));

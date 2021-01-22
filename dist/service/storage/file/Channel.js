@@ -42,7 +42,7 @@ exports.ChannelFileStorageService = void 0;
 const typedi_1 = require("typedi");
 const SingleSave_1 = require("./SingleSave");
 const Path = __importStar(require("path"));
-const Fs = __importStar(require("fs"));
+const Fs = __importStar(require("fs-extra"));
 const ChannelParser_1 = require("../../parser/channel/ChannelParser");
 const Converter_1 = require("../../Converter");
 let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileStorageService extends SingleSave_1.SingleSaveFileStorage {

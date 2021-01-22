@@ -40,8 +40,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SingleSaveFileStorage = exports.JoinPath = void 0;
 const md5_1 = __importDefault(require("md5"));
 const typedi_1 = require("typedi");
-const Fs = __importStar(require("fs"));
-const mkdirp_1 = __importDefault(require("mkdirp"));
+const Fs = __importStar(require("fs-extra"));
 const Path = __importStar(require("path"));
 function JoinPath(path) {
     return path instanceof Array ? Path.join(...path) : path;
@@ -67,7 +66,7 @@ let SingleSaveFileStorage = class SingleSaveFileStorage {
             const content = yield this.serialize(input);
             const contentPath = JoinPath(path);
             if (this.shouldSave(contentPath, content)) {
-                mkdirp_1.default.sync(Path.dirname(contentPath));
+                Fs.ensureDirSync(Path.dirname(contentPath));
                 Fs.writeFileSync(contentPath, content, 'utf8');
             }
         });
