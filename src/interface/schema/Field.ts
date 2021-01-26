@@ -28,7 +28,16 @@ export const FieldSchema = Joi.object({
 		.valid(...FieldSubTypes)
 		.allow(null)
 		.required(),
-	value: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())).required().allow(null),
+	value: Joi.alternatives()
+		.conditional('type', {
+			switch: [
+				{ is: 'entity', then: Joi.string() },
+				{ is: 'enum', then: Joi.array().items(Joi.string()) },
+			],
+			otherwise: null,
+		})
+		.required()
+		.allow(null),
 	primary: Joi.boolean().required(),
 	unique: Joi.boolean().required(),
 	label: Joi.boolean().required(),
