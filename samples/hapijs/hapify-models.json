@@ -1,5 +1,5 @@
 {
-  "version": "1",
+  "version": "2",
   "name": "Hello World",
   "description": "Another project",
   "models": [
@@ -79,6 +79,53 @@
           "name": "name",
           "type": "string",
           "properties": []
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "subtype": "email",
+          "properties": [
+            "unique",
+            "searchable",
+            "sortable"
+          ]
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "subtype": "password",
+          "properties": [
+            "hidden"
+          ]
+        },
+        {
+          "name": "role",
+          "type": "enum",
+          "value": [
+            "admin",
+            "user"
+          ],
+          "properties": [
+            "searchable",
+            "restricted"
+          ]
+        },
+        {
+          "name": "banned",
+          "type": "boolean",
+          "properties": [
+            "searchable",
+            "restricted"
+          ],
+          "notes": "Allow admins to disable this user"
+        },
+        {
+          "name": "last connected at",
+          "type": "datetime",
+          "properties": [
+            "nullable",
+            "internal"
+          ]
         }
       ]
     }

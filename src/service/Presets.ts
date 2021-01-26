@@ -31,7 +31,7 @@ export class PresetsService {
 		const referencesMap: { [id: string]: string } = {};
 
 		for (const model of presetModels) {
-			const existing = models.find((m) => m.name === model.name);
+			const existing = models.find((m) => m.name.toLowerCase() === model.name.toLowerCase());
 			if (existing) {
 				// Save incoming reference to existing reference
 				referencesMap[model.id] = existing.id;
@@ -45,7 +45,7 @@ export class PresetsService {
 						continue;
 					}
 					// Add this field if nothing with the same name was found
-					if (!clone.fields.some((f) => f.name === field.name)) {
+					if (!clone.fields.some((f) => f.name.toLowerCase() === field.name.toLowerCase())) {
 						clone.fields.push(field);
 						edited = true;
 					}
