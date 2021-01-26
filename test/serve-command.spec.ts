@@ -40,7 +40,7 @@ describe('serve command', () => {
 			'--boilerplate-url',
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--preset',
-			'5c8607a696d1ff00107de412', // User
+			'60104aabe0fe50001033f10e', // User
 			'--project-name',
 			'The Name',
 			'--project-desc',
