@@ -67,27 +67,28 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 
 	/** Get list for model search */
 	async list(searchParams?: S): Promise<T[]> {
-		const output = (await this.apiService.get<ListResult<I>>(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
+		const mergedSearchParams = this.mergeSearchParams(searchParams);
+		const output = (await this.apiService.get<ListResult<I>>(`${this.path()}`, mergedSearchParams)).data.items;
 		return output.map((o) => this.parsePayloadFromApi(o));
 	}
 
 	/** Count for model */
-	async count(searchParams: S): Promise<number> {
+	async count(searchParams?: S): Promise<number> {
 		// Remove unwanted properties
-		const params = Object.assign({}, this.defaultSearchParams(), searchParams);
-		delete params._page;
-		delete params._limit;
-		delete params._order;
-		delete params._sort;
-		return (await this.apiService.get<CountResult>(`${this.path()}/count`, Object.assign(this.defaultSearchParams(), searchParams))).data.total;
+		const mergedSearchParams = this.mergeSearchParams(searchParams);
+		delete mergedSearchParams._page;
+		delete mergedSearchParams._limit;
+		delete mergedSearchParams._order;
+		delete mergedSearchParams._sort;
+		return (await this.apiService.get<CountResult>(`${this.path()}/count`, mergedSearchParams)).data.total;
 	}
 
 	/** Get the default search params (limit, page, etc...) */
-	protected defaultSearchParams(): any {
+	protected defaultSearchParams(): S {
 		return {
 			_page: 0,
 			_limit: 20,
-		};
+		} as S;
 	}
 
 	/** Denotes if the calls to the API need the X-Api-Token header */
@@ -112,4 +113,9 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 
 	/** Convert an incoming payload to an internal payload */
 	protected abstract fromApi(object: I): T;
+
+	/** Helper to merge search params */
+	protected mergeSearchParams(searchParams?: S): S {
+		return searchParams ? Object.assign(this.defaultSearchParams(), searchParams) : this.defaultSearchParams();
+	}
 }

@@ -7,6 +7,7 @@ import { OptionsService } from '../../Options';
 import { ConverterService } from '../../Converter';
 import { VersionedObject } from '../../../interface/Version';
 import { ApiPresetParser } from '../../parser/preset/ApiPresetParser';
+import { VersionService } from '../../Version';
 
 interface PresetsSearchParams extends BaseSearchParams {
 	version?: string;
@@ -17,13 +18,14 @@ interface PresetsSearchParams extends BaseSearchParams {
 
 @Service()
 export class PresetsApiStorageService extends BaseApiStorageService<IPreset, IApiPreset, PresetsSearchParams> {
-	constructor(optionsService: OptionsService, private converterService: ConverterService) {
+	constructor(optionsService: OptionsService, private converterService: ConverterService, private versionService: VersionService) {
 		super(optionsService);
 	}
 
 	protected defaultSearchParams(): any {
 		const s = super.defaultSearchParams();
 		s._limit = this.remoteConfig.presetsLimit;
+		s.version = this.versionService.getCurrentVersion('preset');
 		return s;
 	}
 
