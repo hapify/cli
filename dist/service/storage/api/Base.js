@@ -64,7 +64,8 @@ class BaseApiStorageService {
     /** Get list for model search */
     list(searchParams) {
         return __awaiter(this, void 0, void 0, function* () {
-            const output = (yield this.apiService.get(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
+            const mergedSearchParams = this.mergeSearchParams(searchParams);
+            const output = (yield this.apiService.get(`${this.path()}`, mergedSearchParams)).data.items;
             return output.map((o) => this.parsePayloadFromApi(o));
         });
     }
@@ -72,12 +73,12 @@ class BaseApiStorageService {
     count(searchParams) {
         return __awaiter(this, void 0, void 0, function* () {
             // Remove unwanted properties
-            const params = Object.assign({}, this.defaultSearchParams(), searchParams);
-            delete params._page;
-            delete params._limit;
-            delete params._order;
-            delete params._sort;
-            return (yield this.apiService.get(`${this.path()}/count`, Object.assign(this.defaultSearchParams(), searchParams))).data.total;
+            const mergedSearchParams = this.mergeSearchParams(searchParams);
+            delete mergedSearchParams._page;
+            delete mergedSearchParams._limit;
+            delete mergedSearchParams._order;
+            delete mergedSearchParams._sort;
+            return (yield this.apiService.get(`${this.path()}/count`, mergedSearchParams)).data.total;
         });
     }
     /** Get the default search params (limit, page, etc...) */
@@ -98,6 +99,10 @@ class BaseApiStorageService {
     /** Convert payload accordingly to version */
     convertToCurrentVersion(object) {
         return object;
+    }
+    /** Helper to merge search params */
+    mergeSearchParams(searchParams) {
+        return searchParams ? Object.assign(this.defaultSearchParams(), searchParams) : this.defaultSearchParams();
     }
 };
 BaseApiStorageService = __decorate([

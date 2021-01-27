@@ -33,7 +33,16 @@ exports.FieldSchema = joi_1.default.object({
         .valid(...FieldSubTypes)
         .allow(null)
         .required(),
-    value: joi_1.default.alternatives().try(joi_1.default.string(), joi_1.default.array().items(joi_1.default.string())).required().allow(null),
+    value: joi_1.default.alternatives()
+        .conditional('type', {
+        switch: [
+            { is: 'entity', then: joi_1.default.string() },
+            { is: 'enum', then: joi_1.default.array().items(joi_1.default.string()) },
+        ],
+        otherwise: null,
+    })
+        .required()
+        .allow(null),
     primary: joi_1.default.boolean().required(),
     unique: joi_1.default.boolean().required(),
     label: joi_1.default.boolean().required(),

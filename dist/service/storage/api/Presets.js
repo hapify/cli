@@ -15,14 +15,17 @@ const Base_1 = require("./Base");
 const Options_1 = require("../../Options");
 const Converter_1 = require("../../Converter");
 const ApiPresetParser_1 = require("../../parser/preset/ApiPresetParser");
+const Version_1 = require("../../Version");
 let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.BaseApiStorageService {
-    constructor(optionsService, converterService) {
+    constructor(optionsService, converterService, versionService) {
         super(optionsService);
         this.converterService = converterService;
+        this.versionService = versionService;
     }
     defaultSearchParams() {
         const s = super.defaultSearchParams();
         s._limit = this.remoteConfig.presetsLimit;
+        s.version = this.versionService.getCurrentVersion('preset');
         return s;
     }
     path() {
@@ -54,7 +57,7 @@ let PresetsApiStorageService = class PresetsApiStorageService extends Base_1.Bas
 };
 PresetsApiStorageService = __decorate([
     typedi_1.Service(),
-    __metadata("design:paramtypes", [Options_1.OptionsService, Converter_1.ConverterService])
+    __metadata("design:paramtypes", [Options_1.OptionsService, Converter_1.ConverterService, Version_1.VersionService])
 ], PresetsApiStorageService);
 exports.PresetsApiStorageService = PresetsApiStorageService;
 //# sourceMappingURL=Presets.js.map

@@ -19,4 +19,5 @@ export declare class GeneratorService {
     pathPreview(path: string, model?: Model | null): Promise<string>;
     /** Convert generator errors to internal RichError */
     private formatGeneratorError;
+    private filterEmptyFiles;
 }

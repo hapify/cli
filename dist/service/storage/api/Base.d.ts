@@ -28,9 +28,9 @@ export declare abstract class BaseApiStorageService<T, I, S extends BaseSearchPa
     /** Get list for model search */
     list(searchParams?: S): Promise<T[]>;
     /** Count for model */
-    count(searchParams: S): Promise<number>;
+    count(searchParams?: S): Promise<number>;
     /** Get the default search params (limit, page, etc...) */
-    protected defaultSearchParams(): any;
+    protected defaultSearchParams(): S;
     /** Denotes if the calls to the API need the X-Api-Token header */
     protected abstract requiresAuthentication(): boolean;
     /** Returns the base URI for this model */
@@ -41,4 +41,6 @@ export declare abstract class BaseApiStorageService<T, I, S extends BaseSearchPa
     protected convertToCurrentVersion(object: VersionedObject | I): I;
     /** Convert an incoming payload to an internal payload */
     protected abstract fromApi(object: I): T;
+    /** Helper to merge search params */
+    protected mergeSearchParams(searchParams?: S): S;
 }
