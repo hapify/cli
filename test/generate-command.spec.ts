@@ -15,9 +15,9 @@ describe('generate command', () => {
 			'--boilerplate',
 			'hapijs_tractr',
 			'--preset',
-			'5c8607a696d1ff00107de412', // User
+			'60104aabe0fe50001033f10e', // User
 			'--preset',
-			'5c86966796d1ff00107de41c', // Place
+			'60104aabe0fe50001033f10f', // Place
 			'--project-name',
 			'The Name',
 			'--project-desc',
@@ -53,7 +53,7 @@ describe('generate command', () => {
 			'--boilerplate-url',
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--preset',
-			'5c8607a696d1ff00107de412', // User
+			'60104aabe0fe50001033f10e', // User
 			'--project-name',
 			'The Name',
 			'--project-desc',
@@ -86,9 +86,9 @@ describe('generate command', () => {
 			'--boilerplate',
 			'hapijs_tractr',
 			'--preset',
-			'5c8607a696d1ff00107de412', // User
+			'60104aabe0fe50001033f10e', // User
 			'--preset',
-			'5c86966796d1ff00107de41c', // Place
+			'60104aabe0fe50001033f10f', // Place
 			'--project-name',
 			'The Name',
 			'--project-desc',
@@ -111,5 +111,41 @@ describe('generate command', () => {
 		expect(response.stderr).to.contains(['SyntaxEvaluationError', 'S is not defined', 'Column', 'Line', 'File']);
 		expect(response.code).to.equal(1);
 		expect(response.stdout).to.be.a.string();
+	});
+	it('empty templates', async () => {
+		const sandbox = new Sandbox();
+		sandbox.clear();
+
+		// Clone repository first
+		const responseNew = await CLI('new', [
+			'--dir',
+			sandbox.getPath(),
+			'--boilerplate',
+			'hapijs_tractr',
+			'--preset',
+			'60104aabe0fe50001033f10e', // User
+			'--project-name',
+			'The Name',
+			'--project-desc',
+			'The Description',
+		]);
+
+		expect(responseNew.stderr).to.be.empty();
+		expect(responseNew.code).to.equal(0);
+
+		// Empty template
+		const path = ['hapify', 'routes', 'model', 'create.js.hpf'];
+		sandbox.setFileContent(path, '\t\n  <<# This is a comment >>  <<< function testFunc () {} >>>  \n');
+
+		// Generate code
+		const response = await CLI('generate', ['--dir', sandbox.getPath()]);
+
+		expect(response.stderr).to.be.empty();
+		expect(response.code).to.equal(0);
+		expect(response.stdout).to.contains(['Generated', 'files', 'for channel', 'HapiJS']);
+
+		expect(sandbox.fileExists(['routes', 'user', 'create.js'])).to.be.false();
+		expect(sandbox.fileExists(['routes', 'user', 'delete.js'])).to.be.true();
+		expect(sandbox.fileExists(['cmd', 'setup', 'indexes.json'])).to.be.true();
 	});
 });

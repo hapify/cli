@@ -42,9 +42,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WriterService = void 0;
 const typedi_1 = require("typedi");
-const Fs = __importStar(require("fs"));
+const Fs = __importStar(require("fs-extra"));
 const Path = __importStar(require("path"));
-const mkdirp_1 = __importDefault(require("mkdirp"));
 const jszip_1 = __importDefault(require("jszip"));
 let WriterService = class WriterService {
     constructor() { }
@@ -65,7 +64,7 @@ let WriterService = class WriterService {
                     level: 9,
                 },
             });
-            mkdirp_1.default.sync(Path.dirname(path));
+            Fs.ensureDirSync(Path.dirname(path));
             Fs.writeFileSync(path, content);
         });
     }
@@ -81,7 +80,7 @@ let WriterService = class WriterService {
     write(root, result) {
         return __awaiter(this, void 0, void 0, function* () {
             const path = Path.join(root, result.path);
-            mkdirp_1.default.sync(Path.dirname(path));
+            Fs.ensureDirSync(Path.dirname(path));
             Fs.writeFileSync(path, result.content, 'utf8');
         });
     }

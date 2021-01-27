@@ -27,16 +27,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GlobalConfigService = void 0;
 const typedi_1 = require("typedi");
 const Path = __importStar(require("path"));
-const Fs = __importStar(require("fs"));
+const Fs = __importStar(require("fs-extra"));
 const Os = __importStar(require("os"));
-const mkdirp_1 = __importDefault(require("mkdirp"));
 const Config_1 = require("../interface/schema/Config");
 let GlobalConfigService = class GlobalConfigService {
     constructor() {
@@ -54,7 +50,7 @@ let GlobalConfigService = class GlobalConfigService {
     init() {
         // Create path
         if (!Fs.existsSync(this.rootPath) || !Fs.statSync(this.rootPath).isDirectory()) {
-            mkdirp_1.default.sync(this.rootPath);
+            Fs.ensureDirSync(this.rootPath);
         }
         // Create file
         if (!Fs.existsSync(this.filePath) || !Fs.statSync(this.filePath).isFile()) {
@@ -66,11 +62,11 @@ let GlobalConfigService = class GlobalConfigService {
     }
     /** Save data to config file */
     save() {
-        Fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 4), 'utf8');
+        Fs.writeJSONSync(this.filePath, this.data, { spaces: 2 });
     }
     /** Load data from config file */
     load() {
-        this.data = JSON.parse(Fs.readFileSync(this.filePath, 'utf8'));
+        this.data = Fs.readJSONSync(this.filePath);
     }
     /** Validate the current config or scream */
     validate(data = this.data) {

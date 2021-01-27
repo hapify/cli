@@ -1,25 +1,19 @@
 import { BaseApiStorageService, BaseSearchParams } from './Base';
 import { IModel } from '../../../interface/Generator';
+import { VersionedObject } from '../../../interface/Version';
+import { IApiModel } from '../../../interface/Api';
+import { OptionsService } from '../../Options';
+import { ConverterService } from '../../Converter';
 interface ModelsSearchParams extends BaseSearchParams {
     version?: string;
     project?: string;
     name?: string;
 }
-export interface IApiModel {
-    _id: string;
-    created_at: number;
-    updated_at?: number | null;
-    version: string;
-    owner: string | any;
-    project: string | any;
-    name: string;
-    notes: string;
-    fields: any[];
-    accesses: any;
-}
 export declare class ModelsApiStorageService extends BaseApiStorageService<IModel, IApiModel, ModelsSearchParams> {
+    private converterService;
     /** The models fingerprints */
     private hashes;
+    constructor(optionsService: OptionsService, converterService: ConverterService);
     /** Load the models from api for a specific project */
     forProject(project: string): Promise<IModel[]>;
     /** Send models to API if necessary */
@@ -30,6 +24,7 @@ export declare class ModelsApiStorageService extends BaseApiStorageService<IMode
     private static hash;
     protected defaultSearchParams(): any;
     protected path(): string;
+    protected convertToCurrentVersion(object: VersionedObject | IApiModel): IApiModel;
     protected fromApi(object: IApiModel): IModel;
     protected requiresAuthentication(): boolean;
 }

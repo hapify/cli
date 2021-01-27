@@ -42,6 +42,7 @@ const ModelsCollection_1 = require("./ModelsCollection");
 const Channel_1 = require("../service/storage/file/Channel");
 const Config_1 = require("../interface/schema/Config");
 const ValidatorResult_1 = require("../interface/schema/ValidatorResult");
+const Version_1 = require("../service/Version");
 class Channel {
     constructor(path, name = null) {
         this.path = path;
@@ -161,7 +162,7 @@ class Channel {
             // Create a channel from scratch
             const channel = new Channel(path);
             channel.config = {
-                version: '1',
+                version: typedi_1.Container.get(Version_1.VersionService).getCurrentVersion('channel'),
                 validatorPath: `${Channel.defaultFolder}/validator.js`,
                 name: name || channel.name,
                 description: description || 'A new Hapify channel',
@@ -172,7 +173,7 @@ class Channel {
                         name: 'Id',
                         type: 'string',
                         subtype: null,
-                        reference: null,
+                        value: null,
                         primary: true,
                         unique: false,
                         label: false,

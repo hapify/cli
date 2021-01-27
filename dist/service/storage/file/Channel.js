@@ -24,6 +24,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,17 +42,44 @@ exports.ChannelFileStorageService = void 0;
 const typedi_1 = require("typedi");
 const SingleSave_1 = require("./SingleSave");
 const Path = __importStar(require("path"));
-const Fs = __importStar(require("fs"));
+const Fs = __importStar(require("fs-extra"));
+const ChannelParser_1 = require("../../parser/channel/ChannelParser");
+const Converter_1 = require("../../Converter");
 let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileStorageService extends SingleSave_1.SingleSaveFileStorage {
+    constructor(converterService) {
+        super();
+        this.converterService = converterService;
+    }
     serialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
-            return JSON.stringify(content, null, 2);
+            const compact = {
+                version: content.version,
+                validatorPath: content.validatorPath,
+                project: content.project,
+                name: content.name || undefined,
+                description: content.description || undefined,
+                logo: content.logo || undefined,
+                defaultFields: content.defaultFields ? content.defaultFields.map((f) => this.converterService.convertFieldToCompactFormat(f)) : undefined,
+                templates: content.templates,
+            };
+            return JSON.stringify(compact, null, 2);
         });
     }
     deserialize(content) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                return JSON.parse(content);
+                const parsedContent = JSON.parse(content);
+                const compact = new ChannelParser_1.ChannelParser(parsedContent).convert();
+                return {
+                    version: compact.version,
+                    validatorPath: compact.validatorPath,
+                    project: compact.project,
+                    name: compact.name,
+                    description: compact.description,
+                    logo: compact.logo,
+                    defaultFields: compact.defaultFields ? compact.defaultFields.map((f) => this.converterService.convertFieldFromCompactFormat(f)) : undefined,
+                    templates: compact.templates,
+                };
             }
             catch (error) {
                 throw new Error(`An error occurred while parsing Channel configuration: ${error.toString()}`);
@@ -97,7 +127,8 @@ let ChannelFileStorageService = ChannelFileStorageService_1 = class ChannelFileS
     }
 };
 ChannelFileStorageService = ChannelFileStorageService_1 = __decorate([
-    typedi_1.Service()
+    typedi_1.Service(),
+    __metadata("design:paramtypes", [Converter_1.ConverterService])
 ], ChannelFileStorageService);
 exports.ChannelFileStorageService = ChannelFileStorageService;
 //# sourceMappingURL=Channel.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"ApiPresetParser.js","sourceRoot":"","sources":["../../../../src/service/parser/preset/ApiPresetParser.ts"],"names":[],"mappings":";;;AACA,2DAAwD;AACxD,sCAAmC;AAEnC,2DAAwD;AAExD,MAAa,eAAgB,SAAQ,eAAkB;IAC5C,QAAQ;QACjB,OAAO,QAAQ,CAAC;IACjB,CAAC;IACS,aAAa;QACtB,OAAO;YACN,GAAG,EAAE,qCAAiB;YACtB,GAAG,EAAE,qCAAiB;SACtB,CAAC;IACH,CAAC;CACD;AAVD,0CAUC"}

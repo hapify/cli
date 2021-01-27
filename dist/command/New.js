@@ -31,8 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewCommand = void 0;
 const typedi_1 = require("typedi");
 const helpers_1 = require("./helpers");
-const Rimraf = __importStar(require("rimraf"));
-const Fs = __importStar(require("fs"));
+const Fs = __importStar(require("fs-extra"));
 const Path = __importStar(require("path"));
 const Options_1 = require("../service/Options");
 const Logger_1 = require("../service/Logger");
@@ -82,12 +81,12 @@ function NewCommand(cmd) {
             }
             const dirs = GetDirectories(currentDir);
             for (const dir of dirs) {
-                Rimraf.sync(Path.join(dir, '.git'));
+                Fs.removeSync(Path.join(dir, '.git'));
             }
         }
         else {
             yield git.clone(qBoilerplate.urls[0], currentDir);
-            Rimraf.sync(Path.join(currentDir, '.git'));
+            Fs.removeSync(Path.join(currentDir, '.git'));
         }
         // =================================
         // Use only one local project in case of multiple boilerplates

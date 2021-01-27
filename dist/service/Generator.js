@@ -24,7 +24,9 @@ let GeneratorService = class GeneratorService {
     runChannel(channel) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield channel.modelsCollection.list();
-            return yield generator_1.Generator.run(channel.templates, models).catch((e) => {
+            return yield generator_1.Generator.run(channel.templates, models)
+                .then((results) => this.filterEmptyFiles(results))
+                .catch((e) => {
                 throw this.formatGeneratorError(e);
             });
         });
@@ -36,7 +38,9 @@ let GeneratorService = class GeneratorService {
     runTemplate(template) {
         return __awaiter(this, void 0, void 0, function* () {
             const models = yield template.channel().modelsCollection.list();
-            return yield generator_1.Generator.run([template], models).catch((e) => {
+            return yield generator_1.Generator.run([template], models)
+                .then((results) => this.filterEmptyFiles(results))
+                .catch((e) => {
                 throw this.formatGeneratorError(e);
             });
         });
@@ -80,6 +84,9 @@ let GeneratorService = class GeneratorService {
         if (error.stack)
             richError.stack = error.stack;
         return richError;
+    }
+    filterEmptyFiles(results) {
+        return results.filter((result) => result.content.trim().length > 0);
     }
 };
 GeneratorService = __decorate([

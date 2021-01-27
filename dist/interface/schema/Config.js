@@ -8,7 +8,7 @@ const Template_1 = require("./Template");
 const joi_1 = __importDefault(require("joi"));
 const Field_1 = require("./Field");
 const Model_1 = require("./Model");
-const Versions = ['1'];
+const Versions = ['2'];
 exports.ConfigSchema = joi_1.default.object({
     version: joi_1.default.string()
         .valid(...Versions)

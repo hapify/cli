@@ -46,7 +46,7 @@ let PresetsService = class PresetsService {
             const models = yield modelsCollection.list();
             const referencesMap = {};
             for (const model of presetModels) {
-                const existing = models.find((m) => m.name === model.name);
+                const existing = models.find((m) => m.name.toLowerCase() === model.name.toLowerCase());
                 if (existing) {
                     // Save incoming reference to existing reference
                     referencesMap[model.id] = existing.id;
@@ -60,7 +60,7 @@ let PresetsService = class PresetsService {
                             continue;
                         }
                         // Add this field if nothing with the same name was found
-                        if (!clone.fields.some((f) => f.name === field.name)) {
+                        if (!clone.fields.some((f) => f.name.toLowerCase() === field.name.toLowerCase())) {
                             clone.fields.push(field);
                             edited = true;
                         }
@@ -91,8 +91,8 @@ let PresetsService = class PresetsService {
             // Change references to existing models
             const changeReferencesToNewModels = (m) => {
                 for (const f of m.fields) {
-                    if (f.type === 'entity' && typeof referencesMap[f.reference] === 'string') {
-                        f.reference = referencesMap[f.reference];
+                    if (f.type === 'entity' && typeof f.value === 'string' && typeof referencesMap[f.value] === 'string') {
+                        f.value = referencesMap[f.value];
                     }
                 }
             };

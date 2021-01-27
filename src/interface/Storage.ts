@@ -1,5 +1,7 @@
 import { IModel } from './Generator';
-import { Accesses, FieldSubType, FieldType } from '@hapify/generator/dist/interfaces';
+import { Accesses, FieldSubType, FieldType, FieldValueType } from '@hapify/generator/dist/interfaces';
+import { CurrentVersion } from './Version';
+import { IConfigTemplate } from './Config';
 
 /** Represent a class that can be stringified and un-stringified */
 export interface ISerializable<IT, T> {
@@ -33,7 +35,7 @@ export type StorageType = 'local' | 'remote';
 /** Represents the detailed description of a project */
 export interface IStorableProject {
 	/** The project's configuration version */
-	version: string;
+	version: CurrentVersion<'project'>;
 	/** The project's name */
 	name?: string;
 	/** The project's description */
@@ -44,7 +46,7 @@ export interface IStorableProject {
 /** Represents the compact description of a project */
 export interface IStorableCompactProject {
 	/** The project's configuration version */
-	version: string;
+	version: CurrentVersion<'project'>;
 	/** The project's name */
 	name?: string;
 	/** The project's description */
@@ -66,15 +68,15 @@ export interface IStorableCompactModel {
 	notes?: string;
 }
 /** Represents the compact description of a model */
-export interface IStorableCompactField {
+export interface IStorableCompactField<T extends FieldType = FieldType> {
 	/** The field's name */
 	name: string;
 	/** The field's type */
-	type: FieldType;
+	type: T;
 	/** The field's subtype */
 	subtype?: FieldSubType;
-	/** The field's reference if the type is entity. The GUID string of the targeted model */
-	reference?: string;
+	/** The entity id, or the enum list */
+	value?: FieldValueType<T>;
 	/** List of boolean properties */
 	properties: CompactFieldBooleanProperty[];
 	/** The field's notes */
@@ -94,3 +96,22 @@ export type CompactFieldBooleanProperty =
 	| 'internal'
 	| 'restricted'
 	| 'ownership';
+
+export interface IStorableCompactConfig {
+	/** The channel's configuration version */
+	version: CurrentVersion<'channel'>;
+	/** The channel's validation script path */
+	validatorPath: string;
+	/** The project id containing the models or the project file path */
+	project: string;
+	/** The channel's name */
+	name?: string;
+	/** The channel's short description */
+	description?: string;
+	/** The channel's logo URL */
+	logo?: string;
+	/** A list of model that should be added on each new model */
+	defaultFields?: IStorableCompactField[];
+	/** The templates of the channel */
+	templates: IConfigTemplate[];
+}
