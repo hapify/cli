@@ -62,7 +62,7 @@ describe('new command', () => {
 			'--boilerplate-url',
 			'https://github.com/Tractr/boilerplate-ngx-components.git',
 			'--preset',
-			'5c8607a696d1ff00107de412', // User
+			'60104aabe0fe50001033f10e', // User
 			'--project-name',
 			'The Name',
 			'--project-desc',
@@ -100,9 +100,9 @@ describe('new command', () => {
 			'--boilerplate',
 			'hapijs_tractr',
 			'--preset',
-			'5c8607a696d1ff00107de412', // User
+			'60104aabe0fe50001033f10e', // User
 			'--preset',
-			'5c86966796d1ff00107de41c', // Place
+			'60104aabe0fe50001033f10f', // Place
 			'--project-name',
 			'The Name',
 			'--project-desc',

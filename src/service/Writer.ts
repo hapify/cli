@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import * as Path from 'path';
-import mkdirp from 'mkdirp';
 import JSZip from 'jszip';
 import { IGeneratorResult } from '../interface/Generator';
 
@@ -25,7 +24,7 @@ export class WriterService {
 				level: 9,
 			},
 		});
-		mkdirp.sync(Path.dirname(path));
+		Fs.ensureDirSync(Path.dirname(path));
 		Fs.writeFileSync(path, content);
 	}
 
@@ -39,7 +38,7 @@ export class WriterService {
 	/** Write on result to disk */
 	async write(root: string, result: IGeneratorResult): Promise<void> {
 		const path = Path.join(root, result.path);
-		mkdirp.sync(Path.dirname(path));
+		Fs.ensureDirSync(Path.dirname(path));
 		Fs.writeFileSync(path, result.content, 'utf8');
 	}
 }

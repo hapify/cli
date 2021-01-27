@@ -1,17 +1,46 @@
 import { Service } from 'typedi';
 import { FilePath, JoinPath, SingleSaveFileStorage } from './SingleSave';
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import { IConfig } from '../../../interface/Config';
+import { VersionedObject } from '../../../interface/Version';
+import { ChannelParser } from '../../parser/channel/ChannelParser';
+import { IStorableCompactConfig } from '../../../interface/Storage';
+import { ConverterService } from '../../Converter';
 
 @Service()
 export class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
+	constructor(private converterService: ConverterService) {
+		super();
+	}
+
 	protected async serialize(content: IConfig): Promise<string> {
-		return JSON.stringify(content, null, 2);
+		const compact: IStorableCompactConfig = {
+			version: content.version,
+			validatorPath: content.validatorPath,
+			project: content.project,
+			name: content.name || undefined,
+			description: content.description || undefined,
+			logo: content.logo || undefined,
+			defaultFields: content.defaultFields ? content.defaultFields.map((f) => this.converterService.convertFieldToCompactFormat(f)) : undefined,
+			templates: content.templates,
+		};
+		return JSON.stringify(compact, null, 2);
 	}
 	protected async deserialize(content: string): Promise<IConfig> {
 		try {
-			return JSON.parse(content);
+			const parsedContent: VersionedObject = JSON.parse(content);
+			const compact = new ChannelParser(parsedContent).convert();
+			return {
+				version: compact.version,
+				validatorPath: compact.validatorPath,
+				project: compact.project,
+				name: compact.name,
+				description: compact.description,
+				logo: compact.logo,
+				defaultFields: compact.defaultFields ? compact.defaultFields.map((f) => this.converterService.convertFieldFromCompactFormat(f)) : undefined,
+				templates: compact.templates,
+			};
 		} catch (error) {
 			throw new Error(`An error occurred while parsing Channel configuration: ${error.toString()}`);
 		}

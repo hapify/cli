@@ -1,59 +1,42 @@
 import { Service } from 'typedi';
 import { SingleSaveFileStorage } from './SingleSave';
-import { CompactFieldBooleanProperty, IStorableCompactProject, IStorableProject } from '../../../interface/Storage';
+import { IStorableCompactModel, IStorableCompactProject, IStorableProject } from '../../../interface/Storage';
 import { IProject } from '../../../interface/Objects';
 import * as Path from 'path';
 import { IModel } from '../../../interface/Generator';
+import { VersionService } from '../../Version';
+import { VersionedObject } from '../../../interface/Version';
+import { ProjectParser } from '../../parser/project/ProjectParser';
+import { ConverterService } from '../../Converter';
 
 @Service()
 export class ProjectFileStorageService extends SingleSaveFileStorage<IStorableProject> {
-	private booleanPropertiesNames: CompactFieldBooleanProperty[] = [
-		'primary',
-		'unique',
-		'label',
-		'nullable',
-		'multiple',
-		'embedded',
-		'searchable',
-		'sortable',
-		'hidden',
-		'internal',
-		'restricted',
-		'ownership',
-	];
+	constructor(private versionService: VersionService, private converterService: ConverterService) {
+		super();
+	}
 	protected async serialize(content: IStorableProject): Promise<string> {
 		const compact: IStorableCompactProject = {
 			version: content.version,
 			name: content.name || undefined,
 			description: content.description || undefined,
-			models: content.models.map((model) => {
-				return {
-					id: model.id,
-					name: model.name,
-					accesses: model.accesses,
-					fields: model.fields.map((field) => {
-						return {
-							name: field.name,
-							type: field.type,
-							subtype: field.subtype || undefined,
-							reference: field.reference || undefined,
-							properties: this.booleanPropertiesNames
-								.map((property) => {
-									return field[property] ? property : null;
-								})
-								.filter((p) => !!p),
-							notes: field.notes || undefined,
-						};
-					}),
-					notes: model.notes || undefined,
-				};
-			}),
+			models: content.models.map(
+				(model): IStorableCompactModel => {
+					return {
+						id: model.id,
+						name: model.name,
+						accesses: model.accesses,
+						fields: model.fields.map((f) => this.converterService.convertFieldToCompactFormat(f)),
+						notes: model.notes || undefined,
+					};
+				}
+			),
 		};
 		return JSON.stringify(compact, null, 2);
 	}
 	protected async deserialize(content: string): Promise<IStorableProject> {
 		try {
-			const compact: IStorableCompactProject = JSON.parse(content);
+			const parsedContent: VersionedObject = JSON.parse(content);
+			const compact = new ProjectParser(parsedContent).convert();
 			return {
 				version: compact.version,
 				name: compact.name,
@@ -63,27 +46,7 @@ export class ProjectFileStorageService extends SingleSaveFileStorage<IStorablePr
 						id: model.id,
 						name: model.name,
 						accesses: model.accesses,
-						fields: model.fields.map((field) => {
-							return {
-								name: field.name,
-								type: field.type,
-								subtype: field.subtype || null,
-								reference: field.reference || null,
-								primary: field.properties.includes('primary'),
-								unique: field.properties.includes('unique'),
-								label: field.properties.includes('label'),
-								nullable: field.properties.includes('nullable'),
-								multiple: field.properties.includes('multiple'),
-								embedded: field.properties.includes('embedded'),
-								searchable: field.properties.includes('searchable'),
-								sortable: field.properties.includes('sortable'),
-								hidden: field.properties.includes('hidden'),
-								internal: field.properties.includes('internal'),
-								restricted: field.properties.includes('restricted'),
-								ownership: field.properties.includes('ownership'),
-								notes: field.notes || null,
-							};
-						}),
+						fields: model.fields.map((f) => this.converterService.convertFieldFromCompactFormat(f)),
 						notes: model.notes || null,
 					};
 				}),
@@ -105,7 +68,7 @@ export class ProjectFileStorageService extends SingleSaveFileStorage<IStorablePr
 
 	async setProject(path: string, project: IProject, models?: IModel[]): Promise<void> {
 		const projectWithModels: IStorableProject = {
-			version: '1',
+			version: this.versionService.getCurrentVersion('project'),
 			name: project.name,
 			description: project.description,
 			models: !models ? await this.getModels(path) : models,

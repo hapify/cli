@@ -5,12 +5,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
+const FieldTypes = ['boolean', 'number', 'string', 'enum', 'datetime', 'entity', 'object', 'file'];
+const FieldSubTypes = [
+    'integer',
+    'float',
+    'latitude',
+    'longitude',
+    'email',
+    'password',
+    'url',
+    'text',
+    'rich',
+    'date',
+    'time',
+    'image',
+    'video',
+    'audio',
+    'document',
+];
 exports.FieldSchema = joi_1.default.object({
     name: joi_1.default.string().required(),
     notes: joi_1.default.string().allow(null),
-    type: joi_1.default.string().required(),
-    subtype: joi_1.default.string().required().allow(null),
-    reference: joi_1.default.string().required().allow(null),
+    type: joi_1.default.string()
+        .valid(...FieldTypes)
+        .required(),
+    subtype: joi_1.default.string()
+        .valid(...FieldSubTypes)
+        .allow(null)
+        .required(),
+    value: joi_1.default.alternatives()
+        .conditional('type', {
+        switch: [
+            { is: 'entity', then: joi_1.default.string() },
+            { is: 'enum', then: joi_1.default.array().items(joi_1.default.string()) },
+        ],
+        otherwise: null,
+    })
+        .required()
+        .allow(null),
     primary: joi_1.default.boolean().required(),
     unique: joi_1.default.boolean().required(),
     label: joi_1.default.boolean().required(),

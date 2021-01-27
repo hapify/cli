@@ -1,9 +1,7 @@
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import { IGlobalConfig } from '../src/interface/Config';
 import * as Os from 'os';
-import * as mkdirp from 'mkdirp';
-import * as Rimraf from 'rimraf';
 import { Container } from 'typedi';
 import { LoggerService } from '../src/service/Logger';
 import { Program } from '../src/class/Program';
@@ -105,13 +103,20 @@ export class Sandbox {
 	}
 	private create(): void {
 		// Make dir if not exists
-		mkdirp.sync(this.rootPath);
+		Fs.ensureDirSync(this.rootPath);
 	}
 	clear(): void {
-		Rimraf.sync(this.rootPath);
+		Fs.removeSync(this.rootPath);
 		this.create();
 	}
-	cloneFrom(path: string): void {}
+	cloneFrom(path: string, filter: (src: string, dest: string) => boolean = () => true): void {
+		const srcPath = Path.join(ProjectDir, path);
+		Fs.copySync(srcPath, this.rootPath, {
+			overwrite: true,
+			recursive: true,
+			filter,
+		});
+	}
 
 	getPath(subPath: string[] = []): string {
 		return Path.join(this.rootPath, ...subPath);

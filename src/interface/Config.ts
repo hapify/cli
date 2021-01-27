@@ -1,4 +1,5 @@
 import { Engine, IField, Input } from './Generator';
+import { CurrentVersion } from './Version';
 
 export interface IConfigTemplate {
 	/** The template's path */
@@ -10,7 +11,7 @@ export interface IConfigTemplate {
 }
 export interface IConfig {
 	/** The channel's configuration version */
-	version: string;
+	version: CurrentVersion<'channel'>;
 	/** The channel's validation script path */
 	validatorPath: string;
 	/** The project id containing the models or the project file path */

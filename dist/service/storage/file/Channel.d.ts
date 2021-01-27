@@ -1,6 +1,9 @@
 import { FilePath, SingleSaveFileStorage } from './SingleSave';
 import { IConfig } from '../../../interface/Config';
+import { ConverterService } from '../../Converter';
 export declare class ChannelFileStorageService extends SingleSaveFileStorage<IConfig> {
+    private converterService;
+    constructor(converterService: ConverterService);
     protected serialize(content: IConfig): Promise<string>;
     protected deserialize(content: string): Promise<IConfig>;
     /** Cleanup unused files */

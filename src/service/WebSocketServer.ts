@@ -1,6 +1,6 @@
 import { Container, Service } from 'typedi';
 import * as Path from 'path';
-import * as Fs from 'fs';
+import * as Fs from 'fs-extra';
 import * as ws from 'ws';
 import * as http from 'http';
 import * as Jwt from 'jsonwebtoken';
@@ -209,7 +209,7 @@ export class WebSocketServerService {
 	public async stop(): Promise<void> {
 		if (!this.started()) return;
 		this.serverStarted = false;
-		await new Promise((resolve, reject) => {
+		await new Promise<void>((resolve, reject) => {
 			this.server.close((error: Error) => {
 				if (error) reject(error);
 				else resolve();
@@ -247,14 +247,10 @@ export class WebSocketServerService {
 		const token = Jwt.sign({ name: this.randomName }, this.randomSecret, {
 			expiresIn: this.tokenExpires,
 		});
-		const data = JSON.stringify(
-			{
-				url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`,
-			},
-			null,
-			2
-		);
-		Fs.writeFileSync(this.wsInfoPath, data, 'utf8');
+		const data = {
+			url: `ws://${this.optionsService.hostname()}:${wsAddress.port}${this.baseUri}?token=${encodeURIComponent(token)}`,
+		};
+		Fs.writeJSONSync(this.wsInfoPath, data, { spaces: 2 });
 	}
 
 	/** Remove the token */

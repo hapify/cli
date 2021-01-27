@@ -1,0 +1,1 @@
+{"version":3,"file":"ProjectParser.js","sourceRoot":"","sources":["../../../../src/service/parser/project/ProjectParser.ts"],"names":[],"mappings":";;;AACA,uDAAoD;AACpD,uDAAoD;AACpD,sCAAmC;AAGnC,MAAa,aAAc,SAAQ,eAA+B;IACvD,QAAQ;QACjB,OAAO,SAAS,CAAC;IAClB,CAAC;IACS,aAAa;QACtB,OAAO;YACN,GAAG,EAAE,iCAAe;YACpB,GAAG,EAAE,iCAAe;SACpB,CAAC;IACH,CAAC;CACD;AAVD,sCAUC"}

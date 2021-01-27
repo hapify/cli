@@ -2,8 +2,12 @@ import { SingleSaveFileStorage } from './SingleSave';
 import { IStorableProject } from '../../../interface/Storage';
 import { IProject } from '../../../interface/Objects';
 import { IModel } from '../../../interface/Generator';
+import { VersionService } from '../../Version';
+import { ConverterService } from '../../Converter';
 export declare class ProjectFileStorageService extends SingleSaveFileStorage<IStorableProject> {
-    private booleanPropertiesNames;
+    private versionService;
+    private converterService;
+    constructor(versionService: VersionService, converterService: ConverterService);
     protected serialize(content: IStorableProject): Promise<string>;
     protected deserialize(content: string): Promise<IStorableProject>;
     getProject(path: string): Promise<IProject>;

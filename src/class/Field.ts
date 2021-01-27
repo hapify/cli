@@ -10,8 +10,8 @@ export class Field implements ISerializable<IField, Field> {
 	type: FieldType;
 	/** The field's subtype */
 	subtype: FieldSubType | null;
-	/** The field's reference if the type is entity. The GUID string of the targeted model */
-	reference: string;
+	/** The entity id, or the enum list */
+	value: string | string[];
 	/** Should be used as a primary key or not */
 	primary: boolean;
 	/** Should be used as a unique key or not */
@@ -48,7 +48,7 @@ export class Field implements ISerializable<IField, Field> {
 		this.notes = object.notes || null;
 		this.type = object.type;
 		this.subtype = object.subtype;
-		this.reference = object.reference;
+		this.value = object.value;
 		this.primary = !!(<any>object.primary);
 		this.unique = !!(<any>object.unique);
 		this.label = !!(<any>object.label);
@@ -70,7 +70,7 @@ export class Field implements ISerializable<IField, Field> {
 			notes: this.notes || null,
 			type: this.type,
 			subtype: this.subtype,
-			reference: this.type === 'entity' ? this.reference : null,
+			value: this.type === 'entity' || this.type === 'enum' ? this.value : null,
 			primary: this.primary,
 			unique: this.unique,
 			label: this.label,

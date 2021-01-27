@@ -1,7 +1,6 @@
 import md5 from 'md5';
 import { Service } from 'typedi';
-import * as Fs from 'fs';
-import mkdirp from 'mkdirp';
+import * as Fs from 'fs-extra';
 import * as Path from 'path';
 
 export type FilePath = string | string[];
@@ -25,7 +24,7 @@ export abstract class SingleSaveFileStorage<T> {
 		const content = await this.serialize(input);
 		const contentPath = JoinPath(path);
 		if (this.shouldSave(contentPath, content)) {
-			mkdirp.sync(Path.dirname(contentPath));
+			Fs.ensureDirSync(Path.dirname(contentPath));
 			Fs.writeFileSync(contentPath, content, 'utf8');
 		}
 	}
@@ -34,9 +33,9 @@ export abstract class SingleSaveFileStorage<T> {
 		return Fs.existsSync(JoinPath(path));
 	}
 	/** Convert content to string before saving */
-	protected abstract async serialize(content: T): Promise<string>;
+	protected abstract serialize(content: T): Promise<string>;
 	/** Convert content to string before saving */
-	protected abstract async deserialize(content: string): Promise<T>;
+	protected abstract deserialize(content: string): Promise<T>;
 	/** Should be called after loading to hash the content */
 	protected didLoad(bucket: string, data: string): void {
 		this.contentMd5[bucket] = md5(data);

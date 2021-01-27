@@ -9,8 +9,8 @@ export declare class Field implements ISerializable<IField, Field> {
     type: FieldType;
     /** The field's subtype */
     subtype: FieldSubType | null;
-    /** The field's reference if the type is entity. The GUID string of the targeted model */
-    reference: string;
+    /** The entity id, or the enum list */
+    value: string | string[];
     /** Should be used as a primary key or not */
     primary: boolean;
     /** Should be used as a unique key or not */

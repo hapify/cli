@@ -12,9 +12,11 @@ export class GeneratorService {
 	/** Compile for a whole channel */
 	async runChannel(channel: Channel): Promise<IGeneratorResult[]> {
 		const models = await channel.modelsCollection.list();
-		return await Generator.run(channel.templates, models).catch((e) => {
-			throw this.formatGeneratorError(e);
-		});
+		return await Generator.run(channel.templates, models)
+			.then((results) => this.filterEmptyFiles(results))
+			.catch((e) => {
+				throw this.formatGeneratorError(e);
+			});
 	}
 
 	/**
@@ -23,9 +25,11 @@ export class GeneratorService {
 	 */
 	async runTemplate(template: Template): Promise<IGeneratorResult[]> {
 		const models = await template.channel().modelsCollection.list();
-		return await Generator.run([template], models).catch((e) => {
-			throw this.formatGeneratorError(e);
-		});
+		return await Generator.run([template], models)
+			.then((results) => this.filterEmptyFiles(results))
+			.catch((e) => {
+				throw this.formatGeneratorError(e);
+			});
 	}
 
 	/**
@@ -63,5 +67,9 @@ export class GeneratorService {
 		});
 		if (error.stack) richError.stack = error.stack;
 		return richError;
+	}
+
+	private filterEmptyFiles(results: IGeneratorResult[]): IGeneratorResult[] {
+		return results.filter((result) => result.content.trim().length > 0);
 	}
 }

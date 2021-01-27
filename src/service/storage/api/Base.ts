@@ -4,6 +4,7 @@ import { ApiService } from '../../Api';
 import { IStorageService } from '../../../interface/Storage';
 import { IRemoteConfig } from '../../../interface/Config';
 import { AuthenticatedApiService } from '../../AuthenticatedApi';
+import { VersionedObject } from '../../../interface/Version';
 
 /** Used to export and import search params */
 export interface BaseSearchParams {
@@ -45,7 +46,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Create a new model */
 	async create(payload: Partial<I>): Promise<T> {
 		const output = (await this.apiService.post<I>(`${this.path()}`, payload)).data;
-		return this.fromApi(output);
+		return this.parsePayloadFromApi(output);
 	}
 
 	/** Update an model selected from it's id */
@@ -56,7 +57,7 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Get an model from it's id */
 	async get(id: string): Promise<T> {
 		const output = (await this.apiService.get<I>(`${this.path()}/${id}`)).data;
-		return this.fromApi(output);
+		return this.parsePayloadFromApi(output);
 	}
 
 	/** Delete an model selected from it's id */
@@ -66,27 +67,28 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 
 	/** Get list for model search */
 	async list(searchParams?: S): Promise<T[]> {
-		const output = (await this.apiService.get<ListResult<I>>(`${this.path()}`, Object.assign(this.defaultSearchParams(), searchParams))).data.items;
-		return output.map((o) => this.fromApi(o));
+		const mergedSearchParams = this.mergeSearchParams(searchParams);
+		const output = (await this.apiService.get<ListResult<I>>(`${this.path()}`, mergedSearchParams)).data.items;
+		return output.map((o) => this.parsePayloadFromApi(o));
 	}
 
 	/** Count for model */
-	async count(searchParams: S): Promise<number> {
+	async count(searchParams?: S): Promise<number> {
 		// Remove unwanted properties
-		const params = Object.assign({}, this.defaultSearchParams(), searchParams);
-		delete params._page;
-		delete params._limit;
-		delete params._order;
-		delete params._sort;
-		return (await this.apiService.get<CountResult>(`${this.path()}/count`, Object.assign(this.defaultSearchParams(), searchParams))).data.total;
+		const mergedSearchParams = this.mergeSearchParams(searchParams);
+		delete mergedSearchParams._page;
+		delete mergedSearchParams._limit;
+		delete mergedSearchParams._order;
+		delete mergedSearchParams._sort;
+		return (await this.apiService.get<CountResult>(`${this.path()}/count`, mergedSearchParams)).data.total;
 	}
 
 	/** Get the default search params (limit, page, etc...) */
-	protected defaultSearchParams(): any {
+	protected defaultSearchParams(): S {
 		return {
 			_page: 0,
 			_limit: 20,
-		};
+		} as S;
 	}
 
 	/** Denotes if the calls to the API need the X-Api-Token header */
@@ -95,6 +97,25 @@ export abstract class BaseApiStorageService<T, I, S extends BaseSearchParams> im
 	/** Returns the base URI for this model */
 	protected abstract path(): string;
 
+	/** Convert an old payload to new payload */
+	protected parsePayloadFromApi(object: VersionedObject | I): T {
+		if (typeof (object as VersionedObject).version !== 'undefined') {
+			const converted = this.convertToCurrentVersion(object as VersionedObject);
+			return this.fromApi(converted);
+		}
+		return this.fromApi(object as I);
+	}
+
+	/** Convert payload accordingly to version */
+	protected convertToCurrentVersion(object: VersionedObject | I): I {
+		return object as I;
+	}
+
 	/** Convert an incoming payload to an internal payload */
 	protected abstract fromApi(object: I): T;
+
+	/** Helper to merge search params */
+	protected mergeSearchParams(searchParams?: S): S {
+		return searchParams ? Object.assign(this.defaultSearchParams(), searchParams) : this.defaultSearchParams();
+	}
 }

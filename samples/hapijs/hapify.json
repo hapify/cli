@@ -1,46 +1,26 @@
 {
-  "version": "1",
+  "version": "2",
+  "validatorPath": "hapify/validator.js",
+  "project": "hapify-models.json",
   "name": "HapiJS",
   "description": "NodeJS Backend with MongoDB",
   "logo": "https://hapijs.com/public/img/hapi.svg",
-  "project": "hapify-models.json",
-  "validatorPath": "hapify/validator.js",
   "defaultFields": [
     {
       "name": "_id",
       "type": "string",
-      "subtype": null,
-      "reference": null,
-      "primary": true,
-      "unique": false,
-      "label": false,
-      "nullable": false,
-      "multiple": false,
-      "embedded": false,
-      "searchable": false,
-      "sortable": false,
-      "hidden": false,
-      "internal": true,
-      "restricted": false,
-      "ownership": false
+      "properties": [
+        "primary",
+        "internal"
+      ]
     },
     {
       "name": "created_at",
       "type": "datetime",
-      "subtype": null,
-      "reference": null,
-      "primary": false,
-      "unique": false,
-      "label": false,
-      "nullable": false,
-      "multiple": false,
-      "embedded": false,
-      "searchable": false,
-      "sortable": true,
-      "hidden": false,
-      "internal": true,
-      "restricted": false,
-      "ownership": false
+      "properties": [
+        "sortable",
+        "internal"
+      ]
     }
   ],
   "templates": [
