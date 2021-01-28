@@ -4,7 +4,6 @@ import { IConfigTemplate } from '../interface/Config';
 import { Channel } from './Channel';
 export declare class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
     private parent;
-    private static defaultFolder;
     /** Template storage */
     private storageService;
     /** The template's path */
@@ -15,6 +14,8 @@ export declare class Template implements IStorable, ISerializable<ITemplate, Tem
     input: Input;
     /** The template's path */
     contentPath: string;
+    /** @deprecated Old template paths */
+    legacyContentPaths: string[];
     /** The template's content */
     content: string;
     constructor(parent: Channel, object?: ITemplate);
@@ -30,10 +31,11 @@ export declare class Template implements IStorable, ISerializable<ITemplate, Tem
     channel(): Channel;
     load(): Promise<void>;
     save(): Promise<void>;
-    /** Check resource validity */
-    private validate;
+    private findContentPath;
     /** Compute the content path from the dynamic path */
     static computeContentPath(template: Template | IConfigTemplate): string;
+    /** @deprecated */
+    static computeContentPathV1(template: Template | IConfigTemplate): string;
     /** Compute the extension of the template */
     private static computeExtension;
 }

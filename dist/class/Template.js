@@ -27,6 +27,7 @@ class Template {
         this.input = object.input;
         this.content = object.content;
         this.contentPath = Template.computeContentPath(this);
+        this.legacyContentPaths = [Template.computeContentPathV1(this)];
         return this;
     }
     toObject() {
@@ -55,8 +56,8 @@ class Template {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate();
-            this.content = yield this.storageService.get([this.parent.templatesPath, this.contentPath]);
+            const contentPath = this.findContentPath();
+            this.content = yield this.storageService.get([this.parent.templatesPath, contentPath]);
         });
     }
     save() {
@@ -64,19 +65,30 @@ class Template {
             yield this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
         });
     }
-    /** Check resource validity */
-    validate() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!(yield this.storageService.exists([this.parent.templatesPath, this.contentPath]))) {
-                throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
-            }
-        });
+    findContentPath() {
+        const possiblePaths = [this.contentPath, ...(this.legacyContentPaths || [])];
+        const existingPath = possiblePaths.find((path) => this.storageService.exists([this.parent.templatesPath, path]));
+        if (!existingPath) {
+            throw new Error(`Cannot find template in ${possiblePaths.join(', ')}`);
+        }
+        return existingPath;
     }
     /** Compute the content path from the dynamic path */
     static computeContentPath(template) {
         // Get string service
         const stringService = typedi_1.Container.get(String_1.StringService);
-        const variants = stringService.variants(Template.defaultFolder);
+        const types = stringService.types();
+        let path = template.path;
+        for (const type of types) {
+            path = path.replace(new RegExp(`{${type}}`, 'g'), `__${type}__`);
+        }
+        return `${path}.${Template.computeExtension(template)}`;
+    }
+    /** @deprecated */
+    static computeContentPathV1(template) {
+        // Get string service
+        const stringService = typedi_1.Container.get(String_1.StringService);
+        const variants = stringService.variants('model');
         const keys = Object.keys(variants);
         let path = template.path;
         for (const key of keys) {
@@ -93,5 +105,4 @@ class Template {
     }
 }
 exports.Template = Template;
-Template.defaultFolder = 'model';
 //# sourceMappingURL=Template.js.map

@@ -9,7 +9,7 @@ export declare class Channel implements IStorable, ISerializable<IChannel, Chann
     path: string;
     name: string;
     id: string;
-    private static defaultFolder;
+    private static hapifyFolders;
     private static configFile;
     private static projectFile;
     config: IConfig;
@@ -27,6 +27,7 @@ export declare class Channel implements IStorable, ISerializable<IChannel, Chann
     constructor(path: string, name?: string);
     load(): Promise<void>;
     save(): Promise<void>;
+    private guessHapifyFolder;
     /** Denotes if the template should be considered as empty */
     isEmpty(): boolean;
     /** Remove empty templates */
