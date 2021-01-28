@@ -18,7 +18,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 
 	public id: string;
 
-	private static defaultFolder = 'hapify';
+	private static hapifyFolders = ['.hapify', 'hapify'];
 
 	private static configFile = 'hapify.json';
 	private static projectFile = 'hapify-models.json';
@@ -41,7 +41,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		this.storageService = Container.get(ChannelFileStorageService);
 		this.name = name ? name : Path.basename(path);
 		this.id = md5(this.path);
-		this.templatesPath = Path.join(this.path, Channel.defaultFolder);
+		this.templatesPath = Path.join(this.path, this.guessHapifyFolder());
 	}
 
 	async load(): Promise<void> {
@@ -103,7 +103,12 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		// Cleanup files in template path
 		const legitFiles = this.templates.map((t) => [this.templatesPath, t.contentPath]);
 		legitFiles.push([this.path, this.config.validatorPath]);
-		await this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
+		await this.storageService.cleanup([this.path, this.guessHapifyFolder()], legitFiles);
+	}
+
+	private guessHapifyFolder(): string {
+		const existingPath = Channel.hapifyFolders.find((path) => this.storageService.exists([this.path, path]));
+		return existingPath ? existingPath : Channel.hapifyFolders[0];
 	}
 
 	/** Denotes if the template should be considered as empty */
@@ -160,7 +165,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		const channel = new Channel(path);
 		channel.config = {
 			version: Container.get(VersionService).getCurrentVersion('channel'),
-			validatorPath: `${Channel.defaultFolder}/validator.js`,
+			validatorPath: `${Channel.hapifyFolders[0]}/validator.js`,
 			name: name || channel.name,
 			description: description || 'A new Hapify channel',
 			logo: logo || undefined,
@@ -198,7 +203,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		const template = new Template(
 			channel,
 			Object.assign(channel.config.templates[0], {
-				content: '// Hello <<M A>>',
+				content: '// Hello <<Model pascal>>',
 			})
 		);
 		channel.templates.push(template);

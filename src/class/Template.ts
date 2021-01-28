@@ -7,7 +7,6 @@ import { Channel } from './Channel';
 import { StringService } from '../service/String';
 
 export class Template implements IStorable, ISerializable<ITemplate, Template>, ITemplate {
-	private static defaultFolder = 'model';
 	/** Template storage */
 	private storageService: TemplatesFileStorageService;
 	/** The template's path */
@@ -18,6 +17,8 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 	input: Input;
 	/** The template's path */
 	contentPath: string;
+	/** @deprecated Old template paths */
+	legacyContentPaths: string[];
 	/** The template's content */
 	content: string;
 
@@ -34,6 +35,7 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		this.input = object.input;
 		this.content = object.content;
 		this.contentPath = Template.computeContentPath(this);
+		this.legacyContentPaths = [Template.computeContentPathV1(this)];
 		return this;
 	}
 
@@ -67,19 +69,21 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 	}
 
 	public async load(): Promise<void> {
-		await this.validate();
-		this.content = await this.storageService.get([this.parent.templatesPath, this.contentPath]);
+		const contentPath = this.findContentPath();
+		this.content = await this.storageService.get([this.parent.templatesPath, contentPath]);
 	}
 
 	async save(): Promise<void> {
 		await this.storageService.set([this.parent.templatesPath, this.contentPath], this.content);
 	}
 
-	/** Check resource validity */
-	private async validate(): Promise<void> {
-		if (!(await this.storageService.exists([this.parent.templatesPath, this.contentPath]))) {
-			throw new Error(`Template's path ${this.parent.templatesPath}/${this.contentPath} does not exists.`);
+	private findContentPath(): string {
+		const possiblePaths = [this.contentPath, ...(this.legacyContentPaths || [])];
+		const existingPath = possiblePaths.find((path) => this.storageService.exists([this.parent.templatesPath, path]));
+		if (!existingPath) {
+			throw new Error(`Cannot find template in ${possiblePaths.join(', ')}`);
 		}
+		return existingPath;
 	}
 
 	/** Compute the content path from the dynamic path */
@@ -87,7 +91,21 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 		// Get string service
 		const stringService: StringService = Container.get(StringService);
 
-		const variants = stringService.variants(Template.defaultFolder);
+		const types = stringService.types();
+		let path = template.path;
+		for (const type of types) {
+			path = path.replace(new RegExp(`{${type}}`, 'g'), `__${type}__`);
+		}
+
+		return `${path}.${Template.computeExtension(template)}`;
+	}
+
+	/** @deprecated */
+	static computeContentPathV1(template: Template | IConfigTemplate): string {
+		// Get string service
+		const stringService: StringService = Container.get(StringService);
+
+		const variants = stringService.variants('model');
 		const keys = Object.keys(variants) as (keyof IStringVariants)[];
 		let path = template.path;
 		for (const key of keys) {

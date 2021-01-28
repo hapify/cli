@@ -314,10 +314,10 @@ describe('serve command', () => {
 		});
 		expect(typeof response).to.equal('undefined');
 
-		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'create.js.hpf'])).to.be.true();
-		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'new.js.hpf'])).to.be.true();
-		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'delete.js.hpf'])).to.be.false();
-		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', 'model', 'read.js.hpf'])).to.be.false();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', '__kebab__', 'create.js.hpf'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', '__kebab__', 'new.js.hpf'])).to.be.true();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', '__kebab__', 'delete.js.hpf'])).to.be.false();
+		expect(sandbox.fileExists(['boilerplate-hapijs', 'hapify', 'routes', '__kebab__', 'read.js.hpf'])).to.be.false();
 
 		const hapifyJSON = sandbox.getJSONFileContent<IConfig>(['boilerplate-hapijs', 'hapify.json']);
 		expect(hapifyJSON.templates.length).to.equal(5);

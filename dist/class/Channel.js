@@ -51,7 +51,7 @@ class Channel {
         this.storageService = typedi_1.Container.get(Channel_1.ChannelFileStorageService);
         this.name = name ? name : Path.basename(path);
         this.id = md5_1.default(this.path);
-        this.templatesPath = Path.join(this.path, Channel.defaultFolder);
+        this.templatesPath = Path.join(this.path, this.guessHapifyFolder());
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -104,8 +104,12 @@ class Channel {
             // Cleanup files in template path
             const legitFiles = this.templates.map((t) => [this.templatesPath, t.contentPath]);
             legitFiles.push([this.path, this.config.validatorPath]);
-            yield this.storageService.cleanup([this.path, Channel.defaultFolder], legitFiles);
+            yield this.storageService.cleanup([this.path, this.guessHapifyFolder()], legitFiles);
         });
+    }
+    guessHapifyFolder() {
+        const existingPath = Channel.hapifyFolders.find((path) => this.storageService.exists([this.path, path]));
+        return existingPath ? existingPath : Channel.hapifyFolders[0];
     }
     /** Denotes if the template should be considered as empty */
     isEmpty() {
@@ -163,7 +167,7 @@ class Channel {
             const channel = new Channel(path);
             channel.config = {
                 version: typedi_1.Container.get(Version_1.VersionService).getCurrentVersion('channel'),
-                validatorPath: `${Channel.defaultFolder}/validator.js`,
+                validatorPath: `${Channel.hapifyFolders[0]}/validator.js`,
                 name: name || channel.name,
                 description: description || 'A new Hapify channel',
                 logo: logo || undefined,
@@ -198,7 +202,7 @@ class Channel {
             };
             // Create template
             const template = new Template_1.Template(channel, Object.assign(channel.config.templates[0], {
-                content: '// Hello <<M A>>',
+                content: '// Hello <<Model pascal>>',
             }));
             channel.templates.push(template);
             // Create validator
@@ -237,7 +241,7 @@ class Channel {
     }
 }
 exports.Channel = Channel;
-Channel.defaultFolder = 'hapify';
+Channel.hapifyFolders = ['.hapify', 'hapify'];
 Channel.configFile = 'hapify.json';
 Channel.projectFile = 'hapify-models.json';
 //# sourceMappingURL=Channel.js.map

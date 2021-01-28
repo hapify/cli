@@ -1,6 +1,6 @@
 {
   "version": "2",
-  "validatorPath": "hapify/validator.js",
+  "validatorPath": ".hapify/validator.js",
   "project": "hapify-models.json",
   "name": "HapiJS",
   "description": "NodeJS Backend with MongoDB",

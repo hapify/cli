@@ -7,10 +7,7 @@ import { IStringVariants } from '../interface/Generator';
 export class StringService {
 	constructor() {}
 
-	/**
-	 * Returns the string with all formats
-	 *
-	 */
+	/** Returns the string with all formats */
 	public variants(value: string): IStringVariants {
 		return {
 			raw: value,
@@ -26,5 +23,10 @@ export class StringService {
 			pascal: Case.pascal(value),
 			camel: Case.camel(value),
 		};
+	}
+
+	/** Returns the variants names */
+	public types(): (keyof IStringVariants)[] {
+		return Object.keys(this.variants('')) as (keyof IStringVariants)[];
 	}
 }

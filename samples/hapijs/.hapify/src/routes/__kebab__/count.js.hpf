@@ -8,7 +8,7 @@ const Joi = require('joi');
 const MongoDB = require('mongodb');
  
 // Validation schema for query
-const schema = Joi.object({
+const schema = Joi.object({ 
     <<P a_a>>: Joi.array().items(Joi.string().length(24).hex()).single(),
 <<@ F se f>>
     <<=joiValidator(f)>>

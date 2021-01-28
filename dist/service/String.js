@@ -33,10 +33,7 @@ const typedi_1 = require("typedi");
 const Case = __importStar(require("case"));
 let StringService = class StringService {
     constructor() { }
-    /**
-     * Returns the string with all formats
-     *
-     */
+    /** Returns the string with all formats */
     variants(value) {
         return {
             raw: value,
@@ -52,6 +49,10 @@ let StringService = class StringService {
             pascal: Case.pascal(value),
             camel: Case.camel(value),
         };
+    }
+    /** Returns the variants names */
+    types() {
+        return Object.keys(this.variants(''));
     }
 };
 StringService = __decorate([
