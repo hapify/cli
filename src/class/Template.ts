@@ -78,10 +78,10 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 	}
 
 	private findContentPath(): string {
-		const pathPossibilities = [this.contentPath, ...(this.legacyContentPaths || [])];
-		const existingPath = pathPossibilities.find((path) => this.storageService.exists([this.parent.templatesPath, path]));
+		const possiblePaths = [this.contentPath, ...(this.legacyContentPaths || [])];
+		const existingPath = possiblePaths.find((path) => this.storageService.exists([this.parent.templatesPath, path]));
 		if (!existingPath) {
-			throw new Error(`Cannot find template in ${pathPossibilities.join(', ')}`);
+			throw new Error(`Cannot find template in ${possiblePaths.join(', ')}`);
 		}
 		return existingPath;
 	}
