@@ -203,7 +203,7 @@ export class Channel implements IStorable, ISerializable<IChannel, Channel> {
 		const template = new Template(
 			channel,
 			Object.assign(channel.config.templates[0], {
-				content: '// Hello <<M A>>',
+				content: '// Hello <<Model pascal>>',
 			})
 		);
 		channel.templates.push(template);
