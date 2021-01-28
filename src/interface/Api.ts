@@ -11,7 +11,7 @@ interface Accesses {
 	count: Access;
 }
 type FieldType = 'boolean' | 'number' | 'string' | 'enum' | 'datetime' | 'entity' | 'object' | 'file';
-type FieldSubType =
+export type FieldSubType =
 	| 'integer'
 	| 'float'
 	| 'latitude'
@@ -26,7 +26,10 @@ type FieldSubType =
 	| 'image'
 	| 'video'
 	| 'audio'
-	| 'document';
+	| 'document'
+	| 'oneOne'
+	| 'oneMany'
+	| 'manyMany';
 type FieldBooleanProperty =
 	| 'primary'
 	| 'unique'

@@ -22,6 +22,9 @@ const FieldSubTypes = [
     'video',
     'audio',
     'document',
+    'oneOne',
+    'oneMany',
+    'manyMany',
 ];
 exports.FieldSchema = joi_1.default.object({
     name: joi_1.default.string().required(),
