@@ -49,7 +49,7 @@ describe('init command', () => {
 		expect(sandbox.fileExists([hapifyJSON.project])).to.be.true();
 		expect(sandbox.fileExists([hapifyJSON.validatorPath])).to.be.true();
 		for (const template of hapifyJSON.templates) {
-			const realPath = `${template.path.replace('{kebab}', 'model')}.${template.engine}`;
+			const realPath = `${template.path.replace('{kebab}', '__kebab__')}.${template.engine}`;
 			expect(sandbox.fileExists(['hapify', realPath])).to.be.true();
 		}
 		const hapifyModelsJSON = sandbox.getJSONFileContent<IStorableCompactProject>([hapifyJSON.project]);
