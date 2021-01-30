@@ -9,7 +9,7 @@ interface Accesses {
     count: Access;
 }
 declare type FieldType = 'boolean' | 'number' | 'string' | 'enum' | 'datetime' | 'entity' | 'object' | 'file';
-export declare type FieldSubType = 'integer' | 'float' | 'latitude' | 'longitude' | 'email' | 'password' | 'url' | 'text' | 'rich' | 'date' | 'time' | 'image' | 'video' | 'audio' | 'document' | 'oneOne' | 'oneMany' | 'manyMany';
+export declare type FieldSubType = 'integer' | 'float' | 'latitude' | 'longitude' | 'email' | 'password' | 'url' | 'text' | 'rich' | 'date' | 'time' | 'image' | 'video' | 'audio' | 'document' | 'oneOne' | 'oneMany' | 'manyOne' | 'manyMany';
 declare type FieldBooleanProperty = 'primary' | 'unique' | 'label' | 'nullable' | 'multiple' | 'embedded' | 'searchable' | 'sortable' | 'hidden' | 'internal' | 'restricted' | 'ownership';
 export interface IApiModel {
     _id: string;

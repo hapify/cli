@@ -98,10 +98,7 @@ class Template {
     }
     /** Compute the extension of the template */
     static computeExtension(template) {
-        if (template.engine === 'hpf') {
-            return 'hpf';
-        }
-        return 'js';
+        return template.engine;
     }
 }
 exports.Template = Template;

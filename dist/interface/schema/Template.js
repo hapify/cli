@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfigTemplateSchema = exports.TemplateSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 const TemplateInputs = ['one', 'all'];
-const TemplateEngines = ['hpf', 'js'];
+const TemplateEngines = ['hpf', 'js', 'ejs'];
 exports.TemplateSchema = joi_1.default.object({
     path: joi_1.default.string().required(),
     engine: joi_1.default.string()
