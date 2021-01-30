@@ -117,9 +117,6 @@ export class Template implements IStorable, ISerializable<ITemplate, Template>, 
 
 	/** Compute the extension of the template */
 	private static computeExtension(template: Template | IConfigTemplate): string {
-		if (template.engine === 'hpf') {
-			return 'hpf';
-		}
-		return 'js';
+		return template.engine;
 	}
 }

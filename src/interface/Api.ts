@@ -29,6 +29,7 @@ export type FieldSubType =
 	| 'document'
 	| 'oneOne'
 	| 'oneMany'
+	| 'manyOne'
 	| 'manyMany';
 type FieldBooleanProperty =
 	| 'primary'

@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { Engine, Input } from '../Generator';
 
 const TemplateInputs: Input[] = ['one', 'all'];
-const TemplateEngines: Engine[] = ['hpf', 'js'];
+const TemplateEngines: Engine[] = ['hpf', 'js', 'ejs'];
 
 export const TemplateSchema = Joi.object({
 	path: Joi.string().required(),

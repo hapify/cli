@@ -19,6 +19,7 @@ const FieldSubTypes = [
 	'document',
 	'oneOne',
 	'oneMany',
+	'manyOne',
 	'manyMany',
 ];
 export const FieldSchema = Joi.object({
