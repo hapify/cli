@@ -56,8 +56,8 @@ async function addBoilerplate(list: { name: string; value: string }[], qBoilerpl
 			when: () => list.length > 0,
 		},
 		{
-			name: 'url',
-			message: 'Enter boilerplate URL',
+			name: 'git',
+			message: 'Enter boilerplate Git URL',
 			when: (answer: any) => !answer.url,
 			validate: (input: any) => input.length > 0,
 		},
@@ -75,8 +75,9 @@ async function addBoilerplate(list: { name: string; value: string }[], qBoilerpl
 	}
 
 	// Avoid duplicates
-	if (qBoilerplate.urls.indexOf(answer.url) < 0) {
-		qBoilerplate.urls.push(answer.url);
+	const url = answer.git || answer.url;
+	if (qBoilerplate.urls.indexOf(url) < 0) {
+		qBoilerplate.urls.push(url);
 	}
 
 	// Push more if needed

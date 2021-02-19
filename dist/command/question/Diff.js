@@ -47,7 +47,7 @@ function AskDiff(cmd, qDiff, git) {
             },
         ])).source;
         const commits = (yield git.log([qDiff.source, '-n', '20', '--'])).all.map((c) => ({ name: `[${c.date}] ${c.message}`, value: c.hash }));
-        qDiff.from = (yield Inquirer.prompt([
+        const fromAnswer = (yield Inquirer.prompt([
             {
                 name: 'from',
                 message: 'Choose the first commit',
@@ -57,13 +57,14 @@ function AskDiff(cmd, qDiff, git) {
                 when: () => commits.length > 0,
             },
             {
-                name: 'from',
+                name: 'fromHash',
                 message: 'Enter the first commit hash',
                 when: (answer) => !answer.from,
                 validate: (input) => input.length > 0,
             },
-        ])).from;
-        qDiff.to = (yield Inquirer.prompt([
+        ]));
+        qDiff.from = fromAnswer.fromHash || fromAnswer.from;
+        const toAnswer = (yield Inquirer.prompt([
             {
                 name: 'to',
                 message: 'Choose the second commit',
@@ -73,12 +74,13 @@ function AskDiff(cmd, qDiff, git) {
                 when: () => commits.length > 0,
             },
             {
-                name: 'to',
+                name: 'toHash',
                 message: 'Enter the second commit hash',
                 when: (answer) => !answer.to,
                 validate: (input) => input.length > 0,
             },
-        ])).to;
+        ]));
+        qDiff.to = toAnswer.toHash || toAnswer.to;
         qDiff.destination = (yield Inquirer.prompt([
             {
                 name: 'destination',
