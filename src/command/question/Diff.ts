@@ -27,7 +27,7 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 
 	const commits = (await git.log([qDiff.source, '-n', '20', '--'])).all.map((c) => ({ name: `[${c.date}] ${c.message}`, value: c.hash }));
 
-	qDiff.from = ((await Inquirer.prompt([
+	const fromAnswer = (await Inquirer.prompt([
 		{
 			name: 'from',
 			message: 'Choose the first commit',
@@ -37,14 +37,15 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 			when: () => commits.length > 0,
 		},
 		{
-			name: 'from',
+			name: 'fromHash',
 			message: 'Enter the first commit hash',
 			when: (answer: any) => !answer.from,
 			validate: (input) => input.length > 0,
 		},
-	])) as any).from;
+	])) as { from?: string; fromHash?: string };
+	qDiff.from = fromAnswer.fromHash || fromAnswer.from;
 
-	qDiff.to = ((await Inquirer.prompt([
+	const toAnswer = (await Inquirer.prompt([
 		{
 			name: 'to',
 			message: 'Choose the second commit',
@@ -54,12 +55,13 @@ export async function AskDiff(cmd: Command, qDiff: DiffQuery, git: SimpleGit) {
 			when: () => commits.length > 0,
 		},
 		{
-			name: 'to',
+			name: 'toHash',
 			message: 'Enter the second commit hash',
 			when: (answer: any) => !answer.to,
 			validate: (input) => input.length > 0,
 		},
-	])) as any).to;
+	])) as { to?: string; toHash?: string };
+	qDiff.to = toAnswer.toHash || toAnswer.to;
 
 	qDiff.destination = ((await Inquirer.prompt([
 		{
