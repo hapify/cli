@@ -10,4 +10,4 @@ This package is a command line tool for managing your Hapify projects and templa
 
 ## Usage
 
-Please refer to the [online documentation](https://docs.hapify.io/en/latest/cli/).
+Please refer to the [online documentation](https://docs.hapify.io/).
